@@ -1,0 +1,16 @@
+#Proposed SVN structure
+
+= Proposed SVN structure =
+
+{{{
+- joomla
+  |- meta
+    |- customization
+    |- db backups
+  |- www
+  |- build.xml
+- specifications
+- resources
+- tools
+}}}
+
