@@ -2,15 +2,21 @@
 
 = Proposed SVN structure =
 
+== Trunk ==
+
 {{{
 - joomla
   |- meta
-    |- customization
-    |- db backups
-  |- www
-  |- build.xml
-- specifications
-- resources
-- tools
+    |- customization - template and settings modifications
+    |- db - database backups and/or examples with description
+  |- www - joomla extensions in native installation structure with joomla ignores
+  |- build.xml - ant script that builds installation packages for all extensions
+- specifications - document formats and other specification
+- resources - demonstrations, images, ppts, etc...
+- tools - non joomla other tools
+  |- PMML2XTM
+  |- XQuery search
+  |- PMML WS Uploader
+  |- Ontopia Customization
+  |- ...
 }}}
-
