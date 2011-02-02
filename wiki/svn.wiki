@@ -12,7 +12,7 @@
   |- www - joomla extensions in native installation structure with joomla ignores
   |- build.xml - ant script that builds installation packages for all extensions
 - specifications - document formats and other specification
-- libs - 3rd party libraries (lucene, ...)
+- libs - 3rd party libraries (if shared between more project / tools)
 - resources - demonstrations, images, ppts, etc...
 - tools - non joomla other tools
   |- PMML2XTM
