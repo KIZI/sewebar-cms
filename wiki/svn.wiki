@@ -14,6 +14,7 @@
 - specifications - document formats and other specification
 - libs - 3rd party libraries (if shared between more project / tools)
 - resources - demonstrations, images, ppts, etc...
+- tests - Unit test of components
 - tools - non joomla other tools
   |- PMML2XTM
   |- XQuery search
