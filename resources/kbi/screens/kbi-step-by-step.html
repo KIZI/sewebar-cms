@@ -1,0 +1,32 @@
+<h2>Prerequisites</h2>
+<ol style="padding-left:25px;">
+<li>Joomla! 1.5 or higher installed (<a href="http://www.joomla.org/download.html">joomla.org</a>)</li>
+<li>Knowledge base to be used with KBI (for example <a href="http://www.ontopia.net/">Ontopia</a>)</li>
+</ol>
+<h2>Installation</h2>
+<p>In order to use KBI with Joomla! we need to install and enable required extensions. The easiest way is to use prepared installation packages and Joomla!'s Extension Manager. KBI packages are located at <a href="http://bazaar.launchpad.net/~sewebar-team/sewebar-cms/trunk/files/head%3A/Joomla_Extensions/Knowledge%20Bases%20Integration/releases/">launchpad.net/sewebar-cms</a>.</p>
+<ul style="padding-left:25px;">
+<li>lib_kbi-2010-11-12.zip</li>
+<li>com_kbi-2010-11-12.zip</li>
+<li>plg_kbinclude-2010-11-12.zip</li>
+<li>plg_kbi-2010-11-12.zip</li>
+<li style="color: gray;font-style:italic;">com_ardesigner-2010-11-12.zip</li>
+</ul>
+<p>Description of all packages is located in <em>readme.txt</em> inside every zip file. Component <em>com_ardesigner</em> is optional. After installation don't forget to <strong>enable plugins</strong>.</p>
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/00.menu.png" title="KBInclude" onclick="return hs.expand(this)"><img title="KBI Menu" alt="KBI Menu" src="images/stories/Sewebar/kbi/00.menu-small.png" width="490px" /></a></p>
+<h2>Set up</h2>
+<p>After we have all extensions installed we need to set up at least one <em>source</em>, <em>query</em> and <em>XSLT</em>. In Joomla!'s administration menu <strong>Components &gt; Knowledge Base Integration &gt; Sources</strong> we'll create link to a remote knowledge base. As an example let's use Ontopia and its TMRAP interface. Create a new source with values according to the picture. Every source can have specific <em>Custom parameters</em>. In case of Ontopia, we need to provide at least the id of a queried topic map in a <em>topicmap</em> parameter. Detailed explanation can be found at <a href="http://www.ontopia.net/doc/current/doc/tmrap/dev-guide.html#d0e526">Ontopia's page</a>.</p>
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/01.sources.png" title="KBInclude" onclick="return hs.expand(this)"><img title="KBI Sources" alt="KBI Sources" src="images/stories/Sewebar/kbi/01.sources-small.png" width="490px" /></a></p>
+<p>Next we create a parametrized query in s specific language for the used source - in this case <em>tolog</em>. Query in this example selects all operas composed by author given in the parameter with name author. Parameter delimiter is set to <em>"-"</em> therefore the value of parameter will replace all <em>-author-</em> in the query. The query showed in the example is not very flexible, it is in  fact limited to composed_by association, only the values for the parameters are determined at run time. KBI allows to generate queries in a fully dynamic way. In this case the query window would be left empty.</p>
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/02.query.png" title="KBI Query" onclick="return hs.expand(this)"><img title="KBI Query" alt="KBI Query" src="images/stories/Sewebar/kbi/02.query-small.png" width="490px" /></a></p>
+<p>Because the results returned from remote KB are in the XML format and we need to publish them as HTML, we have to specify a "visualization" XSLT to do this job.</p>
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/03.xslt.png" title="XSLT" onclick="return hs.expand(this)"><img title="XSLT" alt="XSLT" src="images/stories/Sewebar/kbi/03.xslt-small.png" width="490px" /></a></p>
+<h2>Use it!</h2>
+<p>When everything is set up, then fragments from KB can be included in any Joomla!'s article. Below the text editor there is a <em>KB include</em> button. This button opens window where we can select source, query and the corresponding "visualization" XSLT.</p>
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/04.wysiwyg.png" title="WYSIWYG" onclick="return hs.expand(this)"><img title="WYSIWYG" alt="WYSIWYG" src="images/stories/Sewebar/kbi/04.wysiwyg-small.png" width="490px" /></a></p>
+<p>At this point there is no need to <em>"speak"</em> any query language. All we need is to set up the value for query parameters. Since we have setup our query so that it contains only one parameter <em>author</em>, we need  to provide value only for this parameter.<em> Static</em> queries are fetched and saved permanently into the article. We also need to choose whether the query will be static or dynamic by setting the Is dynamic option.  On the other hand <em>dynamic</em> queries insert only an identificator into the article and the results are refreshed against the data source on page rendering (i.e. on web user accessing the article). This identificator can look like this</p>
+<pre>&#123;kbi source:1 query:1 xslt:1 parameters:'author: "Puccini "'&#125;</pre>
+<br />
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/05.kbi-include.png" title="KBInclude" onclick="return hs.expand(this)"><img title="KBInclude" alt="KBInclude" src="images/stories/Sewebar/kbi/05.kbi-include-small.png" width="490px" /></a></p>
+<p>Et voilà, results in front end should look like this.</p>
+<p style="text-align: center;"><a href="images/stories/Sewebar/kbi/06.result.png" title="Results" onclick="return hs.expand(this)"><img title="Results" alt="Results" src="images/stories/Sewebar/kbi/06.result-small.png" width="490px" /></a></p>

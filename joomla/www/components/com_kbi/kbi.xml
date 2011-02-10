@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.5.0">
+	<!--  The extension commercial name: make it different form others at JED http://extensions.joomla.org/-->
+	<name>KBI</name>
+	<!-- The following elements are optional and free of formatting constraints -->
+	<!-- Original creation date. Recommended: YYYY-MM-DD -->
+	<creationDate>2009-08-10</creationDate>
+	<author>Andrej Hazucha</author>
+	<authorEmail>rewko@centrum.cz</authorEmail>
+	<authorUrl>http://www.rewko.eu</authorUrl>
+	<copyright>Copyright (C) 2010. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<!--  The version string is recorded in the components table -->
+	<version>0.91</version>
+	<!--  The date for the actual version release -->
+	<!-- <releaseDate>2010-05-14</releaseDate> -->
+	<!--  Type of release: Bug fix, Security Fix, Minor update, Major update -->
+	<!-- <releaseType>Major update</releaseType> -->
+	<!-- <downloadUrl>https://launchpad.net/sewebar-cms</downloadUrl> -->
+	<!-- The description is optional and defaults to the name -->
+	<description>
+		Brings user interface for managing Sources, Queries and XSLTs. Following MVC architectural pattern there is a model, controller and view (list and detail view) for every entity. This component also contains selector and transformator. Transformator calls KBI library's query with combination of source, query and XSLT. Selector is a user window for selecting source, query and coresponding XSLT. Selector window is open from editors-xtd/kbinclude.
+		Component contains ARDesiner integrated into Joomla! environment and cooperating with administrator/com_kbi component.
+	</description>
+
+	<!-- Custom Install Script to execute -->
+	<!-- Note: This will be copied from the root of the installation package to the administrator directory automatically -->
+	<installfile></installfile>
+
+	<!-- Custom Uninstall Script to execute -->
+	<!-- Note: This will be copied from the root of the installation package to the administrator directory automatically -->
+	<uninstallfile></uninstallfile>
+
+	<!-- Install Database Section -->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/01.db.sql</file>
+		</sql>
+	</install>
+
+	<!-- Uninstall Database Section -->
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/00.uninstall.sql</file>
+		</sql>
+	</uninstall>
+
+	<!-- Site Main File Copy Section -->
+	<files>
+		<folder>assets</folder>
+		<folder>controllers</folder>
+		<folder>views</folder>
+		<filename>kbi.php</filename>
+	</files>
+
+	<!-- Site Main Language File Copy Section -->
+	<languages folder="lang">
+		<language tag="cs-CZ">cs-CZ.com_kbi.ini</language>
+	</languages>
+
+	<!-- Site Main Media File Copy Section -->
+	<media destination="com_kbi" />
+
+	<administration>
+		<!-- Administration Menu Section -->
+		<!-- Name to display at the component menu. Should be the same as the extension commercial name -->
+		<menu controller="sources">Knowledge Base Integration</menu>
+		<submenu>
+			<menu controller="documents">PMML Documents</menu>
+			<menu controller="sources">Remote Sources</menu>
+			<menu controller="queries">Queries</menu>
+			<menu controller="xslts">XSLTs</menu>
+		</submenu>
+
+		<!-- Administration Main File Copy Section -->
+		<!-- Note the folder attribute: This attribute describes the folder
+		     to copy FROM in the package to install therefore files copied
+		     in this section are copied from /admin/ in the package -->
+		<files folder="administrator">
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>sql</folder>
+			<folder>views</folder>
+			<filename>admin.kbi.php</filename>
+		</files>
+
+		<!-- Administration Language File Copy Section -->
+		<languages folder="administrator/lang" >
+			<language tag="cs-CZ">cs-CZ.com_kbi.ini</language>
+		</languages>
+
+		<!-- Administration Main Media File Copy Section -->
+		<media folder="administrator" destination="com_helloworld" />
+	</administration>
+</install>

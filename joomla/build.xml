@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project default="all">
+	<description>Builds Joomla! installation packages</description>
+
+	<property name="dist" location="meta/installers/"/>
+	<property name="www" location="www/"/>
+
+	<tstamp>
+		<format property="version" pattern="yyyy-MM-dd" locale="cs,CZ"/>
+	</tstamp>
+
+	<!-- kbi -->
+	<property name="plg_kbilib" value="lib_kbi-${version}.zip"/>
+	<property name="com_kbi" value="com_kbi-${version}.zip"/>
+	<property name="plg_kbi" value="plg_kbi-${version}.zip"/>
+	<property name="plg_kbinclude" value="plg_kbinclude-${version}.zip"/>
+	<property name="com_ardesigner" value="com_ardesigner-${version}.zip"/>
+	<!-- jucene -->
+	<property name="plg_jucene" value="plg_jucene-${version}.zip"/>
+	<property name="com_jucene" value="com_jucene-${version}.zip"/>
+	<property name="mod_jucene" value="mod_jucene-${version}.zip"/>
+
+	<target name="all"
+		description="creates packages for all extensions"
+		depends="kbi, jucene">
+	</target>
+
+	<target name="kbi"
+			description="creates packages for all extensions (KBI)"
+			depends="com_kbi, plg_kbilib, plg_kbi, plg_kbinclude, com_ardesigner">
+		</target>
+
+	<target name="jucene"
+				description="creates packages for all extensions (jucene)"
+				depends="plg_jucene, com_jucene, mod_jucene">
+			</target>
+
+	<target name="plg_kbilib">
+		<zip destfile="${dist}/${plg_kbilib}">
+			<zipfileset dir="${www}/plugins/kbi/" excludes="**/.svn"/>
+			<zipfileset file="readme.txt"/>
+		</zip>
+	</target>
+
+	<target name="com_kbi">
+		<zip destfile="${dist}/${com_kbi}">
+			<zipfileset dir="${www}/components/com_kbi/" excludes="**/.svn"/>
+			<zipfileset dir="${www}/administrator/components/com_kbi/" prefix="administrator" excludes="**/.svn"/>
+			<zipfileset file="readme.txt"/>
+		</zip>
+	</target>
+
+	<target name="plg_kbi">
+		<zip destfile="${dist}/${plg_kbi}">
+			<zipfileset dir="${www}/plugins/content/" excludes="**/.svn">
+				<include name="kbi.php"/>
+				<include name="kbi.xml"/>
+			</zipfileset>
+			<zipfileset file="readme.txt"/>
+		</zip>
+	</target>
+
+	<target name="plg_kbinclude">
+		<zip destfile="${dist}/${plg_kbinclude}">
+			<zipfileset dir="${www}/plugins/editors-xtd/" excludes="**/.svn">
+				<include name="kbinclude.php"/>
+				<include name="kbinclude.xml"/>
+			</zipfileset>
+			<zipfileset file="readme.txt"/>
+		</zip>
+	</target>
+
+	<target name="com_ardesigner">
+		<zip destfile="${dist}/${com_ardesigner}">
+			<zipfileset dir="${www}/components/com_ardesigner/" excludes="**/.svn"/>
+			<zipfileset file="readme.txt"/>
+		</zip>
+	</target>
+
+	<target name="plg_jucene">
+		<zip destfile="${dist}/${plg_jucene}">
+			<zipfileset dir="${www}/plugins/search/" includes="jucene.*" excludes="**/.svn"/>
+		</zip>
+	</target>
+
+	<target name="com_jucene">
+		<zip destfile="${dist}/${com_jucene}">
+			<zipfileset dir="${www}/components/com_jucene/" excludes="**/.svn"/>
+			<zipfileset dir="${www}/administrator/components/com_jucene/" prefix="administrator" excludes="**/.svn"/>
+		</zip>
+	</target>
+
+	<target name="mod_jucene">
+		<zip destfile="${dist}/${mod_jucene}">
+			<zipfileset dir="${www}/modules/mod_jucene/" excludes="**/.svn" />
+		</zip>
+	</target>
+
+	<target description="deletes all previously created packages by name" name="clean">
+		<delete>
+			<fileset dir="${dist}">
+				<include name="${plg_kbilib}" />
+				<include name="${com_kbi}" />
+				<include name="${plg_kbi}" />
+				<include name="${plg_kbinclude}" />
+				<include name="${com_ardesigner}" />
+
+				<include name="${plg_jucene}" />
+				<include name="${com_jucene}" />
+				<include name="${mod_jucene}" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target description="deletes all packages in ${dist} folder" name="clean-all">
+		<delete>
+			<fileset dir="${dist}">
+				<include name="*" />
+			</fileset>
+		</delete>
+	</target>
+</project>

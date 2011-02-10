@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="kbi">
+	<name>Knowledge Base Integration Library</name>
+	<author>Andrej Hazucha</author>
+	<creationDate>April 2010</creationDate>
+	<copyright>Copyright (C) 2010. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>rewko@centrum.cz</authorEmail>
+	<authorUrl>www.rewko.eu</authorUrl>
+	<version>0.9</version>
+	<description>
+		The Knowledge Base Include (KBI) library, which consists of communication procedures and CMS interfaces. This allows to use one implementation in various CMSs.
+	</description>
+	<files>
+		<filename plugin="kbi">IKBIntegrator.php</filename>
+		<filename plugin="kbi">KBIntegrator.php</filename>
+		<filename plugin="kbi">Ontopia.php</filename>
+		<filename plugin="kbi">Semsol.php</filename>
+		<filename plugin="kbi">XQuery.php</filename>
+	</files>
+</install>
