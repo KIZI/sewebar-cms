@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+ <params>
+  <param name="index_path" type="folderlist" default="search_index" label="Select a folder" directory="administrator/components/com_jucene" filter="" exclude="" stripext="" />
+  <param name="index_name" type="text" default="index" label="Name of an index" size="100" description="Define a name of you search index"/>
+ </params>
+</config>
