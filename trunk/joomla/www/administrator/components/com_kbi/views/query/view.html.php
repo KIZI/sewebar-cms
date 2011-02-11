@@ -1,6 +1,6 @@
 <?php 
 /**
- * @version		$Id: view.html.php 1602 2010-11-06 12:21:19Z andrej $
+ * @version		$Id$
  * @package		com_kbi
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.

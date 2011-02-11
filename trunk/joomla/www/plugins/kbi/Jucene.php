@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: Jucene.php 1788 2011-02-06 21:15:22Z andrej $
+ * @version		$Id$
  * @package		KBI
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.
