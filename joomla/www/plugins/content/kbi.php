@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' );
 /**
- * @version		$Id: kbi.php 1586 2010-10-24 22:32:27Z andrej $
+ * @version		$Id$
  * @package		content/kbi
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.

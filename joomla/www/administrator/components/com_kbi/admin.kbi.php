@@ -2,7 +2,7 @@
 /**
  * Entry point for component. It switches to corresponding controller given by paramter.
  * 
- * @version		$Id: admin.kbi.php 1661 2010-12-19 12:42:45Z andrej $
+ * @version		$Id$
  * @package		com_kbi
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.

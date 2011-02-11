@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: KBIntegrator.php 1787 2011-02-06 14:42:04Z andrej $
+ * @version		$Id$
  * @package		KBI
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.
