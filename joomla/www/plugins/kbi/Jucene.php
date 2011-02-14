@@ -8,7 +8,7 @@
  */
 
 require_once 'KBIntegratorSynchronable.php';
-require_once dirname(__FILE__).'/../../administrator/components/com_jucene/controllers/controller.php';
+//require_once dirname(__FILE__).'/../../administrator/components/com_jucene/controllers/controller.php';
 
 /**
  * IKBIntegrator implementation for jucene (Joomla + Lucene).
@@ -24,7 +24,7 @@ class Jucene extends KBIntegratorSynchronable
 
 	public function __construct(Array $config)
 	{
-		parent::__contruct($config);
+		parent::__construct($config);
 	}
 
 	public function queryPost($query)

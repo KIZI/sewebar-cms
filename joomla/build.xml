@@ -119,4 +119,12 @@
 			</fileset>
 		</delete>
 	</target>
+
+	<target name="doc">
+		<exec command="phpdoc -d www/plugins/kbi/ --target doc --packageoutput KBI"/>
+	</target>
+	
+	<target name="tests">
+		<exec command="phpunit tests"/>
+	</target>
 </project>

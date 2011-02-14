@@ -82,7 +82,7 @@ class KBIntegrator implements IKBIntegrator
 		$this->config['port'] = $value;
 	}
 
-	public function __contruct(Array $config = array())
+	public function __construct(Array $config = array())
 	{
 		if(isset($config['params']) && !empty($config['params'])) {
 			$params = $this->parseNameValues($config['params']);
