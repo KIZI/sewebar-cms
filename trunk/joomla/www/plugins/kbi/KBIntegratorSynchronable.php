@@ -7,8 +7,8 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-require_once 'IKBIntegrator.php';
-require_once 'ISynchronable.php';
+require_once dirname(__FILE__).'/KBIntegrator.php';
+require_once dirname(__FILE__).'/ISynchronable.php';
 
 /**
  * Generic implementation for IKBIntegrator.

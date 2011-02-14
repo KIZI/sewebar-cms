@@ -7,6 +7,8 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
+require_once dirname(__FILE__).'/KBIntegrator.php';
+
 /**
  * IKBIntegrator implementation for OKS.
  *
@@ -36,7 +38,7 @@ class Ontopia extends KBIntegrator
 
 	public function __construct($config)
 	{
-		parent::__contruct($config);
+		parent::__construct($config);
 	}
 
 	public function queryGet($query) {

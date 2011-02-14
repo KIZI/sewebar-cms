@@ -38,7 +38,7 @@ class XQuery extends KBIntegratorSynchronable
 
 	public function __construct(Array $config)
 	{
-		parent::__contruct($config);
+		parent::__construct($config);
 	}
 
 	public function queryPost($query) {
