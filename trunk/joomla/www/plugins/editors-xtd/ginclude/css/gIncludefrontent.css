@@ -1,0 +1,14 @@
+/*
+to be refenced from main joomla template
+ */
+.mceContentBody div.gincludeDiv{
+  background-color: rgb(255,255,153) !important;
+  border: 1px dotted red !important;
+}
+.mceContentBody div.gincludeDiv div.gincludeTitleDiv {
+  color: red;
+  display: block !important;
+}
+
+
+div.gincludeTitleDiv { display:none; }
