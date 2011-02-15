@@ -1,0 +1,61 @@
+/* CSS Document */
+
+div.level1Div {
+  background-color: rgb(250,250,250);
+  margin: 5px 0px 5px 0px;
+  border: 1px dotted rgb(200,200,200) ;
+  padding:5px;
+}
+div.level1Div:hover {
+  background-color: rgb(255,255,204);
+  border: 1px dotted rgb(0,51,102) ;
+}
+div.level2Div {
+  background-color: rgb(245,245,245);
+  border: 1px dotted rgb(200,200,200) ;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+}
+div.level2Div:hover {
+  border:1px dotted rgb(0,51,102);
+  background-color:rgb(255,255,240);
+}
+div.level3Div {
+  background-color: rgb(250,250,250);
+  margin: 5px 0px 5px 0px;
+  border: 1px dotted rgb(200,200,200) ;
+  padding:5px;
+}
+div.level3Div:hover {
+  border: 1px dotted maroon;
+  background-color:white;
+}
+
+div.level1Div h2{
+  margin-top: 10px;
+  margin-left: 2px;
+}
+
+                /*
+div.linksDiv a{
+  color: green;           
+}             */
+div.linksDiv {
+  margin: 5px 0px 5px 0px;
+}
+
+
+.infotext {
+  font-style: italic;
+  color: navy;
+}
+
+.missing {
+  color: red;
+}
+
+div.navigationDiv {
+  margin-bottom: 20px;
+  padding:4px;
+  border: 1px dotted rgb(255,255,204) ;
+}
