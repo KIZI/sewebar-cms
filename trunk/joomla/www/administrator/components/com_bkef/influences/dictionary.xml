@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<BKEFDictionary>
+    <Author>Daniel Šťastný</Author>
+    <Date>2009</Date>
+    <Strings>
+        
+        <str lang="en" name="Navigation">Navigation</str>
+        <str lang="cz" name="Navigation">Navigace</str>
+        
+        <str lang="en" name="Meta attributes">Meta attributes</str>
+        <str lang="cz" name="Meta attributes">Meta-atributy</str>
+        
+        <str lang="en" name="Mutual influences">Mutual influences</str>
+        <str lang="cz" name="Mutual influences">Vzájemné vztahy</str>
+        
+        <str lang="en" name="Generate matrix">Generate matrix</str>
+        <str lang="cz" name="Generate matrix">Generovat matici</str>
+        
+        <str lang="en" name="level">level</str>
+        <str lang="cz" name="level">úroveň</str>
+        
+        <str lang="en" name="Author">Author</str>
+        <str lang="cz" name="Author">Autor</str>
+        
+        <str lang="en" name="Author-format">Author of this format</str>
+        <str lang="cz" name="Author-format">Autor formátu</str>
+        
+        <str lang="en" name="Annotation">Annotation</str>
+        <str lang="cz" name="Annotation">Anotace</str>
+        
+        <str lang="en" name="Parent-metaattribute">Parent-metaattribute</str>
+        <str lang="cz" name="Patent-metaattribute">Rodičovský meta-atribut</str>
+        
+        <str lang="en" name="Variability">Variability</str>
+        <str lang="cz" name="Variability">Variabilita</str>
+        
+        <str lang="en" name="Formats">Formats</str>
+        <str lang="cz" name="Formats">Formáty</str>
+        
+        <str lang="en" name="Name">Name</str>
+        <str lang="cz" name="Name">Jméno</str>
+        
+        <str lang="en" name="Data type">Data type</str>
+        <str lang="cz" name="Data type">Datový typ</str>
+        
+        <str lang="en" name="Value type">Value type</str>
+        <str lang="cz" name="Value type">Hodnotový typ</str>
+        
+        <str lang="en" name="Value annotations">Value annotations</str>
+        <str lang="cz" name="Value annotations">Anotace hodnot</str>
+        
+        <str lang="en" name="Value">Value</str>
+        <str lang="cz" name="Value">Hodnota</str>
+        
+        <str lang="en" name="Allowed range">Allowed range</str>
+        <str lang="cz" name="Allowed range">Přípustný rozsah</str>
+        
+        <str lang="en" name="Enumeration">Enumeration</str>
+        <str lang="cz" name="Enumeration">Výčet hodnot</str>
+        
+        <str lang="en" name="Interval">Interval</str>
+        <str lnag="cz" name="Interval">Interval</str>
+        
+        <str lang="en" name="Collation">Collation</str>
+        <str lang="cz" name="Collation">Pořadí hodnot</str>
+        
+        <str lang="en" name="Type-collation">Type</str>
+        <str lang="cz" name="Type-collation">Druh pořadí</str>
+        
+        <str lang="en" name="Sense">Sense</str>
+        <str lang="cz" name="Sense">Smysl</str>
+        
+        <str lang="en" name="Values">Values</str>
+        <str lang="cz" name="Values">Hodnoty</str>
+        
+        <str lang="en" name="Preprocessing hints">Preprocessing hints</str>
+        <str lang="cz" name="Preprocessing hints">Příprava meta-atributů</str>
+        
+        <str lang="en" name="Characteristics">Characteristics ~ list of appropriate values</str>
+        <str lang="cz" name="Characteristics">Charakteristika - seznam přípustných hodnot</str>
+        
+        <str lang="en" name="Intervals">Intervals</str>
+        <str lang="cz" name="Intervals">Intervaly</str>
+        
+        <str lang="en" name="Equidistant">Equidistant</str>
+        <str lang="cz" name="Equidistant">Rozdělení na stejné části</str>
+        
+        <str lang="en" name="Range">Range</str>
+        <str lang="cz" name="Range">Rozsah</str>
+        
+        <str lang="en" name="Step">Step</str>
+        <str lang="cz" name="Step">Krok</str>
+        
+        <str lang="en" name="Equifrequent interval">Equifrequent interval</str>
+        <str lang="cz" name="Equifrequent interval">Ekvifrekventní interval</str>
+        
+        <str lang="en" name="Count">Count (number of groups)</str>
+        <str lang="cz" name="Count">Počet skupin</str>
+        
+        <str lang="en" name="Value descriptions">Value descriptions</str>
+        <str lang="cz" name="Value descriptions">Popis hodnot</str>
+        
+        <str lang="en" name="Type-desc">Type</str>
+        <str lang="cz" name="Type-desc">Druh</str>
+        
+        <str lang="en" name="Attributes">Attributes</str>
+        <str lang="cz" name="Attributes">Atributy</str>
+        
+        <str lang="en" name="Influence scope">Influence scope</str>
+        <str lang="cz" name="Influence scope">Rámec vztahu</str>
+        
+        <str lang="en" name="Knowledge validity">Knowledge validity</str>
+        <str lang="cz" name="Knowledge validity">Ověření znalosti</str>
+        
+        <str lang="en" name="Format name">Format name</str>
+        <str lang="cz" name="Format name">Jméno formátu</str>
+        
+        <str lang="en" name="BetweenAttributes">Between attributes</str>
+        <str lang="cz" name="BetweenAttributes">Mezi Atributy </str>
+        
+        <str lang="en" name="DoNotCare">is influence but it isn't interesting.</str>
+        <str lang="cz" name="DoNotCare"> je závislost, ale není zajímavá.</str>
+        
+        <str lang="en" name="Functional">is strong functional influence.</str>
+        <str lang="cz" name="Functional"> je silná funkční závislost.</str>
+        
+        <str lang="en" name="NegativeBooleanBeg">Truth of the attribute</str>
+        <str lang="cz" name="NegativeBooleanBeg">Pravdivost atributu </str>
+        
+        <str lang="en" name="IfValues">If values of the attribute</str>
+        <str lang="cz" name="IfValues">Pokud se hodnoty atributu </str>
+        
+        <str lang="en" name="NegativeFrequency">increaces, the relative frequency of clients having certain value in the attribute decreases</str>
+        <str lang="cz" name="NegativeFrequency"> zvyšují, snižuje se relativní frekvence pacientů majících určitou hodnotu v atributu </str>
+        
+        <str lang="en" name="ChooseValueDown">Choose this value below</str>
+        <str lang="cz" name="ChooseValueDown"> Tuto hodnotu nastavte níže</str>
+        
+        <str lang="en" name="NegativeInfluence">increases, values of the attribute decreases</str>
+        <str lang="cz" name="NegativeInfluence"> zvyšují, snižují se  hodnoty atributu </str>
+        
+        <str lang="en" name="NoneInfl">there is no influence</str>
+        <str lang="cz" name="NoneInfl"> není žádná závislost</str>
+        
+        <str lang="en" name="IsAtributeRight">Truth of the attribute</str>
+        <str lang="cz" name="IsAtributeRight">Pravdivost atributu </str>
+        
+        <str lang="en" name="PositiveBoolean">the relative frequency of truthful values of the attribute</str>
+        <str lang="cz" name="PositiveBoolean"> zvyšuje relativní frekvenci pravdivých hodnot atributu </str>
+        
+        <str lang="en" name="PositiveFrequency1">If values of the attribute increases</str>
+        <str lang="cz" name="PositiveFrequency1">Pokud se zvyšují hodnoty atributu </str>
+        
+        <str lang="en" name="PositiveFrequency2">the relative frequency of clients having certain value in the attribute increases</str>
+        <str lang="cz" name="PositiveFrequency2"> zvyšuje se relativní frekvence pacientù majících určitou hodnotu v atributu </str>
+        
+        <str lang="en" name="NegativeBoolean">decrease the relative frequency of truthful values of the attribute</str>
+        <str lang="cz" name="NegativeBoolean"> snižuje relativní frekvenci pravdivých hodnot atributu </str>
+        
+        <str lang="en" name="PositiveInfluence1">If values of the attribute</str>
+        <str lang="cz" name="PositiveInfluence1">Pokud se hodnoty atributu </str>
+        
+		<str lang="en" name="PositiveInfluence2">increases, values of the attribute also increases</str>
+        <str lang="cz" name="PositiveInfluence2"> zvyšují, zvyšují se i hodnoty atributu </str>
+        
+        <str lang="en" name="SomeInfluence">is dependence, but unknown</str>
+        <str lang="cz" name="SomeInfluence"> je závislost, ale není známá</str>
+        
+		<str lang="en" name="Unknown1">can be dependence, but details are unknown</str>
+        <str lang="cz" name="Unknown1"> může být závislost, ale detaily nejsou známy</str>
+        
+        <str lang="en" name="Choose">Choose</str>
+        <str lang="cz" name="Choose">Vyberte</str>
+        
+        <str lang="en" name="Proven">Proven</str>
+        <str lang="cz" name="Proven">Prokázáno</str>
+        
+        <str lang="en" name="Rejected">Rejected</str>
+        <str lang="cz" name="Rejected">Zavrhnuto</str>
+        
+        <str lang="en" name="Unknown">Unknown</str>
+        <str lang="cz" name="Unknown">Neznámo</str>
+        
+        <str lang="en" name="Background Knowledge">Background knowledge</str>
+        <str lang="cz" name="Background Knowledge">Podkladové znalosti</str>
+        
+        <str lang="en" name="Save">Save</str>
+        <str lang="cz" name="Save">Ulož</str>
+        
+        <str lang="en" name="Add Annotation">Add Annotation</str>
+        <str lang="cz" name="Add Annotation">Přidej anotaci</str>
+    </Strings>
+</BKEFDictionary>
