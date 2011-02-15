@@ -239,6 +239,11 @@ public class XQuery_servlet extends HttpServlet {
     	int mappedAction = mapAction(action);
         String output = "";
 
+        if ((mappedAction != 2 && mappedAction != 7 && mappedAction != 8 && mappedAction != 10 && mappedAction != 13 && mappedAction != 14) && variable.equals("")) {
+            //output += "<MA>"+mappedAction+"</MA>";
+            output += "<error>Neni zadan parametr ID!</error>";
+        } else {
+
         switch (mappedAction) {
             case 0: output += "<error>Zadana akce neexistuje</error>"; break;
             case 1: if (content.equals("")) {
@@ -278,7 +283,11 @@ public class XQuery_servlet extends HttpServlet {
                         content = content.toString();
                         output += bh.indexDocument(content, variable, mgr, containerName, useTransformation, xsltPath);
                     } break;
-            case 10: output += bh.indexDocumentMultiple(content, mgr, containerName, useTransformation, xsltPath); break;
+            case 10: if (content.equals("")) {
+                        output += "<error>Neni zadano umisteni slozky!</error>";
+                    } else {
+                        output += bh.indexDocumentMultiple(content, mgr, containerName, useTransformation, xsltPath); break;
+                    } break;
             case 11: if (variable == null){
                         output += "<error>Neni zadan nazev dokumentu</error>";
                     } else {
@@ -293,6 +302,7 @@ public class XQuery_servlet extends HttpServlet {
                     } break;
             case 14: output += tester.runTest(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError); break;
             default: output += "<error>Zadana akce neexistuje</error>"; break;
+            }
         }
 	return (output);
     }
