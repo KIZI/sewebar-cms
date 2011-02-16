@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="SEWEBAR Publisher" default="build" basedir=".">
+	<description>SEWEBAR Publisher application for publishing PMML reports from LISp-Miner</description>
+	<target name="build" description="Build SEWEBAR Publisher">
+		<mkdir dir="${utils.dir}"/>
+		<csc target="exe" output="${path::combine(utils.dir,'SewebarPublisher.exe')}" debug="${debug}" optimize="${optimize}">
+			<nowarn>
+				<warning number="1591"/>
+			</nowarn>
+			<sources>
+				<include name="*.cs"/>
+			</sources>
+			<references>
+				<include name="${path::combine(serverbin.dir,'Sewebar.dll')}"/>
+				<include name="System.dll"/>
+				<include name="System.Data.dll"/>
+				<include name="System.Drawing.dll"/>
+				<include name="System.Xml.dll"/>
+				<include name="System.Windows.Forms.dll"/>
+			</references>
+		</csc>
+		<copy todir="${utils.dir}">
+			<fileset basedir="${serverbin.dir}">
+				<include name="Sewebar.dll"/>
+				<include name="CookComputing.XmlRpcV2.dll"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset basedir="${utils.dir}">
+				<include name="SewebarPublisher.*"/>
+				<include name="Sewebar.dll"/>
+				<include name="CookComputing.XmlRpcV2.dll"/>
+			</fileset>
+		</delete>
+	</target>
+</project>
