@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="xmlrpc">
+	<name>Joomla! XML-RPC Upload for .xml files</name>
+	<author>Jakub Balhar</author>
+	<creationDate>May 2009</creationDate>
+	<copyright>
+		
+	</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>jakub.balhar@centrum.cz</authorEmail>
+	<authorUrl>www.dvojka.cz</authorUrl>
+	<version>1.5</version>
+	<description>Joomla! XML-RPC for uploading XML files.
+	Plugin exposes two methods one uploadXML.listFiles and uploadXML.uploadFile. Both services are restricted only two documents that are in *Sekce* and *Kategorie* parameters. 	If *XSD/XSL Path* is set, the uploadXML.uploadFile uploads the document only if it finds a validating schema in the designated folder. If there is an xslt transformation with the same name as the validating schema, it is applied to the document before it is saved to the database.
+	Both services perform authentication and authorization. The *XSD/XSL Path* is relative to Joomla root, typical setting: 'xml/ws/'.
+	
+	</description>
+	<files>
+		<filename plugin="uploadxml">uploadxml.php</filename>
+	</files>
+	<params>
+		<param name="sectionid" type="section" default="0"
+			label="Sekce" description="PARAMSECTION" />
+		<param name="catid" type="category" default="1"
+			label="Kategorie" description="PARAMCATEGORY" />
+		<param name="xmlpath" label="XSD/XSL path" type="text" description="Adresar se schematy a transformacemi" />
+		
+		<param name="publikovat" type="radio" default="0" label="Mají být články defaultně publikovány:">
+
+			<option value="0">Ne</option>
+			<option value="1">Ano</option>
+		</param>
+		<param name="groupsArticles" label="Id of group connected to articles it has right to edit" type="textarea" rows="60" cols="20" description="Group ArticleId;ArticleId" />
+		<param name="groupUsers" label="User Id connected to his group" type="textarea" rows="60" cols="20" description="Group UserId;UserId" />
+
+	</params>
+</install>
