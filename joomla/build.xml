@@ -2,8 +2,10 @@
 <project default="all">
 	<description>Builds Joomla! installation packages</description>
 
-	<property name="dist" location="meta/installers/"/>
+	<property name="dist" location="installers/"/>
 	<property name="www" location="www/"/>
+	<property name="tests" location="tests/"/>
+	<property name="docs" location="meta/docs/"/>
 
 	<tstamp>
 		<format property="version" pattern="yyyy-MM-dd" locale="cs,CZ"/>
@@ -38,7 +40,7 @@
 	<target name="plg_kbilib">
 		<zip destfile="${dist}/${plg_kbilib}">
 			<zipfileset dir="${www}/plugins/kbi/" excludes="**/.svn"/>
-			<zipfileset file="readme.txt"/>
+			<zipfileset file="${docs}/kbi/readme.txt"/>
 		</zip>
 	</target>
 
@@ -46,7 +48,7 @@
 		<zip destfile="${dist}/${com_kbi}">
 			<zipfileset dir="${www}/components/com_kbi/" excludes="**/.svn"/>
 			<zipfileset dir="${www}/administrator/components/com_kbi/" prefix="administrator" excludes="**/.svn"/>
-			<zipfileset file="readme.txt"/>
+			<zipfileset file="${docs}/kbi/readme.txt"/>
 		</zip>
 	</target>
 
@@ -56,7 +58,7 @@
 				<include name="kbi.php"/>
 				<include name="kbi.xml"/>
 			</zipfileset>
-			<zipfileset file="readme.txt"/>
+			<zipfileset file="${docs}/kbi/readme.txt"/>
 		</zip>
 	</target>
 
@@ -66,14 +68,14 @@
 				<include name="kbinclude.php"/>
 				<include name="kbinclude.xml"/>
 			</zipfileset>
-			<zipfileset file="readme.txt"/>
+			<zipfileset file="${docs}/kbi/readme.txt"/>
 		</zip>
 	</target>
 
 	<target name="com_ardesigner">
 		<zip destfile="${dist}/${com_ardesigner}">
 			<zipfileset dir="${www}/components/com_ardesigner/" excludes="**/.svn"/>
-			<zipfileset file="readme.txt"/>
+			<zipfileset file="${docs}/kbi/readme.txt"/>
 		</zip>
 	</target>
 
@@ -123,8 +125,8 @@
 	<target name="doc">
 		<exec command="phpdoc -d www/plugins/kbi/ --target doc --packageoutput KBI"/>
 	</target>
-	
-	<target name="tests">
-		<exec command="phpunit tests"/>
+
+	<target description="runs PHPUnit tests" name="tests">
+		<exec command="phpunit ${tests}"/>
 	</target>
 </project>
