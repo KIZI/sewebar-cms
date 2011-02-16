@@ -7,7 +7,7 @@
 {{{
 - joomla
   |- meta
-    |- docs - userdocumentation for extensions
+    |- docs - user documentation for extensions
     |- customization - template and settings modifications
     |- db - database backups and/or examples with description
   |- www - joomla extensions in native installation structure with joomla ignores
