@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project name="Sewebar.dll" default="build" basedir=".">
+	<target name="build">
+		<csc target="library" output="${path::combine(serverbin.dir,'Sewebar.dll')}" debug="${debug}" optimize="${optimize}">
+			<references>
+				<include name="System.dll" />
+				<include name="System.Data.dll" />
+				<include name="${path::combine(lib.dir,'CookComputing.XmlRpcV2.dll')}" />
+			</references>
+			<sources>
+				<include name="**.cs" />
+			</sources>			
+		</csc>
+		<!-- 
+		<copy todir="${frontendbin.dir}">
+			<fileset basedir="${serverbin.dir}">
+				<include name="CvsReader.*"/>
+			</fileset>
+		</copy>
+		-->
+	</target>
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset basedir="${serverbin.dir}">
+				<include name="Sewebar.*"/>
+			</fileset>
+		</delete>
+	</target>
+</project>
