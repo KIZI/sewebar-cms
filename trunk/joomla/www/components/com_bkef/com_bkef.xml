@@ -1,190 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0">
-  <name>BKEF</name>
-  <creationDate>Sommer 2009</creationDate>
-  <author>Stanislav Vojíř</author>
-  <authorEmail>stanislav.vojir@gmail.com</authorEmail>
-  <copyright>(C) 2009 All rights reserved.</copyright>
-  <license>GNU/GPL</license>
-  <version>1.5.0</version>
-  <description>
+	<name>BKEF</name>
+	<creationDate>Sommer 2009</creationDate>
+	<author>Stanislav Vojíř</author>
+	<authorEmail>stanislav.vojir@gmail.com</authorEmail>
+	<copyright>(C) 2009 All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<version>1.5.0</version>
+	<description>
     <![CDATA[
       Komponenta pro práci s BKEF
     ]]></description>
-  <!-- FRONT-END --> 
-  <files>
-    <filename>bkef.php</filename>
-    <filename>com_bkef.xml</filename>
-    <filename>controller.php</filename>
-    <filename>toolbar.bkef.html.php</filename>
-    <filename>css/component.css</filename>
-    <filename>css/general.css</filename>
-    <filename>css/main.css</filename>
-    <filename>css/style.css</filename>
-    <filename>influences/bkef-styl-jakub.xsl</filename>
-    <filename>influences/influences.js</filename>
-    <filename>influences/saveBKEF.php</filename>
-    <filename>influences/style.css</filename>
-    <filename>influences/dictionary.xml</filename>
-    <filename>influences/bkef-matrix-table.xsl</filename>
-    <filename>influences/bkef-matrix-influence.xsl</filename>
-    <filename>influences/img/doNotCare.png</filename>
-    <filename>influences/img/doNotCare.svg</filename>
-    <filename>influences/img/functional.png</filename>
-    <filename>influences/img/functional.svg</filename>
-    <filename>influences/img/negativeBoolean.png</filename>
-    <filename>influences/img/negativeBoolean.svg</filename>
-    <filename>influences/img/negativeFrequency.png</filename>
-    <filename>influences/img/negativeFrequency.svg</filename>
-    <filename>influences/img/negativeInfluence.png</filename>
-    <filename>influences/img/negativeInfluence.svg</filename>
-    <filename>influences/img/none.png</filename>
-    <filename>influences/img/none.svg</filename>
-    <filename>influences/img/notSet.png</filename>
-    <filename>influences/img/notSet.svg</filename>
-    <filename>influences/img/positiveBoolean.png</filename>
-    <filename>influences/img/positiveBoolean.svg</filename>
-    <filename>influences/img/positiveFrequency.png</filename>
-    <filename>influences/img/positiveFrequency.svg</filename>
-    <filename>influences/img/positiveInfluence.png</filename>
-    <filename>influences/img/positiveInfluence.svg</filename>
-    <filename>influences/img/someInfluence.png</filename>
-    <filename>influences/img/someInfluence.svg</filename>
-    <filename>influences/img/unknown.png</filename>
-    <filename>influences/img/unknown.svg</filename>
-    <filename>models/bkef.php</filename>
-    <filename>views/edit/article.html.php</filename>
-    <filename>views/edit/articles.html.php</filename>
-    <filename>views/edit/format.html.php</filename>
-    <filename>views/edit/groupMetaAttribute.html.php</filename>
-    <filename>views/edit/metaAttribute.html.php</filename>
-    <filename>views/edit/newArticle.html.php</filename>
-    <filename>views/iframe/addChildMeta.html.php</filename>
-    <filename>views/iframe/addExhaustiveEnumerationBinValue.html.php</filename>
-    <filename>views/iframe/addIntervalEnumerationBinValue.html.php</filename>
-    <filename>views/iframe/addPreprocessingHint.html.php</filename>
-    <filename>views/iframe/addValueDescription.html.php</filename>
-    <filename>views/iframe/addValueDescriptionValue.html.php</filename>
-    <filename>views/iframe/delAnnotation.html.php</filename>
-    <filename>views/iframe/delChildMeta.html.php</filename>
-    <filename>views/iframe/delExhaustiveEnumerationBin.html.php</filename>
-    <filename>views/iframe/delFormat.html.php</filename>
-    <filename>views/iframe/delIntervalEnumerationBin.html.php</filename>
-    <filename>views/iframe/delMetaAttribute.html.php</filename>
-    <filename>views/iframe/delPreprocessingHint.html.php</filename>
-    <filename>views/iframe/delValueDescription.html.php</filename>
-    <filename>views/iframe/editAnnotation.html.php</filename>
-    <filename>views/iframe/editCollation.html.php</filename>
-    <filename>views/iframe/editCollationEnumeration.html.php</filename>
-    <filename>views/iframe/editEquifrequentInterval.html.php</filename>
-    <filename>views/iframe/editFormat.html.php</filename>
-    <filename>views/iframe/editGroupMetaAttribute.html.php</filename>
-    <filename>views/iframe/editMetaAttribute.html.php</filename>
-    <filename>views/iframe/editRange.html.php</filename>
-    <filename>views/iframe/editValueDescription.html.php</filename>
-    <filename>views/iframe/equidistant.html.php</filename>
-    <filename>views/iframe/exhaustiveEnumerationAddBin.html.php</filename>
-    <filename>views/iframe/intervalEnumerationAddBin.html.php</filename>
-    <filename>views/iframe/renamePreprocessingHint.html.php</filename>
-    <filename>views/influences/articles.html.php</filename>
-    <filename>views/influences/influences.html.php</filename>
-    <filename>js/wz_tooltip.js</filename>
-  </files>
-  <languages folder="lang">
-    <language tag="en-GB">en-GB.com_bkef.ini</language>  
-    <language tag="cs-CZ">cs-CZ.com_bkef.ini</language>
-  </languages>
-    
-  <administration>
-    <!-- Administration Menu Section -->
-    <menu>BKEF</menu>
-    <submenu>
-      <menu link="option=com_bkef&amp;task=newArticle">New BKEF</menu>
-      <menu link="option=com_bkef&amp;task=selArticle">Edit MetaAttributes</menu>
-      <menu link="option=com_bkef&amp;task=influences">Edit Influences</menu>
-    </submenu>
-    <!-- Administration Main File Copy Section -->
-    <!-- Note the folder attribute: This attribute describes the folder    to copy FROM in the package to install therefore files copied    in this section are copied from /admin/ in the package -->
-    <files>
-      <filename>admin.bkef.php</filename>
-      <filename>com_bkef.xml</filename>
-      <filename>controller.php</filename>
-      <filename>toolbar.bkef.html.php</filename>
-      <filename>css/component.css</filename>
-      <filename>css/general.css</filename>
-      <filename>css/main.css</filename>
-      <filename>influences/bkef-styl-jakub.xsl</filename>
-      <filename>influences/influences.js</filename>
-      <filename>influences/saveBKEF.php</filename>
-      <filename>influences/style.css</filename>
-      <filename>influences/dictionary.xml</filename>
-      <filename>influences/bkef-matrix-table.xsl</filename>
-      <filename>influences/bkef-matrix-influence.xsl</filename>
-      <filename>influences/img/doNotCare.png</filename>
-      <filename>influences/img/doNotCare.svg</filename>
-      <filename>influences/img/functional.png</filename>
-      <filename>influences/img/functional.svg</filename>
-      <filename>influences/img/negativeBoolean.png</filename>
-      <filename>influences/img/negativeBoolean.svg</filename>
-      <filename>influences/img/negativeFrequency.png</filename>
-      <filename>influences/img/negativeFrequency.svg</filename>
-      <filename>influences/img/negativeInfluence.png</filename>
-      <filename>influences/img/negativeInfluence.svg</filename>
-      <filename>influences/img/none.png</filename>
-      <filename>influences/img/none.svg</filename>
-      <filename>influences/img/notSet.png</filename>
-      <filename>influences/img/notSet.svg</filename>
-      <filename>influences/img/positiveBoolean.png</filename>
-      <filename>influences/img/positiveBoolean.svg</filename>
-      <filename>influences/img/positiveFrequency.png</filename>
-      <filename>influences/img/positiveFrequency.svg</filename>
-      <filename>influences/img/positiveInfluence.png</filename>
-      <filename>influences/img/positiveInfluence.svg</filename>
-      <filename>influences/img/someInfluence.png</filename>
-      <filename>influences/img/someInfluence.svg</filename>
-      <filename>influences/img/unknown.png</filename>
-      <filename>influences/img/unknown.svg</filename>
-      <filename>models/bkef.php</filename>
-      <filename>views/edit/article.html.php</filename>
-      <filename>views/edit/articles.html.php</filename>
-      <filename>views/edit/format.html.php</filename>
-      <filename>views/edit/groupMetaAttribute.html.php</filename>
-      <filename>views/edit/metaAttribute.html.php</filename>
-      <filename>views/edit/newArticle.html.php</filename>
-      <filename>views/iframe/addChildMeta.html.php</filename>
-      <filename>views/iframe/addExhaustiveEnumerationBinValue.html.php</filename>
-      <filename>views/iframe/addIntervalEnumerationBinValue.html.php</filename>
-      <filename>views/iframe/addPreprocessingHint.html.php</filename>
-      <filename>views/iframe/addValueDescription.html.php</filename>
-      <filename>views/iframe/addValueDescriptionValue.html.php</filename>
-      <filename>views/iframe/delAnnotation.html.php</filename>
-      <filename>views/iframe/delChildMeta.html.php</filename>
-      <filename>views/iframe/delExhaustiveEnumerationBin.html.php</filename>
-      <filename>views/iframe/delFormat.html.php</filename>
-      <filename>views/iframe/delIntervalEnumerationBin.html.php</filename>
-      <filename>views/iframe/delMetaAttribute.html.php</filename>
-      <filename>views/iframe/delPreprocessingHint.html.php</filename>
-      <filename>views/iframe/delValueDescription.html.php</filename>
-      <filename>views/iframe/editAnnotation.html.php</filename>
-      <filename>views/iframe/editCollation.html.php</filename>
-      <filename>views/iframe/editCollationEnumeration.html.php</filename>
-      <filename>views/iframe/editEquifrequentInterval.html.php</filename>
-      <filename>views/iframe/editFormat.html.php</filename>
-      <filename>views/iframe/editGroupMetaAttribute.html.php</filename>
-      <filename>views/iframe/editMetaAttribute.html.php</filename>
-      <filename>views/iframe/editRange.html.php</filename>
-      <filename>views/iframe/editValueDescription.html.php</filename>
-      <filename>views/iframe/equidistant.html.php</filename>
-      <filename>views/iframe/exhaustiveEnumerationAddBin.html.php</filename>
-      <filename>views/iframe/intervalEnumerationAddBin.html.php</filename>
-      <filename>views/iframe/renamePreprocessingHint.html.php</filename>
-      <filename>views/influences/articles.html.php</filename>
-      <filename>views/influences/influences.html.php</filename>
-    </files>
-	  <languages folder="lang">
-      <language tag="en-GB">en-GB.com_bkef.ini</language> 
-      <language tag="cs-CZ">cs-CZ.com_bkef.ini</language>
-    </languages>
-  </administration>
+	<!-- FRONT-END -->
+	<files>
+		<filename>bkef.php</filename>
+		<filename>com_bkef.xml</filename>
+		<filename>controller.php</filename>
+		<filename>toolbar.bkef.html.php</filename>
+		<filename>css/component.css</filename>
+		<filename>css/general.css</filename>
+		<filename>css/main.css</filename>
+		<filename>css/style.css</filename>
+		<filename>influences/bkef-styl-jakub.xsl</filename>
+		<filename>influences/influences.js</filename>
+		<filename>influences/saveBKEF.php</filename>
+		<filename>influences/style.css</filename>
+		<filename>influences/dictionary.xml</filename>
+		<filename>influences/bkef-matrix-table.xsl</filename>
+		<filename>influences/bkef-matrix-influence.xsl</filename>
+		<filename>influences/img/doNotCare.png</filename>
+		<filename>influences/img/doNotCare.svg</filename>
+		<filename>influences/img/functional.png</filename>
+		<filename>influences/img/functional.svg</filename>
+		<filename>influences/img/negativeBoolean.png</filename>
+		<filename>influences/img/negativeBoolean.svg</filename>
+		<filename>influences/img/negativeFrequency.png</filename>
+		<filename>influences/img/negativeFrequency.svg</filename>
+		<filename>influences/img/negativeInfluence.png</filename>
+		<filename>influences/img/negativeInfluence.svg</filename>
+		<filename>influences/img/none.png</filename>
+		<filename>influences/img/none.svg</filename>
+		<filename>influences/img/notSet.png</filename>
+		<filename>influences/img/notSet.svg</filename>
+		<filename>influences/img/positiveBoolean.png</filename>
+		<filename>influences/img/positiveBoolean.svg</filename>
+		<filename>influences/img/positiveFrequency.png</filename>
+		<filename>influences/img/positiveFrequency.svg</filename>
+		<filename>influences/img/positiveInfluence.png</filename>
+		<filename>influences/img/positiveInfluence.svg</filename>
+		<filename>influences/img/someInfluence.png</filename>
+		<filename>influences/img/someInfluence.svg</filename>
+		<filename>influences/img/unknown.png</filename>
+		<filename>influences/img/unknown.svg</filename>
+		<filename>models/bkef.php</filename>
+		<filename>views/edit/article.html.php</filename>
+		<filename>views/edit/articles.html.php</filename>
+		<filename>views/edit/format.html.php</filename>
+		<filename>views/edit/groupMetaAttribute.html.php</filename>
+		<filename>views/edit/metaAttribute.html.php</filename>
+		<filename>views/edit/newArticle.html.php</filename>
+		<filename>views/iframe/addChildMeta.html.php</filename>
+		<filename>views/iframe/addExhaustiveEnumerationBinValue.html.php</filename>
+		<filename>views/iframe/addIntervalEnumerationBinValue.html.php</filename>
+		<filename>views/iframe/addPreprocessingHint.html.php</filename>
+		<filename>views/iframe/addValueDescription.html.php</filename>
+		<filename>views/iframe/addValueDescriptionValue.html.php</filename>
+		<filename>views/iframe/delAnnotation.html.php</filename>
+		<filename>views/iframe/delChildMeta.html.php</filename>
+		<filename>views/iframe/delExhaustiveEnumerationBin.html.php</filename>
+		<filename>views/iframe/delFormat.html.php</filename>
+		<filename>views/iframe/delIntervalEnumerationBin.html.php</filename>
+		<filename>views/iframe/delMetaAttribute.html.php</filename>
+		<filename>views/iframe/delPreprocessingHint.html.php</filename>
+		<filename>views/iframe/delValueDescription.html.php</filename>
+		<filename>views/iframe/editAnnotation.html.php</filename>
+		<filename>views/iframe/editCollation.html.php</filename>
+		<filename>views/iframe/editCollationEnumeration.html.php</filename>
+		<filename>views/iframe/editEquifrequentInterval.html.php</filename>
+		<filename>views/iframe/editFormat.html.php</filename>
+		<filename>views/iframe/editGroupMetaAttribute.html.php</filename>
+		<filename>views/iframe/editMetaAttribute.html.php</filename>
+		<filename>views/iframe/editRange.html.php</filename>
+		<filename>views/iframe/editValueDescription.html.php</filename>
+		<filename>views/iframe/equidistant.html.php</filename>
+		<filename>views/iframe/exhaustiveEnumerationAddBin.html.php</filename>
+		<filename>views/iframe/intervalEnumerationAddBin.html.php</filename>
+		<filename>views/iframe/renamePreprocessingHint.html.php</filename>
+		<filename>views/influences/articles.html.php</filename>
+		<filename>views/influences/influences.html.php</filename>
+		<filename>js/wz_tooltip.js</filename>
+	</files>
+	<languages folder="lang">
+		<language tag="en-GB">en-GB.com_bkef.ini</language>
+		<language tag="cs-CZ">cs-CZ.com_bkef.ini</language>
+	</languages>
+
+	<administration>
+		<!-- Administration Menu Section -->
+		<menu>BKEF</menu>
+		<submenu>
+			<menu link="option=com_bkef&amp;task=newArticle">New BKEF</menu>
+			<menu link="option=com_bkef&amp;task=selArticle">Edit MetaAttributes</menu>
+			<menu link="option=com_bkef&amp;task=influences">Edit Influences</menu>
+		</submenu>
+		<!-- Administration Main File Copy Section -->
+		<!-- Note the folder attribute: This attribute describes the folder to
+			copy FROM in the package to install therefore files copied in this section
+			are copied from /admin/ in the package -->
+		<files folder="administrator">
+			<filename>admin.bkef.php</filename>
+			<filename>controller.php</filename>
+			<filename>toolbar.bkef.html.php</filename>
+			<filename>css/component.css</filename>
+			<filename>css/general.css</filename>
+			<filename>css/main.css</filename>
+			<filename>influences/bkef-styl-jakub.xsl</filename>
+			<filename>influences/influences.js</filename>
+			<filename>influences/saveBKEF.php</filename>
+			<filename>influences/style.css</filename>
+			<filename>influences/dictionary.xml</filename>
+			<filename>influences/bkef-matrix-table.xsl</filename>
+			<filename>influences/bkef-matrix-influence.xsl</filename>
+			<filename>influences/img/doNotCare.png</filename>
+			<filename>influences/img/doNotCare.svg</filename>
+			<filename>influences/img/functional.png</filename>
+			<filename>influences/img/functional.svg</filename>
+			<filename>influences/img/negativeBoolean.png</filename>
+			<filename>influences/img/negativeBoolean.svg</filename>
+			<filename>influences/img/negativeFrequency.png</filename>
+			<filename>influences/img/negativeFrequency.svg</filename>
+			<filename>influences/img/negativeInfluence.png</filename>
+			<filename>influences/img/negativeInfluence.svg</filename>
+			<filename>influences/img/none.png</filename>
+			<filename>influences/img/none.svg</filename>
+			<filename>influences/img/notSet.png</filename>
+			<filename>influences/img/notSet.svg</filename>
+			<filename>influences/img/positiveBoolean.png</filename>
+			<filename>influences/img/positiveBoolean.svg</filename>
+			<filename>influences/img/positiveFrequency.png</filename>
+			<filename>influences/img/positiveFrequency.svg</filename>
+			<filename>influences/img/positiveInfluence.png</filename>
+			<filename>influences/img/positiveInfluence.svg</filename>
+			<filename>influences/img/someInfluence.png</filename>
+			<filename>influences/img/someInfluence.svg</filename>
+			<filename>influences/img/unknown.png</filename>
+			<filename>influences/img/unknown.svg</filename>
+			<filename>models/bkef.php</filename>
+			<filename>views/edit/article.html.php</filename>
+			<filename>views/edit/articles.html.php</filename>
+			<filename>views/edit/format.html.php</filename>
+			<filename>views/edit/groupMetaAttribute.html.php</filename>
+			<filename>views/edit/metaAttribute.html.php</filename>
+			<filename>views/edit/newArticle.html.php</filename>
+			<filename>views/iframe/addChildMeta.html.php</filename>
+			<filename>views/iframe/addExhaustiveEnumerationBinValue.html.php</filename>
+			<filename>views/iframe/addIntervalEnumerationBinValue.html.php</filename>
+			<filename>views/iframe/addPreprocessingHint.html.php</filename>
+			<filename>views/iframe/addValueDescription.html.php</filename>
+			<filename>views/iframe/addValueDescriptionValue.html.php</filename>
+			<filename>views/iframe/delAnnotation.html.php</filename>
+			<filename>views/iframe/delChildMeta.html.php</filename>
+			<filename>views/iframe/delExhaustiveEnumerationBin.html.php</filename>
+			<filename>views/iframe/delFormat.html.php</filename>
+			<filename>views/iframe/delIntervalEnumerationBin.html.php</filename>
+			<filename>views/iframe/delMetaAttribute.html.php</filename>
+			<filename>views/iframe/delPreprocessingHint.html.php</filename>
+			<filename>views/iframe/delValueDescription.html.php</filename>
+			<filename>views/iframe/editAnnotation.html.php</filename>
+			<filename>views/iframe/editCollation.html.php</filename>
+			<filename>views/iframe/editCollationEnumeration.html.php</filename>
+			<filename>views/iframe/editEquifrequentInterval.html.php</filename>
+			<filename>views/iframe/editFormat.html.php</filename>
+			<filename>views/iframe/editGroupMetaAttribute.html.php</filename>
+			<filename>views/iframe/editMetaAttribute.html.php</filename>
+			<filename>views/iframe/editRange.html.php</filename>
+			<filename>views/iframe/editValueDescription.html.php</filename>
+			<filename>views/iframe/equidistant.html.php</filename>
+			<filename>views/iframe/exhaustiveEnumerationAddBin.html.php</filename>
+			<filename>views/iframe/intervalEnumerationAddBin.html.php</filename>
+			<filename>views/iframe/renamePreprocessingHint.html.php</filename>
+			<filename>views/influences/articles.html.php</filename>
+			<filename>views/influences/influences.html.php</filename>
+		</files>
+		<languages folder="lang">
+			<language tag="en-GB">en-GB.com_bkef.ini</language>
+			<language tag="cs-CZ">cs-CZ.com_bkef.ini</language>
+		</languages>
+	</administration>
 </install>
