@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ar:GUHAFeatureList xmlns:ar="http://keg.vse.cz/ns/arfeatures_01"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+ mode="ARQuery"
+ procedure="4ft">
+    <UserInterface>
+        <AllowMultipleRules>false</AllowMultipleRules>
+    </UserInterface>
+    <RulePattern>        
+        <Antecedent minNumberOfBBAs="1" maxNumberOfBBAs="1"/>
+        <Consequent minNumberOfBBAs="1" maxNumberOfBBAs="1"/>
+        <Condition minNumberOfBBAs="0" maxNumberOfBBAs="1"/>
+        <GeneralConstraint minNumberOfBBAs="0"/>
+    </RulePattern>
+<SerializationOverride/>
+    <!-- Details for each building block -->
+    <BuildingBlocks>
+        <!-- The user does not have to  specify the threshold, but he can -->
+        <InterestMeasures threshold="prohibited">
+            <!-- Possible values: optional/mandatory/prohibited-->
+            <Types>
+                <!-- The user needs to choose the type of the interest measure -->
+                <Type>
+                    <!-- master name used for serialization -->
+                    <Name>Any Interest Measure</Name>
+                    <!-- display in GUI depending on locale -->
+                    <LocalizedName lang="en">Any Interest Measure</LocalizedName>
+                    <LocalizedName lang="cs">Jakákoliv míra zajímavosti</LocalizedName>                    
+                    <!-- For each interest measure, there are different fields displayed-->
+                    <!-- There is no field for this interest measure -->
+                </Type>
+            </Types>
+            <SupportedInterestMeasureCombinations>
+                <!-- List of allowed combinations of interest measures -->
+                <!-- If the resulting AR contains this combination of interest measures
+                    do not create the InterestMeasureSetting element (in TaskSetting/ARQuery modes)                    
+                    or do not create the IMValue elements in the AssociationRules mode.                    
+                -->
+                <SupportedIMCombination>
+                    <InterestMeasure>Any Interest Measure</InterestMeasure>
+                </SupportedIMCombination>                
+            </SupportedInterestMeasureCombinations>
+        </InterestMeasures>
+        <!-- defines how BBAs are created -->
+        <!-- coefficient is required for bbas -->
+        <BasicBooleanAttribute coefficient="required">
+            <Coefficient>
+                <!-- allowed coefficient types -->
+                <Type>
+                    <!-- only one type allowed -->
+                    <Name>One category</Name>
+                    <LocalizedName lang="cs">Jedna kategorie</LocalizedName>
+                    <LocalizedName lang="en">One category</LocalizedName>                    
+                    <!-- the UI should display one field for this UI -->
+                   
+                    <Field>
+                        <Name>category name</Name>
+                        <LocalizedName lang="en">category </LocalizedName>
+                        <LocalizedName lang="cs">kategorie</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <Datatype>listOfFieldValues</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+            </Coefficient>
+        </BasicBooleanAttribute>
+        <DerivedBooleanAttribute>                       
+            <NestingConstraints scope="allruleparts">
+                <MaxLevels>1</MaxLevels>              
+                <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="no"/>
+                    </Connectives>                    
+                </NestingConstraint>
+            </NestingConstraints>
+        </DerivedBooleanAttribute>
+    </BuildingBlocks>
+</ar:GUHAFeatureList>

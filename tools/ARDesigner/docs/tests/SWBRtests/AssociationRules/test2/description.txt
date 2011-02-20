@@ -1,0 +1,6 @@
+There are two rulse formulated:
+ duration(Nad 2 roky vcetne) OR NEG(district(Praha))  => statusAgregovane(dobry)
+sex(female) AND (duration(Nad 2 roky vcetne) OR NEG(district(Praha))) => statusAgregovane(dobry)
+
+Condition is not allowed
+Consequent must contain 0 op one BBA

@@ -1,0 +1,6 @@
+same as test1 but without negation
+
+Find all rules, where there is a BBA AD Scale [Loan Quality](Good) in antecedent  and  there is months [Loan Duration](&lt;24;INF&gt;) in consequent.
+There is no constraint on interest measure (Any Interest Measure)
+
+

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AR Builder output for mining -->
+<arb:ARBuilder mode="AssociationRules" xmlns:arb="http://keg.vse.cz/ns/arbuilder0_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd">
+    <DataDescription>
+    <Dictionary  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   numberOfFields="4"  sourceType="PMML"  sourceName="Barbora">    
+        <Field name="statusAgregovane" optype="categorical" dataType="string" derived="true">       
+            <Category frequency="2116">dobry</Category>         
+            <Category frequency="4065">stredni</Category>        
+            <Category frequency="289">spatny</Category>                
+        </Field>
+        <Field name="duration" optype="continuous" dataType="integer" derived="true">        
+            <Category frequency="4999">Nad 2 roky vcetne</Category>        
+            <Category frequency="1243">13 az 23</Category>        
+            <Category frequency="1181">Rok</Category>        
+        </Field>
+        <Field dataType="string" optype="categorical" name="district" derived="true">
+            <Category frequency="209">Brno</Category>        
+            <Category frequency="710">Praha</Category>        
+            <Category frequency="5262">Other</Category>        
+        </Field>
+        <Field dataType="string" optype="categorical" name="sex" derived="true">
+            <Category frequency="6181">F</Category>        
+        </Field>
+    </Dictionary>
+    </DataDescription>
+    <TaskSetting>
+        <!-- BBAPattern setting je skoro literal s tim ze neobsahuje negaci, ta se musi vytvorit pomoci DerivedBooleanAttributeSetting s typem Sign -->
+        <BBASettings>        
+        <BBASetting id="1"> 
+            <Name>statusAgregovane(SS[2-2])</Name>
+            <FieldRef>statusAgregovane</FieldRef>          
+            <Coefficient>
+                <Type>Subset</Type>
+                <MinimalLength>2</MinimalLength>
+                <MaximalLength>2</MaximalLength>                    
+            </Coefficient>            
+        </BBASetting>					
+        <BBASetting id="2">
+            <Name>duration(SS[1-1])</Name>
+            <FieldRef>duration</FieldRef>
+            <Coefficient>
+                <Type>Subset</Type>
+                <MinimalLength>1</MinimalLength>
+                <MaximalLength>1</MaximalLength>                    
+            </Coefficient>
+        </BBASetting>
+        <!-- u typu Fixed set nejsou maximalni a minimalni delky, ale vycet kategorii -->
+        <BBASetting id="3">
+            <Name>district(Praha)</Name>
+            <FieldRef>district</FieldRef>
+            <Coefficient>
+                <Type>One category</Type>
+                <Category>Praha</Category>
+            </Coefficient>        
+        </BBASetting>
+        <BBASetting id="4">
+            <Name>sex(SS[1-1])</Name>
+            <FieldRef>sex</FieldRef>
+            <Coefficient>
+                <Type>Subset</Type>
+                <MinimalLength>1</MinimalLength>
+                <MaximalLength>1</MaximalLength>                    
+            </Coefficient>
+        </BBASetting>        
+        </BBASettings>
+        <DBASettings>        
+        
+        <DBASetting type="Literal" id="5">
+            <Name>¬district(Praha)</Name>
+            <BASettingRef>3</BASettingRef>
+            <LiteralSign>Negative</LiteralSign>
+        </DBASetting>
+        <DBASetting type="Literal" id="6">
+            <Name>sex(SS[1-1])</Name>
+            <BASettingRef>4</BASettingRef>
+            <LiteralSign>Positive</LiteralSign>
+        </DBASetting>
+        <DBASetting type="Conjunction" id="7" >
+            <Name>duration(SS[1-1]) ^ ¬district(Praha)</Name>
+            <BASettingRef>6</BASettingRef>
+            <BASettingRef>5</BASettingRef>
+            <MinimalLength>2</MinimalLength>
+            <MaximalLength>2</MaximalLength>
+        </DBASetting>
+        <DBASetting type="Literal" id="8">
+            <Name>statusAgregovane(SS[2-2])</Name>
+            <BASettingRef>1</BASettingRef>
+            <LiteralSign>Positive</LiteralSign>
+        </DBASetting>
+        <DBASetting type="Literal" id="9">
+            <Name>sex(SS[1-1])</Name>
+            <BASettingRef>4</BASettingRef>
+            <LiteralSign>Positive</LiteralSign>
+        </DBASetting>                        
+        </DBASettings>
+        <AntecedentSetting>7</AntecedentSetting>
+        <ConsequentSetting>8</ConsequentSetting>
+        <ConditionSetting>4</ConditionSetting>
+        <InterestMeasureSetting>
+            <InterestMeasureThreshold id="1">
+                <InterestMeasure>Support</InterestMeasure>
+                <Threshold>0.1</Threshold>
+                <CompareType>Greater than</CompareType>
+            </InterestMeasureThreshold>
+            <InterestMeasureThreshold id="2">
+                <InterestMeasure>Above Average Implication</InterestMeasure>
+                <Threshold>0.02</Threshold>
+                <CompareType>Greater than</CompareType>
+            </InterestMeasureThreshold>           
+        </InterestMeasureSetting>    
+    </TaskSetting>    
+</arb:ARBuilder>

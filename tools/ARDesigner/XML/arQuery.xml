@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ar:ARBuilder xmlns:ar="http://keg.vse.cz/ns/arbuilder0_1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd"
+    xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1">
+    <DataDescription>
+        <Dictionary numberOfFields="0" sourceType="PMML" sourceSubType="TransformationDictionary"
+            sourceName="sourceName0" complete="true">
+            <Field optype="categorical" dataType="string" name="duration" derived="false">
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name0</Name>
+                    <Value>Value0</Value>
+                </AuxilliaryIdentifier>
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name1</Name>
+                    <Value>Value1</Value>
+                </AuxilliaryIdentifier>
+                <Statistics>
+                    <Min>0</Min>
+                    <Max>0</Max>
+                    <Average>0</Average>
+                </Statistics>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName0"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName1"/>
+                <Category frequency="0">Category0</Category>
+                <Category frequency="0">Category1</Category>
+            </Field>
+            <Field optype="categorical" dataType="string" name="district" derived="false">
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name2</Name>
+                    <Value>Value2</Value>
+                </AuxilliaryIdentifier>
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name3</Name>
+                    <Value>Value3</Value>
+                </AuxilliaryIdentifier>
+                <Statistics>
+                    <Min>0</Min>
+                    <Max>0</Max>
+                    <Average>0</Average>
+                </Statistics>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName2"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName3"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName4"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName5"/>
+            </Field>
+        </Dictionary>
+        <Dictionary numberOfFields="0" sourceType="PMML" sourceSubType="TransformationDictionary"
+            sourceName="sourceName1" complete="true">
+            <Field optype="categorical" dataType="string" name="statusAgregovane" derived="false">
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name4</Name>
+                    <Value>Value4</Value>
+                </AuxilliaryIdentifier>
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name5</Name>
+                    <Value>Value5</Value>
+                </AuxilliaryIdentifier>
+                <Statistics>
+                    <Min>0</Min>
+                    <Max>0</Max>
+                    <Average>0</Average>
+                </Statistics>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName6"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName7"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName8"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName9"/>
+            </Field>
+            <Field optype="categorical" dataType="string" name="name3" derived="false">
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name6</Name>
+                    <Value>Value6</Value>
+                </AuxilliaryIdentifier>
+                <AuxilliaryIdentifier display="false">
+                    <Name>Name7</Name>
+                    <Value>Value7</Value>
+                </AuxilliaryIdentifier>
+                <Statistics>
+                    <Min>0</Min>
+                    <Max>0</Max>
+                    <Average>0</Average>
+                </Statistics>
+                <Category frequency="0">Category2</Category>
+                <Category frequency="0">Category3</Category>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName10"/>
+                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName11"/>
+            </Field>
+        </Dictionary>
+    </DataDescription>
+    <ARQuery>
+        <BBASettings>
+            <BBASetting id="1">
+                <Text>duration</Text>
+                <Name>duration</Name>
+                <FieldRef>duration</FieldRef>
+                <Coefficient>
+                    <Type>Interval</Type>
+                    <Category/>
+                    <Category/>
+                </Coefficient>
+            </BBASetting>
+            <BBASetting id="3">
+                <Text>district</Text>
+                <Name>district</Name>
+                <FieldRef>district</FieldRef>
+                <Coefficient>
+                    <Type>Interval</Type>
+                    <Category/>
+                    <Category/>
+                </Coefficient>
+            </BBASetting>
+            <BBASetting id="6">
+                <Text>statusAgregovane</Text>
+                <Name>statusAgregovane</Name>
+                <FieldRef>statusAgregovane</FieldRef>
+                <Coefficient>
+                    <Type>Interval</Type>
+                    <Category/>
+                    <Category/>
+                </Coefficient>
+            </BBASetting>
+        </BBASettings>
+        <DBASettings>
+            <DBASetting type="Literal" id="2">
+                <BASettingRef>1</BASettingRef>
+                <LiteralSign>Positive</LiteralSign>
+            </DBASetting>
+            <DBASetting type="Literal" id="4">
+                <BASettingRef>3</BASettingRef>
+                <LiteralSign>Positive</LiteralSign>
+            </DBASetting>
+            <DBASetting type="Literal" id="7">
+                <BASettingRef>6</BASettingRef>
+                <LiteralSign>Positive</LiteralSign>
+            </DBASetting>
+            <DBASetting type="Conjunction" id="8">
+                <BASettingRef>2</BASettingRef>
+                <BASettingRef>4</BASettingRef>
+            </DBASetting>
+        </DBASettings>
+        <AntecedentSetting>8</AntecedentSetting>
+        <ConsequentSetting>7</ConsequentSetting>
+        <InterestMeasureSetting>
+            <InterestMeasureThreshold id="5">
+                <InterestMeasure>Support</InterestMeasure>
+                <Threshold>0</Threshold>
+                <CompareType>Greater than or equal</CompareType>
+            </InterestMeasureThreshold>
+        </InterestMeasureSetting>
+    </ARQuery>
+</ar:ARBuilder>
