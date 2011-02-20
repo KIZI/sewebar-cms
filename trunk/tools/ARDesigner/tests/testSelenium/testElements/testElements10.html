@@ -1,0 +1,57 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="../../../lib/hlavni.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+    <script type="text/javascript" src="../../../lib/Mootools.js" >;</script>
+        <script type="text/javascript" src="../../../lib/MootoolsMore.js" >;</script>
+        <script type="text/javascript" src="../../../lib/Prepravka.js" >;</script>
+        <script type="text/javascript" src="../../../lib/Utils.js" >;</script>
+        <script type="text/javascript" src="../../../asocRuleGUI/Elements.js" >;</script>
+        <script type="text/javascript" src="../../../asocRuleGUI/UtilsAR.js" >;</script>
+        <script type="text/javascript" src="../../../asocRuleGUI/FieldAR.js" >;</script>
+        <script type="text/javascript" src="../../../asocRuleGUI/Controls.js" >;</script>
+        <script type="text/javascript">
+            var JSONObject = new Class({
+
+            });
+
+            window.addEvent('domready', function(event){
+                var FIELD_AMOUNT = 1;
+                var fields = new Array();
+                var oneCategory = new Array();
+                for(var i = 0; i < 10; i++){
+                    oneCategory.push("Catego ry"+i);
+                }
+                for(var actualField = 0; actualField < FIELD_AMOUNT; actualField++){
+                    testField = new FieldSelect("name", "nameLang", "explanation");
+                    testField.setOneCategoryInfo(oneCategory);
+                    fields.push(testField);
+                }
+                for(var actualField = 0; actualField < FIELD_AMOUNT; actualField++){
+                    testField = new FieldInput("name", "nameLang", 0, 2, "number", "explanation");
+                    fields.push(testField);
+                }
+                element = new InterestMeasure("IM1","IM1CZ", "oneCategory", fields);
+                var mainDiv = element.display();
+                mainDiv.inject($('body'));
+
+            });
+
+            function setJSON(){
+                $('jsonInfo').set("html",JSON.encode(element.toJSON()));
+            }
+
+        </script>
+  </head>
+   <body id="body">
+        <span id="jsonInfo"></span>
+        <input id="save" type="button" value="Save" onClick="element.save()" />
+        <input id="toJSON" type="button" value="SetJSON" onClick="setJSON()" />
+    </body>
+</html>

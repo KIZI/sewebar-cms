@@ -1,0 +1,6 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+{"rule0":[{"name":"duration","type":"attr","category":"Interval","fields":[{"name":"maxLength","value":""}]},{"name":"Confidence","type":"oper","fields":[{"name":"min value","value":""}]},{"name":"Support","type":"oper","fields":[{"name":"min value","value":""}]},{"name":"NEG","type":"neg"},{"name":"duration","type":"attr","category":"Interval","fields":[{"name":"maxLength","value":""}]},{"name":"AND","type":"and"},{"name":"district","type":"attr","category":"Interval","fields":[{"name":"maxLength","value":""}]}],"rule1":[{"name":"district","type":"attr","category":"Interval","fields":[{"name":"maxLength","value":""}]},{"name":"Support","type":"oper","fields":[{"name":"min value","value":""}]},{"name":"statusAgregovane","type":"attr","category":"Interval","fields":[{"name":"maxLength","value":""}]}],"rules":2}

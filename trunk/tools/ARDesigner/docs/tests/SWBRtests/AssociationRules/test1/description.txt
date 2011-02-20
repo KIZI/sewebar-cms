@@ -1,0 +1,10 @@
+There are separate nesting restrictions on individual rule parts
+antecedent - three levels
+consequent - two levels (conjunction of BBAs without negation)
+condition - single nonnegated BBA
+
+The user defines two rules
+Loan Duration [months] (&lt;24;INF&gt;) AND  (NEG(district [district](Praha))) => Loan Quality [AD Scale](dobry,stredni) / sex [abbrev](F), Average Difference 0.1, Confidence 0.6
+Loan Duration [months] (&lt;0;12&gt;) => Loan Quality [AD Scale](dobry,stredni), Support 0.05, Confidence 0.6
+
+

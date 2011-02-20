@@ -1,0 +1,631 @@
+Pøi jednom pravidle obsahujícím 27 prvkù zabralo jeho vytvoøení: 671.425ms
+
+Akce
+Odebrání prvku z pravidla: 925.539ms
+Pøidání prvku do pravidla: 828.635ms
+
+GET http://localhost/BakalarkaJoomla/testGetInfo.php 200 OK	36ms
+
+Profilování (671.425ms, 158580 volání)
+
+Funkce Volání Procent Vlastní èas Èas Prùmìr Minimum Maximum
+Soubor
+
+getBracketDepth	521	28.89%	194.004ms	218.784ms	0.42ms	0.056ms	1.488ms
+AsociationRule.js (øádek 537)
+solveTwoElements	943	8.01%	53.766ms	228.188ms	0.242ms	0.021ms	1.759ms
+AsociationRule.js (øádek 510)
+countNegation	236	7.11%	47.72ms	53.833ms	0.228ms	0.068ms	0.451ms
+AsociationRule.js (øádek 460)
+getType	47974	6.88%	46.179ms	46.179ms	0.001ms	0ms	0.123ms
+Elements.js (øádek 25)
+countAttrsCon	114	5.59%	37.525ms	42.169ms	0.37ms	0.028ms	1.001ms
+AsociationRule.js (øádek 177)
+$type	21949	4.6%	30.889ms	30.889ms	0.001ms	0ms	0.022ms
+Mootools.js (øádek 260)
+isRuleCorrect	59	4.47%	29.987ms	454.821ms	7.709ms	0.01ms	14.797ms
+AsociationRule.js (øádek 421)
+clone_obj	1010	1.93%	12.959ms	12.959ms	0.013ms	0ms	0.503ms
+UtilsAR.js (øádek 8)
+getComputedStyle	129	1.88%	12.63ms	13.206ms	0.102ms	0.042ms	7.213ms
+Mootools.js (øádek 1915)
+$mixin	824	1.81%	12.135ms	32.993ms	0.04ms	0.01ms	1.563ms
+Mootools.js (øádek 219)
+countOpers	87	1.73%	11.602ms	13.071ms	0.15ms	0.016ms	0.328ms
+AsociationRule.js (øádek 204)
+countAttrsAnt	58	1.72%	11.567ms	13.06ms	0.225ms	0.029ms	0.417ms
+AsociationRule.js (øádek 154)
+reset	4504	1.51%	10.112ms	15.176ms	0.003ms	0ms	0.67ms
+Mootools.js (øádek 1167)
+$unlink	5936	1.28%	8.618ms	16.479ms	0.003ms	0ms	0.346ms
+Mootools.js (øádek 275)
+getExistingOperators	58	1.28%	8.58ms	9.608ms	0.166ms	0.017ms	0.28ms
+AsociationRule.js (øádek 134)
+getSize	16	0.95%	6.383ms	6.447ms	0.403ms	0.014ms	6.209ms
+Mootools.js (øádek 2454)
+bottom	123	0.85%	5.732ms	7.705ms	0.063ms	0.004ms	1.444ms
+Mootools.js (øádek 1712)
+build	21	0.82%	5.488ms	5.965ms	0.284ms	0.001ms	0.688ms
+MootoolsMore.js (øádek 1170)
+(?)	1731	0.73%	4.888ms	6.843ms	0.004ms	0ms	0.093ms
+Mootools.js (øádek 1573)
+initialize	47	0.69%	4.645ms	11.605ms	0.247ms	0.007ms	0.365ms
+Mootools.js (øádek 1489)
+implement	1169	0.67%	4.53ms	44.553ms	0.038ms	0ms	1.575ms
+Mootools.js (øádek 1217)
+flatten	179	0.67%	4.472ms	7.758ms	0.043ms	0.007ms	0.247ms
+Mootools.js (øádek 584)
+extend	879	0.64%	4.311ms	4.311ms	0.005ms	0.004ms	0.027ms
+Mootools.js (øádek 637)
+solveAmounts	58	0.64%	4.285ms	46.255ms	0.797ms	0.126ms	1.369ms
+AsociationRule.js (øádek 48)
+solveAttrRBrac	207	0.63%	4.209ms	142.64ms	0.689ms	0.216ms	1.694ms
+AsociationRule.js (øádek 388)
+$extend	116	0.6%	4.052ms	4.052ms	0.035ms	0.002ms	0.108ms
+Mootools.js (øádek 198)
+getStyle	129	0.5%	3.371ms	16.992ms	0.132ms	0.068ms	7.282ms
+Mootools.js (øádek 2340)
+add	492	0.39%	2.627ms	7.351ms	0.015ms	0.004ms	0.051ms
+Mootools.js (øádek 52)
+set	48	0.38%	2.573ms	3.26ms	0.068ms	0.054ms	0.125ms
+Mootools.js (øádek 2078)
+setOptions	74	0.37%	2.493ms	17.236ms	0.233ms	0.03ms	0.528ms
+Mootools.js (øádek 1383)
+wrap	799	0.36%	2.408ms	6.292ms	0.008ms	0.006ms	0.03ms
+Mootools.js (øádek 1199)
+set	335	0.32%	2.182ms	7.71ms	0.023ms	0.004ms	0.172ms
+Mootools.js (øádek 1743)
+initialize	43	0.3%	2.014ms	22.782ms	0.53ms	0.506ms	0.722ms
+MootoolsMore.js (øádek 5044)
+solveRule	1	0.29%	1.954ms	473.867ms	473.867ms	473.867ms	473.867ms
+ServerInfo.js (øádek 369)
+genericize	521	0.29%	1.954ms	1.954ms	0.004ms	0ms	0.013ms
+Mootools.js (øádek 79)
+setStyle	59	0.28%	1.854ms	2.743ms	0.046ms	0.039ms	0.103ms
+Mootools.js (øádek 2321)
+bind	613	0.27%	1.819ms	2.542ms	0.004ms	0.002ms	0.017ms
+Mootools.js (øádek 667)
+newElement	123	0.26%	1.779ms	11.468ms	0.093ms	0.053ms	0.208ms
+Mootools.js (øádek 1522)
+afterImplement	142	0.26%	1.716ms	2.306ms	0.016ms	0.003ms	0.03ms
+Mootools.js (øádek 1433)
+Implements	61	0.24%	1.635ms	5.328ms	0.087ms	0.029ms	0.217ms
+Mootools.js (øádek 1276)
+(?)	1	0.24%	1.634ms	2.153ms	2.153ms	2.153ms	2.153ms
+MootoolsMore.js (øádek 2222)
+addListener	78	0.24%	1.603ms	1.603ms	0.021ms	0.015ms	0.044ms
+Mootools.js (øádek 1995)
+$$	46	0.24%	1.584ms	27.042ms	0.588ms	0.486ms	1.983ms
+Mootools.js (øádek 1591)
+addEvent	79	0.23%	1.553ms	4.126ms	0.052ms	0.04ms	0.108ms
+Mootools.js (øádek 2132)
+search	4	0.23%	1.521ms	4.572ms	1.143ms	0.125ms	1.718ms
+Mootools.js (øádek 2832)
+getElement	59	0.22%	1.482ms	8.65ms	0.147ms	0.029ms	0.516ms
+ServerInfo.js (øádek 416)
+newClass	247	0.22%	1.472ms	580.468ms	2.35ms	0.007ms	477.09ms
+Mootools.js (øádek 1144)
+byClass	400	0.22%	1.464ms	2.208ms	0.006ms	0ms	0.016ms
+Mootools.js (øádek 2935)
+createNewElement	27	0.21%	1.442ms	16.589ms	0.614ms	0.58ms	0.721ms
+AsociationRule.js (øádek 730)
+genericize	291	0.21%	1.403ms	12.715ms	0.044ms	0ms	0.528ms
+Mootools.js (øádek 80)
+setProperty	164	0.2%	1.311ms	1.311ms	0.008ms	0.006ms	0.023ms
+Mootools.js (øádek 1766)
+initialize	43	0.18%	1.238ms	66.278ms	1.541ms	1.316ms	8.721ms
+MootoolsMore.js (øádek 5210)
+decode	1	0.18%	1.219ms	4.372ms	4.372ms	4.372ms	4.372ms
+Mootools.js (øádek 3165)
+solveSupportedOperators	58	0.17%	1.117ms	34.167ms	0.589ms	0.024ms	1.403ms
+AsociationRule.js (øádek 83)
+isBoolean	951	0.15%	1.015ms	1.015ms	0.001ms	0ms	0.052ms
+AsociationRule.js (øádek 491)
+addEvent	175	0.14%	0.963ms	2.352ms	0.013ms	0.01ms	0.082ms
+Mootools.js (øádek 1327)
+insertItemWithoutDisplay	59	0.14%	0.957ms	456.465ms	7.737ms	0.03ms	14.83ms
+AsociationRule.js (øádek 579)
+(?)	146	0.14%	0.94ms	0.94ms	0.006ms	0ms	0.056ms
+Mootools.js (øádek 403)
+implement	216	0.12%	0.814ms	8.046ms	0.037ms	0.013ms	1.322ms
+Mootools.js (øádek 68)
+addEvent	72	0.11%	0.762ms	4.93ms	0.068ms	0.061ms	0.099ms
+MootoolsMore.js (øádek 1999)
+contains	259	0.11%	0.744ms	0.744ms	0.003ms	0.002ms	0.011ms
+Mootools.js (øádek 769)
+create	628	0.11%	0.739ms	0.739ms	0.001ms	0ms	0.005ms
+Mootools.js (øádek 642)
+send	1	0.11%	0.733ms	5.575ms	5.575ms	5.575ms	5.575ms
+Mootools.js (øádek 4071)
+createDragability	1	0.11%	0.733ms	79.512ms	79.512ms	79.512ms	79.512ms
+Dragability.js (øádek 100)
+removeOn	181	0.11%	0.708ms	0.864ms	0.005ms	0.002ms	0.073ms
+Mootools.js (øádek 1375)
+solveAttrOper	29	0.1%	0.696ms	24.925ms	0.859ms	0.642ms	1.581ms
+AsociationRule.js (øádek 406)
+inject	123	0.1%	0.689ms	8.603ms	0.07ms	0.009ms	1.45ms
+Mootools.js (øádek 1836)
+copyElements	59	0.1%	0.687ms	0.687ms	0.012ms	0.002ms	0.027ms
+AsociationRule.js (øádek 570)
+Class	76	0.1%	0.674ms	22.342ms	0.294ms	0.016ms	0.951ms
+Mootools.js (øádek 1140)
+filter	400	0.1%	0.673ms	2.881ms	0.007ms	0.002ms	0.017ms
+Mootools.js (øádek 2800)
+initialize	123	0.1%	0.672ms	12.298ms	0.1ms	0.058ms	0.214ms
+Mootools.js (øádek 1426)
+getStyles	129	0.1%	0.667ms	17.659ms	0.137ms	0.072ms	7.292ms
+Mootools.js (øádek 2382)
+(?)	44	0.1%	0.653ms	23.903ms	0.543ms	0.384ms	0.739ms
+Mootools.js (øádek 1267)
+$splat	338	0.09%	0.615ms	0.998ms	0.003ms	0.001ms	0.08ms
+Mootools.js (øádek 242)
+$merge	77	0.09%	0.579ms	11.684ms	0.152ms	0.017ms	0.37ms
+Mootools.js (øádek 213)
+createPrvek	43	0.09%	0.579ms	7.057ms	0.164ms	0.146ms	0.227ms
+UtilsAR.js (øádek 171)
+get	472	0.09%	0.571ms	0.571ms	0.001ms	0.001ms	0.003ms
+Mootools.js (øádek 893)
+afterImplement	28	0.08%	0.569ms	0.569ms	0.02ms	0.018ms	0.036ms
+Mootools.js (øádek 424)
+extend	52	0.08%	0.548ms	0.664ms	0.013ms	0.008ms	0.017ms
+Mootools.js (øádek 875)
+link	44	0.08%	0.538ms	0.793ms	0.018ms	0.003ms	0.023ms
+Mootools.js (øádek 531)
+setValue	16	0.08%	0.527ms	0.594ms	0.037ms	0.029ms	0.058ms
+Elements.js (øádek 153)
+$	63	0.08%	0.524ms	1.168ms	0.019ms	0.011ms	0.063ms
+Mootools.js (øádek 1584)
+splitType	72	0.08%	0.521ms	0.521ms	0.007ms	0.005ms	0.012ms
+MootoolsMore.js (øádek 1974)
+initialize	153	0.07%	0.469ms	565.996ms	3.699ms	0ms	476.984ms
+MootoolsMore.js (øádek 609)
+element	144	0.07%	0.467ms	1.324ms	0.009ms	0.005ms	0.019ms
+Mootools.js (øádek 1555)
+isAllowed	227	0.06%	0.435ms	0.435ms	0.002ms	0.001ms	0.004ms
+DepthNesting.js (øádek 52)
+retrieve	81	0.06%	0.421ms	0.853ms	0.011ms	0.008ms	0.033ms
+Mootools.js (øádek 2016)
+getDocument	172	0.06%	0.419ms	0.419ms	0.002ms	0.002ms	0.005ms
+Mootools.js (øádek 1896)
+camelCase	188	0.06%	0.416ms	0.416ms	0.002ms	0.001ms	0.008ms
+Mootools.js (øádek 781)
+createDragability	43	0.06%	0.405ms	75.008ms	1.744ms	1.511ms	8.959ms
+Dragability.js (øádek 102)
+display	16	0.06%	0.404ms	3.829ms	0.239ms	0.233ms	0.255ms
+Elements.js (øádek 143)
+include	179	0.06%	0.38ms	0.558ms	0.003ms	0.002ms	0.008ms
+Mootools.js (øádek 562)
+getStyles	43	0.05%	0.366ms	19.054ms	0.443ms	0.262ms	7.546ms
+Mootools.js (øádek 2380)
+forEach	15	0.05%	0.352ms	2.791ms	0.186ms	0.01ms	0.519ms
+Mootools.js (øádek 126)
+display	23	0.05%	0.349ms	4.534ms	0.197ms	0.185ms	0.265ms
+Elements.js (øádek 72)
+Native	15	0.05%	0.334ms	0.402ms	0.027ms	0.014ms	0.039ms
+Mootools.js (øádek 29)
+createMainDivs	1	0.05%	0.334ms	6.43ms	6.43ms	6.43ms	6.43ms
+BasicS...eGUI.js (øádek 51)
+getMaxValues	232	0.05%	0.326ms	0.326ms	0.001ms	0ms	0.005ms
+ServerInfo.js (øádek 334)
+display	1	0.05%	0.321ms	17.299ms	17.299ms	17.299ms	17.299ms
+AsociationRule.js (øádek 701)
+wrap	53668	0.05%	0.317ms	617.732ms	0.012ms	0ms	602.023ms
+Mootools.js (øádek 1202)
+(?)	130	0.05%	0.31ms	0.31ms	0.002ms	0.001ms	0.006ms
+MootoolsMore.js (øádek 1182)
+createElements	3	0.05%	0.304ms	6.773ms	2.258ms	1.299ms	3.553ms
+BasicS...eGUI.js (øádek 136)
+instantiate	81	0.04%	0.298ms	5.016ms	0.062ms	0.01ms	0.677ms
+Mootools.js (øádek 1192)
+hyphenate	129	0.04%	0.297ms	0.297ms	0.002ms	0.002ms	0.006ms
+Mootools.js (øádek 787)
+afterImplement	32	0.04%	0.294ms	0.294ms	0.009ms	0.003ms	0.017ms
+Mootools.js (øádek 454)
+Extends	20	0.04%	0.273ms	4.166ms	0.208ms	0.053ms	0.702ms
+Mootools.js (øádek 1262)
+contains	259	0.04%	0.272ms	0.272ms	0.001ms	0ms	0.007ms
+Mootools.js (øádek 545)
+getFieldNameValues	16	0.04%	0.255ms	0.28ms	0.017ms	0.015ms	0.023ms
+Elements.js (øádek 352)
+initialize	1	0.04%	0.253ms	0.294ms	0.294ms	0.294ms	0.294ms
+Mootools.js (øádek 440)
+initialize	8	0.04%	0.247ms	0.504ms	0.063ms	0.057ms	0.093ms
+Elements.js (øádek 112)
+dispose	28	0.04%	0.241ms	0.241ms	0.009ms	0.003ms	0.06ms
+Mootools.js (øádek 1976)
+setOneCategoryInfo	32	0.04%	0.236ms	0.257ms	0.008ms	0.007ms	0.014ms
+Elements.js (øádek 386)
+$pick	81	0.03%	0.23ms	0.23ms	0.003ms	0.002ms	0.005ms
+Mootools.js (øádek 231)
+solveFields	7	0.03%	0.227ms	0.657ms	0.094ms	0.083ms	0.11ms
+ServerInfo.js (øádek 118)
+attach	43	0.03%	0.221ms	3.118ms	0.073ms	0.066ms	0.085ms
+MootoolsMore.js (øádek 5067)
+(?)	290	0.03%	0.217ms	0.217ms	0.001ms	0ms	0.001ms
+Mootools.js (øádek 37)
+run	74	0.03%	0.202ms	11.436ms	0.155ms	0.022ms	0.377ms
+Mootools.js (øádek 659)
+get	81	0.03%	0.202ms	0.202ms	0.002ms	0.001ms	0.007ms
+Mootools.js (øádek 1639)
+(?)	58	0.03%	0.202ms	0.317ms	0.005ms	0.004ms	0.011ms
+Mootools.js (øádek 2329)
+Implements	32	0.03%	0.199ms	5.622ms	0.176ms	0.039ms	0.448ms
+Mootools.js (øádek 1275)
+extend	74	0.03%	0.198ms	0.198ms	0.003ms	0.002ms	0.004ms
+Mootools.js (øádek 549)
+display	55	0.03%	0.197ms	3.596ms	0.065ms	0.064ms	0.075ms
+AsociationRule.js (øádek 790)
+initialize	27	0.03%	0.19ms	1.4ms	0.052ms	0.047ms	0.062ms
+MootoolsMore.js (øádek 2852)
+getDepthLevels	227	0.03%	0.188ms	0.188ms	0.001ms	0ms	0.002ms
+ServerInfo.js (øádek 517)
+getMinValues	142	0.03%	0.182ms	0.182ms	0.001ms	0ms	0.003ms
+ServerInfo.js (øádek 308)
+solveAttributes	1	0.03%	0.182ms	1.192ms	1.192ms	1.192ms	1.192ms
+ServerInfo.js (øádek 176)
+getName	201	0.03%	0.179ms	0.179ms	0.001ms	0ms	0.002ms
+Elements.js (øádek 36)
+string	20	0.03%	0.178ms	0.295ms	0.015ms	0.011ms	0.04ms
+Mootools.js (øádek 1550)
+onStateChange	7	0.03%	0.172ms	602.061ms	86.009ms	0.006ms	602.014ms
+Mootools.js (øádek 4009)
+F	296	0.02%	0.156ms	0.156ms	0.001ms	0ms	0.001ms
+Mootools.js (øádek 1178)
+removeOn	130	0.02%	0.156ms	0.156ms	0.001ms	0.001ms	0.003ms
+Mootools.js (øádek 1376)
+add	27	0.02%	0.153ms	24.585ms	0.911ms	0.187ms	1.683ms
+MootoolsMore.js (øádek 3099)
+$chk	129	0.02%	0.147ms	0.147ms	0.001ms	0ms	0.04ms
+Mootools.js (øádek 177)
+onComplete	1	0.02%	0.147ms	597.356ms	597.356ms	597.356ms	597.356ms
+Asocia...ules.js (øádek 48)
+solvePossibleCoefficients	1	0.02%	0.142ms	0.714ms	0.714ms	0.714ms	0.714ms
+ServerInfo.js (øádek 201)
+create	294	0.02%	0.137ms	617.398ms	2.1ms	0.025ms	602.041ms
+Mootools.js (øádek 645)
+(?)	1	0.02%	0.136ms	3.127ms	3.127ms	3.127ms	3.127ms
+Mootools.js (øádek 1634)
+initialize	12	0.02%	0.134ms	0.16ms	0.013ms	0.006ms	0.037ms
+Mootools.js (øádek 116)
+set	52	0.02%	0.116ms	0.116ms	0.002ms	0.001ms	0.004ms
+Mootools.js (øádek 897)
+solveInterestMeasures	1	0.02%	0.116ms	0.629ms	0.629ms	0.629ms	0.629ms
+ServerInfo.js (øádek 74)
+Request	2	0.02%	0.115ms	0.115ms	0.057ms	0.029ms	0.086ms
+Mootools.js (øádek 365)
+display	4	0.02%	0.109ms	0.97ms	0.243ms	0.238ms	0.249ms
+Elements.js (øádek 469)
+initialize	1	0.02%	0.108ms	476.972ms	476.972ms	476.972ms	476.972ms
+ServerInfo.js (øádek 11)
+initializeBooleans	1	0.02%	0.106ms	0.37ms	0.37ms	0.37ms	0.37ms
+ServerInfo.js (øádek 59)
+type	86	0.02%	0.103ms	0.233ms	0.003ms	0.002ms	0.003ms
+Mootools.js (øádek 91)
+refactor	37	0.02%	0.103ms	0.775ms	0.021ms	0.016ms	0.078ms
+MootoolsMore.js (øádek 568)
+$lambda	56	0.02%	0.101ms	0.214ms	0.004ms	0.002ms	0.008ms
+Mootools.js (øádek 207)
+(?)	66	0.02%	0.101ms	0.167ms	0.003ms	0.001ms	0.02ms
+MootoolsMore.js (øádek 1176)
+(?)	1	0.01%	0.098ms	0.57ms	0.57ms	0.57ms	0.57ms
+MootoolsMore.js (øádek 803)
+(?)	1	0.01%	0.097ms	1.268ms	1.268ms	1.268ms	1.268ms
+MootoolsMore.js (øádek 7331)
+associate	4	0.01%	0.092ms	0.092ms	0.023ms	0.006ms	0.055ms
+Mootools.js (øádek 525)
+Transition	11	0.01%	0.089ms	0.216ms	0.02ms	0.018ms	0.025ms
+Mootools.js (øádek 3879)
+solveSize	16	0.01%	0.088ms	6.535ms	0.408ms	0.019ms	6.222ms
+Asocia...ules.js (øádek 113)
+regexOf	4	0.01%	0.082ms	0.165ms	0.041ms	0.034ms	0.051ms
+MootoolsMore.js (øádek 1125)
+typize	16	0.01%	0.081ms	0.081ms	0.005ms	0.004ms	0.007ms
+Mootools.js (øádek 90)
+gecko	1	0.01%	0.081ms	0.081ms	0.081ms	0.081ms	0.081ms
+Mootools.js (øádek 337)
+parseSelector	4	0.01%	0.079ms	0.079ms	0.02ms	0.002ms	0.033ms
+Mootools.js (øádek 2772)
+getFieldNameValues	4	0.01%	0.079ms	0.087ms	0.022ms	0.02ms	0.024ms
+Elements.js (øádek 478)
+isBoolean	59	0.01%	0.072ms	0.072ms	0.001ms	0.001ms	0.002ms
+ServerInfo.js (øádek 425)
+initialize	1	0.01%	0.072ms	13.346ms	13.346ms	13.346ms	13.346ms
+BasicS...eGUI.js (øádek 29)
+getName	64	0.01%	0.067ms	0.067ms	0.001ms	0ms	0.002ms
+Elements.js (øádek 348)
+parse	2	0.01%	0.067ms	0.123ms	0.062ms	0.056ms	0.067ms
+MootoolsMore.js (øádek 1609)
+returns	294	0.01%	0.065ms	617.246ms	2.099ms	0.01ms	602.029ms
+Mootools.js (øádek 649)
+isBody	16	0.01%	0.064ms	0.064ms	0.004ms	0.003ms	0.009ms
+Mootools.js (øádek 2628)
+initialize	51	0.01%	0.062ms	0.062ms	0.001ms	0.001ms	0.002ms
+MootoolsMore.js (øádek 608)
+initialize	2	0.01%	0.062ms	0.763ms	0.382ms	0ms	0.763ms
+MootoolsMore.js (øádek 1600)
+(?)	5	0.01%	0.061ms	0.499ms	0.1ms	0.091ms	0.11ms
+Mootools.js (øádek 1725)
+initialize	6	0.01%	0.058ms	0.091ms	0.015ms	0.013ms	0.023ms
+FieldAR.js (øádek 80)
+getByTagAndID	4	0.01%	0.058ms	0.058ms	0.014ms	0.004ms	0.032ms
+Mootools.js (øádek 2823)
+getDepthNesting	58	0.01%	0.057ms	0.057ms	0.001ms	0ms	0.002ms
+ServerInfo.js (øádek 506)
+fireEvent	4	0.01%	0.057ms	603.693ms	150.923ms	0.033ms	597.403ms
+Mootools.js (øádek 1345)
+(?)	1	0.01%	0.056ms	6.713ms	6.713ms	6.713ms	6.713ms
+DomReady.js (øádek 2)
+(?)	26	0.01%	0.055ms	0.055ms	0.002ms	0.001ms	0.007ms
+MootoolsMore.js (øádek 820)
+getElements	4	0.01%	0.051ms	5.368ms	1.342ms	0.147ms	1.971ms
+Mootools.js (øádek 2698)
+initAllowedCom	1	0.01%	0.05ms	0.08ms	0.08ms	0.08ms	0.08ms
+AsociationRule.js (øádek 225)
+initialize	1	0.01%	0.048ms	6.453ms	6.453ms	6.453ms	6.453ms
+Asocia...ules.js (øádek 22)
+implement	7	0.01%	0.048ms	2.45ms	0.35ms	0.053ms	0.756ms
+Mootools.js (øádek 86)
+(?)	18	0.01%	0.047ms	5.999ms	0.333ms	0.001ms	0.691ms
+MootoolsMore.js (øádek 1165)
+getInfo	1	0.01%	0.043ms	6.338ms	6.338ms	6.338ms	6.338ms
+Asocia...ules.js (øádek 45)
+(?)	1	0.01%	0.042ms	0.478ms	0.478ms	0.478ms	0.478ms
+MootoolsMore.js (øádek 7961)
+addAllThese	26	0.01%	0.041ms	24.439ms	0.94ms	0.228ms	1.685ms
+MootoolsMore.js (øádek 3112)
+extend	1	0.01%	0.041ms	0.18ms	0.18ms	0.18ms	0.18ms
+Mootools.js (øádek 3900)
+domready	2	0.01%	0.041ms	9.031ms	4.515ms	0.004ms	9.027ms
+Mootools.js (øádek 3084)
+extend	5	0.01%	0.04ms	0.874ms	0.175ms	0.042ms	0.247ms
+Mootools.js (øádek 874)
+(?)	1	0.01%	0.039ms	0.732ms	0.732ms	0.732ms	0.732ms
+Mootools.js (øádek 2440)
+replacers	66	0.01%	0.037ms	0.066ms	0.001ms	0ms	0.019ms
+MootoolsMore.js (øádek 1131)
+fireEvent	6	0.01%	0.036ms	603.749ms	100.625ms	0.006ms	597.418ms
+Mootools.js (øádek 1342)
+solveDepth	1	0.01%	0.036ms	0.046ms	0.046ms	0.046ms	0.046ms
+ServerInfo.js (øádek 291)
+(?)	3	0.01%	0.035ms	0.035ms	0.012ms	0.008ms	0.018ms
+Mootools.js (øádek 4120)
+recompile	2	0.01%	0.034ms	6.198ms	3.099ms	3.061ms	3.137ms
+MootoolsMore.js (øádek 1159)
+$try	4	0%	0.033ms	0.357ms	0.089ms	0.029ms	0.203ms
+Mootools.js (øádek 251)
+capitalize	5	0%	0.033ms	0.044ms	0.009ms	0.007ms	0.015ms
+Mootools.js (øádek 793)
+parseTagAndID	4	0%	0.033ms	0.033ms	0.008ms	0.003ms	0.021ms
+Mootools.js (øádek 2794)
+set	2	0%	0.033ms	0.158ms	0.079ms	0.07ms	0.088ms
+MootoolsMore.js (øádek 1650)
+initLang	2	0%	0.033ms	0.033ms	0.017ms	0.016ms	0.017ms
+Langua...port.js (øádek 29)
+getSupportedIMCombinations	30	0%	0.032ms	0.032ms	0.001ms	0ms	0.002ms
+ServerInfo.js (øádek 451)
+regexOf	38	0%	0.031ms	0.031ms	0.001ms	0ms	0.002ms
+MootoolsMore.js (øádek 1126)
+alias	11	0%	0.031ms	0.155ms	0.014ms	0.008ms	0.038ms
+Mootools.js (øádek 59)
+initialize	1	0%	0.031ms	0.11ms	0.11ms	0.11ms	0.11ms
+Mootools.js (øádek 413)
+onSuccess	1	0%	0.031ms	597.456ms	597.456ms	597.456ms	597.456ms
+Mootools.js (øádek 4039)
+protect	20	0%	0.028ms	0.028ms	0.001ms	0.001ms	0.004ms
+Mootools.js (øádek 1162)
+pass	9	0%	0.028ms	0.036ms	0.004ms	0.003ms	0.01ms
+Mootools.js (øádek 663)
+defineParser	9	0%	0.028ms	0.041ms	0.005ms	0.001ms	0.011ms
+MootoolsMore.js (øádek 1107)
+detect	1	0%	0.028ms	0.165ms	0.165ms	0.165ms	0.165ms
+Mootools.js (øádek 347)
+addAllThese	2	0%	0.028ms	24.474ms	12.237ms	7.157ms	17.317ms
+MootoolsMore.js (øádek 3111)
+set	2	0%	0.028ms	7.011ms	3.505ms	3.501ms	3.51ms
+MootoolsMore.js (øádek 114)
+(?)	1	0%	0.027ms	0.237ms	0.237ms	0.237ms	0.237ms
+Mootools.js (øádek 3082)
+presto	1	0%	0.025ms	0.025ms	0.025ms	0.025ms	0.025ms
+Mootools.js (øádek 325)
+success	1	0%	0.025ms	601.853ms	601.853ms	601.853ms	601.853ms
+Mootools.js (øádek 4325)
+merge	2	0%	0.025ms	0.04ms	0.02ms	0.019ms	0.021ms
+MootoolsMore.js (øádek 1616)
+$defined	45	0%	0.024ms	0.024ms	0.001ms	0ms	0.001ms
+Mootools.js (øádek 187)
+initialize	1	0%	0.024ms	0.333ms	0.333ms	0.333ms	0.333ms
+Mootools.js (øádek 4002)
+get	6	0%	0.024ms	0.056ms	0.009ms	0.008ms	0.012ms
+MootoolsMore.js (øádek 104)
+solveSize	1	0%	0.024ms	8.047ms	8.047ms	8.047ms	8.047ms
+Asocia...ules.js (øádek 110)
+initialize	3	0%	0.024ms	0.024ms	0.008ms	0.003ms	0.016ms
+Elements.js (øádek 449)
+defn	3	0%	0.023ms	9.058ms	3.019ms	0.01ms	9.036ms
+Mootools.js (øádek 2148)
+fireEvent	2	0%	0.023ms	8.99ms	4.495ms	0.024ms	8.966ms
+Mootools.js (øádek 2203)
+cascade	2	0%	0.023ms	0.586ms	0.293ms	0.237ms	0.349ms
+MootoolsMore.js (øádek 93)
+(?)	1	0%	0.023ms	0.078ms	0.078ms	0.078ms	0.078ms
+MootoolsMore.js (øádek 52)
+createDiv	5	0%	0.023ms	0.422ms	0.084ms	0.062ms	0.161ms
+UtilsAR.js (øádek 55)
+trident	1	0%	0.022ms	0.022ms	0.022ms	0.022ms	0.022ms
+Mootools.js (øádek 329)
+fireEvent	2	0%	0.022ms	8.934ms	4.467ms	2.187ms	6.747ms
+Mootools.js (øádek 2206)
+initialize	2	0%	0.022ms	0.055ms	0.028ms	0.026ms	0.029ms
+Langua...port.js (øádek 19)
+setOneCategoryInfo	32	0%	0.021ms	0.021ms	0.001ms	0ms	0.001ms
+FieldAR.js (øádek 22)
+initialize	5	0%	0.02ms	0.02ms	0.004ms	0.003ms	0.006ms
+Elements.js (øádek 56)
+addEvents	1	0%	0.019ms	0.133ms	0.133ms	0.133ms	0.133ms
+Mootools.js (øádek 2180)
+setDraggability	1	0%	0.019ms	79.534ms	79.534ms	79.534ms	79.534ms
+Asocia...ules.js (øádek 127)
+getValue	20	0%	0.018ms	0.018ms	0.001ms	0ms	0.001ms
+FieldAR.js (øádek 56)
+defineParsers	2	0%	0.018ms	0.123ms	0.062ms	0.027ms	0.096ms
+MootoolsMore.js (øádek 1111)
+(?)	1	0%	0.017ms	0.076ms	0.076ms	0.076ms	0.076ms
+MootoolsMore.js (øádek 1445)
+initialize	1	0%	0.017ms	0.127ms	0.127ms	0.127ms	0.127ms
+MootoolsMore.js (øádek 7350)
+setup	1	0%	0.017ms	0.02ms	0.02ms	0.02ms	0.02ms
+MootoolsMore.js (øádek 7354)
+$each	7	0%	0.016ms	0.996ms	0.142ms	0.022ms	0.346ms
+Mootools.js (øádek 191)
+initialize	1	0%	0.016ms	0.096ms	0.096ms	0.096ms	0.096ms
+AsociationRule.js (øádek 21)
+getName	20	0%	0.015ms	0.015ms	0.001ms	0ms	0.001ms
+FieldAR.js (øádek 52)
+refactor	5	0%	0.015ms	0.963ms	0.193ms	0.096ms	0.348ms
+MootoolsMore.js (øádek 566)
+initialize	1	0%	0.015ms	0.355ms	0.355ms	0.355ms	0.355ms
+MootoolsMore.js (øádek 8267)
+setStyles	1	0%	0.014ms	0.213ms	0.213ms	0.213ms	0.213ms
+Mootools.js (øádek 2375)
+initialize	1	0%	0.014ms	0.44ms	0.44ms	0.44ms	0.44ms
+Mootools.js (øádek 4320)
+(?)	1	0%	0.014ms	0.119ms	0.119ms	0.119ms	0.119ms
+MootoolsMore.js (øádek 2220)
+createDivIdClas	5	0%	0.014ms	0.393ms	0.079ms	0.075ms	0.082ms
+UtilsAR.js (øádek 88)
+initialize	4	0%	0.014ms	0.014ms	0.003ms	0.003ms	0.005ms
+Elements.js (øádek 325)
+createDivHtmlClas	3	0%	0.013ms	0.492ms	0.164ms	0.135ms	0.215ms
+UtilsAR.js (øádek 106)
+(?)	1	0%	0.013ms	0.015ms	0.015ms	0.015ms	0.015ms
+Mootools.js (øádek 1546)
+solveRules	1	0%	0.013ms	473.88ms	473.88ms	473.88ms	473.88ms
+ServerInfo.js (øádek 355)
+get	9	0%	0.012ms	0.068ms	0.008ms	0.001ms	0.014ms
+MootoolsMore.js (øádek 110)
+(?)	1	0%	0.012ms	0.012ms	0.012ms	0.012ms	0.012ms
+Mootools.js (øádek 4013)
+(?)	1	0%	0.012ms	5.611ms	5.611ms	5.611ms	5.611ms
+Mootools.js (øádek 4150)
+enableLog	1	0%	0.012ms	0.016ms	0.016ms	0.016ms	0.016ms
+MootoolsMore.js (øádek 190)
+getMsg	6	0%	0.012ms	0.077ms	0.013ms	0.011ms	0.017ms
+MootoolsMore.js (øádek 1027)
+(?)	3	0%	0.012ms	6.213ms	2.071ms	0.004ms	3.144ms
+MootoolsMore.js (øádek 1243)
+send	1	0%	0.012ms	5.587ms	5.587ms	5.587ms	5.587ms
+MootoolsMore.js (øádek 8269)
+capitalize	5	0%	0.011ms	0.011ms	0.002ms	0.002ms	0.003ms
+Mootools.js (øádek 794)
+load	2	0%	0.01ms	0.646ms	0.323ms	0.266ms	0.38ms
+MootoolsMore.js (øádek 76)
+add	3	0%	0.01ms	0.01ms	0.003ms	0.002ms	0.005ms
+DepthNesting.js (øádek 33)
+parseDirectory	2	0%	0.009ms	0.014ms	0.007ms	0.005ms	0.009ms
+MootoolsMore.js (øádek 1630)
+createHtmlIdClick	2	0%	0.009ms	0.338ms	0.169ms	0.162ms	0.176ms
+UtilsAR.js (øádek 125)
+webkit	1	0%	0.009ms	0.009ms	0.009ms	0.009ms	0.009ms
+Mootools.js (øádek 333)
+(?)	1	0%	0.009ms	0.364ms	0.364ms	0.364ms	0.364ms
+MootoolsMore.js (øádek 570)
+load	3	0%	0.008ms	0.014ms	0.005ms	0.003ms	0.006ms
+MootoolsMore.js (øádek 79)
+initialize	1	0%	0.008ms	0.008ms	0.008ms	0.008ms	0.008ms
+DepthNesting.js (øádek 11)
+createDivClas	2	0%	0.008ms	0.128ms	0.064ms	0.061ms	0.067ms
+UtilsAR.js (øádek 71)
+$A	2	0%	0.007ms	0.007ms	0.004ms	0.003ms	0.004ms
+Mootools.js (øádek 162)
+$arguments	4	0%	0.007ms	0.007ms	0.002ms	0.001ms	0.002ms
+Mootools.js (øádek 171)
+Request	2	0%	0.007ms	0.132ms	0.066ms	0.035ms	0.097ms
+Mootools.js (øádek 364)
+combine	3	0%	0.007ms	0.02ms	0.007ms	0.005ms	0.01ms
+Mootools.js (øádek 567)
+erase	2	0%	0.007ms	0.007ms	0.004ms	0.003ms	0.004ms
+Mootools.js (øádek 572)
+getName	5	0%	0.007ms	0.007ms	0.001ms	0.001ms	0.002ms
+Langua...port.js (øádek 62)
+getCurrentLanguage	5	0%	0.006ms	0.006ms	0.001ms	0.001ms	0.002ms
+MootoolsMore.js (øádek 84)
+lambda	3	0%	0.006ms	0.006ms	0.002ms	0.001ms	0.003ms
+MootoolsMore.js (øádek 103)
+(?)	1	0%	0.006ms	0.056ms	0.056ms	0.056ms	0.056ms
+MootoolsMore.js (øádek 1970)
+initAddAttr	1	0%	0.006ms	0.006ms	0.006ms	0.006ms	0.006ms
+AsociationRule.js (øádek 363)
+initialize	1	0%	0.006ms	0.006ms	0.006ms	0.006ms	0.006ms
+Dragability.js (øádek 15)
+test	2	0%	0.005ms	0.005ms	0.003ms	0.002ms	0.003ms
+Mootools.js (øádek 765)
+(?)	1	0%	0.005ms	0.024ms	0.024ms	0.024ms	0.024ms
+MootoolsMore.js (øádek 2327)
+initAddRbrac	1	0%	0.005ms	0.005ms	0.005ms	0.005ms	0.005ms
+AsociationRule.js (øádek 249)
+initialize	1	0%	0.005ms	0.005ms	0.005ms	0.005ms	0.005ms
+FieldAR.js (øádek 149)
+solveSupIM	1	0%	0.005ms	0.005ms	0.005ms	0.005ms	0.005ms
+ServerInfo.js (øádek 254)
+solveMinMax	1	0%	0.005ms	0.005ms	0.005ms	0.005ms	0.005ms
+ServerInfo.js (øádek 269)
+value	6	0%	0.004ms	0.004ms	0.001ms	0ms	0.001ms
+Mootools.js (øádek 208)
+onAdd	2	0%	0.004ms	0.004ms	0.002ms	0.002ms	0.002ms
+Mootools.js (øádek 3076)
+addLanguage	2	0%	0.004ms	0.004ms	0.002ms	0.001ms	0.003ms
+MootoolsMore.js (øádek 88)
+resetLog	1	0%	0.004ms	0.004ms	0.004ms	0.004ms	0.004ms
+MootoolsMore.js (øádek 185)
+Binds	6	0%	0.004ms	0.004ms	0.001ms	0ms	0.001ms
+MootoolsMore.js (øádek 604)
+orderIndex	2	0%	0.004ms	0.029ms	0.014ms	0.014ms	0.015ms
+MootoolsMore.js (øádek 1093)
+(?)	1	0%	0.004ms	0.004ms	0.004ms	0.004ms	0.004ms
+MootoolsMore.js (øádek 6650)
+initAddLbrac	1	0%	0.004ms	0.004ms	0.004ms	0.004ms	0.004ms
+AsociationRule.js (øádek 270)
+initAddOr	1	0%	0.004ms	0.004ms	0.004ms	0.004ms	0.004ms
+AsociationRule.js (øádek 304)
+initAddAnd	1	0%	0.004ms	0.004ms	0.004ms	0.004ms	0.004ms
+AsociationRule.js (øádek 323)
+initAddOper	1	0%	0.004ms	0.004ms	0.004ms	0.004ms	0.004ms
+AsociationRule.js (øádek 342)
+$H	1	0%	0.003ms	0.009ms	0.009ms	0.009ms	0.009ms
+Mootools.js (øádek 203)
+initAddNeg	1	0%	0.003ms	0.003ms	0.003ms	0.003ms	0.003ms
+AsociationRule.js (øádek 289)
+removeDragability	1	0%	0.003ms	0.003ms	0.003ms	0.003ms	0.003ms
+Dragability.js (øádek 128)
+addEvents	1	0%	0.002ms	0.002ms	0.002ms	0.002ms	0.002ms
+Mootools.js (øádek 1337)
+(?)	2	0%	0.002ms	0.002ms	0.001ms	0.001ms	0.001ms
+MootoolsMore.js (øádek 97)
+callChain	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+Mootools.js (øádek 1312)
+isSuccess	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+Mootools.js (øádek 4026)
+check	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+Mootools.js (øádek 4062)
+merge	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+MootoolsMore.js (øádek 1619)
+activate	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+MootoolsMore.js (øádek 7387)
+setMaxSize	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+AsociationRule.js (øádek 31)
+initialize	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+AsociationRule.js (øádek 779)
+getExistingRules	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+ServerInfo.js (øádek 50)
+getMoreRules	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+ServerInfo.js (øádek 462)
+getOperators	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+ServerInfo.js (øádek 473)
+getAttributes	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+ServerInfo.js (øádek 484)
+getBooleans	1	0%	0.001ms	0.001ms	0.001ms	0.001ms	0.001ms
+ServerInfo.js (øádek 528)
+getLast	1	0%	0ms	0ms	0ms	0ms	0ms
+Mootools.js (øádek 554)
+empty	1	0%	0ms	0ms	0ms	0ms	0ms
+Mootools.js (øádek 579)

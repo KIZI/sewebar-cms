@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+    xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
+    schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+     mode="TaskSetting" procedure="4ft"> 
+    <UserInterface>
+        <AllowMultipleRules>true</AllowMultipleRules>
+    </UserInterface>
+    <RulePattern>
+        <!-- Antecedent may or may not be specified. There can be any number of (basic boolean) attributes.
+        For each BBA, the user has to specify coefficient        -->
+        <Antecedent minNumberOfBBAs="0"/>
+        <!-- Interest Measure must be specified. 
+            There can be any number of interest measures - provided that conditions in BuildingBlocks/InterestMeasures are met.
+            The user must specify the thresholds.
+        -->
+        <InterestMeasureConstraint/>
+        <!-- Consequent may or may not be specified. There can be only one (basic boolean) attribute in negation.-->
+        <Consequent minNumberOfBBAs="0"/>
+        <!-- Condition must not be specified. 
+        -->
+        <Condition minNumberOfBBAs="0"/>
+        <!-- The whole rule (Ant+Cons+Cond) must contain at least 1 BBA and at most 10 BBAs  -->
+        <GeneralConstraint minNumberOfBBAs="0"/>
+    </RulePattern>
+
+    <!-- Details for each building block -->
+    <BuildingBlocks>
+        <!-- The user does not have to  specify the threshold, but he can -->
+        <InterestMeasures threshold="optional">
+            <!-- Possible values: optional/mandatory/prohibited-->
+            <Types>
+                <!-- The user needs to choose the type of the interest measure -->
+                <Type> 
+                    <!-- master name used for serialization -->
+                    <Name>Support</Name>
+                    <!-- display in GUI depending on locale -->
+                    <LocalizedName lang="en">Support</LocalizedName>
+                    <LocalizedName lang="cs">Podpora</LocalizedName>
+                    <!-- For each interest measure, there are different fields displayed-->
+                    <Field>
+                        <!-- master name used for serialization -->
+                        <Name>min value</Name>
+                        <!-- display in GUI depending on locale -->
+                        <LocalizedName lang="en">min value</LocalizedName>
+                        <LocalizedName lang="cs">min hodnota</LocalizedName>
+                        <!-- The input value must be a decimal in  (0;1) -->
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                 </Type>
+            </Types>
+
+            <!-- There are two options,
+                either all the interest measures can be freely combined (SupportedInterestMeasureCombinations is empty element)
+               or the permitted combinations are enumerated
+            -->
+            <SupportedInterestMeasureCombinations>
+                <!-- The user can specify Confidence and Support -->
+                <SupportedIMCombination>
+                    <InterestMeasure>Confidence</InterestMeasure>
+                </SupportedIMCombination>
+            </SupportedInterestMeasureCombinations>
+        </InterestMeasures>
+
+        <!-- The user may or may not specify coefficients for each BBA -->
+        <BasicBooleanAttribute coefficient="optional">
+            <!-- Possible values: optional/mandatory/prohibited-->
+            <Coefficient>
+                <Type>
+                    <Name>Interval</Name>
+                    <!-- for interval coefficient, there are two fields:-->
+                    <Field>
+                        <Name>minLength</Name>
+                        <LocalizedName lang="en">minimum length</LocalizedName>
+                        <LocalizedName lang="cs">minimální délka</LocalizedName>
+                        <!-- for minLength field, the user has to input integer greater or equal 1 -->
+                        <Validation>
+                            <MinValue>1</MinValue>
+                            <Datatype>integer</Datatype>
+                        </Validation>
+                    </Field>
+                    <Field>
+                        <Name>maxLength</Name>
+                        <LocalizedName lang="en">maximum length</LocalizedName>
+                        <LocalizedName lang="cs">maximální délka</LocalizedName>
+                        <!-- into maxLength field, the user has to input integer greater or equal 1, 
+                            entered value needs to be greater or equal to value in the previous field-->
+                        <Validation>
+                            <Required value="yes"/>
+                            <MinValue>1</MinValue>
+                            <Datatype>integer</Datatype>
+                            <Previous>isSmallerOrEqual</Previous>
+                        </Validation>
+                    </Field>
+
+                </Type>
+                <Type>
+                    <Name>Subset</Name>
+                    <Field>
+                        <Name>minLength</Name>
+                        <LocalizedName lang="en">minimum length</LocalizedName>
+                        <LocalizedName lang="cs">minimální délka</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <MinValue>1</MinValue>
+                            <Datatype>integer</Datatype>
+                        </Validation>
+                    </Field>
+
+                    <Field>
+                        <Name>maxLength</Name>
+                        <LocalizedName lang="en">maximum length</LocalizedName>
+                        <LocalizedName lang="cs">maximální délka</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <MinValue>1</MinValue>
+                            <Datatype>integer</Datatype>
+                            <Previous>isSmallerOrEqual</Previous>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Cut</Name>
+                    <Field>
+                        <Name>minLength</Name>
+                        <LocalizedName lang="en">minimum length</LocalizedName>
+                        <LocalizedName lang="cs">minimální délka</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <MinValue>1</MinValue>
+                            <Datatype>integer</Datatype>
+                        </Validation>
+                    </Field>
+                    <Field>
+                        <Name>maxLength</Name>
+                        <LocalizedName lang="en">maximum length</LocalizedName>
+                        <LocalizedName lang="cs">maximální délka</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <MinValue>1</MinValue>
+                            <Datatype>integer</Datatype>
+                            <Previous>isSmallerOrEqual</Previous>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>One category</Name>
+                    <Field>
+                        <Name>category</Name>
+                        <LocalizedName lang="en">category</LocalizedName>
+                        <LocalizedName lang="cs">kategorie</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <Datatype>string</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+            </Coefficient>
+        </BasicBooleanAttribute>
+
+        <!-- Derived Boolean Attribute is a group of BBAs grouped by brackets -->
+        <DerivedBooleanAttribute> 
+            <NestingConstraints scope="allruleparts">
+                <!-- MaxLevel = 0: means there are no derived boolean attributes allowed -->
+                <!-- MaxLevel = 1: means there is one derived boolean attributes allowed i.e. A ^ B ^ C-->
+                <!-- MaxLevel = 2: i.e. (A v B) ^ C => D or (A v B) => D -->
+                <!-- for example if level 1 allows only conjunction and level 2 conjunction and disjunction,
+                    the following is valid -->
+                <!-- MaxLevel = 2: example 2:  (A v B) => D  -->
+                <!-- MaxLevel = 3: i.e. (A v neg(B)) ^ C => D or (A v (B ^ C)) => D -->
+                <!-- if level 3 allows only negation 
+                    (A v neg(B)) ^ C => D 
+                -->                
+                <MaxLevels>3</MaxLevels>
+<!-- On level 1, there is only conjunction allowed -->                
+                <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="yes"/>
+                        <Disjunction allowed="no"/>
+                        <Negation allowed="yes"/>
+                    </Connectives>
+                </NestingConstraint>
+<!-- On level 2, there is conjunction or disjunction allowed -->
+                <NestingConstraint level="2"> 
+                    <Connectives>
+                        <Conjunction allowed="yes"/>
+                        <Disjunction allowed="yes"/>
+                        <Negation allowed="no"/>
+                    </Connectives>
+                </NestingConstraint>
+<!-- On level 3, there is only negation allowed-->
+<!-- I.e. literal level -->                
+                <NestingConstraint level="3">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="no"/>
+                        <Negation allowed="yes"/>
+                    </Connectives>
+                </NestingConstraint>
+<!-- Ferda allows any number of arbitrary levels, for Ferda,it would look as follows
+    <NestingConstraint level="remaining">
+    <Connectives>
+    <Conjunction allowed="yes"/>
+    <Disjunction allowed="yes"/>
+    <Negation allowed="yes"/>
+    </Connectives>
+    </NestingConstraint>
+
+-->                
+            </NestingConstraints>
+        </DerivedBooleanAttribute>
+    </BuildingBlocks>
+</arf:GUHAFeatureList>

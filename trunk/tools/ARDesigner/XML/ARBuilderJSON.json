@@ -1,0 +1,131 @@
+/**
+ * This is documentation for JSON format used in application ARBuilder for
+ * getting data from server and desnding them to the server again.
+ */
+{
+// This part is about allowed amounts of BBAs
+    // Minimal number of BBAs in consequent
+    "consMinNumberBBA": "1",
+    // Maximal number of BBAs in consequent
+    "consMaxNumberBBA": "10",
+    // Minimal number of BBAs in antecedent
+    "antMinNumberBBA": "1",
+    // Maximal number of BBAs in antecedent
+    "antMaxNumberBBA": "10",
+    // Minimal number of BBAs in Interest Measures part
+    "IMMinNumberBBA": "1",
+    // Maximal number of BBAs in Interest Measures part
+    "IMMaxNumberBBA": "10",
+    // Minimal number of BBAs in a whole rule
+    "minNumberBBA": "1",
+    // Maximal number of BBAs in a whole rule
+    "maxNumberBBA": "10",
+// This part is about combinations of Interest measures that are allowed.
+    // How many possible combinations are there
+    "supIMCombinations": "2",
+    // First combination
+    "supIMCom1": ["support", "confidence"],
+    // Second combination
+    "supIMCom2": ["support", "confidence", "above average implication"],
+// This part is about allowed connectives on every possible level of depth nesting
+    // How many levels are allowed
+    "depthNesting": "3",
+    // On level x it is allowed or disallowed to use [disjunction, conjunction, negation]
+    // On level 0 it is allowed to use disjunction and conjuction and it is not allowed to use negation
+    "depth0": ["true","true","false"],
+    // On level 1 it is allowed to use only conjunction
+    "depth1": ["false","true","false"],
+    // On level 2 it is allowed to use only negation
+    "depth2": ["false","false","true"],
+// This part is about all necessary info for interest measures.
+    "interestMeasures": [
+        // operatorName
+        {"name": "support",
+            // Localized operator name
+            "localizedName": "podpora",
+            // Explanation of InterestMeasure
+            "explanation": "explanation",
+            // fields info
+            "fields": {
+                // Names of fields for each category
+                "fieldNames" :["min value", "max value"],
+                // Localized names of fields of each category
+                "fieldNamesLocalized" :["minimalni hodnota", "maximalni hodnota"],
+                // Minimal values of fields
+                "fieldMinValues" :["1","2"],
+                // Maximal values of fields
+                "fieldMaxValues" :["3","5"],
+                // Datatypes of fields
+                "fieldDatatypes" :["double","integer"],
+                // Explanation of fields for user
+                "fieldExplanations" :["explanation 1","explanation 2"]
+            }
+        }
+    ],
+
+// This part contains all necessary info about attributes.
+    "attributes" : [
+        // Name of possible atribute
+        {"name":"Name",
+            // For each attribute possible choices at one category type
+            "choices": ["Jack", "Thomas", "Sten"]},
+        {"name":"Age",
+            "choices": ["15","<20;25]","40","<30;35>"]}
+    ],
+    
+// This part contains all info about additional fields, which are at dispozition for user
+    "possibleCoef": [
+        // Categories
+        {"name": "Subset",
+            // Localized name of category
+            "localizedName":"Subset",
+            // fields info
+            "fields": {
+                // Names of fields for each category
+                "fieldNames" :["min value", "max value"],
+                // Localized names of fields of each category
+                "fieldNamesLocalized" :["minimalni hodnota", "maximalni hodnota"],
+                // Minimal values of fields
+                "fieldMinValues" :["1","2"],
+                // Maximal values of fields
+                "fieldMaxValues" :["3","5"],
+                // Datatypes of fields
+                "fieldDatatypes" :["double","integer"],
+                // Explanation of fields for user
+                "fieldExplanations" :["explanation 1","explanation 2"]
+            }
+        }
+    ],
+// This part contains all info connected with existing rules.
+    // Amount of rules
+    "rules": 2,
+    //First rule
+    "rule0": [
+        // First Element
+        {"name": "Element1",
+         "type": "attr",
+         "category": "One category", // attribute Field
+         "fields": [
+             {"name": "jmeno",
+              "value": "hodnota"
+             },
+             {"name": "jmeno",
+              "value": "hodnota"
+             }
+         ]
+        },
+        // Second element
+        {"name": "Support",
+         "type": "oper",
+         "category": "", // Not important.
+         "fields": [
+             {"name": "jmeno",
+              "value": "hodnota"
+             },
+             {"name": "jmeno",
+              "value": "hodnota"
+             }
+         ]
+        }
+    ]
+}
