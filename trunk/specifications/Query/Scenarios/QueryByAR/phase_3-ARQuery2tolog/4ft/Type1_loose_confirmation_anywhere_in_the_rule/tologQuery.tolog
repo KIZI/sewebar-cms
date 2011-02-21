@@ -1,0 +1,26 @@
+
+using d for i"http://keg.vse.cz/dmo/" 
+using p for i"http://www.dmg.org/PMML-4_0#"
+
+/*Support predicates, also in arlib*/
+getTopicInstanceForString($String,$TopicType, $Topic):- value ($Object,$String),topic-name($Topic, $Object), instance-of( $Topic, $TopicType). 
+
+GetBBAContainingCategoryAsString($RuleCategoryAsString, $DerivedFieldAsString, $BBA) :- 
+getTopicInstanceForString($DerivedFieldAsString, p:DerivedField, $DerivedField),
+getTopicInstanceForString($RuleCategoryAsString, d:derivedfieldcontent, $RuleCategory), d:havebin($DerivedField :p:DerivedField ,$RuleCategory : d:derivedfieldcontent), d:havecoefficient($BBA : d:basicbooleanattribute, $RuleCategory: d:coefficient).
+
+getRules($RuleAsString) :- 
+
+d:haveantecedent($DBAANT : p:antecedent, $RULE: p:associationrule), d:haveconsequent($DBACONS : p:consequent, $RULE: p:associationrule),{ d:bederivedfrom($DBAANT : d:derivedbooleanattribute,$LiteralDBA_FTLiteralI_Sign_40936: d:booleanattribute)
+|
+d:bederivedfrom($DBACONS : d:derivedbooleanattribute,$LiteralDBA_FTLiteralI_Sign_40936: d:booleanattribute)
+}
+
+,GetBBAContainingCategoryAsString("good"
+,"Quality",
+$BBABBA_FTLiteralI_40936),d:bederivedfrom($LiteralDBA_FTLiteralI_Sign_40936 : d:derivedbooleanattribute, $BBABBA_FTLiteralI_40936: d:booleanattribute)
+,d:bederivedfrom(
+$DBAANT : d:derivedbooleanattribute,$LiteralDBA_FTLiteralI_Sign_40937: d:booleanattribute)
+,GetBBAContainingCategoryAsString("M"
+,"Sex",
+$BBABBA_FTLiteralI_40937),d:bederivedfrom($LiteralDBA_FTLiteralI_Sign_40937 : d:derivedbooleanattribute, $BBABBA_FTLiteralI_40937: d:booleanattribute), topic-name($RULE, $ObjectR), value ($ObjectR,$RuleAsString).  getRules($RuleAsString)?
