@@ -161,16 +161,8 @@ class GetDataARBuilderQuery extends AncestorGetData {
             $fieldChildren = $elField->childNodes;
             $choices = array();
             foreach ($fieldChildren as $elFieldChildren) {
-                if ($elFieldChildren->nodeName == "AuxilliaryIdentifier") {
-                    $fieldChildNodes1 = $elFieldChildren->childNodes;
-                    if($fieldChildNodes1->length < 1){
-                        continue;
-                    }
-                    foreach ($fieldChildNodes1 as $elFieldChildren1) {
-                        if ($elFieldChildren1->nodeName == "Value") {
-                            $choices[] = $elFieldChildren1->nodeValue;
-                        }
-                    }
+                if ($elFieldChildren->nodeName == "Category") {
+                    $choices[] = $elFieldChildren->nodeValue;
                 }
             }
             $attribute['choices'] = $choices;
