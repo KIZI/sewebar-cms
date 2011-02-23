@@ -74,7 +74,7 @@ class KBIntegrator implements IKBIntegrator
 
 	public function getPort()
 	{
-		return isset($this->config['port']) ? $this->config['port'] : 80;
+		return isset($this->config['port']) ? $this->config['port'] : 8081;
 	}
 
 	public function setPort($value)
@@ -113,7 +113,7 @@ class KBIntegrator implements IKBIntegrator
 
 		$query = $query['query'];
 
-		$method = $this->getMethod();
+		$method = strtoupper($this->getMethod());
 
 		switch($method) {
 			case 'POST':
