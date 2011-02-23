@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:pmml="http://www.dmg.org/PMML-4_0"
+    xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://sewebar.vse.cz/schemas/PMML4.0+GUHA0.1.xsd">
+<!-- 4ftMiner.HypoInGroup.PMML.Template, version of 2010-11-18 -->
+
+	<Header copyright="Copyright (c) KIZI UEP">
+		<Extension name="metabase" value="<?LM:System:Metabase?>"/>
+		<Extension name="dataset" value="<?LM:MB:Task.Matrix?>"/>
+		<Extension name="author" value="<?LM:System:User?>"/>
+		<Extension name="subsystem" value="<?LM:System:Subsystem?>"/>
+		<Extension name="module" value="<?LM:System:Module?>"/>
+		<Extension name="format" value="4ftMiner.Task"/>		
+		<Application name="LISp-Miner" version="<?LM:System:Version?>"/>
+		<Annotation><?LM:MB:Task.Description?></Annotation>
+		<Timestamp><?LM:MB:Task.GenerationStartTime?></Timestamp>
+	</Header>
+
+<!-- Matrix -->
+
+	<DataDictionary numberOfFields="<?LM:MB:Task.Attribute#Count?>">
+		<?LM:Loop:Task.Attribute?>
+		<DataField 
+			name="<?LM:MB:Task.Attribute?>" 
+			optype="<?LM:MB:Task.Attribute.Cardinality?>" 
+//			attributeType="<?LM:MB:Task.Attribute.AttributeSubType?>"
+			dataType="<?LM:MB:Task.Attribute.ValueSubType?>"
+		>
+			<?LM:IFF:Task.Attribute.Cardinality:Cardinal?>
+			<Extension name="Avg" value="<?LM:MB:Task.Attribute.ValueAvg?>" extender="Avg"/>
+			<Interval leftMargin="<?LM:MB:Task.Attribute.ValueMin?>" rightMargin="<?LM:MB:Task.Attribute.ValueMax?>" closure="closedClosed"/>
+			
+			<?LM:EndIFF:Task.Attribute.Cardinality?>
+		</DataField>
+		<?LM:EndLoop:Task.Attribute?>
+	</DataDictionary>
+
+<!-- Attributes -->
+
+	<TransformationDictionary>
+		<?LM:Loop:Task.Quantity?>
+		<DerivedField 
+			name= "<?LM:MB:Task.Quantity?>"
+			dataType="string" 
+			<?LM:IFF:Task.Quantity.DerivedFieldTransformation:MapValues?>
+			optype="ordinal"
+			<?LM:EndIFF:Task.Quantity.DerivedFieldTransformation?>
+			<?LM:IFF:Task.Quantity.DerivedFieldTransformation:Discretize?>
+			optype="continuous"
+			<?LM:EndIFF:Task.Quantity.DerivedFieldTransformation?>
+		>
+//			<!-- MapValue -->
+			<?LM:IFF:Task.Quantity.DerivedFieldTransformation:MapValues?>
+			<MapValues outputColumn="<?LM:MB:Task.Quantity?>"
+				<?LM:IFF:Task.Quantity.IncludeNULLCategory::Not?>
+				mapMissingTo="<?LM:MB:Task.Quantity.IncludeNULLCategory?>"
+				<?LM:EndIFF:Task.Quantity.IncludeNULLCategory?>
+			>
+				<FieldColumnPair column="<?LM:MB:Task.Quantity.Attribute?>" field="<?LM:MB:Task.Quantity?>"/>
+				<InlineTable>
+					<?LM:Loop:Task.Quantity.Category?>
+					<Extension name="Frequency" value="<?LM:MB:Task.Quantity.Category.Frequency?>" extender="<?LM:MB:Task.Quantity.Category?>"/>
+					<?LM:EndLoop:Task.Quantity.Category?>
+					<?LM:Loop:Task.Quantity.Category?>
+					<?LM:Loop:Task.Quantity.Category.Enum?>
+					<row>
+						<column><?LM:MB:Task.Quantity.Category.Enum?></column>
+						<field><?LM:MB:Task.Quantity.Category?></field>
+					</row>
+					<?LM:EndLoop:Task.Quantity.Category.Enum?>
+//					<!-- NULL -->
+					<?LM:IFF:Task.Quantity.Category.IncludeNULL:Yes?>
+					<row>
+						<column>NULL</column>
+						<field><?LM:MB:Task.Quantity.Category?></field>
+					</row>
+					<?LM:EndIFF:Task.Quantity.Category.IncludeNULL?>
+					<?LM:EndLoop:Task.Quantity.Category?>
+				</InlineTable>
+			</MapValues>
+			<?LM:EndIFF:Task.Quantity.DerivedFieldTransformation?>
+//			<!-- Discretize -->
+			<?LM:IFF:Task.Quantity.DerivedFieldTransformation:Discretize?>
+			<Discretize field="<?LM:MB:Task.Quantity.Attribute?>"
+				<?LM:IFF:Task.Quantity.IncludeNULLCategory::Not?>
+				mapMissingTo="<?LM:MB:Task.Quantity.IncludeNULLCategory?>"
+				<?LM:EndIFF:Task.Quantity.IncludeNULLCategory?>
+			>
+				<?LM:Loop:Task.Quantity.Category?>
+				<DiscretizeBin binValue="<?LM:MB:Task.Quantity.Category?>">
+					<Extension name="Frequency" value="<?LM:MB:Task.Quantity.Category.Frequency?>" extender="<?LM:MB:Task.Quantity.Category?>"/>
+					<?LM:IFF:Task.Quantity.Category.CategorySubType:Interval?>
+						<?LM:Loop:Task.Quantity.Category.Interval?>
+						<Interval 
+						  closure="<?LM:MB:Task.Quantity.Category.Interval.Closure?>" 
+						  leftMargin="<?LM:MB:Task.Quantity.Category.Interval.FromValue?>" 
+						  rightMargin="<?LM:MB:Task.Quantity.Category.Interval.ToValue?>" 
+						/>
+						<?LM:EndLoop:Task.Quantity.Category.Interval?>
+					<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+//					<!-- Enum -->
+					<?LM:IFF:Task.Quantity.Category.CategorySubType:Enumeration?>
+					<?LM:Loop:Task.Quantity.Category.Enum?>
+//					<Extension name="Enumeration" value="<?LM:MB:Task.Quantity.Category.Enum?>"/>
+					<Interval closure="closedClosed" leftMargin="<?LM:MB:Task.Quantity.Category.Enum?>" rightMargin="<?LM:MB:Task.Quantity.Category.Enum?>"/>
+					<?LM:EndLoop:Task.Quantity.Category.Enum?>
+					<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+//					<!-- NULL -->
+					<?LM:IFF:Task.Quantity.Category.IncludeNULL:Yes?>
+					<Extension name="Enumeration" value="NULL"/>
+					<?LM:EndIFF:Task.Quantity.Category.IncludeNULL?>
+				</DiscretizeBin>
+				<?LM:EndLoop:Task.Quantity.Category?>
+			</Discretize>
+			<?LM:EndIFF:Task.Quantity.DerivedFieldTransformation?>
+
+		</DerivedField>
+		<?LM:EndLoop:Task.Quantity?>
+	</TransformationDictionary>
+
+<!-- Task -->
+
+	<guha:AssociationModel  xmlns="" xsi:schemaLocation="http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"
+			  xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
+			  modelName="<?LM:MB:Task?>" 
+//			  modelName="GUHA Association rules procedure 4FT"
+			  functionName="associationRules" 
+			  algorithmName="4ft" 
+			  numberOfTransactions="<?LM:MB:Task.Matrix.RecordCount?>" 
+			  numberOfCategories="<?LM:MB:Task.TotalCategories?>" 
+			  numberOfRules="<?LM:MB:Task.Hypothesis#Count?>"
+	>
+		<TaskSetting>
+		<Extension name="LISp-Miner">
+			<TaskGroup><?LM:MB:Task.TaskGroup?></TaskGroup>
+			<NumberOfVerifications><?LM:MB:Task.GenerationNrOfTests?></NumberOfVerifications>
+			<TaskDuration><?LM:MB:Task.GenerationTime?></TaskDuration>
+			<FTMissingsType><?LM:MB:Task.MissingsType?></FTMissingsType>
+			<FTTaskParamProlong100AFlag><?LM:MB:Task.Prolong100A?></FTTaskParamProlong100AFlag>
+			<FTTaskParamProlong100SFlag><?LM:MB:Task.Prolong100S?></FTTaskParamProlong100SFlag>
+			<FTTaskParamPrimeCheckMinLen><?LM:MB:Task.PrimeCheckMinLen?></FTTaskParamPrimeCheckMinLen>
+			<FTTaskParamPrimeCheck><?LM:MB:Task.PrimeCheck?></FTTaskParamPrimeCheck>
+			<FTTaskParamIncludeSymetricFlag><?LM:MB:Task.IncludeSymetric?></FTTaskParamIncludeSymetricFlag>
+			<TaskNotice><?LM:MB:Task.Notice?></TaskNotice>
+		</Extension>
+			<BBASettings>
+//			<!-- FTLiteralD -->
+			<?LM:Loop:Task.FTCedentD?>
+			<?LM:Loop:Task.FTCedentD.LiteralD?>
+				<BBASetting 
+				   id="Basic_FTLiteralD_<?LM:MB:Task.FTCedentD.LiteralD.LiteralDID?>">			   
+					<Name><?LM:MB:Task.FTCedentD.LiteralD?></Name>
+					<FieldRef><?LM:MB:Task.FTCedentD.LiteralD.Quantity.Attribute?></FieldRef>
+					<Coefficient>
+					    <Type><?LM:MB:Task.FTCedentD.LiteralD.CoefficientType?></Type>
+					    <MinimalLength><?LM:MB:Task.FTCedentD.LiteralD.MinLen?></MinimalLength>
+					    <MaximalLength><?LM:MB:Task.FTCedentD.LiteralD.MaxLen?></MaximalLength>
+					</Coefficient>
+//					<Extension name="CedentType" value="<?LM:MB:Task.FTCedentD.CedentType?>"/>
+//					<Extension name="LiteralPosition" value=<?LM:MB:Task.FTCedentD.LiteralD.Ord?>"/>
+				</BBASetting>
+			<?LM:EndLoop:Task.FTCedentD.LiteralD?>
+			<?LM:EndLoop:Task.FTCedentD?>
+			</BBASettings>
+			<DBASettings>
+//			<!-- FTLiteralD: Sign (Gace) -->
+			<?LM:Loop:Task.FTCedentD?>			
+			<?LM:Loop:Task.FTCedentD.LiteralD?>
+				<DBASetting id="Derived_FTLiteralD_Sign_<?LM:MB:Task.FTCedentD.LiteralD.LiteralDID?>" 
+					type="Literal">
+					<Name><?LM:MB:Task.FTCedentD.LiteralD?></Name>
+					<BASettingRef>Basic_FTLiteralD_<?LM:MB:Task.FTCedentD.LiteralD.LiteralDID?></BASettingRef>
+					<LiteralSign><?LM:MB:Task.FTCedentD.LiteralD.GaceType?></LiteralSign>
+					<LiteralType><?LM:MB:Task.FTCedentD.LiteralD.LiteralType?></LiteralType>
+					<EquivalenceClass><?LM:MB:Task.FTCedentD.LiteralD.EquivalenceClass?></EquivalenceClass>				   
+				</DBASetting>
+			<?LM:EndLoop:Task.FTCedentD.LiteralD?>
+			<?LM:EndLoop:Task.FTCedentD?>
+
+//			<!-- FTCedentD: Conj, Disj, Len -->
+			<?LM:Loop:Task.FTCedentD?>
+			<?LM:IFF:Task.FTCedentD.LiteralD#Count:0:Not?>
+				<DBASetting 
+					id="Derived_FTCedentD_<?LM:MB:Task.FTCedentD.CedentDID?>"
+					type="<?LM:MB:Task.FTCedentD.BoolOpType?>"
+				>
+					<Name><?LM:MB:Task.FTCedentD?></Name>
+					<?LM:Loop:Task.FTCedentD.LiteralD?>
+					<BASettingRef>Derived_FTLiteralD_Sign_<?LM:MB:Task.FTCedentD.LiteralD.LiteralDID?></BASettingRef>
+					<?LM:EndLoop:Task.FTCedentD.LiteralD?>
+					<MinimalLength><?LM:MB:Task.FTCedentD.MinLen?></MinimalLength>
+					<MaximalLength><?LM:MB:Task.FTCedentD.MaxLen?></MaximalLength>
+				</DBASetting>
+			<?LM:EndIFF:Task.FTCedentD.LiteralD#Count?>
+			<?LM:EndLoop:Task.FTCedentD?>
+
+//			<!-- FTCedentBagD: TotalLen -->
+			<?LM:Loop:Task.FTCedentBagD?>
+			<?LM:IFF:Task.FTCedentBagD.LiteralCount:0:Not?>
+				<DBASetting id="Derived_FTCedentBagD_<?LM:MB:Task.FTCedentBagD.FTCedentBagDID?>" type="Conjunction">
+					<Name><?LM:MB:Task.FTCedentBagD?></Name>
+					<?LM:Loop:Task.FTCedentBagD.FTCedentD?>
+					<BASettingRef>Derived_FTCedentD_<?LM:MB:Task.FTCedentBagD.FTCedentD.CedentDID?></BASettingRef>
+					<?LM:EndLoop:Task.FTCedentBagD.FTCedentD?>
+					<MinimalLength><?LM:MB:Task.FTCedentBagD.MinLen?></MinimalLength>
+					<MaximalLength><?LM:MB:Task.FTCedentBagD.MaxLen?></MaximalLength>
+				</DBASetting>
+			<?LM:EndIFF:Task.FTCedentBagD.LiteralCount?>
+			<?LM:EndLoop:Task.FTCedentBagD?>
+
+			</DBASettings>
+
+		<?LM:IFF:Task.FTAntecedentBagD.LiteralCount:0:Not?>
+			<AntecedentSetting>Derived_FTCedentBagD_<?LM:MB:Task.FTAntecedentBagD.FTCedentBagDID?></AntecedentSetting>
+		<?LM:EndIFF:Task.FTAntecedentBagD.LiteralCount?>
+		<?LM:IFF:Task.FTSuccedentBagD.LiteralCount:0:Not?>
+			<ConsequentSetting>Derived_FTCedentBagD_<?LM:MB:Task.FTSuccedentBagD.FTCedentBagDID?></ConsequentSetting>
+		<?LM:EndIFF:Task.FTSuccedentBagD.LiteralCount?>
+		<?LM:IFF:Task.FTConditionBagD.LiteralCount:0:Not?>
+			<ConditionSetting>Derived_FTCedentBagD_<?LM:MB:Task.FTConditionBagD.FTCedentBagDID?></ConditionSetting>
+		<?LM:EndIFF:Task.FTConditionBagD.LiteralCount?>
+
+		<InterestMeasureSetting>
+		<?LM:Loop:Task.Quantifier?>
+		<InterestMeasureThreshold id="<?LM:MB:Task.Quantifier.FTQuantifierID?>">
+			<Extension name="ShortName"><?LM:MB:Task.Quantifier.FTQuantifierType.ShortName?></Extension>
+			<Extension name="Description"><?LM:MB:Task.Quantifier.FTQuantifierType.Notice?></Extension>
+			<Extension name="Order"><?LM:MB:Task.Quantifier.Ord?></Extension>
+			<?LM:IFF:Task.Quantifier.Threshold:N/A:Not?>
+			<InterestMeasure><?LM:MB:Task.Quantifier.FTQuantifierType?></InterestMeasure>
+			<Threshold><?LM:MB:Task.Quantifier.Threshold?></Threshold>
+			<CompareType><?LM:MB:Task.Quantifier.CompareType?></CompareType>
+			<?LM:IFF:Task.Quantifier.Extended:Y?>
+			<ThresholdType><?LM:MB:Task.Quantifier.FTQuantifierValueType?></ThresholdType>
+			<?LM:EndIFF:Task.Quantifier.Extended?>
+			<?LM:EndIFF:Task.Quantifier.Threshold?>
+			<?LM:IFF:Task.Quantifier.SignificanceLevel:N/A:Not?>
+			<SignificanceLevel><?LM:MB:Task.Quantifier.SignificanceLevel?></SignificanceLevel>
+			<?LM:EndIFF:Task.Quantifier.SignificanceLevel?>
+		</InterestMeasureThreshold>		
+		<?LM:EndLoop:Task.Quantifier?>
+		</InterestMeasureSetting>
+		</TaskSetting>
+
+	<!-- MiningSchema -->
+
+		<pmml:MiningSchema>
+		<?LM:Loop:Task.HypothesisAttribute?>
+			<pmml:MiningField name="<?LM:MB:Task.HypothesisAttribute?>"/>
+		<?LM:EndLoop:Task.HypothesisAttribute?>
+		</pmml:MiningSchema>
+
+	<!-- Item a DBA -->
+		<AssociationRules>
+//		<!-- Item: LiteralI -->	
+		<?LM:Loop:Task.HypothesisFTLiteralI?>		  
+		    <BBA id="BBA_FTLiteralI_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?>" literal="false">
+			<Text><?LM:MB:Task.HypothesisFTLiteralI?></Text>
+			<FieldRef><?LM:MB:Task.HypothesisFTLiteralI.LiteralD.Quantity?></FieldRef>
+			<?LM:Loop:Task.HypothesisFTLiteralI.Coefficient?>
+			<CatRef><?LM:MB:Task.HypothesisFTLiteralI.Coefficient?></CatRef>
+			<?LM:EndLoop:Task.HypothesisFTLiteralI.Coefficient?>
+		    </BBA>
+		<?LM:EndLoop:Task.HypothesisFTLiteralI?>
+
+//		<!-- DBA: Sign (Gace) -->	
+		<?LM:Loop:Task.HypothesisFTLiteralI?>
+// IF Literal is negative,  literal ="true" flag is placed on the DBA to mark that the referenced BBA cannot be thought of as a   literal (the default value for DBA is false)
+		<?LM:IFF:Task.HypothesisFTLiteralI.Negation:Yes?>
+		   <DBA id="DBA_FTLiteralI_Sign_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?>" connective="Negation" literal="true">
+			<Text><?LM:MB:Task.HypothesisFTLiteralI?></Text>
+			<BARef>BBA_FTLiteralI_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?></BARef>
+		   </DBA>
+		<?LM:EndIFF:Task.HypothesisFTLiteralI.Negation?>
+		<?LM:IFF:Task.HypothesisFTLiteralI.Negation:No?>
+		   <DBA id="DBA_FTLiteralI_Sign_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?>" connective="Conjunction" literal="true">
+			<Text><?LM:MB:Task.HypothesisFTLiteralI?></Text>
+			<BARef>BBA_FTLiteralI_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?></BARef>
+		   </DBA>
+		<?LM:EndIFF:Task.HypothesisFTLiteralI.Negation?>
+		<?LM:EndLoop:Task.HypothesisFTLiteralI?>
+
+//		<!-- DBA: CedentI -->	
+		<?LM:Loop:Task.HypothesisFTCedentI?>
+		   <DBA id="DBA_FTCedentI_<?LM:MB:Task.HypothesisFTCedentI.CedentIID?>" connective="<?LM:MB:Task.HypothesisFTCedentI.CedentD.BoolOpType?>">
+			<Text><?LM:MB:Task.HypothesisFTCedentI?></Text>
+			<?LM:Loop:Task.HypothesisFTCedentI.LiteralI?>
+			<BARef>DBA_FTLiteralI_Sign_<?LM:MB:Task.HypothesisFTCedentI.LiteralI.LiteralIID?></BARef>
+			<?LM:EndLoop:Task.HypothesisFTCedentI.LiteralI?>
+		   </DBA>
+		<?LM:EndLoop:Task.HypothesisFTCedentI?>
+
+//		<!-- DBA: CedentBag -->	
+		<?LM:Loop:HypothesisInGroup?>
+		   <DBA id="DBA_Antecedent_<?LM:MB:HypothesisInGroup.HypothesisID?>" connective="Conjunction">
+			<Text><?LM:MB:HypothesisInGroup.FTAntecedent?></Text>
+			<?LM:Loop:HypothesisInGroup.FTAntecedentBagI?>
+			<BARef>DBA_FTCedentI_<?LM:MB:HypothesisInGroup.FTAntecedentBagI.CedentIID?></BARef>
+			<?LM:EndLoop:HypothesisInGroup.FTAntecedentBagI?>
+		   </DBA>
+		   <DBA id="DBA_Succedent_<?LM:MB:HypothesisInGroup.HypothesisID?>" connective="Conjunction">
+			<Text><?LM:MB:HypothesisInGroup.FTSuccedent?></Text>
+			<?LM:Loop:HypothesisInGroup.FTSuccedentBagI?>
+			<BARef>DBA_FTCedentI_<?LM:MB:HypothesisInGroup.FTSuccedentBagI.CedentIID?></BARef>
+			<?LM:EndLoop:HypothesisInGroup.FTSuccedentBagI?>
+		   </DBA>
+		<?LM:IFF:HypothesisInGroup.FTConditionBagI#Count:0:Not?>
+		   <DBA id="DBA_Condition_<?LM:MB:HypothesisInGroup.HypothesisID?>" connective="Conjunction">
+			<Text><?LM:MB:HypothesisInGroup.FTCondition?></Text>
+			<?LM:Loop:HypothesisInGroup.FTConditionBagI?>
+			<BARef>DBA_FTCedentI_<?LM:MB:HypothesisInGroup.FTConditionBagI.CedentIID?></BARef>
+			<?LM:EndLoop:HypothesisInGroup.FTConditionBagI?>
+		   </DBA>
+		<?LM:EndIFF:HypothesisInGroup.FTConditionBagI#Count?>
+		<?LM:EndLoop:HypothesisInGroup?>
+
+	<!-- Hypothesis -->
+
+		<?LM:Loop:HypothesisInGroup?>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_<?LM:MB:HypothesisInGroup.HypothesisID?>"
+			consequent="DBA_Succedent_<?LM:MB:HypothesisInGroup.HypothesisID?>"
+			<?LM:IFF:HypothesisInGroup.FTConditionBagI#Count:0:Not?>
+			condition="DBA_Condition_<?LM:MB:HypothesisInGroup.HypothesisID?>"
+			<?LM:EndIFF:HypothesisInGroup.FTConditionBagI#Count?>
+		   >
+			<Text><?LM:MB:HypothesisInGroup.Name?></Text>
+	
+//			<!-- InterestMeasures -->
+			<?LM:Loop:HypothesisInGroup.InterestMeasure?>
+			<IMValue imSettingRef="<?LM:MB:HypothesisInGroup.InterestMeasure.QuantifierID?>" name="<?LM:MB:HypothesisInGroup.InterestMeasure.ShortName?>"><?LM:MB:HypothesisInGroup.InterestMeasure.Value?></IMValue>
+			<?LM:EndLoop:HypothesisInGroup.InterestMeasure?>
+
+//			<!-- Quantifier values -->
+			<?LM:Loop:HypothesisInGroup.QuantifierValue?>
+			<IMValue name="<?LM:MB:HypothesisInGroup.QuantifierValue.Name?>"><?LM:MB:HypothesisInGroup.QuantifierValue.Value?></IMValue>
+			<?LM:EndLoop:HypothesisInGroup.QuantifierValue?>
+
+//			<!-- Frequency table -->
+			<FourFtTable a="<?LM:MB:HypothesisInGroup.FreqA?>" b="<?LM:MB:HypothesisInGroup.FreqB?>" c="<?LM:MB:HypothesisInGroup.FreqC?>" d="<?LM:MB:HypothesisInGroup.FreqD?>"/>
+		   </AssociationRule>
+		<?LM:EndLoop:HypothesisInGroup?>
+		</AssociationRules>
+	</guha:AssociationModel>
+</PMML>
+

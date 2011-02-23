@@ -1,0 +1,192 @@
+BKEF XSLT * Daniel Stastny * 2009
+=================================
+
+BKEF XSLT file collection
+---------------------------------
+- bkef.xsd
+
+XML Schema definitions of valid BKEF XML file
+
+- bkef.xsl
+
+XSLT template for producing single website (BKEF website) of meta-attributes and optionaly imports the bkef-matrix.xsl
+
+- bkef-matrix.xsl
+
+XSLT template for producing matrix of mutual influences among meta-attributes
+
+- dictionary.xml
+
+Language definitions (currently implemented czech and english)
+
+- influences.js
+
+Partial displaying of the matrix (according to the meta-attributes of level 1)
+
+- wz_tooltip.js
+
+Tooltip for matrix
+
+- style.css
+CSS of the BKEF website and single matrix website
+
+place this file to the css folder of the active template 
+bkef.css -> templates/rhuk_milkyway/css
+and link it to the template 
+ see install_instructions_editTemplate.JPG
+
+
+
+- img/(...).png
+
+Folder with pictures of mutual influences
+---------------------------------
+
+---------------------------------
+CONTENT
+
+(1) BKEF* (bkef.xsl) definitions
+(2) BKEF-Matrix* (bkef-matrix.xsl) definitions
+(.1) APPENDIX
+     - Navigation menu, partial displaying of the matrix
+(.2) INSTALLATION AND DEFAULT SETTINGS FOR JOOMLA CMS AND SEWEBAR BKEF EXTENSION
+---------------------------------
+
+This documentation describes BKEF* and BKEF-Matrix* XSLT templates which produce single Web-page (valid XHTML) showing the content of the valid BKEF XML file.
+Note: with the "*" is meant the XSLT template (the file) for better orientation in the following text.
+
+These templates produces XHTML Web-page showing the content of the valid BKEF XML file.
+
+(1) BKEF* (bkef.xsl)
+
+The BKEF* template produces an overview of meta-attributes from BKEF XML source file.
+
+Important parts of the template:
+    [a] Navigation
+    [b] 1. Group of meta-attributes (level 1)
+        |   - 1. Meta-attribute (level 0)
+        |     | - Important premises
+        |     | - Format
+        |     |
+        |     |
+        |   - m. Meta-attribute (level 0)
+        |  
+        |  
+        n. Group of meta-attributes
+    [c] Data Matrix
+    
+[a] Makes the navigation window for easier browsing of produced XHTML website. See the APPENDIX.
+[b] Shows the clear list of meta-attributes with their parametres
+[c] Data Matrix - optional part, which is produced (imported) by single file BKEF-Matrix*
+
+Important parameters and settings of BKEF*
+------------------------------------------
+
+Following parameters are defined on the beginning of the BKEF*.
+
+[-] Name of the parametres
+
+[csspath]
+CSS Path - lokalization of CSS file (the name of the file is defined, so only the location of folder have to be specified)
+Example: <xsl:param name="csspath" select="'com_bkef/css/'"/>
+- the path must end with "/" (com_bkef/css/)
+
+[jspath]
+JS (JavaScript) Path: <xsl:param name="jspath" select="'com_bkef/js/'"/>
+The lokation of folder in this example is "com_bkef/js/"
+
+[img-url]
+The location of folder img/ with images of mutual influences
+Example: <xsl:param name="image-url" select="'xml/bkef/img/'" />
+
+[dictpath]
+The location of the dictionary.xml file with various language versions. The name dictionary.xml shall be mentioned.
+Example: <xsl:param name="dictpath" select="'bkef/dict/dictionary.xml'" />
+
+[lang]
+Language - "cz" or "en"
+<xsl:param name="lang">cz</xsl:param>
+
+[contentOnly]
+!! Very important !!
+Settings for content:
+
+If paremeter contentOnly contains the value 1, then it produces the content within <body>...</body> (so the website without any definitions).
+If the contentOnly contains the value 0, then it produces complete website
+
+Example (this definition produces complete website): <xsl:param name="contentOnly" select="0"/>
+
+[Matrix]
+If the value of parameter Matrix is 1, then it means true, so the Matrix will be included
+The value 0 of parameter Matrix means the opposite, matrix will not be produced.
+
+Example (matrix will be produced): <xsl:param name="Matrix" select="1"/>
+
+(2) BKEF-Matrix* (bkef-matrix.xsl)
+
+The BKEF-Matrix* produces single matrix of all meta-attributes.
+
+Important parameters and settings of BKEF-Matrix*
+-------------------------------------------------
+
+Settings are analog to BKEF*.
+
+[csspath] see the definition above
+[jspath] see the definition above
+[lang] see the definition above
+[contentOnly] see the definitions above (in this case there will be produced
+[img-url] see the definition above
+[dictpath] see the definition above
+[image-url] see the definition above
+
+
+(.1) APPENDIX - Navigation Menu
+
+The important feature of the navigation menu is the possibility to display (partial displaying) the matrix partially according to the meta-attributes of level 1.
+
+Partial displaying does work only within complete website (contentOnly 0).
+
+
+(.2) APPENDIX - INSTALATION AND DEFAULT SETTINGS FOR JOOMLA CMS (with installed SEWEBAR plugin for editing BKEF documents)
+
+!! BKEF* and BKEF-Matrix* shall be saved together within the same directory.
+
+BKEF*
+
+[contentOnly]
+<xsl:param name="contentOnly" select="1"/>
+
+[Matrix]
+<xsl:param name="Matrix" select="1"/>
+
+[csspath]
+<xsl:param name="jspath" select="'xml/bkef/css/'"/>
+
+[jspath]
+<xsl:param name="jspath" select="'xml/bkef/js/'"/>
+
+[img-url]
+<xsl:param name="image-url" select="'xml/bkef/img/'" />
+
+[dictpath]
+<xsl:param name="dictpath" select="'bkef/dict/dictionary.xml'" />
+
+Important JS files for SEWEBAR:
+- wz_tooltip.js shall be included within the (SEWEBAR) BKEF plugin in folder js/.
+- influences.js shall be also included in the js/ folder (but the path to the file has to be provided externally - just when the parameter [contentOnly] has value 1 (true), then the definition of the path to influences.js is not defined by the bkef.xls.
+
+BKEF-Matrix*
+
+If the BKEF-Matrix* is not use alone, but is imported by BKEF*, then the same parameters are inherited from BKEF*.
+
+[image-url]
+<xsl:param name="image-url" select="'img/'"/>
+It means the img/ folder shall be in the same directory as BKEF* as well as BKEF-Matrix*.
+
+IMPORTANT REMARK TO THE PATHS
+
+- BKEF* and BKEF-Matrix* shall be together in the same directory
+- dictionary.xml shall be in the same directory as BKEF* as well as BKEF-Matrix*
+- bkef.xsd is not directly used, it can serve as a control instance for creating new BKEF XML documents
+
+=================================
