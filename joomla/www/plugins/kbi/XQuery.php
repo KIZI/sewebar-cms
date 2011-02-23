@@ -16,9 +16,14 @@ require_once 'KBIntegratorSynchronable.php';
  */
 class XQuery extends KBIntegratorSynchronable
 {
+	public function getMethod()
+	{
+		return isset($this->config['method']) ? $this->config['method'] : 'POST';
+	}
+
 	public function getAction()
 	{
-		return isset($this->config['action']) ? $this->config['action'] : '';
+		return isset($this->config['action']) ? $this->config['action'] : 'directQuery';
 	}
 
 	public function setAction($value)
@@ -48,7 +53,7 @@ class XQuery extends KBIntegratorSynchronable
 			'content' => $query,
 		);
 
-		return $this->requestPost($this->getUrl(), $postdata);
+		return $this->requestCurlPost($this->getUrl(), $postdata);
 	}
 
 	public function getDocuments()

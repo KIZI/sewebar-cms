@@ -62,6 +62,8 @@ class KbiModelTransformator extends JModel {
 			$config = $value;
 		}
 
+		if(!is_array($config)) throw new Exception("Not valid source configuration");
+
 		$this->source = KBIntegrator::create($config);
 	}
 

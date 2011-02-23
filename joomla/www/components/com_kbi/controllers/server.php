@@ -46,10 +46,13 @@ class KbiControllerServer extends JController
 			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
 		);
 
-		$model = new KbiModelTransformator($config);
-		$view->assignRef('value', $model->transform());
+		try {
+			$model = new KbiModelTransformator($config);
+			$view->assignRef('value', $model->transform());
+		} catch (Exception $e) {
+			$view->assign('value', "<p class=\"kbierror\">Chyba dotazu: {$e->getMessage()}</p>");
+		}
 
-		//$view->assign('value', JPATH_COMPONENT_ADMINISTRATOR);
 		$view->display();
 	}
 }
