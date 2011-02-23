@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:complexType name="obsah" mixed="true">
+		<xs:sequence>
+			<xs:element name="tucne" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>	
+	
+	<xs:element name="clanek">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="autor" type="xs:string" />
+				<xs:element name="popis" type="obsah" />
+				<xs:element name="text">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nadpis" type="obsah" minOccurs="0" maxOccurs="unbounded" />
+							<xs:element name="odstavec" type="obsah" minOccurs="0" maxOccurs="unbounded" /> 
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="zapati" type="obsah" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

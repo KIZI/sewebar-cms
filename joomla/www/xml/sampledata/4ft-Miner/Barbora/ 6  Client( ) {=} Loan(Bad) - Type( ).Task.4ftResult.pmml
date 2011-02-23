@@ -1,0 +1,2235 @@
+<?xml version="1.0"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:pmml="http://www.dmg.org/PMML-4_0"
+    xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://sewebar.vse.cz/schemas/PMML4.0+GUHA0.1.xsd">
+
+<!-- 4ftMiner.Task.PMML.Template, version of 2010-11-29 -->
+
+	<Header copyright="Copyright (c) KIZI UEP">
+		<Extension name="metabase" value="LM LM Barbora.mdb MB"/>
+		<Extension name="dataset" value="Loans"/>
+		<Extension name="author" value="PowerUser"/>
+		<Extension name="subsystem" value="4ft-Miner"/>
+		<Extension name="module" value="4ftResult.exe"/>
+		<Extension name="format" value="4ftMiner.Task"/>		
+		<Application name="LISp-Miner" version="14.09.00 of 29 Nov 2010"/>
+		<Annotation></Annotation>
+		<Timestamp>12.1.2010 13:07:26</Timestamp>
+	</Header>
+
+<!-- Matrix -->
+
+	<DataDictionary numberOfFields="8">
+		<DataField 
+			name="Age" 
+			optype="continuous" 
+			dataType="integer"
+		>
+			<Extension name="Avg" value="43.357386" extender="Avg"/>
+			<Extension name="StDev" value="-1.000000" extender="StDev"/>
+            <Interval leftMargin="21.000000" rightMargin="67.000000" closure="closedClosed"/>			
+		</DataField>
+		<DataField 
+			name="amount" 
+			optype="continuous" 
+			dataType="integer"
+		>
+			<Extension name="Avg" value="151450.639702" extender="Avg"/>
+			<Extension name="StDev" value="-1.000000" extender="StDev"/>
+            <Interval leftMargin="4980.000000" rightMargin="590820.000000" closure="closedClosed"/>			
+		</DataField>
+		<DataField 
+			name="District" 
+			optype="categorical" 
+			dataType="string"
+		>
+		</DataField>
+		<DataField 
+			name="duration" 
+			optype="continuous" 
+			dataType="integer"
+		>
+			<Extension name="Avg" value="36.520466" extender="Avg"/>
+			<Extension name="StDev" value="-1.000000" extender="StDev"/>
+            <Interval leftMargin="12.000000" rightMargin="60.000000" closure="closedClosed"/>			
+		</DataField>
+		<DataField 
+			name="payments" 
+			optype="continuous" 
+			dataType="integer"
+		>
+			<Extension name="Avg" value="4192.148681" extender="Avg"/>
+			<Extension name="StDev" value="-1.000000" extender="StDev"/>
+            <Interval leftMargin="304.000000" rightMargin="41728.000000" closure="closedClosed"/>			
+		</DataField>
+		<DataField 
+			name="Salary" 
+			optype="continuous" 
+			dataType="integer"
+		>
+			<Extension name="Avg" value="9464.201747" extender="Avg"/>
+			<Extension name="StDev" value="-1.000000" extender="StDev"/>
+            <Interval leftMargin="8110.000000" rightMargin="12541.000000" closure="closedClosed"/>			
+		</DataField>
+		<DataField 
+			name="Sex" 
+			optype="categorical" 
+			dataType="string"
+		>
+		</DataField>
+		<DataField 
+			name="status" 
+			optype="categorical" 
+			dataType="string"
+		>
+		</DataField>
+	</DataDictionary>
+
+<!-- Attributes -->
+
+	<TransformationDictionary>
+		<DerivedField 
+			name= "Age"
+			dataType="string" 
+			optype="continuous"
+		>
+			<Discretize field="Age"
+			>
+				<DiscretizeBin binValue="&lt;21;31)">
+					<Extension name="Frequency" value="225" extender="&lt;21;31)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="21" 
+						  rightMargin="31" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;31;41)">
+					<Extension name="Frequency" value="1291" extender="&lt;31;41)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="31" 
+						  rightMargin="41" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;41;51)">
+					<Extension name="Frequency" value="1440" extender="&lt;41;51)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="41" 
+						  rightMargin="51" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;51;61)">
+					<Extension name="Frequency" value="1448" extender="&lt;51;61)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="51" 
+						  rightMargin="61" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;61;71)">
+					<Extension name="Frequency" value="1389" extender="&lt;61;71)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="61" 
+						  rightMargin="71" 
+						/>
+				</DiscretizeBin>
+			</Discretize>
+
+		</DerivedField>
+		<DerivedField 
+			name= "Amount"
+			dataType="string" 
+			optype="continuous"
+		>
+			<Discretize field="amount"
+			>
+				<DiscretizeBin binValue="&lt; 20">
+					<Extension name="Frequency" value="198" extender="&lt; 20"/>
+						<Interval 
+						  closure="openOpen" 
+						  leftMargin="0" 
+						  rightMargin="20000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;20;50)">
+					<Extension name="Frequency" value="936" extender="&lt;20;50)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="20000" 
+						  rightMargin="50000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;50;100)">
+					<Extension name="Frequency" value="1613" extender="&lt;50;100)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="50000" 
+						  rightMargin="100000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;100;250)">
+					<Extension name="Frequency" value="2300" extender="&lt;100;250)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="100000" 
+						  rightMargin="250000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&lt;250;500)">
+					<Extension name="Frequency" value="1089" extender="&lt;250;500)"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="250000" 
+						  rightMargin="500000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="&gt;= 500">
+					<Extension name="Frequency" value="45" extender="&gt;= 500"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="500000" 
+						  rightMargin="INF" 
+						/>
+				</DiscretizeBin>
+			</Discretize>
+
+		</DerivedField>
+		<DerivedField 
+			name= "District"
+			dataType="string" 
+			optype="ordinal"
+		>
+			<MapValues outputColumn="District"
+			>
+				<FieldColumnPair column="District" field="District"/>
+				<InlineTable>
+					<Extension name="Frequency" value="63" extender="Benesov"/>
+					<Extension name="Frequency" value="63" extender="Beroun"/>
+					<Extension name="Frequency" value="63" extender="Blansko"/>
+					<Extension name="Frequency" value="54" extender="Breclav"/>
+					<Extension name="Frequency" value="207" extender="Brno"/>
+					<Extension name="Frequency" value="99" extender="Brno - venkov"/>
+					<Extension name="Frequency" value="55" extender="Bruntal"/>
+					<Extension name="Frequency" value="54" extender="Ceska Lipa"/>
+					<Extension name="Frequency" value="81" extender="Ceske Budejovice"/>
+					<Extension name="Frequency" value="63" extender="Cesky Krumlov"/>
+					<Extension name="Frequency" value="45" extender="Decin"/>
+					<Extension name="Frequency" value="18" extender="Domazlice"/>
+					<Extension name="Frequency" value="135" extender="Frydek - Mistek"/>
+					<Extension name="Frequency" value="86" extender="Havlickuv Brod"/>
+					<Extension name="Frequency" value="72" extender="Hodonin"/>
+					<Extension name="Frequency" value="54" extender="Hradec Kralove"/>
+					<Extension name="Frequency" value="36" extender="Cheb"/>
+					<Extension name="Frequency" value="72" extender="Chomutov"/>
+					<Extension name="Frequency" value="63" extender="Chrudim"/>
+					<Extension name="Frequency" value="18" extender="Jablonec n. Nisou"/>
+					<Extension name="Frequency" value="72" extender="Jesenik"/>
+					<Extension name="Frequency" value="63" extender="Jicin"/>
+					<Extension name="Frequency" value="54" extender="Jihlava"/>
+					<Extension name="Frequency" value="99" extender="Jindrichuv Hradec"/>
+					<Extension name="Frequency" value="54" extender="Karlovy Vary"/>
+					<Extension name="Frequency" value="225" extender="Karvina"/>
+					<Extension name="Frequency" value="54" extender="Kladno"/>
+					<Extension name="Frequency" value="18" extender="Klatovy"/>
+					<Extension name="Frequency" value="99" extender="Kolin"/>
+					<Extension name="Frequency" value="99" extender="Kromeriz"/>
+					<Extension name="Frequency" value="72" extender="Kutna Hora"/>
+					<Extension name="Frequency" value="63" extender="Liberec"/>
+					<Extension name="Frequency" value="63" extender="Litomerice"/>
+					<Extension name="Frequency" value="117" extender="Louny"/>
+					<Extension name="Frequency" value="45" extender="Melnik"/>
+					<Extension name="Frequency" value="45" extender="Mlada Boleslav"/>
+					<Extension name="Frequency" value="61" extender="Most"/>
+					<Extension name="Frequency" value="72" extender="Nachod"/>
+					<Extension name="Frequency" value="45" extender="Novy Jicin"/>
+					<Extension name="Frequency" value="81" extender="Nymburk"/>
+					<Extension name="Frequency" value="135" extender="Olomouc"/>
+					<Extension name="Frequency" value="72" extender="Opava"/>
+					<Extension name="Frequency" value="180" extender="Ostrava - mesto"/>
+					<Extension name="Frequency" value="90" extender="Pardubice"/>
+					<Extension name="Frequency" value="54" extender="Pelhrimov"/>
+					<Extension name="Frequency" value="27" extender="Pisek"/>
+					<Extension name="Frequency" value="54" extender="Plzen"/>
+					<Extension name="Frequency" value="81" extender="Plzen - jih"/>
+					<Extension name="Frequency" value="63" extender="Plzen - sever"/>
+					<Extension name="Frequency" value="711" extender="Praha"/>
+					<Extension name="Frequency" value="45" extender="Praha - vychod"/>
+					<Extension name="Frequency" value="90" extender="Praha - zapad"/>
+					<Extension name="Frequency" value="108" extender="Prachatice"/>
+					<Extension name="Frequency" value="27" extender="Prerov"/>
+					<Extension name="Frequency" value="45" extender="Pribram"/>
+					<Extension name="Frequency" value="81" extender="Prostejov"/>
+					<Extension name="Frequency" value="81" extender="Rakovnik"/>
+					<Extension name="Frequency" value="72" extender="Rokycany"/>
+					<Extension name="Frequency" value="45" extender="Rychnov nad Kneznou"/>
+					<Extension name="Frequency" value="27" extender="Semily"/>
+					<Extension name="Frequency" value="12" extender="Sokolov"/>
+					<Extension name="Frequency" value="45" extender="Strakonice"/>
+					<Extension name="Frequency" value="54" extender="Sumperk"/>
+					<Extension name="Frequency" value="108" extender="Svitavy"/>
+					<Extension name="Frequency" value="72" extender="Tabor"/>
+					<Extension name="Frequency" value="99" extender="Tachov"/>
+					<Extension name="Frequency" value="45" extender="Teplice"/>
+					<Extension name="Frequency" value="54" extender="Trebic"/>
+					<Extension name="Frequency" value="63" extender="Trutnov"/>
+					<Extension name="Frequency" value="81" extender="Uherske Hradiste"/>
+					<Extension name="Frequency" value="27" extender="Usti nad Labem"/>
+					<Extension name="Frequency" value="135" extender="Usti nad Orlici"/>
+					<Extension name="Frequency" value="63" extender="Vsetin"/>
+					<Extension name="Frequency" value="72" extender="Vyskov"/>
+					<Extension name="Frequency" value="63" extender="Zdar nad Sazavou"/>
+					<Extension name="Frequency" value="144" extender="Zlin"/>
+					<Extension name="Frequency" value="54" extender="Znojmo"/>
+					<row>
+						<column>Benesov</column>
+						<field>Benesov</field>
+					</row>
+					<row>
+						<column>Beroun</column>
+						<field>Beroun</field>
+					</row>
+					<row>
+						<column>Blansko</column>
+						<field>Blansko</field>
+					</row>
+					<row>
+						<column>Breclav</column>
+						<field>Breclav</field>
+					</row>
+					<row>
+						<column>Brno</column>
+						<field>Brno</field>
+					</row>
+					<row>
+						<column>Brno - venkov</column>
+						<field>Brno - venkov</field>
+					</row>
+					<row>
+						<column>Bruntal</column>
+						<field>Bruntal</field>
+					</row>
+					<row>
+						<column>Ceska Lipa</column>
+						<field>Ceska Lipa</field>
+					</row>
+					<row>
+						<column>Ceske Budejovice</column>
+						<field>Ceske Budejovice</field>
+					</row>
+					<row>
+						<column>Cesky Krumlov</column>
+						<field>Cesky Krumlov</field>
+					</row>
+					<row>
+						<column>Decin</column>
+						<field>Decin</field>
+					</row>
+					<row>
+						<column>Domazlice</column>
+						<field>Domazlice</field>
+					</row>
+					<row>
+						<column>Frydek - Mistek</column>
+						<field>Frydek - Mistek</field>
+					</row>
+					<row>
+						<column>Havlickuv Brod</column>
+						<field>Havlickuv Brod</field>
+					</row>
+					<row>
+						<column>Hodonin</column>
+						<field>Hodonin</field>
+					</row>
+					<row>
+						<column>Hradec Kralove</column>
+						<field>Hradec Kralove</field>
+					</row>
+					<row>
+						<column>Cheb</column>
+						<field>Cheb</field>
+					</row>
+					<row>
+						<column>Chomutov</column>
+						<field>Chomutov</field>
+					</row>
+					<row>
+						<column>Chrudim</column>
+						<field>Chrudim</field>
+					</row>
+					<row>
+						<column>Jablonec n. Nisou</column>
+						<field>Jablonec n. Nisou</field>
+					</row>
+					<row>
+						<column>Jesenik</column>
+						<field>Jesenik</field>
+					</row>
+					<row>
+						<column>Jicin</column>
+						<field>Jicin</field>
+					</row>
+					<row>
+						<column>Jihlava</column>
+						<field>Jihlava</field>
+					</row>
+					<row>
+						<column>Jindrichuv Hradec</column>
+						<field>Jindrichuv Hradec</field>
+					</row>
+					<row>
+						<column>Karlovy Vary</column>
+						<field>Karlovy Vary</field>
+					</row>
+					<row>
+						<column>Karvina</column>
+						<field>Karvina</field>
+					</row>
+					<row>
+						<column>Kladno</column>
+						<field>Kladno</field>
+					</row>
+					<row>
+						<column>Klatovy</column>
+						<field>Klatovy</field>
+					</row>
+					<row>
+						<column>Kolin</column>
+						<field>Kolin</field>
+					</row>
+					<row>
+						<column>Kromeriz</column>
+						<field>Kromeriz</field>
+					</row>
+					<row>
+						<column>Kutna Hora</column>
+						<field>Kutna Hora</field>
+					</row>
+					<row>
+						<column>Liberec</column>
+						<field>Liberec</field>
+					</row>
+					<row>
+						<column>Litomerice</column>
+						<field>Litomerice</field>
+					</row>
+					<row>
+						<column>Louny</column>
+						<field>Louny</field>
+					</row>
+					<row>
+						<column>Melnik</column>
+						<field>Melnik</field>
+					</row>
+					<row>
+						<column>Mlada Boleslav</column>
+						<field>Mlada Boleslav</field>
+					</row>
+					<row>
+						<column>Most</column>
+						<field>Most</field>
+					</row>
+					<row>
+						<column>Nachod</column>
+						<field>Nachod</field>
+					</row>
+					<row>
+						<column>Novy Jicin</column>
+						<field>Novy Jicin</field>
+					</row>
+					<row>
+						<column>Nymburk</column>
+						<field>Nymburk</field>
+					</row>
+					<row>
+						<column>Olomouc</column>
+						<field>Olomouc</field>
+					</row>
+					<row>
+						<column>Opava</column>
+						<field>Opava</field>
+					</row>
+					<row>
+						<column>Ostrava - mesto</column>
+						<field>Ostrava - mesto</field>
+					</row>
+					<row>
+						<column>Pardubice</column>
+						<field>Pardubice</field>
+					</row>
+					<row>
+						<column>Pelhrimov</column>
+						<field>Pelhrimov</field>
+					</row>
+					<row>
+						<column>Pisek</column>
+						<field>Pisek</field>
+					</row>
+					<row>
+						<column>Plzen</column>
+						<field>Plzen</field>
+					</row>
+					<row>
+						<column>Plzen - jih</column>
+						<field>Plzen - jih</field>
+					</row>
+					<row>
+						<column>Plzen - sever</column>
+						<field>Plzen - sever</field>
+					</row>
+					<row>
+						<column>Praha</column>
+						<field>Praha</field>
+					</row>
+					<row>
+						<column>Praha - vychod</column>
+						<field>Praha - vychod</field>
+					</row>
+					<row>
+						<column>Praha - zapad</column>
+						<field>Praha - zapad</field>
+					</row>
+					<row>
+						<column>Prachatice</column>
+						<field>Prachatice</field>
+					</row>
+					<row>
+						<column>Prerov</column>
+						<field>Prerov</field>
+					</row>
+					<row>
+						<column>Pribram</column>
+						<field>Pribram</field>
+					</row>
+					<row>
+						<column>Prostejov</column>
+						<field>Prostejov</field>
+					</row>
+					<row>
+						<column>Rakovnik</column>
+						<field>Rakovnik</field>
+					</row>
+					<row>
+						<column>Rokycany</column>
+						<field>Rokycany</field>
+					</row>
+					<row>
+						<column>Rychnov nad Kneznou</column>
+						<field>Rychnov nad Kneznou</field>
+					</row>
+					<row>
+						<column>Semily</column>
+						<field>Semily</field>
+					</row>
+					<row>
+						<column>Sokolov</column>
+						<field>Sokolov</field>
+					</row>
+					<row>
+						<column>Strakonice</column>
+						<field>Strakonice</field>
+					</row>
+					<row>
+						<column>Sumperk</column>
+						<field>Sumperk</field>
+					</row>
+					<row>
+						<column>Svitavy</column>
+						<field>Svitavy</field>
+					</row>
+					<row>
+						<column>Tabor</column>
+						<field>Tabor</field>
+					</row>
+					<row>
+						<column>Tachov</column>
+						<field>Tachov</field>
+					</row>
+					<row>
+						<column>Teplice</column>
+						<field>Teplice</field>
+					</row>
+					<row>
+						<column>Trebic</column>
+						<field>Trebic</field>
+					</row>
+					<row>
+						<column>Trutnov</column>
+						<field>Trutnov</field>
+					</row>
+					<row>
+						<column>Uherske Hradiste</column>
+						<field>Uherske Hradiste</field>
+					</row>
+					<row>
+						<column>Usti nad Labem</column>
+						<field>Usti nad Labem</field>
+					</row>
+					<row>
+						<column>Usti nad Orlici</column>
+						<field>Usti nad Orlici</field>
+					</row>
+					<row>
+						<column>Vsetin</column>
+						<field>Vsetin</field>
+					</row>
+					<row>
+						<column>Vyskov</column>
+						<field>Vyskov</field>
+					</row>
+					<row>
+						<column>Zdar nad Sazavou</column>
+						<field>Zdar nad Sazavou</field>
+					</row>
+					<row>
+						<column>Zlin</column>
+						<field>Zlin</field>
+					</row>
+					<row>
+						<column>Znojmo</column>
+						<field>Znojmo</field>
+					</row>
+				</InlineTable>
+			</MapValues>
+
+		</DerivedField>
+		<DerivedField 
+			name= "Duration"
+			dataType="string" 
+			optype="ordinal"
+		>
+			<MapValues outputColumn="Duration"
+			>
+				<FieldColumnPair column="duration" field="Duration"/>
+				<InlineTable>
+					<Extension name="Frequency" value="1181" extender="1 year"/>
+					<Extension name="Frequency" value="1243" extender="2 years"/>
+					<Extension name="Frequency" value="1194" extender="3 years"/>
+					<Extension name="Frequency" value="1252" extender="4 years"/>
+					<Extension name="Frequency" value="1311" extender="5 years"/>
+					<row>
+						<column>12</column>
+						<field>1 year</field>
+					</row>
+					<row>
+						<column>13</column>
+						<field>2 years</field>
+					</row>
+					<row>
+						<column>24</column>
+						<field>2 years</field>
+					</row>
+					<row>
+						<column>36</column>
+						<field>3 years</field>
+					</row>
+					<row>
+						<column>48</column>
+						<field>4 years</field>
+					</row>
+					<row>
+						<column>60</column>
+						<field>5 years</field>
+					</row>
+				</InlineTable>
+			</MapValues>
+
+		</DerivedField>
+		<DerivedField 
+			name= "Quality"
+			dataType="string" 
+			optype="ordinal"
+		>
+			<MapValues outputColumn="Quality"
+			>
+				<FieldColumnPair column="status" field="Quality"/>
+				<InlineTable>
+					<Extension name="Frequency" value="5454" extender="good"/>
+					<Extension name="Frequency" value="727" extender="bad"/>
+					<row>
+						<column>A</column>
+						<field>good</field>
+					</row>
+					<row>
+						<column>C</column>
+						<field>good</field>
+					</row>
+					<row>
+						<column>B</column>
+						<field>bad</field>
+					</row>
+					<row>
+						<column>D</column>
+						<field>bad</field>
+					</row>
+				</InlineTable>
+			</MapValues>
+
+		</DerivedField>
+		<DerivedField 
+			name= "Repayment"
+			dataType="string" 
+			optype="continuous"
+		>
+			<Discretize field="payments"
+			>
+				<DiscretizeBin binValue="(0;1&gt;">
+					<Extension name="Frequency" value="325" extender="(0;1&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="0" 
+						  rightMargin="1000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(1;2&gt;">
+					<Extension name="Frequency" value="858" extender="(1;2&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="1000" 
+						  rightMargin="2000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(2;3&gt;">
+					<Extension name="Frequency" value="873" extender="(2;3&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="2000" 
+						  rightMargin="3000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(3;4&gt;">
+					<Extension name="Frequency" value="1098" extender="(3;4&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="3000" 
+						  rightMargin="4000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(4;5&gt;">
+					<Extension name="Frequency" value="884" extender="(4;5&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="4000" 
+						  rightMargin="5000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(5;6&gt;">
+					<Extension name="Frequency" value="727" extender="(5;6&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="5000" 
+						  rightMargin="6000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(6;7&gt;">
+					<Extension name="Frequency" value="595" extender="(6;7&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="6000" 
+						  rightMargin="7000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(7;8&gt;">
+					<Extension name="Frequency" value="450" extender="(7;8&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="7000" 
+						  rightMargin="8000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(8;9&gt;">
+					<Extension name="Frequency" value="280" extender="(8;9&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="8000" 
+						  rightMargin="9000" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="(9;10&gt;">
+					<Extension name="Frequency" value="90" extender="(9;10&gt;"/>
+						<Interval 
+						  closure="openClosed" 
+						  leftMargin="9000" 
+						  rightMargin="10000" 
+						/>
+				</DiscretizeBin>
+			</Discretize>
+
+		</DerivedField>
+		<DerivedField 
+			name= "Salary"
+			dataType="string" 
+			optype="continuous"
+		>
+			<Discretize field="Salary"
+			>
+				<DiscretizeBin binValue="low">
+					<Extension name="Frequency" value="2049" extender="low"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="8110" 
+						  rightMargin="8678" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="avg">
+					<Extension name="Frequency" value="2034" extender="avg"/>
+						<Interval 
+						  closure="closedOpen" 
+						  leftMargin="8678" 
+						  rightMargin="9624" 
+						/>
+				</DiscretizeBin>
+				<DiscretizeBin binValue="high">
+					<Extension name="Frequency" value="2098" extender="high"/>
+						<Interval 
+						  closure="closedClosed" 
+						  leftMargin="9624" 
+						  rightMargin="12541" 
+						/>
+				</DiscretizeBin>
+			</Discretize>
+
+		</DerivedField>
+		<DerivedField 
+			name= "Sex"
+			dataType="string" 
+			optype="ordinal"
+		>
+			<MapValues outputColumn="Sex"
+			>
+				<FieldColumnPair column="Sex" field="Sex"/>
+				<InlineTable>
+					<Extension name="Frequency" value="3145" extender="F"/>
+					<Extension name="Frequency" value="3036" extender="M"/>
+					<row>
+						<column>Yes</column>
+						<field>F</field>
+					</row>
+					<row>
+						<column>No</column>
+						<field>M</field>
+					</row>
+				</InlineTable>
+			</MapValues>
+
+		</DerivedField>
+	</TransformationDictionary>
+
+<!-- Task -->
+
+	<guha:AssociationModel  xmlns="" xsi:schemaLocation="http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"
+			  xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
+			  modelName=" 6  Client(?) &lt;=&gt; Loan(Bad) / Type(?)" 
+			  functionName="associationRules" 
+			  algorithmName="4ft" 
+			  numberOfTransactions="6181" 
+			  numberOfCategories="110" 
+			  numberOfRules="10"
+	>
+		<TaskSetting>
+		<Extension name="LISp-Miner">
+			<TaskGroup>Default task-group</TaskGroup>
+			<NumberOfVerifications>1648</NumberOfVerifications>
+			<TaskDuration>0h 0m 19s</TaskDuration>
+			<FTMissingsType>Delete</FTMissingsType>
+			<FTTaskParamProlong100AFlag>No</FTTaskParamProlong100AFlag>
+			<FTTaskParamProlong100SFlag>No</FTTaskParamProlong100SFlag>
+			<FTTaskParamPrimeCheckMinLen>No</FTTaskParamPrimeCheckMinLen>
+			<FTTaskParamPrimeCheck>Yes</FTTaskParamPrimeCheck>
+			<FTTaskParamIncludeSymetricFlag>Yes</FTTaskParamIncludeSymetricFlag>
+			<HypothesesCountMax>10</HypothesesCountMax>
+			<TaskNotice>simple literals, p = 0.7,  Base = 20</TaskNotice>
+		</Extension>
+			<BBASettings>
+				<BBASetting 
+				   id="Basic_FTLiteralD_17">			   
+					<Name>Age (subset), 1 - 1</Name>
+					<FieldRef>Age</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_18">			   
+					<Name>Sex (subset), 1 - 1</Name>
+					<FieldRef>Sex</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_19">			   
+					<Name>Salary (subset), 1 - 1</Name>
+					<FieldRef>Salary</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_20">			   
+					<Name>District (subset), 1 - 1</Name>
+					<FieldRef>District</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_21">			   
+					<Name>Quality (rcut), 1 - 1</Name>
+					<FieldRef>Quality</FieldRef>
+					<Coefficient>
+					    <Type>Right cut</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_26">			   
+					<Name>Amount (subset), 1 - 1</Name>
+					<FieldRef>Amount</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_27">			   
+					<Name>Repayment (subset), 1 - 1</Name>
+					<FieldRef>Repayment</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+				<BBASetting 
+				   id="Basic_FTLiteralD_28">			   
+					<Name>Duration (subset), 1 - 1</Name>
+					<FieldRef>Duration</FieldRef>
+					<Coefficient>
+					    <Type>Subset</Type>
+					    <MinimalLength>1</MinimalLength>
+					    <MaximalLength>1</MaximalLength>
+					</Coefficient>
+				</BBASetting>
+			</BBASettings>
+			<DBASettings>
+				<DBASetting id="Derived_FTLiteralD_Sign_17" 
+					type="Literal">
+					<Name>Age (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_17</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_18" 
+					type="Literal">
+					<Name>Sex (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_18</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_19" 
+					type="Literal">
+					<Name>Salary (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_19</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_20" 
+					type="Literal">
+					<Name>District (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_20</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_21" 
+					type="Literal">
+					<Name>Quality (rcut), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_21</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_26" 
+					type="Literal">
+					<Name>Amount (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_26</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_27" 
+					type="Literal">
+					<Name>Repayment (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_27</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+				<DBASetting id="Derived_FTLiteralD_Sign_28" 
+					type="Literal">
+					<Name>Duration (subset), 1 - 1</Name>
+					<BASettingRef>Basic_FTLiteralD_28</BASettingRef>
+					<LiteralSign>Positive</LiteralSign>
+					<LiteralType>Basic</LiteralType>
+					<EquivalenceClass>NULL</EquivalenceClass>				   
+				</DBASetting>
+
+				<DBASetting 
+					id="Derived_FTCedentD_10"
+					type="Conjunction"
+				>
+					<Name>Cedent</Name>
+					<BASettingRef>Derived_FTLiteralD_Sign_17</BASettingRef>
+					<BASettingRef>Derived_FTLiteralD_Sign_18</BASettingRef>
+					<BASettingRef>Derived_FTLiteralD_Sign_19</BASettingRef>
+					<BASettingRef>Derived_FTLiteralD_Sign_20</BASettingRef>
+					<MinimalLength>1</MinimalLength>
+					<MaximalLength>4</MaximalLength>
+				</DBASetting>
+				<DBASetting 
+					id="Derived_FTCedentD_11"
+					type="Conjunction"
+				>
+					<Name>Cedent</Name>
+					<BASettingRef>Derived_FTLiteralD_Sign_21</BASettingRef>
+					<MinimalLength>1</MinimalLength>
+					<MaximalLength>1</MaximalLength>
+				</DBASetting>
+				<DBASetting 
+					id="Derived_FTCedentD_12"
+					type="Conjunction"
+				>
+					<Name>Cedent</Name>
+					<BASettingRef>Derived_FTLiteralD_Sign_26</BASettingRef>
+					<BASettingRef>Derived_FTLiteralD_Sign_27</BASettingRef>
+					<BASettingRef>Derived_FTLiteralD_Sign_28</BASettingRef>
+					<MinimalLength>0</MinimalLength>
+					<MaximalLength>99</MaximalLength>
+				</DBASetting>
+
+				<DBASetting id="Derived_FTCedentBagD_11" type="Conjunction">
+					<Name>Antecedent</Name>
+					<BASettingRef>Derived_FTCedentD_10</BASettingRef>
+					<MinimalLength>0</MinimalLength>
+					<MaximalLength>99</MaximalLength>
+				</DBASetting>
+				<DBASetting id="Derived_FTCedentBagD_12" type="Conjunction">
+					<Name>Succedent</Name>
+					<BASettingRef>Derived_FTCedentD_11</BASettingRef>
+					<MinimalLength>1</MinimalLength>
+					<MaximalLength>99</MaximalLength>
+				</DBASetting>
+				<DBASetting id="Derived_FTCedentBagD_10" type="Conjunction">
+					<Name>Condition</Name>
+					<BASettingRef>Derived_FTCedentD_12</BASettingRef>
+					<MinimalLength>0</MinimalLength>
+					<MaximalLength>99</MaximalLength>
+				</DBASetting>
+
+			</DBASettings>
+
+			<AntecedentSetting>Derived_FTCedentBagD_11</AntecedentSetting>
+			<ConsequentSetting>Derived_FTCedentBagD_12</ConsequentSetting>
+			<ConditionSetting>Derived_FTCedentBagD_10</ConditionSetting>
+
+		<InterestMeasureSetting>
+		<InterestMeasureThreshold id="33">
+			<Extension name="ShortName">BASE</Extension>
+			<Extension name="Description">a &gt;= BASE ... at least BASE-number of objects for dependency to be statistically relevant</Extension>
+			<Extension name="Order">0</Extension>
+			<InterestMeasure>BASE</InterestMeasure>
+			<Threshold>0.003236</Threshold>
+			<CompareType>Greater than or equal</CompareType>
+		</InterestMeasureThreshold>		
+		<InterestMeasureThreshold id="4">
+			<Extension name="ShortName">DFUI</Extension>
+			<Extension name="Description">a/(a+b+c) &gt;= p ... at least 100*p [%] of objects satisfying A or S satisfy both A and S</Extension>
+			<Extension name="Order">1</Extension>
+			<InterestMeasure>Double Founded Implication</InterestMeasure>
+			<Threshold>0.700000</Threshold>
+			<CompareType>Greater than or equal</CompareType>
+		</InterestMeasureThreshold>		
+		</InterestMeasureSetting>
+		</TaskSetting>
+
+	<!-- MiningSchema -->
+
+		<pmml:MiningSchema>
+			<pmml:MiningField name="Age"/>
+			<pmml:MiningField name="amount"/>
+			<pmml:MiningField name="District"/>
+			<pmml:MiningField name="duration"/>
+			<pmml:MiningField name="payments"/>
+			<pmml:MiningField name="Salary"/>
+			<pmml:MiningField name="Sex"/>
+			<pmml:MiningField name="status"/>
+		</pmml:MiningSchema>
+
+	<!-- Item a DBA -->
+
+		<AssociationRules>
+
+		    <BBA id="BBA_FTLiteralI_1655" literal="false">
+			<Text>Age(&lt;61;71))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;61;71)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1656" literal="false">
+			<Text>Salary(avg)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>avg</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1657" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1658" literal="false">
+			<Text>Amount(&lt;20;50))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;20;50)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1659" literal="false">
+			<Text>Repayment((2;3&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(2;3&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1660" literal="false">
+			<Text>Age(&lt;61;71))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;61;71)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1661" literal="false">
+			<Text>Salary(avg)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>avg</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1662" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1663" literal="false">
+			<Text>Amount(&lt;20;50))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;20;50)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1664" literal="false">
+			<Text>Repayment((2;3&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(2;3&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1665" literal="false">
+			<Text>Duration(1 year)</Text>
+			<FieldRef>Duration</FieldRef>
+			<CatRef>1 year</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1666" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1667" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1668" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1669" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1670" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1671" literal="false">
+			<Text>Sex(M)</Text>
+			<FieldRef>Sex</FieldRef>
+			<CatRef>M</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1672" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1673" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1674" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1675" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1676" literal="false">
+			<Text>Sex(M)</Text>
+			<FieldRef>Sex</FieldRef>
+			<CatRef>M</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1677" literal="false">
+			<Text>Salary(low)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>low</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1678" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1679" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1680" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1681" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1682" literal="false">
+			<Text>Sex(M)</Text>
+			<FieldRef>Sex</FieldRef>
+			<CatRef>M</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1683" literal="false">
+			<Text>Salary(low)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>low</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1684" literal="false">
+			<Text>District(Havlickuv Brod)</Text>
+			<FieldRef>District</FieldRef>
+			<CatRef>Havlickuv Brod</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1685" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1686" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1687" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1688" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1689" literal="false">
+			<Text>Sex(M)</Text>
+			<FieldRef>Sex</FieldRef>
+			<CatRef>M</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1690" literal="false">
+			<Text>District(Havlickuv Brod)</Text>
+			<FieldRef>District</FieldRef>
+			<CatRef>Havlickuv Brod</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1691" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1692" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1693" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1694" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1695" literal="false">
+			<Text>Salary(low)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>low</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1696" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1697" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1698" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1699" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1700" literal="false">
+			<Text>Salary(low)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>low</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1701" literal="false">
+			<Text>District(Havlickuv Brod)</Text>
+			<FieldRef>District</FieldRef>
+			<CatRef>Havlickuv Brod</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1702" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1703" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1704" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1705" literal="false">
+			<Text>Age(&lt;31;41))</Text>
+			<FieldRef>Age</FieldRef>
+			<CatRef>&lt;31;41)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1706" literal="false">
+			<Text>District(Havlickuv Brod)</Text>
+			<FieldRef>District</FieldRef>
+			<CatRef>Havlickuv Brod</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1707" literal="false">
+			<Text>Quality(bad)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>bad</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1708" literal="false">
+			<Text>Amount(&lt;100;250))</Text>
+			<FieldRef>Amount</FieldRef>
+			<CatRef>&lt;100;250)</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_1709" literal="false">
+			<Text>Repayment((1;2&gt;)</Text>
+			<FieldRef>Repayment</FieldRef>
+			<CatRef>(1;2&gt;</CatRef>
+		    </BBA>
+
+		   <DBA id="DBA_FTLiteralI_Sign_1655" connective="Conjunction" literal="true">
+			<Text>Age(&lt;61;71))</Text>
+			<BARef>BBA_FTLiteralI_1655</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1656" connective="Conjunction" literal="true">
+			<Text>Salary(avg)</Text>
+			<BARef>BBA_FTLiteralI_1656</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1657" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1657</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1658" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;20;50))</Text>
+			<BARef>BBA_FTLiteralI_1658</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1659" connective="Conjunction" literal="true">
+			<Text>Repayment((2;3&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1659</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1660" connective="Conjunction" literal="true">
+			<Text>Age(&lt;61;71))</Text>
+			<BARef>BBA_FTLiteralI_1660</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1661" connective="Conjunction" literal="true">
+			<Text>Salary(avg)</Text>
+			<BARef>BBA_FTLiteralI_1661</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1662" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1662</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1663" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;20;50))</Text>
+			<BARef>BBA_FTLiteralI_1663</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1664" connective="Conjunction" literal="true">
+			<Text>Repayment((2;3&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1664</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1665" connective="Conjunction" literal="true">
+			<Text>Duration(1 year)</Text>
+			<BARef>BBA_FTLiteralI_1665</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1666" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1666</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1667" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1667</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1668" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1668</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1669" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1669</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1670" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1670</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1671" connective="Conjunction" literal="true">
+			<Text>Sex(M)</Text>
+			<BARef>BBA_FTLiteralI_1671</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1672" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1672</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1673" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1673</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1674" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1674</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1675" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1675</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1676" connective="Conjunction" literal="true">
+			<Text>Sex(M)</Text>
+			<BARef>BBA_FTLiteralI_1676</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1677" connective="Conjunction" literal="true">
+			<Text>Salary(low)</Text>
+			<BARef>BBA_FTLiteralI_1677</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1678" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1678</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1679" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1679</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1680" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1680</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1681" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1681</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1682" connective="Conjunction" literal="true">
+			<Text>Sex(M)</Text>
+			<BARef>BBA_FTLiteralI_1682</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1683" connective="Conjunction" literal="true">
+			<Text>Salary(low)</Text>
+			<BARef>BBA_FTLiteralI_1683</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1684" connective="Conjunction" literal="true">
+			<Text>District(Havlickuv Brod)</Text>
+			<BARef>BBA_FTLiteralI_1684</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1685" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1685</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1686" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1686</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1687" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1687</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1688" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1688</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1689" connective="Conjunction" literal="true">
+			<Text>Sex(M)</Text>
+			<BARef>BBA_FTLiteralI_1689</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1690" connective="Conjunction" literal="true">
+			<Text>District(Havlickuv Brod)</Text>
+			<BARef>BBA_FTLiteralI_1690</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1691" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1691</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1692" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1692</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1693" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1693</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1694" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1694</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1695" connective="Conjunction" literal="true">
+			<Text>Salary(low)</Text>
+			<BARef>BBA_FTLiteralI_1695</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1696" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1696</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1697" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1697</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1698" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1698</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1699" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1699</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1700" connective="Conjunction" literal="true">
+			<Text>Salary(low)</Text>
+			<BARef>BBA_FTLiteralI_1700</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1701" connective="Conjunction" literal="true">
+			<Text>District(Havlickuv Brod)</Text>
+			<BARef>BBA_FTLiteralI_1701</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1702" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1702</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1703" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1703</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1704" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1704</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1705" connective="Conjunction" literal="true">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>BBA_FTLiteralI_1705</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1706" connective="Conjunction" literal="true">
+			<Text>District(Havlickuv Brod)</Text>
+			<BARef>BBA_FTLiteralI_1706</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1707" connective="Conjunction" literal="true">
+			<Text>Quality(bad)</Text>
+			<BARef>BBA_FTLiteralI_1707</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1708" connective="Conjunction" literal="true">
+			<Text>Amount(&lt;100;250))</Text>
+			<BARef>BBA_FTLiteralI_1708</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_1709" connective="Conjunction" literal="true">
+			<Text>Repayment((1;2&gt;)</Text>
+			<BARef>BBA_FTLiteralI_1709</BARef>
+		   </DBA>
+
+		   <DBA id="DBA_FTCedentI_135" connective="Conjunction">
+			<Text>Age(&lt;61;71)) &amp; Salary(avg)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1655</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1656</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_136" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1657</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_137" connective="Conjunction">
+			<Text>Amount(&lt;20;50)) &amp; Repayment((2;3&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1658</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1659</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_138" connective="Conjunction">
+			<Text>Age(&lt;61;71)) &amp; Salary(avg)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1660</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1661</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_139" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1662</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_140" connective="Conjunction">
+			<Text>Amount(&lt;20;50)) &amp; Repayment((2;3&gt;) &amp; Duration(1 year)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1663</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1664</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1665</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_141" connective="Conjunction">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>DBA_FTLiteralI_Sign_1666</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_142" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1667</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_143" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1668</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1669</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_144" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1670</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1671</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_145" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1672</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_146" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1673</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1674</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_147" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; Salary(low)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1675</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1676</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1677</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_148" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1678</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_149" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1679</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1680</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_150" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; Salary(low) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1681</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1682</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1683</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1684</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_151" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1685</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_152" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1686</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1687</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_153" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1688</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1689</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1690</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_154" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1691</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_155" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1692</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1693</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_156" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Salary(low)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1694</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1695</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_157" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1696</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_158" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1697</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1698</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_159" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Salary(low) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1699</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1700</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1701</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_160" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1702</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_161" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1703</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1704</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_162" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1705</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1706</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_163" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1707</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_164" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTLiteralI_Sign_1708</BARef>
+			<BARef>DBA_FTLiteralI_Sign_1709</BARef>
+		   </DBA>
+
+		   <DBA id="DBA_Antecedent_349" connective="Conjunction">
+			<Text>Age(&lt;61;71)) &amp; Salary(avg)</Text>
+			<BARef>DBA_FTCedentI_135</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_349" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_136</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_349" connective="Conjunction">
+			<Text>Amount(&lt;20;50)) &amp; Repayment((2;3&gt;)</Text>
+			<BARef>DBA_FTCedentI_137</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_350" connective="Conjunction">
+			<Text>Age(&lt;61;71)) &amp; Salary(avg)</Text>
+			<BARef>DBA_FTCedentI_138</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_350" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_139</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_350" connective="Conjunction">
+			<Text>Amount(&lt;20;50)) &amp; Repayment((2;3&gt;) &amp; Duration(1 year)</Text>
+			<BARef>DBA_FTCedentI_140</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_351" connective="Conjunction">
+			<Text>Age(&lt;31;41))</Text>
+			<BARef>DBA_FTCedentI_141</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_351" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_142</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_351" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_143</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_352" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M)</Text>
+			<BARef>DBA_FTCedentI_144</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_352" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_145</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_352" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_146</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_353" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; Salary(low)</Text>
+			<BARef>DBA_FTCedentI_147</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_353" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_148</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_353" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_149</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_354" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; Salary(low) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTCedentI_150</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_354" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_151</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_354" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_152</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_355" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTCedentI_153</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_355" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_154</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_355" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_155</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_356" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Salary(low)</Text>
+			<BARef>DBA_FTCedentI_156</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_356" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_157</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_356" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_158</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_357" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; Salary(low) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTCedentI_159</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_357" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_160</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_357" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_161</BARef>
+		   </DBA>
+		   <DBA id="DBA_Antecedent_358" connective="Conjunction">
+			<Text>Age(&lt;31;41)) &amp; District(Havlickuv Brod)</Text>
+			<BARef>DBA_FTCedentI_162</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_358" connective="Conjunction">
+			<Text>Quality(bad)</Text>
+			<BARef>DBA_FTCedentI_163</BARef>
+		   </DBA>
+		   <DBA id="DBA_Condition_358" connective="Conjunction">
+			<Text>Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+			<BARef>DBA_FTCedentI_164</BARef>
+		   </DBA>
+
+	<!-- Hypothesis -->
+
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_349"
+			consequent="DBA_Succedent_349"
+			condition="DBA_Condition_349"
+		   >
+			<Text>Age(&lt;61;71)) &amp; Salary(avg) ::: Quality(bad) / Amount(&lt;20;50)) &amp; Repayment((2;3&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">27</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.75</IMValue>
+
+			<IMValue name="a">27</IMValue>
+			<IMValue name="b">9</IMValue>
+			<IMValue name="c">0</IMValue>
+			<IMValue name="d">135</IMValue>
+			<IMValue name="r">36</IMValue>
+			<IMValue name="n">171</IMValue>
+			<IMValue name="Conf">0.75</IMValue>
+			<IMValue name="DConf">0.75</IMValue>
+			<IMValue name="EConf">0.9473684211</IMValue>
+			<IMValue name="Supp">0.1578947368</IMValue>
+			<IMValue name="Cmplt">1</IMValue>
+			<IMValue name="AvgDf">3.75</IMValue>
+			<IMValue name="LBound">0.997801589</IMValue>
+			<IMValue name="UBound">0.0076728179</IMValue>
+			<IMValue name="ELBound">0.0197267317</IMValue>
+			<IMValue name="EUBound">0.9910256449</IMValue>
+			<IMValue name="DLBound">0.997801589</IMValue>
+			<IMValue name="DUBound">0.0076728179</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">120.234375</IMValue>
+			<IMValue name="bMean">0.7368421053</IMValue>
+			<IMValue name="bVAR">0.7368421053</IMValue>
+			<IMValue name="bStDev">0.0705120134</IMValue>
+			<IMValue name="P(&gt;=90%)">0.0027468644</IMValue>
+			<IMValue name="P(&gt;=95%)">0.0000097608</IMValue>
+
+			<FourFtTable a="27" b="9" c="0" d="135"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_350"
+			consequent="DBA_Succedent_350"
+			condition="DBA_Condition_350"
+		   >
+			<Text>Age(&lt;61;71)) &amp; Salary(avg) ::: Quality(bad) / Amount(&lt;20;50)) &amp; Repayment((2;3&gt;) &amp; Duration(1 year)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">27</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">1</IMValue>
+
+			<IMValue name="a">27</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">0</IMValue>
+			<IMValue name="d">108</IMValue>
+			<IMValue name="r">27</IMValue>
+			<IMValue name="n">135</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">1</IMValue>
+			<IMValue name="EConf">1</IMValue>
+			<IMValue name="Supp">0.2</IMValue>
+			<IMValue name="Cmplt">1</IMValue>
+			<IMValue name="AvgDf">4</IMValue>
+			<IMValue name="LBound">0.058149737</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0000006649</IMValue>
+			<IMValue name="EUBound">1</IMValue>
+			<IMValue name="DLBound">0.058149737</IMValue>
+			<IMValue name="DUBound">1</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">135</IMValue>
+			<IMValue name="bMean">0.9655172414</IMValue>
+			<IMValue name="bVAR">0.9655172414</IMValue>
+			<IMValue name="bStDev">0.0333135098</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9477241656</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7621847143</IMValue>
+
+			<FourFtTable a="27" b="0" c="0" d="108"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_351"
+			consequent="DBA_Succedent_351"
+			condition="DBA_Condition_351"
+		   >
+			<Text>Age(&lt;31;41)) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_352"
+			consequent="DBA_Succedent_352"
+			condition="DBA_Condition_352"
+		   >
+			<Text>Age(&lt;31;41)) &amp; Sex(M) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_353"
+			consequent="DBA_Succedent_353"
+			condition="DBA_Condition_353"
+		   >
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; Salary(low) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_354"
+			consequent="DBA_Succedent_354"
+			condition="DBA_Condition_354"
+		   >
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; Salary(low) &amp; District(Havlickuv Brod) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_355"
+			consequent="DBA_Succedent_355"
+			condition="DBA_Condition_355"
+		   >
+			<Text>Age(&lt;31;41)) &amp; Sex(M) &amp; District(Havlickuv Brod) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_356"
+			consequent="DBA_Succedent_356"
+			condition="DBA_Condition_356"
+		   >
+			<Text>Age(&lt;31;41)) &amp; Salary(low) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_357"
+			consequent="DBA_Succedent_357"
+			condition="DBA_Condition_357"
+		   >
+			<Text>Age(&lt;31;41)) &amp; Salary(low) &amp; District(Havlickuv Brod) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		   <AssociationRule 
+			antecedent="DBA_Antecedent_358"
+			consequent="DBA_Succedent_358"
+			condition="DBA_Condition_358"
+		   >
+			<Text>Age(&lt;31;41)) &amp; District(Havlickuv Brod) ::: Quality(bad) / Amount(&lt;100;250)) &amp; Repayment((1;2&gt;)</Text>
+	
+			<IMValue imSettingRef="33" name="BASE">29</IMValue>
+			<IMValue imSettingRef="4" name="DFUI">0.9666666667</IMValue>
+
+			<IMValue name="a">29</IMValue>
+			<IMValue name="b">0</IMValue>
+			<IMValue name="c">1</IMValue>
+			<IMValue name="d">54</IMValue>
+			<IMValue name="r">29</IMValue>
+			<IMValue name="n">84</IMValue>
+			<IMValue name="Conf">1</IMValue>
+			<IMValue name="DConf">0.9666666667</IMValue>
+			<IMValue name="EConf">0.9880952381</IMValue>
+			<IMValue name="Supp">0.3452380952</IMValue>
+			<IMValue name="Cmplt">0.9666666667</IMValue>
+			<IMValue name="AvgDf">1.8</IMValue>
+			<IMValue name="LBound">0.047101287</IMValue>
+			<IMValue name="UBound">1</IMValue>
+			<IMValue name="ELBound">0.0014811916</IMValue>
+			<IMValue name="EUBound">0.9998566589</IMValue>
+			<IMValue name="DLBound">0.1836950192</IMValue>
+			<IMValue name="DUBound">0.9576088417</IMValue>
+			<IMValue name="Fisher">0</IMValue>
+			<IMValue name="Chi-Sq">79.7236363636</IMValue>
+			<IMValue name="bMean">0.9677419355</IMValue>
+			<IMValue name="bVAR">0.9677419355</IMValue>
+			<IMValue name="bStDev">0.0312337367</IMValue>
+			<IMValue name="P(&gt;=90%)">0.9576775466</IMValue>
+			<IMValue name="P(&gt;=95%)">0.7853750504</IMValue>
+
+			<FourFtTable a="29" b="0" c="1" d="54"/>
+		   </AssociationRule>
+		</AssociationRules>
+	</guha:AssociationModel>
+</PMML>

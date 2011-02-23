@@ -1,0 +1,10 @@
+Source value in export	Target value 
+optype="Cardinal"	optype="continuous"
+optype="Nominal"	optype="categorical"
+dataType="String"	dataType="string"
+dataType="Long integer"	dataType="integer"
+dataType="Float"	dataType="float"
+dataType="Boolean"	dataType="string"
+dataType="Date"	dataType="string"
+leftMargin="-Inf"	leftMargin="-INF"
+rightMargin="+inf"	rightMargin="INF"
