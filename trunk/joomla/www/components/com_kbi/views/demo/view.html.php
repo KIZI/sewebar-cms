@@ -32,7 +32,7 @@ class KbiViewDemo extends JView
 		$style.= '#messages{min-height: 1.5em;}';
 		$document->addStyleDeclaration( $style );
 
-		$this->url = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;controller=server&amp;task=query&amp;format=raw';
+		$this->url = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;&amp;task=query&amp;format=raw';
 
 		parent::display($tpl);
 	}

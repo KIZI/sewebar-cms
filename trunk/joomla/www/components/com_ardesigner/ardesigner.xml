@@ -3,16 +3,16 @@
 <install type="component" version="1.5.0">
 	<!--  The extension commercial name: make it different form others at JED http://extensions.joomla.org/-->
 	<name>AR Designer</name>
-	<!-- The following elements are optional and free of formatting constraints --> 
+	<!-- The following elements are optional and free of formatting constraints -->
 	<!-- Original creation date. Recommended: YYYY-MM-DD -->
-	<creationDate>2010-11-03</creationDate>
+	<creationDate>2011-02-24</creationDate>
 	<author>Jakub Balhar and Andrej Hazucha</author>
 	<authorEmail>andrej.hazucha@vse.cz</authorEmail>
 	<authorUrl>http://sewebar.vse.cz</authorUrl>
 	<copyright>Copyright (C) 2010. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>0.91</version>
+	<version>0.92</version>
 	<!--  The date for the actual version release -->
 	<!-- <releaseDate>2010-05-14</releaseDate> -->
 	<!--  Type of release: Bug fix, Security Fix, Minor update, Major update -->
@@ -22,30 +22,30 @@
 	<description>
 		Component contains ARDesiner integrated into Joomla! environment.
 	</description>
-	
+
 	<!-- Custom Install Script to execute -->
 	<!-- Note: This will be copied from the root of the installation package to the administrator directory automatically -->
 	<installfile></installfile>
-	
+
 	<!-- Custom Uninstall Script to execute -->
 	<!-- Note: This will be copied from the root of the installation package to the administrator directory automatically -->
 	<uninstallfile></uninstallfile>
-	
-	
+
+
 	<!-- Install Database Section -->
 	<install>
 		<!--<sql>
 			<file driver="mysql" charset="utf8">sql/01.db.sql</file>
 		</sql>-->
 	</install>
-	
+
 	<!-- Uninstall Database Section -->
 	<uninstall>
 		<!--<sql>
 			<file driver="mysql" charset="utf8">sql/00.uninstall.sql</file>
 		</sql>-->
 	</uninstall>
-	
+
 	<!-- Site Main File Copy Section -->
 	<files>
 		<folder>assets</folder>
@@ -53,17 +53,16 @@
 		<folder>js</folder>
 		<folder>models</folder>
 		<folder>views</folder>
-		<filename>controller.php</filename>
 		<filename>ardesigner.php</filename>
 	</files>
-	
+
 	<!-- Site Main Language File Copy Section -->
 	<languages folder="lang">
 		<language tag="cs-CZ">cs-CZ.com_kbi.ini</language>
 	</languages>
-	
+
 	<!-- Site Main Media File Copy Section -->
 	<media destination="com_ardesigner" />
-	
+
 	<administration> </administration>
 </install>
