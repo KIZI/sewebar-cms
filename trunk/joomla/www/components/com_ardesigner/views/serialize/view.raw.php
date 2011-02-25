@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: view.raw.php 1587 2010-10-24 22:40:30Z andrej $
+ * @version		$Id$
  * @package		com_ardesigner
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
