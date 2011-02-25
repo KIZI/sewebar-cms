@@ -1,0 +1,64 @@
+/* CSS Document */
+#metadata { /*zarovnani prvniho sloupce je primo u bunek*/
+  font-family                           : Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-size                             : 10pt;
+  margin                                : 30px 10px 30px 10px;
+  }
+  #metadata th {
+    text-align                          : left;
+    }
+  #metadata td {
+    padding                             : 0px 4px 0px 4px;
+    }
+  
+.itable {
+  font-family                           : Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-size                             : 10pt;  
+  border                                : 1px solid black;
+  border-collapse                       : collapse;
+  margin-left                           :auto; 
+  margin-right                          :auto;
+  margin-top                            :10px; 
+  margin-bottom                         :10px;
+  
+  }
+  .itable th {
+    background-color                    : rgb(210,234,241);
+    font-weight                         : bold;
+    border                              : 1px solid black;
+    border-collapse                     : collapse;
+    padding                             : 0px 4px 0px 4px;
+    }
+  .itable td {
+    border                              : 1px solid black;
+    border-collapse                     : collapse;
+    padding                             : 0px 4px 0px 4px;
+    }
+  .itable caption { /*vertical-align muselo byt naformatovano uz ve stylu, protoze css vlastnost na caption nefunguje*/
+    font-family                         : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size                           : 8pt;
+    }
+    
+  input[type="text"] {
+    width: 40px;
+  }
+
+  .dim {
+    color: gray;
+  }
+  
+  .hot {
+    color: red;
+  }
+  
+  .hidden {
+    display: none;
+  }
+
+  .graphUI label { padding: 1em; }
+  
+  @media print {
+    .noprint, form, input, #navigation { display: none; }
+  }
+  /* to by melo resit problem s sablonou quasar */
+  ul, ol { padding-left: 2em; }
