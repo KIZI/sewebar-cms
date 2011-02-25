@@ -29,8 +29,8 @@ class JuceneHelper {
 		//get params
 
 
-		require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'lucene/Lucene.php');
-		require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers/LuceneDigitAnalyzer.php');
+		require_once ('Zend/Search/Lucene.php');
+		//require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers/LuceneDigitAnalyzer.php');
 		$index_path = JuceneHelper::getIndexPath ();
 
 
