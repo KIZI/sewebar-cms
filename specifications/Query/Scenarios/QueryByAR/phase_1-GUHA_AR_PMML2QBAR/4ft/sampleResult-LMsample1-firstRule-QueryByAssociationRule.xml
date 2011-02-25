@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?oxygen SCHSchema="http://sewebar.vse.cz/schemas/QueryByAssociationRule0_1.sch"?>
-<arb:ARBuilder xmlns:arb="http://keg.vse.cz/ns/arbuilder0_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmml="http://www.dmg.org/PMML-4_0" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1" xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd" mode="AssociationRules">
+<arb:ARBuilder xmlns:arb="http://keg.vse.cz/ns/arbuilder0_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmml="http://www.dmg.org/PMML-4_0" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1" xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd" mode="QueryByAssociationRule">
    <DataDescription>
       <Dictionary sourceSubType="TransformationDictionary" sourceType="PMML">
          <Field name="Age">
