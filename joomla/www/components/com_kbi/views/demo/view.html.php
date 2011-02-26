@@ -22,17 +22,17 @@ class KbiViewDemo extends JView
 		global $option, $mainframe;
 
 		$document = &JFactory::getDocument();
-		$document->addScript( '/media/system/js/mootools.js' );
-		$document->addScript( '/components/com_kbi/assets/js.js' );
+		$document->addScript('/media/system/js/mootools.js');
+		$document->addScript('/components/com_kbi/assets/js.js');
 
 		$style = 'label{display: block;margin:5px 0;font-weight:bold;}';
 		$style.= ' ';
 		$style.= 'label span{color: gray; font-weight:normal; margin-left: .5em;}';
 		$style.= ' ';
 		$style.= '#messages{min-height: 1.5em;}';
-		$document->addStyleDeclaration( $style );
+		$document->addStyleDeclaration($style);
 
-		$this->url = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;&amp;task=query&amp;format=raw';
+		$this->url = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;task=query&amp;format=raw';
 
 		parent::display($tpl);
 	}

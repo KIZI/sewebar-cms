@@ -87,29 +87,6 @@ class KbiControllerQueries extends JController
 			$view->setModel($model, true);
 		}
 
-		$declaration = "function getRules(data){
-			var url = '/administrator/index.php?option=com_kbi&controller=selector&view=params&format=raw';
-			var params = data;
-			var form = document.forms['adminForm'];
-			var qid = form.elements['id'];
-			var query = $$('#query');
-
-			query.empty().addClass('ajax-loading');
-
-			new Ajax(url + '&id_query=' + qid.value, {
-				method: 'post',
-				//update: $('someelement'),
-				data: {data: params},
-				onComplete: function() {
-					var query = $$('#query');
-					query.removeClass('ajax-loading');
-					query.appendText(this.response.text);
-				}
-			}).request();
-		}";
-
-		$document->addScriptDeclaration($declaration);
-
 		$view->setLayout('default');
 		$view->display();
 	}

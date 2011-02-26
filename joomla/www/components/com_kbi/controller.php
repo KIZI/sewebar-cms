@@ -13,7 +13,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport( 'joomla.application.component.controller' );
 JPluginHelper::importPlugin('kbi', 'base');
 JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
-JLoader::import('transformator', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+JLoader::import('transformator', JPATH_COMPONENT . DS . 'models');
 
 /**
  *
