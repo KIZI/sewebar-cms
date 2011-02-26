@@ -48,7 +48,7 @@ class ARDesignerController extends JController
 	function features()
 	{
 		$document =& JFactory::getDocument();
-		$document->setMimeEncoding( 'application/json' );
+		$document->setMimeEncoding('application/json');
 
 		$viewName = JRequest::getVar('view', 'features');
 		$viewType = 'raw';
@@ -59,10 +59,12 @@ class ARDesignerController extends JController
 		$view->assign('value', '');
 
 		if($query_id != NULL) {
+			// TODO: do it more clever (load component)
+			// $arbuilder = JComponentHelper::getComponent('com_ardesigner', true);
 			require_once(dirname(__FILE__).'/../../administrator/components/com_kbi/models/queries.php');
 			$model_queries = new KbiModelQueries;
 			$query = $model_queries->getQuery($query_id);
-			$featurelist = $query->featurelist;
+			$featurelist = !empty($query->featurelist) ? $query->featurelist : dirname(__FILE__).'/assets/featurelist.xml';
 		} else {
 			$featurelist = dirname(__FILE__).'/assets/featurelist.xml';
 		}
@@ -77,6 +79,9 @@ class ARDesignerController extends JController
 		$view->display();
 	}
 
+	/**
+	 * Renders serialized rules
+	 */
 	function serialize()
 	{
 		$document =& JFactory::getDocument();
@@ -84,9 +89,11 @@ class ARDesignerController extends JController
 		$viewType = $document->getType();
 		$view =& $this->getView($viewName, $viewType);
 
+		// JRequest::getVar('data', '', 'post', 'string', JREQUEST_ALLOWRAW);
 		$data = JRequest::getVar('data', NULL);
 
 		if($viewType == 'raw' && $data != NULL) {
+			// TODO: why serialize (JREQUEST_ALLOWRAW) ?
 			$toSolve = str_replace('\\"', '"', $_POST['data']);
 			//var_dump($toSolve);
 			//session_start();

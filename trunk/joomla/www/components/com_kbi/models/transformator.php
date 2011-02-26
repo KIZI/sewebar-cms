@@ -10,18 +10,17 @@
 defined('_JEXEC') or die('Restricted access');
 jimport( 'joomla.application.component.model' );
 JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
-
-require_once 'sources.php';
-require_once 'queries.php';
-require_once 'xslts.php';
+JLoader::import('sources', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+JLoader::import('queries', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+JLoader::import('xslts', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
 
 /**
  * JModel for transformator. Transformator calls KBI library's query with combination of source, query and xslt.
  *
  * @package com_kbi
  */
-class KbiModelTransformator extends JModel {
-
+class KbiModelTransformator extends JModel
+{
 	private $source = NULL;
 	private $query = NULL;
 	private $xslt = NULL;

@@ -2,7 +2,7 @@
 
 function KbiPostArb(id, src_type, query_type)
 {
-	var service_url = 'index.php?option=com_kbi&amp;controller=server&amp;task=query&amp;format=raw';
+	var service_url = 'index.php?option=com_kbi&amp;task=query&amp;format=raw';
 	var params = document.getElementById('arb' + id).innerHTML;
 	// element, do ktereho prijde vysledek
 	var result = $('arb_result' + id);

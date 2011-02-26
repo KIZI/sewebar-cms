@@ -19,28 +19,25 @@ class KbiViewSelector extends JView
 {
 	function display($tpl = NULL)
 	{
-		$app = JFactory::getApplication();
-		$append = '';
-		if($app->getClientId() == 1) $append = 'administrator/';
-
-		JHTML::_('script', 'popup-kbimanager.js', $append .'components/com_kbi/assets/');
+		JHTML::_('script', 'popup-kbimanager.js', 'administrator/components/com_kbi/assets/');
 
 		$lists = array();
 
 		// dynamic/static
-		$lists['dynamic'] = JHTML::_('select.booleanlist',  'dynamic', '', false );
+		$lists['dynamic'] = JHTML::_('select.booleanlist',  'dynamic', '', false);
 
 		// sources
-		$lists['sources'] = JHTML::_('select.genericlist',  $this->sources, 'sources', '', 'id', 'name' );
+		$lists['sources'] = JHTML::_('select.genericlist',  $this->sources, 'sources', '', 'id', 'name');
 
 		// queries
-		$lists['queries'] = JHTML::_('select.genericlist',  $this->queries, 'query', '', 'id', 'name' );
+		$lists['queries'] = JHTML::_('select.genericlist',  $this->queries, 'query', '', 'id', 'name');
 
 		// xslt
-		$lists['xslt'] = JHTML::_('select.genericlist',  $this->xslts, 'xslt', '', 'id', 'name' );
+		$lists['xslt'] = JHTML::_('select.genericlist',  $this->xslts, 'xslt', '', 'id', 'name');
 
 		// ARBuilder
 		$arbuilder = JComponentHelper::getComponent('com_ardesigner', true);
+		// TODO: and if existuje DD a FL
 		if($arbuilder->enabled) {
 			$url = '/index.php?option=com_ardesigner&tmpl=component';
 			$attrs = array(
@@ -52,6 +49,8 @@ class KbiViewSelector extends JView
 		} else {
 			$this->assign('ardesigner', NULL);
 		}
+
+		JHTML::_('script', 'ardesigner.js', 'administrator/components/com_kbi/assets/');
 
 		$this->assignRef('lists', $lists);
 

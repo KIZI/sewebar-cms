@@ -4,7 +4,7 @@
 	<div class="col width-50">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_( 'Details' ); ?></legend>
-	
+
 			<table class="admintable">
 			<tbody>
 				<tr>
@@ -30,61 +30,71 @@
 			</tbody>
 			</table>
 		</fieldset>
+		<?php if (!empty($this->ardesigner)) :?>
+		<fieldset class="adminform">
+			<legend><?php echo JText::_('Query Designer'); ?>:</legend>
+			<table cellspacing="1" class="admintable">
+				<tr>
+					<td valign="top" class="key">
+						<span class="editlinktip hasTip"><?php echo JText::_('Open Designer'); ?></span>
+					</td>
+					<td valign="top">
+						<?php echo $this->ardesigner; ?>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" class="key">
+						<span class="editlinktip hasTip"><?php echo JText::_( 'Feature List' ); ?></span>
+					</td>
+					<td valign="top">
+						<textarea class="text_area" name="featurelist" id="featurelist" cols="80" rows="20" style="width:90%"><?php echo $this->row->featurelist;?></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" class="key">
+						<span class="editlinktip hasTip"><?php echo JText::_( 'Data Dictionary Query' ); ?></span>
+					</td>
+					<td valign="top">
+						<textarea class="text_area" name="dictionaryquery" id="dictionaryquery" cols="80" rows="20" style="width:90%"><?php echo $this->row->dictionaryquery;?></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" class="key">
+						<span class="editlinktip hasTip"><?php echo JText::_( 'Data Dictionary XSLT' ); ?></span>
+					</td>
+					<td valign="top">
+						<textarea class="text_area" name="dictionaryqueryxsl" id="dictionaryqueryxsl" cols="80" rows="20" style="width:90%"><?php echo $this->row->dictionaryqueryxsl;?></textarea>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		<?php endif ?>
 	</div>
 	<div class="col width-50">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_( 'Query' ); ?>:</legend>
 			<table class="admintable" width="100%">
-			<tr>
-				<td width="100%" valign="top">
-					<textarea class="inputbox" name="query" id="query" cols="80" rows="20" style="width:90%"><?php echo $this->row->query;?></textarea>
-					<?php if (!empty($this->ardesigner)) :?>
-					<br>
-					<?php echo $this->ardesigner; ?>
-					<?php endif ?>
-				</td>
-			</tr>
-			</table>
-			
-			<legend><?php echo JText::_( 'Feature List' ); ?>:</legend>
-			<table class="admintable" width="100%">
-			<tr>
-				<td width="100%" valign="top">
-					<textarea class="inputbox" name="featurelist" id="featurelist" cols="80" rows="20" style="width:90%"><?php echo $this->row->featurelist;?></textarea>
-				</td>
-			</tr>
-			</table>
-			
-			<legend><?php echo JText::_( 'Data Dictionary Query' ); ?>:</legend>
-			<table class="admintable" width="100%">
-			<tr>
-				<td width="100%" valign="top">
-					<textarea class="inputbox" name="dictionaryquery" id="dictionaryquery" cols="80" rows="20" style="width:90%"><?php echo $this->row->dictionaryquery;?></textarea>
-				</td>
-			</tr>
-			</table>
-			
-			<legend><?php echo JText::_( 'Data Dictionary XSLT' ); ?>:</legend>
-			<table class="admintable" width="100%">
-			<tr>
-				<td width="100%" valign="top">
-					<textarea class="inputbox" name="dictionaryqueryxsl" id="dictionaryqueryxsl" cols="80" rows="20" style="width:90%"><?php echo $this->row->dictionaryqueryxsl;?></textarea>
-				</td>
-			</tr>
-			</table>
-			
-			<legend><?php echo JText::_( 'Params XSLT' ); ?>:</legend>
-			<table class="admintable" width="100%">
-			<tr>
-				<td width="100%" valign="top">
-					<textarea class="inputbox" name="paramsxsl" id="paramsxsl" cols="80" rows="20" style="width:90%"><?php echo $this->row->paramsxsl;?></textarea>
-				</td>
-			</tr>
+				<tr>
+					<td valign="top" class="key">
+						<span class="editlinktip hasTip"><?php echo JText::_( 'Query' ); ?></span>
+					</td>
+					<td valign="top">
+						<textarea class="text_area" name="query" id="query" cols="80" rows="20"><?php echo $this->row->query;?></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" class="key">
+						<span class="editlinktip hasTip"><?php echo JText::_( 'Params XSLT' ); ?></span>
+					</td>
+					<td valign="top">
+						<textarea class="text_area" name="paramsxsl" id="paramsxsl" cols="80" rows="20"><?php echo $this->row->paramsxsl;?></textarea>
+					</td>
+				</tr>
 			</table>
 		</fieldset>
 	</div>
 	<div class="clr"></div>
-	
+
 	<input type="hidden" name="controller" value="queries" />
 	<input type="hidden" name="option" value="com_kbi" />
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />

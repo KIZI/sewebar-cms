@@ -1,43 +1,53 @@
-var KbiManager = {		
+var KbiManager = {
 	initialize: function()
 	{
 		o = this._getUriObject(window.self.location.href);
 		//console.log(o);
 		q = $H(this._getQueryObject(o.query));
 		this.editor = decodeURIComponent(q.get('e_name'));
-		
+
 		//frame
 		//this.frame		= window.frames['imageframe'];
 		//this.frameurl	= this.frame.location.href;
 	},
-		
+
 	onOk: function()
 	{
 		var dynamic = document.getElementById("dynamic1").checked;
-		
-		// Get selected source
-		var source = document.getElementById("sources").value;
-			
-		//Get selected query
-		var query = document.getElementById("query").value;
-
-		//Get selected xslt
-		var xslt = document.getElementById("xslt").value;
-		
+		var source = document.getElementById("sources").value; // Get selected source
+		var query = document.getElementById("query").value; // Get selected query
+		var xslt = document.getElementById("xslt").value; // Get selected xslt
 		var parameters = document.getElementById("parameters").value;
-		
-		if(dynamic)
-		{
-			window.parent.jInsertEditorText('{kbi source:' + source + ' query:' + query + ' xslt:' + xslt + ' parameters:\'' + parameters + '\'}', this.editor);
-		} 
-		else
-		{
-			window.parent.kbiStaticInclude(source, query, xslt, parameters);
+
+		if(dynamic)	{
+			// TODO: semidynamic - dynamicka data, ale staticky dotaz (zdroj v JSON...)
+			var url = '/administrator/index.php?option=com_kbi&controller=selector&task=serialize&format=raw';
+		} else {
+			var url = '/index.php?option=com_kbi&task=query&format=raw';
 		}
-		
+
+		var myAjax = new Ajax(url,
+			{
+				method: 'post',
+				data:
+				{
+					source: source,
+					query: query,
+					xslt: xslt
+				},
+				onSuccess: function(response){
+					window.parent.jInsertEditorText(response, 'text');
+				}
+			}).request();
+
+		/*url += '&source=' + source;
+		url += '&query=' + query;
+		url += '&xslt=' + xslt;
+		url += '&parameters=' + escape(parameters); */
+
 		return false;
 	},
-	
+
 	refreshFrame: function()
 	{
 		this._setFrameUrl();
