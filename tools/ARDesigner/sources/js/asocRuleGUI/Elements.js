@@ -200,6 +200,9 @@ var Attribute = new Class({
      */
     displayAskingWindow: function(){
         // Create asking window div
+        this.podklad = new Element('div',{
+            id: "podklad"
+        });
         this.askingWindowDiv = new Element('div',{
             id: "askingWindow",
             'class': "askingWindow"
@@ -234,6 +237,7 @@ var Attribute = new Class({
      */
     onClickMy: function(event){
         var askingWindow = this.displayAskingWindow();
+        this.podklad.inject($('mainDiv'));
         askingWindow.inject($('mainDiv'));
     },
 
@@ -330,6 +334,8 @@ var Attribute = new Class({
     save: function(){
         this.actualAttrField.save();
         this.askingWindowDiv.dispose();
+        this.podklad.dispose();
+        this.fireEvent("save");
     },
 
     /**
@@ -572,6 +578,7 @@ var InterestMeasure = new Class({
      */
     onClickMy: function(event){
         var askingWindow = this.displayAskingWindow();
+        this.podklad.inject($('mainDiv'));
         askingWindow.inject($('mainDiv'));
     },
 
@@ -585,6 +592,9 @@ var InterestMeasure = new Class({
      */
     displayAskingWindow: function(){
         // Create asking window div
+        this.podklad = new Element('div',{
+            id: "podklad"
+        });
         this.askingWindowDiv = new Element('div',{
             id: "askingWindow",
             'class': "askingWindow"
@@ -676,6 +686,8 @@ var InterestMeasure = new Class({
         for(var actualField = 0; actualField < this.fields.length; actualField++){
             this.fields[actualField].save();
         }
+        this.podklad.dispose();
+        this.fireEvent("save");
     },
 
     /**

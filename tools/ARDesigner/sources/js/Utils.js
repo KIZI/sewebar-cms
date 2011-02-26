@@ -153,7 +153,6 @@ var Porovnavani = new Class({
 });
 
 var TvorbaElementu = new Class({
-    POZICE_POZADI: "url('images/sedive.png')",
     PODKLAD: "podklad",
 
     vytvorDiv: function(styly, atributy, kam){
@@ -163,15 +162,6 @@ var TvorbaElementu = new Class({
     vytvorMeziVrstvu: function(){
         var prepravkaStyl = new Prepravka();
         var prepravkaAtribut = new Prepravka();
-        prepravkaStyl.vloz("position","absolute");
-        prepravkaStyl.vloz("top","0px");
-        prepravkaStyl.vloz("left","0px");
-        prepravkaStyl.vloz("width","100%");
-        prepravkaStyl.vloz("height","2000px");
-        prepravkaStyl.vloz("display","");
-        prepravkaStyl.vloz("background-image",this.POZICE_POZADI);
-        prepravkaStyl.vloz("background-color","transparent");
-        prepravkaStyl.vloz("z-index","8");
         prepravkaAtribut.vloz("id",this.PODKLAD);
         this.vytvorDiv(prepravkaStyl, prepravkaAtribut, document.getElementsByTagName("body")[0]);
 

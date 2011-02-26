@@ -1,11 +1,11 @@
 <?php
-    require_once('lib/JSON.php');
-    require_once('parseData/AncestorGetData.php');
-    require_once('parseData/GetDataARBuilderQuery.php');
-    require_once('parseData/AsociationRulesParser.php');
-    require_once('parseData/ARQueryParser.php');
-    require_once('parseData/TaskSettingParser.php');
-    require_once('lib/Utils.php');
+    require_once('sources/models/JSON.php');
+    require_once('sources/models/parseData/AncestorGetData.php');
+    require_once('sources/models/parseData/GetDataARBuilderQuery.php');
+    require_once('sources/models/parseData/AsociationRulesParser.php');
+    require_once('sources/models/parseData/ARQueryParser.php');
+    require_once('sources/models/parseData/TaskSettingParser.php');
+    require_once('sources/models/Utils.php');
     
     $DD = "XML/datadescription.xml";
     $FL = "XML/featurelist.xml";

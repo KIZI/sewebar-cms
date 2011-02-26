@@ -3,7 +3,7 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://keg.vse.cz/ns/datadescription0_1 http://sewebar.vse.cz/schemas/DataDescription0_1.xsd">
     <Dictionary numberOfFields="0" sourceType="PMML" sourceSubType="TransformationDictionary" sourceName="sourceName0"
-            complete="true">
+            complete="true" default="true">
         <Field optype="categorical" dataType="string" name="duration" derived="false">
             <AuxilliaryIdentifier display="false">
                 <Name>Name0</Name>
@@ -18,8 +18,8 @@
                 <Max>0</Max>
                 <Average>0</Average>
             </Statistics>
-            <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName0"/>
-            <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName1"/>
+            <Interval closure="openClosed" leftMargin="0" rightMargin="1" binName="binName0"/>
+            <Interval closure="openClosed" leftMargin="0" rightMargin="2" binName="binName1"/>
             <Category frequency="0">Category0</Category>
             <Category frequency="0">Category1</Category>
         </Field>
@@ -37,10 +37,10 @@
                 <Max>0</Max>
                 <Average>0</Average>
             </Statistics>
-            <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName2"/>
-            <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName3"/>
-            <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName4"/>
-            <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName5"/>
+            <Interval closure="openClosed" leftMargin="0" rightMargin="3" binName="binName2"/>
+            <Interval closure="openClosed" leftMargin="0" rightMargin="4" binName="binName3"/>
+            <Interval closure="openClosed" leftMargin="0" rightMargin="5" binName="binName4"/>
+            <Interval closure="openClosed" leftMargin="0" rightMargin="6" binName="binName5"/>
         </Field>
     </Dictionary>
     <Dictionary numberOfFields="0" sourceType="PMML" sourceSubType="TransformationDictionary" sourceName="sourceName1"
