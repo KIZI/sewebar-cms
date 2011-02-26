@@ -46,6 +46,10 @@ body{
     font-family: Georgia,'Times New Roman',times,serif;
 }
 
+.additionalInfo{
+    font-style: italic;
+}
+
 .operators{
     height: 100%;
     margin: 4px;
@@ -126,6 +130,20 @@ body{
 }
 
 #createRuleButton{
+    border: 2px;
+    border-style: outset;
+    border-color: #336398;
+    background-color: #d8eaff;
+    cursor: pointer;
+    padding: 2px;
+    margin: 2px;
+    width: 100px;
+    height: 20px;
+    position: relative;
+    text-align: center;
+}
+
+#saveRule{
     border: 2px;
     border-style: outset;
     border-color: #336398;
@@ -262,6 +280,7 @@ body{
 	background-image: url("sedive.png");
 	background-color: transparent;
 	z-index: 8;
+        display: block;
 }
 
 /* Joomla styly */

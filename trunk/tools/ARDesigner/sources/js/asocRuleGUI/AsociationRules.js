@@ -60,6 +60,9 @@ var AsociationRules = new Class({
                 if(moreRules){
                     $("newRule").addEvent('click', function(event){
                         var newRule = new AsociationRule(this.serverInfo);
+                        newRule.addEvent("display", function(){
+                            this.setDraggability();
+                        }.bind(this));
                         newRule.setMaxSize(this.maxSize);
                         this.asociationRules.push(newRule);
                         var newDiv = newRule.display();
@@ -87,13 +90,19 @@ var AsociationRules = new Class({
                 var allRules = this.serverInfo.getExistingRules();
                 for(var actualRule = 0; actualRule < allRules.length; actualRule++){
                     allRules[actualRule].setMaxSize(this.maxSize);
+                    allRules[actualRule].addEvent("display", function(){
+                        this.setDraggability();
+                    }.bind(this));
                     var newRuleDiv1 = allRules[actualRule].display();
                     newRuleDiv1.inject($('rightDivPlace'));
                 }
                 this.asociationRules = this.asociationRules.concat(allRules);
 
                 if(!moreRules && this.asociationRules.length < 1){
-                    var newAsociationRule = new AsociationRule();
+                    var newAsociationRule = new AsociationRule(this.serverInfo);
+                    newAsociationRule.addEvent("display", function(){
+                        this.setDraggability();
+                    }.bind(this));
                     this.asociationRules.push(newAsociationRule);
                     var newRuleDiv = newAsociationRule.display();
                     // This should be injected into the left part.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * It is descendant of AncestorGetData. This specific implementation gets data
  * from Data Description and Feature List.
@@ -26,8 +27,17 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $this->domDD = new DomDocument();
         $this->domFL = new DomDocument();
 
-        $this->domDD->load($domDD1);
-        $this->domFL->load($domFL1);
+        if (file_exists($domDD1)) {
+            $this->domDD->load($domDD1);
+        } else {
+            $this->domDD->loadXML($domDD1);
+        }
+
+        if (file_exists($domFL1)) {
+            $this->domFL->load($domFL1);
+        } else {
+            $this->domFL->loadXML($domFL1);
+        }
 
         $this->jsonObject = array();
 
@@ -37,7 +47,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
         } else {
             $this->domER = null;
         }
-        
+
         session_start();
         $_SESSION["ARBuilder_domDataDescr"] = $domDD1;
         $_SESSION["ARBuilder_domFeatureList"] = $domFL1;
@@ -55,11 +65,11 @@ class GetDataARBuilderQuery extends AncestorGetData {
 
         $interestMeasure = $this->solveInterestMeasures();
         $this->jsonObject['interestMeasures'] = $interestMeasure;
-        
+
         $this->solveNumberBBA();
         $this->solveDepthNesting();
         $this->solveMoreRules();
-        
+
         $posCoef = $this->solvePosCoef();
         $this->jsonObject['possibleCoef'] = $posCoef;
 
@@ -153,7 +163,11 @@ class GetDataARBuilderQuery extends AncestorGetData {
      * and add them to the finalJSON
      */
     private function solveData() {
-        $field = $this->domDD->getElementsByTagName("Field");
+        $OPEN = "open";
+        //$CLOSED = "closed";
+        $xPath = new DOMXPath($this->domDD);
+        $anXPathExpr = "//DataDescription/Dictionary[@default='true']/Field";
+        $field = $xPath->query($anXPathExpr);
         $attributeArray = array();
         foreach ($field as $elField) {
             $attribute = array();
@@ -164,11 +178,45 @@ class GetDataARBuilderQuery extends AncestorGetData {
                 if ($elFieldChildren->nodeName == "Category") {
                     $choices[] = $elFieldChildren->nodeValue;
                 }
+                if ($elFieldChildren->nodeName == "Interval") {
+                    $leftMargin = $elFieldChildren->getAttribute("leftMargin");
+                    $rightMargin = $elFieldChildren->getAttribute("rightMargin");
+                    $type = $elFieldChildren->getAttribute("closure");
+                    $value = "";
+                    if($this->startsWith($type, $OPEN, false)){
+                        $value .= "(";
+                    }
+                    else{
+                        $value .= "<";
+                    }
+                    $value .= $leftMargin.";".$rightMargin;
+                    if($this->endsWith($type, $OPEN, false)){
+                        $value .= ")";
+                    }
+                    else{
+                        $value .= ">";
+                    }
+                    $choices[] = $value;
+                }
             }
             $attribute['choices'] = $choices;
             $attributeArray[] = $attribute;
         }
         return $attributeArray;
+    }
+
+    function startsWith($haystack, $needle, $case=true) {
+        if ($case) {
+            return (strcmp(substr($haystack, 0, strlen($needle)), $needle) === 0);
+        }
+        return (strcasecmp(substr($haystack, 0, strlen($needle)), $needle) === 0);
+    }
+
+    function endsWith($haystack, $needle, $case=true) {
+        if ($case) {
+            return (strcmp(substr($haystack, strlen($haystack) - strlen($needle)), $needle) === 0);
+        }
+        return (strcasecmp(substr($haystack, strlen($haystack) - strlen($needle)), $needle) === 0);
     }
 
     /**
@@ -186,7 +234,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $maxValues = array();
         $datatypes = array();
         $explanations = array();
-        
+
         foreach ($fields as $field) {
             if ($field->nodeName == "Name" && !$field->hasAttributes()) {
                 $names[] = $field->nodeValue;
@@ -223,12 +271,12 @@ class GetDataARBuilderQuery extends AncestorGetData {
                 $explanations[] = "";
             }
         }
-        $fieldsArray = array('fieldNames'=>$names,
-                'fieldNamesLocalized'=>$localizedNames,
-                'fieldMinValues'=>$minValues,
-                'fieldMaxValues'=>$maxValues,
-                'fieldDatatypes'=>$datatypes,
-                'fieldExplanations'=>$explanations);
+        $fieldsArray = array('fieldNames' => $names,
+            'fieldNamesLocalized' => $localizedNames,
+            'fieldMinValues' => $minValues,
+            'fieldMaxValues' => $maxValues,
+            'fieldDatatypes' => $datatypes,
+            'fieldExplanations' => $explanations);
         return $fieldsArray;
     }
 
@@ -285,7 +333,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $supportedIM[] = $supChild->nodeValue;
                 }
             }
-            $this->jsonObject['supIMCom'. $amount] = $supportedIM;
+            $this->jsonObject['supIMCom' . $amount] = $supportedIM;
         }
         $this->jsonObject['supIMCombinations'] = $amount;
     }
@@ -307,11 +355,11 @@ class GetDataARBuilderQuery extends AncestorGetData {
             $constraintChild = $constraint->childNodes;
             foreach ($constraintChild as $connective) {
                 $connectiveChild = $connective->childNodes;
-                if($connectiveChild == null){
+                if ($connectiveChild == null) {
                     continue;
                 }
                 $lengthList = $connectiveChild->length;
-                for($connectivePos = 0; $connectivePos < $lengthList; $connectivePos++) {
+                for ($connectivePos = 0; $connectivePos < $lengthList; $connectivePos++) {
                     $connegdis = $connectiveChild->item($connectivePos);
                     if ($connegdis->nodeName == "Conjunction") {
                         if ($connegdis->getAttribute("allowed") == "yes") {
@@ -337,13 +385,13 @@ class GetDataARBuilderQuery extends AncestorGetData {
                 }
             }
             if ($constraint->getAttribute("level") == $LEVEL_REMAINING) {
-                $conns = array($dis,$conj,$neg);
+                $conns = array($dis, $conj, $neg);
                 for ($i = $level + 1; $i <= $maxLevel->nodeValue; $i++) {
-                    $this->jsonObject['depth'. $i] = $conns;
+                    $this->jsonObject['depth' . $i] = $conns;
                 }
             } else {
-                $conns = array($dis,$conj,$neg);
-                $this->jsonObject['depth'. $level] = $conns;
+                $conns = array($dis, $conj, $neg);
+                $this->jsonObject['depth' . $level] = $conns;
             }
         }
     }
@@ -396,15 +444,15 @@ class GetDataARBuilderQuery extends AncestorGetData {
         // Z toho ARQuery a TaskSetting se zpracovávají stejnì. Liší se pouze spodek.
         // Každopádnì to pøevádíme do Elementù. ze kterých se vyrábí JSON
         $asocRuleType = $this->domER->getElementsByTagName('AssociationRules');
-        if($asocRuleType->length > 0){
+        if ($asocRuleType->length > 0) {
             $this->solveAssociationRules();
         }
         $taskSettingType = $this->domER->getElementsByTagName('TaskSetting');
-        if($taskSettingType->length > 0){
+        if ($taskSettingType->length > 0) {
             $this->solveTaskSetting('TaskSetting');
         }
         $ARQuery = $this->domER->getElementsByTagName('ARQuery');
-        if($ARQuery->length > 0){
+        if ($ARQuery->length > 0) {
             $this->solveARQuery('ARQuery');
         }
     }
@@ -412,14 +460,14 @@ class GetDataARBuilderQuery extends AncestorGetData {
     /**
      * It solves the rules if the data format is AssociationRules
      */
-    private function solveAssociationRules(){
+    private function solveAssociationRules() {
         $ruleAr = array();
         $rules = $this->domER->getElementsByTagName('AssociationRule');
-        foreach ($rules as $rule){
+        foreach ($rules as $rule) {
             $ruleAr[] = new AsociationRule($rule, $this->domER);
         }
-        for($actualRule = 0; $actualRule < count($ruleAr); $actualRule++){
-            $this->jsonObject["rule".$actualRule] = $ruleAr[$actualRule]->toJSON();
+        for ($actualRule = 0; $actualRule < count($ruleAr); $actualRule++) {
+            $this->jsonObject["rule" . $actualRule] = $ruleAr[$actualRule]->toJSON();
         }
         $this->jsonObject["rules"] = count($ruleAr);
     }
@@ -451,4 +499,5 @@ class GetDataARBuilderQuery extends AncestorGetData {
     }
 
 }
+
 ?>

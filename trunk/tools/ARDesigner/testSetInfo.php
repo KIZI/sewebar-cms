@@ -1,8 +1,8 @@
 <?php
-    require_once('serializeRules/AncestorSerializeRules.php');
-    require_once('serializeRules/SerializeRulesBackgroundAssociationRules.php');
-    //require_once('serializeRules/SerializeRulesARQuery.php');
-    //require_once('serializeRules/SerializeRulesTaskSetting.php');
+    require_once('sources/models/serializeRules/AncestorSerializeRules.php');
+    require_once('sources/models/serializeRules/SerializeRulesBackgroundAssociationRules.php');
+    require_once('sources/models/serializeRules/SerializeRulesARQuery.php');
+    require_once('sources/models/serializeRules/SerializeRulesTaskSetting.php');
 
     session_start();
     

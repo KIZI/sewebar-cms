@@ -202,7 +202,7 @@ var ServerInfo = new Class({
                 oneCategoryInfo = new Array();
             }
 
-            this.attributes.push(new Attribute(attrName, oneCategoryInfo, this.attributesFields));
+            this.attributes.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields)));
         }
     },
 
@@ -371,7 +371,12 @@ var ServerInfo = new Class({
         this.moreRules = item.moreRules;
         var amountOfRules = item.rules;
         if(this.moreRules == "false"){
-            this.solveRule(item["rule0"]);
+            if(amountOfRules > 0){
+                this.solveRule(item["rule0"]);
+            }
+            else{
+                this.solveRule(new Array());
+            }
         }
         else{
             for(var actualRule = 0; actualRule < amountOfRules; actualRule++){

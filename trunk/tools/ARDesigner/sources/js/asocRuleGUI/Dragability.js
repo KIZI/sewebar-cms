@@ -3,6 +3,8 @@
  * This class ensures Dragability on choosen elements.
  */
 var Dragability = new Class({
+    Implements: [Events],
+
     /**
      * Function: initialize
      * It creates instance of class Dragability
@@ -41,6 +43,10 @@ var Dragability = new Class({
         if(!canAdd){
             element.dispose();
         }
+        else{
+            element.correctPlace = true;
+            asociationRule.showAsking();
+        }
     },
 
     /**
@@ -63,8 +69,9 @@ var Dragability = new Class({
         }
         else{
             element.correctPlace = false;
+            element.dispose();
         }
-
+        
         this.removeDragability();
         this.createDragability();
     },

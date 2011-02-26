@@ -5,43 +5,27 @@ and open the template in the editor.
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title></title>
+    <title>ARDesigner</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
-    <script type="text/javascript">
-        function create(){
-            w = window.open("","arBuilderWindow", "");
-            w.document.write("<!DOCTYPE html>");
-            w.document.write("<html>");
-            w.document.write("<head>");
-            w.document.write("<title>Test</title>");
-            w.document.write('<script type="text/javascript" src="lib/Mootools.js" >;<\/script>');
-            w.document.write('<script type="text/javascript" src="lib/MootoolsMore.js" >;<\/script>');
-            w.document.write('<script type="text/javascript" src="lib/Prepravka.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="lib/Utils.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/UtilsAR.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/AsociationRules.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/AsociationRule.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/BasicStructureGUI.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/Controls.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/DepthNesting.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/DomReady.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/Dragability.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/Elements.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/FieldAR.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/ServerInfo.js">;<\/script>');
-            w.document.write('<script type="text/javascript" src="asocRuleGUI/LanguageSupport.js">;<\/script>');
-            w.document.write('<link rel="stylesheet" href="lib/hlavni.css">');
-            w.document.write('</head>');
-            w.document.write('<body>');
-            w.document.write('<div id="mainDiv">');
-            w.document.write('</div>');
-            w.document.write('</body>');
-            w.document.write('</html>');
-            w.document.close();
-        }
-    </script>
+    <script type="text/javascript" src="sources/js/Mootools.js" >;</script>
+    <script type="text/javascript" src="sources/js/MootoolsMore.js" >;</script>
+    <script type="text/javascript" src="sources/js/Prepravka.js">;</script>
+    <script type="text/javascript" src="sources/js/Utils.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/UtilsAR.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/AsociationRules.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/AsociationRule.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/BasicStructureGUI.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/Controls.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/DepthNesting.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/DomReady.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/Dragability.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/Elements.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/FieldAR.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/ServerInfo.js">;</script>
+    <script type="text/javascript" src="sources/js/asocRuleGUI/LanguageSupport.js">;</script>
+    <link rel="stylesheet" href="sources/assets/hlavni.css">
   </head>
   <body>
-      <input type="button" value="createARBuilder" onclick="create()" />
+      <div id="mainDiv"></div>
   </body>
 </html>

@@ -6,6 +6,8 @@
  * validity of the rule.
  */
 var AsociationRule = new Class({
+    Implements: [Events],
+
     /**
      * Function: initialize
      * creates instance of class AsociationRule. As param it takes the main class
@@ -714,6 +716,7 @@ var AsociationRule = new Class({
                 var actualDiv = this.ruleDiv
                 this.ruleDiv.empty();
                 this.display().replaces(actualDiv);
+                this.fireEvent("display");
                 return true;
             }
             else{
@@ -744,6 +747,7 @@ var AsociationRule = new Class({
             var actualDiv = this.ruleDiv
             this.ruleDiv.empty();
             this.display().replaces(actualDiv);
+            this.fireEvent("display");
             return true;
         }
         else{
@@ -769,6 +773,7 @@ var AsociationRule = new Class({
         var actualDiv = this.ruleDiv
         this.ruleDiv.empty();
         this.display().replaces(actualDiv);
+        this.fireEvent("display");
         return true;
     },
 
@@ -789,14 +794,26 @@ var AsociationRule = new Class({
         var placeForEl = new PlaceForARElement();
         this.placeHTML = placeForEl.display();
 
+        var lastElement = null;
         for(var actualElement = 0; actualElement < this.elements.length; actualElement++){
+            if(this.elements[actualElement] != null){
+                lastElement = this.elements[actualElement];
+            }
             this.createNewElement(placeForEl, this.elements[actualElement], actualElement);
         }
         this.placeHTML.set("name","rule"+actualElement);
         this.placeHTML.setStyle("height",this.maxSize+5);
         this.placeHTML.inject(this.ruleDiv);
 
+        if(lastElement != null){
+            this.lastElement = lastElement;
+        }
+
         return this.ruleDiv;
+    },
+
+    showAsking: function(){
+        this.lastElement.onClickMy();
     },
 
     /**
@@ -814,6 +831,12 @@ var AsociationRule = new Class({
             elementToBeDisplayed.addEvent('click', function(event){
                 actualElement.onClickMy();
             }.bind(this));
+            actualElement.addEvent("save", function(event){
+                var actualDiv = this.ruleDiv
+                this.ruleDiv.empty();
+                this.display().replaces(actualDiv);
+                this.fireEvent("display");
+            }.bind(this))
             actualElement.correctPlace = false;
             actualElement.shouldBeCreated = false;
         }
