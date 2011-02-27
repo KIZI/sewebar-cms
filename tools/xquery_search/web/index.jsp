@@ -20,11 +20,12 @@
         color: #4682B4;
       }
       input, select{
-        padding: 1px;
+        padding: 1px 1px 1px 10px;
         border-width: 1px;
         border-color: black;
         border-style: solid;
         font-family: Arial;
+        width: 300px;
       }
       textarea{
       	padding: 2px 5px 2px 5px;
@@ -41,10 +42,10 @@
   </head>
   <script type="text/javascript">
       function zobrazPole(vybrano){
-          if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest") {
+          if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest" || vybrano == "listIn") {
               window.document.getElementById("nazev").style.display = "none";
               window.document.getElementById("data").style.display = "none";
-          } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "addDocumentMultiple") {
+          } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "delIndex" || vybrano == "addDocumentMultiple") {
               window.document.getElementById("nazev").style.display = "none";
               window.document.getElementById("data").style.display = "block";
           } else if (vybrano == "getQuery" || vybrano == "deleteQuery" || vybrano == "getDocument" || vybrano == "deleteDocument") {
@@ -74,19 +75,22 @@
       <option value="getDocument">Zobrazit dokument</option>
       <option value="deleteDocument">Smazat dokument</option>
       <option value="addIndex">Přidat index</option>
+      <option value="delIndex">Odstranit index</option>
+      <option value="listIn">Zobrazit indexy</option>
       <option value="completeTest">Otestování nastavení</option>
+      <%--<option value="existQuery">Exist-DB XQuery</option>--%>
     </select>
     <br />
     <br />
     <div id="nazev">
-    <b>ID:&nbsp;&nbsp;&nbsp;</b><input type="text" name="variable" id="variable" size="50">
+    <b>ID:&nbsp;&nbsp;&nbsp;</b><input type="text" name="variable" id="variable" size="150">
     <br /><i>Nápověda: Pole slouží pro zadání názvu query nebo názvu dokumentu</i>
     </div>
     <br />
     <div id="data">
     <b>Data:</b>
     <br />
-    <textarea name="content" rows="20%" cols="100%" id="content"></textarea>
+    <textarea name="content" rows="20%" cols="120%" id="content"></textarea>
     <br /><i>Nápověda: Pole slouží pro zadání těla query, těla dokuentu nebo indexu</i>
     </div>
     <br />
@@ -105,6 +109,6 @@
     </form>
     <br />
     <br />
-    <i>verze 1.0.4 (5.2.2011)</i>
+    <i>verze 1.05 (26.2.2011)</i>
   </body>
 </html>

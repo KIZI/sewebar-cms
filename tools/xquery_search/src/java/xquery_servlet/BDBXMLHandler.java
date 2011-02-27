@@ -3,6 +3,8 @@ package xquery_servlet;
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
+import com.sleepycat.dbxml.XmlIndexDeclaration;
+import com.sleepycat.dbxml.XmlIndexSpecification;
 import com.sleepycat.dbxml.XmlManager;
 import com.sleepycat.dbxml.XmlQueryContext;
 import com.sleepycat.dbxml.XmlResults;
@@ -122,8 +124,7 @@ public class BDBXMLHandler {
                     } else {
                         query = qh.getQuery(id, queryDir)[1].toString();
                         query += "\nlet $zadani := " + search
-                                + "\nreturn" +
-                                        "\nlocal:mainFunction($zadani)";
+                                + "\nreturn local:mainFunction($zadani)";
                     }
             }
             if (chyba != 1) {
@@ -243,7 +244,7 @@ public class BDBXMLHandler {
         String output = "";
         String xml_doc = "";
         long act_time_long = System.currentTimeMillis();
-        String act_time = Long.toString(act_time_long);
+        //String act_time = Long.toString(act_time_long);
         try {
             if (useTransformation.equals("true")) {
             /*File xmlFile = new File(tempDir + act_time +".xml");
@@ -279,7 +280,9 @@ public class BDBXMLHandler {
             XmlContainer cont = mgr.openContainer(containerName);
 
             XmlTransaction txn = mgr.createTransaction();
-
+            
+            id = id.replaceAll("[^a-zA-Z_0-9][^-_=+]", "_");
+            
             cont.putDocument(id, xml_doc);
             output += "<message>Dokument " + id + " vlozen</message>";
 
@@ -344,6 +347,8 @@ public class BDBXMLHandler {
             XmlContainer cont = mgr.openContainer(containerName);
 
             XmlTransaction txn = mgr.createTransaction();
+            
+            id = id.replaceAll("[^a-zA-Z_0-9][^-_=+]", "_");
 
             cont.putDocument(id, xml_doc);
             output += "<message>Dokument " + id + " vlozen</message>";
@@ -387,8 +392,9 @@ public class BDBXMLHandler {
 
     /**
      * Metoda pro pridani indexu XML DB
-     * @param index Zadani indexu
+     * @param index zadani indexu - namespace;node;index type
      * @param mgr XmlManager
+     * @param containerName nazev kontajneru
      * @return
      */
     public String addIndex(String index, XmlManager mgr, String containerName) {
@@ -398,22 +404,90 @@ public class BDBXMLHandler {
             XmlContainer cont = mgr.openContainer(containerName);
 
             XmlTransaction txn = mgr.createTransaction();
-            String[] index_pole = index.split(" ");
-            if (index_pole.length == 3) {
-            cont.addIndex(index_pole[0], index_pole[1], index_pole[2]);
-            output = "<message>Index " + index + " pridan</message>";
+            String[] indexPole = index.split(";");
+            if (indexPole.length == 3) {
+                XmlIndexSpecification indexSpec = cont.getIndexSpecification();
+                indexSpec.addIndex(indexPole[0], indexPole[1], indexPole[2]);
+                cont.setIndexSpecification(indexSpec);
+                output = "<message>Index " + index + " pridan</message>";
 
-            txn.commit();
+                txn.commit();
+                indexSpec.delete();
             } else {
                 output = "<error>Spatne zadany index</error>";
             }
-
             cleanup(cont);
-
         } catch (XmlException e) {
                 output += "<error>"+e.toString()+"</error>";
         }catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
+        }
+        return output;
+    }
+
+    /**
+     * Metoda zajistujici smazani indexu
+     * @param index zadani indexu - namespace;node;index type
+     * @param mgr
+     * @param containerName nazev kontajneru
+     * @return
+     */
+    public String delIndex (String index, XmlManager mgr, String containerName){
+        String output = "";
+
+        try {
+            XmlContainer cont = mgr.openContainer(containerName);
+            XmlTransaction txn = mgr.createTransaction();
+            String[] indexPole = index.split(";");
+
+            if (indexPole.length == 3) {
+                XmlIndexSpecification indexSpec = cont.getIndexSpecification();
+                indexSpec.deleteIndex(indexPole[0], indexPole[1], indexPole[2]);
+                cont.setIndexSpecification(indexSpec);
+                output = "<message>Index " + index + " odebran</message>";
+
+                txn.commit();
+                indexSpec.delete();
+            } else {
+                output = "<error>Spatne zadany index</error>";
+            }
+            cleanup(cont);
+        } catch (XmlException ex) {
+            //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            output += "<error>"+ex.toString()+"</error>";
+        }
+
+        
+        return output;
+    }
+
+    /**
+     * Metoda pro zobrazeni indexu v XML DB
+     * @param mgr
+     * @param containerName nazev kontajneru
+     * @return
+     */
+    public String listIndex(XmlManager mgr, String containerName) {
+        String output = "";
+        String outputEnd = "";
+        try {
+            XmlContainer cont = mgr.openContainer(containerName);
+            XmlIndexSpecification indexSpec = cont.getIndexSpecification();
+
+            int count = 0;
+            XmlIndexDeclaration indexDecl = null;
+            while ((indexDecl = (indexSpec.next())) != null) {
+                outputEnd += "<index>"
+                            + "<nodeName>" + indexDecl.name + "</nodeName>"
+                            + "<indexType>" + indexDecl.index + "</indexType>"
+                        + "</index>";
+                count++;
+            }
+            output += "<indexCount>" + count + "</indexCount>" + outputEnd;
+            indexSpec.delete();
+        } catch (XmlException ex) {
+            //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            output += "<error>"+ex.toString()+"</error>";
         }
         return output;
     }
