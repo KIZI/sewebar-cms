@@ -15,7 +15,8 @@ Specifically, the three tier DBA structure must be enforced.
         <let name="nonLiteralDBA" value="//DBA[@literal='false' or not(@literal)]/@id"/>
         <let name="nonLiteralDBAthatIsARulePart" value="//DBA[(@literal='false' or not(@literal)) and (@id=//@antecedent or @id=//@consequent  or @id=//@condition)]/@id"/>
         <let name="nonLiteralDBAthatIsNotARulePart" value="//DBA[(@literal='false' or not(@literal)) and not(@id=//@antecedent or @id=//@consequent  or @id=//@condition)]/@id"/>
-        <let name="literalDBA" value="//DBA[@literal='true']/@id"/>        
+        <let name="literalDBA" value="//DBA[@literal='true']/@id"/>
+        <let name="allDBAs" value="//DBA/@id"/>
         <let name="BBAs" value="//BBA/@id"/>
         <rule context="arb:ARBuilder">
             <assert test="QueryByAssociationRule">
@@ -42,17 +43,23 @@ Specifically, the three tier DBA structure must be enforced.
             </assert>
         </rule>
         
+        
         <rule context="DBA[(@literal='false' or not(@literal)) and (@id=//@antecedent or @id=//@consequent  or @id=//@condition)]">
-            <assert test="count(BARef[not(.=$nonLiteralDBAthatIsNotARulePart)]=0">
+            <!-- <assert test="BARef=$nonLiteralDBAthatIsNotARulePart">
                 A rule part level DBA must reference a non-literal DBA
-            </assert>            
+                </assert> -->
+
+            <assert test="count(BARef[not(.=$allDBAs)])=0">
+                A rule part level DBA must reference a DBA
+            </assert> 
             <assert test="@connective='Conjunction'">
                 A non-rule part non-literal level DBA must have Conjunction connective
             </assert>
             
         </rule>
         <rule context="DBA[(@literal='false' or not(@literal)) and not(@id=//@antecedent or @id=//@consequent  or @id=//@condition)]">
-            <assert test="count(BARef[not(.=$literalDBA)])=0">
+            
+            <assert test="count(BARef[not(.=$literalDBA)])=0">                <!-- //DBA[@literal='true']/@id -->
                 A non-rule part non-literal level DBA must reference a literal DBA
             </assert>            
             <assert test="@connective='Conjunction' or @connective='Disjunction'">
@@ -64,7 +71,7 @@ Specifically, the three tier DBA structure must be enforced.
                 Literal DBA must reference a BBA
             </assert>
             <assert test="@connective='Conjunction' or @connective='Negation'">
-                Literal DBA must have Conjunction od Disjunction connective (negation not allowed) 
+                Literal DBA must have Conjunction or Negation 
             </assert>
         </rule>
     </pattern>
