@@ -395,7 +395,6 @@ class SerializeRulesARQuery extends AncestorSerializeRules {
         $ant[] = $this->solvePlainDBA($ruleAntecedent);
         $type = "AND";
         $this->antecedent = $this->createDBASetting($type, $ant);
-        echo $this->antecedent;
         if($this->antecedent == -1){
             $this->antecedent = "";
         }
