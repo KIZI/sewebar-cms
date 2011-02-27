@@ -59,11 +59,10 @@
 			<filename>uninstall.sql</filename>
 			<folder>controllers</folder>
 			<folder>helpers</folder>			
-			<folder>models</folder>
-			<folder>search_index</folder>
+			<folder>models</folder>			
 			<folder>views</folder>
-			<folder>xslt</folder>			
-			<folder>lucene</folder>
+			<folder>xslt</folder>	
+			<folder>search_index</folder>
 		</files>	
 	<!--	Language	-->
 		<languages folder="administrator">
