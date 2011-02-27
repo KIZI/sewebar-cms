@@ -69,21 +69,43 @@ var AsociationRule = new Class({
         var IMAttrs = this.countOpers();
         var arraySup = ["cons", "ant", "IM", "general"];
         var array2Sup = [conAttrs, antAttrs, IMAttrs, antAttrs+conAttrs+IMAttrs];
+        // This one solves max values
         for(var i = 0; i < arraySup.length; i++){
             if(this.serverInfo.getMaxValues(arraySup[i]) < array2Sup[i]){
                 return false;
             }
         }
+        // This one solves min values
         if(IMAttrs > 0){
             if(this.serverInfo.getMinValues("ant") > antAttrs){
                 return false;
             }
         }
-        if(antAttrs > 0 && IMAttrs > 0){
-            if(this.serverInfo.getMinValues("ant") > antAttrs){
+        if(conAttrs > 0){
+            if(this.serverInfo.getMinValues("IM") > IMAttrs){
                 return false;
             }
-            if(this.serverInfo.getMinValues("IM") > IMAttrs){
+        }
+        return true;
+    },
+
+    /**
+     * Function: solveAmountsMin
+     * This function decides whether there are enough attributes in antecedent,
+     * IM and consequent.
+     *
+     * Returns:
+     * {Boolean} true If everything is ok(less or equal amount to allowed)
+     */
+    solveAmountsMin: function(){
+        var antAttrs = this.countAttrsAnt();
+        var conAttrs = this.countAttrsCon();
+        var IMAttrs = this.countOpers();
+        var arraySup = ["cons", "ant", "IM", "general"];
+        var array2Sup = [conAttrs, antAttrs, IMAttrs, antAttrs+conAttrs+IMAttrs];
+        // This one solves min values
+        for(var i = 0; i < arraySup.length; i++){
+            if(this.serverInfo.getMinValues(arraySup[i]) > array2Sup[i]){
                 return false;
             }
         }
@@ -861,6 +883,7 @@ var AsociationRule = new Class({
      * It saves all elements data at this moment.
      */
     save: function(){
+        // It is necessary to test rule for min amounts.
         for(var actualElement = 0; actualElement < this.elements.length; actualElement++){
             this.elements[actualElement].save();
         }
@@ -875,8 +898,16 @@ var AsociationRule = new Class({
      */
     toJSON: function(){
         var jsonObject = new Array();
+        if(!this.isRuleCorrect()){
+            return null;
+        }
+        if(!this.solveAmountsMin()){
+            return null;
+        }
         for(var actualElement = 0; actualElement < this.elements.length; actualElement++){
-            jsonObject.push(this.elements[actualElement].toJSON());
+            if(this.elements[actualElement] != null){
+                jsonObject.push(this.elements[actualElement].toJSON());
+            }
         }
         return jsonObject;
     }

@@ -4,7 +4,7 @@
  *
  * @author balda
  */
-class SerializeRulesQueryByAR {
+class SerializeRulesQueryByAR  extends AncestorSerializeRules {
 
     private $id = 0;
     private $finalXMLDocument;
@@ -14,7 +14,7 @@ class SerializeRulesQueryByAR {
     private $rulePosition = -1;
     private $Dictionary;
     private $ARQuery;
-    private $ONE_CATEGORY = "One Category";
+    private $ONE_CATEGORY = "One category";
     private $bbas = array();
     private $dbas = array();
     private $rules = array();

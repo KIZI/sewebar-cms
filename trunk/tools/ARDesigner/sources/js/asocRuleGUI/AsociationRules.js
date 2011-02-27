@@ -74,7 +74,13 @@ var AsociationRules = new Class({
 
                 $("saveRule").addEvent('click', function(event){
                     var wholeJson = new JSONHelp();
+                    var rule = null;
                     for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
+                        rule = this.asociationRules[actualRule].toJSON();
+                        if(rule == null){
+                            new Hlaseni(this.language.getName(this.language.INCORRECT_RULE, this.lang));
+                            return;
+                        }
                         wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
                     }
                     wholeJson.rules = actualRule;
