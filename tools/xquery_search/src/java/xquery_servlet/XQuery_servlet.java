@@ -16,12 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.0.4 (5.2.2011)
+ * @version 1.05 (26.2.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
-
-    final static XMLSettingsReader xmlSettings = new XMLSettingsReader();
+    XMLSettingsReader xmlSettings = new XMLSettingsReader();
     /*
      * 0 - envDir
      * 1 - queryDir
@@ -32,19 +31,19 @@ public class XQuery_servlet extends HttpServlet {
      * 6 - error messages
      */
 
-    final static String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");
+    //String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");
     
-    //final static String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
+    String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
 
 
 
-    final static String envDir = settings[0];
-    final static String queryDir = settings[1];
-    final static String containerName = settings[2];
-    final static String useTransformation = settings[3];
-    final static String xsltPath = settings[4];
-    final static String tempDir = settings[5];
-    final static String settingsError = settings[6];
+    String envDir = settings[0];
+    String queryDir = settings[1];
+    String containerName = settings[2];
+    String useTransformation = settings[3];
+    String xsltPath = settings[4];
+    String tempDir = settings[5];
+    String settingsError = settings[6];
 
     //static FileInputStream xsltTrans = xsltPrepare(new File(xsltPath));
 
@@ -77,14 +76,14 @@ public class XQuery_servlet extends HttpServlet {
         double time_start = System.currentTimeMillis();
 
         if (settingsError != null) {
-                output += "<error>" + settingsError + "</error>";
+                output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: " + settingsError + "</error>";
         } else {
         try {
 
 
         // Vytvoreni spojeni s BDB XML
 
-        Environment env = createEnvironment(envDir, true);
+        Environment env = createEnvironment(envDir, false);
         XmlManagerConfig mconfig = new XmlManagerConfig();
         mconfig.setAllowExternalAccess(true);
         XmlManager mgr = new XmlManager(env, mconfig);
@@ -96,29 +95,28 @@ public class XQuery_servlet extends HttpServlet {
         QueryHandler qh = new QueryHandler();
         BDBXMLHandler bh = new BDBXMLHandler();
         Tester tester = new Tester();
+        ExistDBHandler eh = new ExistDBHandler();
 
         if (request.getParameter("action").equals("")){
-                output += "<error>Parametr akce neni vyplnen!</error>";
+                output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!</error>";
         } else {
                 String akce = request.getParameter("action").toString().toLowerCase();
                 String promenna = request.getParameter("variable").toString();
                 String obsah = request.getParameter("content").toString();
 
-                output += processRequest(akce, promenna, obsah, mgr, qh, bh, tester);
+                output += processRequest(akce, promenna, obsah, mgr, qh, bh, eh, tester);
         }
 
-                // Ukonceni spojeni s BDB XML a vycisteni
-
+        // Ukonceni spojeni s BDB XML a vycisteni
         mgr.close();
         mgr.delete();
-
         env.close();
-        Environment.remove(env.getHome(), true, EnvironmentConfig.DEFAULT);
-        
     }
     catch (Throwable ex) {
         //Logger.getLogger(XQuery_servlet.class.getName()).log(Level.SEVERE, null, ex);
-        //output += "<err>" + ex.toString() +"</err>";
+        //StringWriter sw = new StringWriter();
+        //ex.printStackTrace(new PrintWriter(sw));
+        output += "<error>Trida:  XQuery_servlet | Metoda: processRequest | Chyba: " + ex.toString() +"</error>";
         }
     }
         // Vypocet doby zpracovani,
@@ -176,19 +174,10 @@ public class XQuery_servlet extends HttpServlet {
             config.setLockDetectMode(LockDetectMode.MINWRITE);
             config.setLogAutoRemove(true);
             config.setLockTimeout(3);
+            config.setLogAutoRemove(true);
             File f = new File(home);
             return new Environment(f, config);
     }
-
-    /*private static FileInputStream xsltPrepare(File xsltFile) {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(xsltFile);
-        } catch (FileNotFoundException ex) {
-            //Logger.getLogger(XQuery_servlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return fis;
-    }*/
 
     private static int mapAction (String action){
         /*
@@ -221,7 +210,10 @@ public class XQuery_servlet extends HttpServlet {
         if (action.equals("getdocument")) returnID = 11; else
         if (action.equals("deletedocument")) returnID = 12; else
         if (action.equals("addindex")) returnID = 13; else
-        if (action.equals("completetest")) returnID = 14;
+        if (action.equals("completetest")) returnID = 14; else
+        if (action.equals("existquery")) returnID = 15; else
+        if (action.equals("listin")) returnID = 16; else
+        if (action.equals("delindex")) returnID = 17;
         return returnID;
 	}
 
@@ -235,14 +227,27 @@ public class XQuery_servlet extends HttpServlet {
      * @param mgr XmlManager
      * @return Sestaveny vystup
      */
-    private static String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, Tester tester){
+    private String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, ExistDBHandler eh, Tester tester){
     	int mappedAction = mapAction(action);
         String output = "";
+        int except[] = {2,7,8,10,13,14,16,17};
 
-        if ((mappedAction != 2 && mappedAction != 7 && mappedAction != 8 && mappedAction != 10 && mappedAction != 13 && mappedAction != 14) && variable.equals("")) {
-            //output += "<MA>"+mappedAction+"</MA>";
+        Boolean except_bool = false;
+        for (int i = 0; i < except.length; i++){
+            if (except[i] == mappedAction) {
+                except_bool = true;
+            }
+        }
+
+        if (except_bool == false && variable.isEmpty()) {
+            //output += "<b>" + except_bool + "|" + variable.isEmpty() + "</b>";
             output += "<error>Neni zadan parametr ID!</error>";
         } else {
+
+        /*if ((mappedAction != 2 && mappedAction != 7 && mappedAction != 8 && mappedAction != 10 && mappedAction != 13 && mappedAction != 14 && mappedAction != 16) && variable.equals("")) {
+            //output += "<MA>"+mappedAction+"</MA>";
+            output += "<error>Neni zadan parametr ID!</error>";
+        } else {*/
 
         switch (mappedAction) {
             case 0: output += "<error>Zadana akce neexistuje</error>"; break;
@@ -301,107 +306,17 @@ public class XQuery_servlet extends HttpServlet {
                         output += bh.addIndex(dotaz, mgr, containerName);
                     } break;
             case 14: output += tester.runTest(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError); break;
+            case 15: break; //output += eh.test(content); break;
+            case 16: output += bh.listIndex(mgr, containerName); break;
+            case 17: if (content.equals("")){
+                        output += "<error>Index nebyl zadan!</error>";
+                    } else {
+                        String dotaz = content.toString();
+                        output += bh.delIndex(dotaz, mgr, containerName);
+                    } break;
             default: output += "<error>Zadana akce neexistuje</error>"; break;
             }
         }
 	return (output);
     }
 }
-
-/*
- * if (action.equals("getdocsnames")) {
-                    output += bh.getDocsNames(mgr, containerName);
-		} else if (action.equals("getqueriesnames")) {
-                    output += qh.getQueriesNames(queryDir);
-                } else if (action.equals("completetest")) {
-                    output += tester.runTest(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
-                } else if (action.equals("directquery")) {
-			if (content.equals("")) {
-                            output += "<error>Query nebyla zadana!</error>";
-			} else {
-                            String dotaz = content.toString();
-                            String[] message = bh.query("", dotaz, 0, mgr, qh, containerName, queryDir);
-                            output += message[1].toString();
-			}
-		} else if (action.equals("directquery10")) {
-			if (content.equals("")) {
-				output += "<error>Query nebyla zadana!</error>";
-			} else {
-				String dotaz = content.toString();
-				String message = query_10(dotaz, mgr);
-                                output += message.toString();
-			}
-		} else if (action.equals("adddocumentmultiple")) {
-                    output += bh.indexDocumentMultiple(content, mgr, containerName, useTransformation, xsltPath);
-                } else if (action.equals("addindex")) {
-                    if (content.equals("")){
-                        output += "<error>Index nebyl zadan!</error>";
-                    } else {
-                        String dotaz = content.toString();
-                        output += bh.addIndex(dotaz, mgr, containerName);
-                    }
-            } else if (action.equals("adddocument")) {
-	    		if (content.equals("")) {
-	    			output += "<error>Neni zadan obsah dokumentu</error>";
-	    		} else {
-	    			content = content.toString();
-	    			output += bh.indexDocument(content, variable, mgr, containerName, useTransformation, xsltPath);
-	    		}
-	    	} else if (variable.equals("")) {
-				output += "<error>Parametr ID neni vyplnen!</error>";
-			}
-		else {
-			variable = variable.toString();
-
-			//action = usequery
-	    	if (action.equals("usequery")) {
-	    		if (content.equals("")) {
-	    			output += "<error>Neni zadan obsah query</error>";
-	    		} else {
-	    				String dotaz = content.toString();
-                        String[] message = bh.query(variable, dotaz, 1, mgr, qh, containerName, queryDir);
-                        output += message[1].toString();
-				}
-
-	    	//action = getquery
-	    	} else if (action.equals("getquery")) {
-	    		output += "<query>" + qh.getQuery(variable, queryDir)[1].toString() + "</query>";
-	    	} else if (action.equals("addquery")) {
-	    		if (content.equals("")) {
-	    			output += "<error>Neni zadan obsah query</error>";
-	    		} else {
-	    			content = content.toString();
-	    			output += qh.addQuery(content, variable, queryDir);
-	    		}
-
-	    	//action = deletequery
-	    	} else if (action.equals("deletequery")){
-	    		output += qh.deleteQuery(variable, queryDir);
-
-	    	//action = moredoc
-	    	} else if (action.equals("moredoc")) {
-	    		if (content.equals("")) {
-	    			output_temp += "<error>Neni zadan obsah</error>";
-	    		} else {
-	    			content = content.toString();
-                    String[] message = bh.moreDocuments(content, variable, mgr);
-	    			output_temp += message[1].toString();
-	    		}
-	    	//action = getdocument
-	    	} else if (action.equals("getdocument")) {
-	    		if (variable == null){
-	    			output += "<error>Neni zadan nazev dokumentu</error>";
-	    		} else {
-	    			output += bh.getDocument(variable, mgr, containerName);
-	    		}
-
-	    	//action = deletedocument
-	    	} else if (action.equals("deletedocument")) {
-	    		output += bh.removeDocument(variable, mgr, containerName);
-
-	    	//error - zadana action neexistuje
-	    	} else {
-	    		output += "<error>Zadana akce neexistuje</error>";
-	    		}
-    	}
- */
