@@ -25,12 +25,13 @@ $gantry->init();
 		$gantry->addStyles(array('template.css','joomla.css','style.css','typography.css'));
 	?>
 	<!-- sewebar specific imports-->
-	  <link rel="stylesheet" href="/xml/css/sewebar.css" type="text/css" />
-	  <link rel="stylesheet" href="/xml/bkef/css/bkef.css" type="text/css" />
-	  <link rel="stylesheet" href="/xml/pmml/css/pmml.css" type="text/css" />
-	  <link rel="stylesheet" href="/xml/pmml/css/navigation.css" type="text/css" />
-	  <link rel="stylesheet" href="/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
-    <script type="text/javascript" src="/xml/bkef/js/influences.js"></script>
+	<link rel="stylesheet" href="/xml/css/sewebar.css" type="text/css" />
+	<link rel="stylesheet" href="/xml/bkef/css/bkef.css" type="text/css" />
+	<link rel="stylesheet" href="/xml/pmml/css/pmml.css" type="text/css" />
+	<link rel="stylesheet" href="/xml/pmml/css/navigation.css" type="text/css" />
+	<link rel="stylesheet" href="/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
+	<link rel="stylesheet" href="/components/com_kbi/assets/kbi.css" type="text/css" />
+	<script type="text/javascript" src="/xml/bkef/js/influences.js"></script>
 
 	<!-- end of sewebar specific imports (some javascript imports are below)-->    
 </head>
