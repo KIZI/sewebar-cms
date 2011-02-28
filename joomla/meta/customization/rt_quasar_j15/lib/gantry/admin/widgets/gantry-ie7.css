@@ -1,0 +1,6 @@
+.mini-grid, .mini-container, .miniatures, .presets-badge {zoom:1;position: relative;}
+.presets-badge .number {top:0;}
+#diagnostic {position: relative;z-index:10;zoom:1;overflow:hidden;}
+#diagnostic .g-title {z-index:10;zoom:1;}
+.paramlist_key input[type=checkbox] {left: 0;position: absolute;}
+.paramlist_value .menuitems-patch {top: 0 !important;}
