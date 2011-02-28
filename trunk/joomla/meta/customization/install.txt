@@ -1,0 +1,5 @@
+pack rt_quasar_j15 folder into rt_quasar_j15.tgz and install as Joomla Template
+Select Style  6 
+
+Images
+If image upload does not work disable flash upload in global configuration.
