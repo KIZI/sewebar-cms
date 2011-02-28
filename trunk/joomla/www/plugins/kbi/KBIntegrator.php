@@ -8,6 +8,7 @@
  */
 
 require_once 'IKBIntegrator.php';
+require_once 'Query.php';
 
 if(!class_exists('FB'))
 {
@@ -27,19 +28,19 @@ class KBIntegrator implements IKBIntegrator
 
 		switch($type){
 			case 'ONTOPIA':
-				require_once 'Ontopia.php';
+				require_once 'Integrators/Ontopia.php';
 				return new Ontopia($config);
 			break;
 			case 'SPARQL':
-				require_once 'Semsol.php';
+				require_once 'Integrators/Semsol.php';
 				return new Semsol($config);
 			break;
 			case 'XQUERY':
-				require_once 'XQuery.php';
+				require_once 'Integrators/XQuery.php';
 				return new XQuery($config);
 				break;
 			case 'JUCENE':
-				require_once 'Jucene.php';
+				require_once 'Integrators/Jucene.php';
 				return new Jucene($config);
 				break;
 			case 'GENERIC':
@@ -94,24 +95,16 @@ class KBIntegrator implements IKBIntegrator
 		$this->config = $config;
 	}
 
+	/**
+	 * Implements the query execution. If remote source returned well-formed XML and XSLT is set the transformation is performed.
+	 *
+	 * @param KBIQuery | string Query
+	 * @param string XSLT
+	 */
 	public function query($query, $xsl = '') {
-		if(!is_array($query)) {
-			$query = array('query' => $query);
+		if($query instanceof KBIQuery) {
+			$query = $query->proccessQuery();
 		}
-		/*if(!empty($parameters))
-		{
-			$delimiter = $this->_source->delimiter;
-			$replace_pairs = array();
-
-			foreach($parameters as $name=>$value)
-			{
-				$replace_pairs[$delimiter.$name.$delimiter] = $value;
-			}
-
-			$this->_source->query = strtr($this->_source->query, $replace_pairs);
-		}*/
-
-		$query = $query['query'];
 
 		$method = strtoupper($this->getMethod());
 
@@ -133,17 +126,19 @@ class KBIntegrator implements IKBIntegrator
 		}
 
 		$xml = new DOMDocument();
-		$xml->loadXML($xml_data);
+		if($xml->loadXML($xml_data)) {
+			// Create XSLT document
+			$xsl_document = new DOMDocument();
+			$xsl_document->loadXML($xsl, LIBXML_NOCDATA);
 
-		// Create XSLT document
-		$xsl_document = new DOMDocument();
-		$xsl_document->loadXML($xsl, LIBXML_NOCDATA);
+			// Process XSLT
+			$xslt = new XSLTProcessor();
+			$xslt->importStylesheet($xsl_document);
 
-		// Process XSLT
-		$xslt = new XSLTProcessor();
-		$xslt->importStylesheet($xsl_document);
-
-		return $xslt->transformToXML($xml);
+			return $xslt->transformToXML($xml);
+		} else {
+			return $xml_data;
+		}
 	}
 
 	protected function queryGet($query) {

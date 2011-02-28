@@ -16,6 +16,12 @@ interface IKBIntegrator
 {
 	public function getUrl();
 	public function setUrl($value);
-	
+
+	/**
+	 * Generic implementation for IKBIntegrator.
+	 *
+	 * @param KBIQuery | array | string $query
+	 * @param unknown_type $xsl
+	 */
 	public function query($query, $xsl = '');
 }

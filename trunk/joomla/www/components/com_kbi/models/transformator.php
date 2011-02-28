@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die('Restricted access');
 /**
  * @version		$Id$
  * @package		com_kbi
@@ -7,12 +7,13 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-defined('_JEXEC') or die('Restricted access');
+$com_kbi_admin_model = JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi' . DS . 'models';
+
 jimport( 'joomla.application.component.model' );
 JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
-JLoader::import('sources', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
-JLoader::import('queries', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
-JLoader::import('xslts', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+JLoader::import('sources', $com_kbi_admin_model);
+JLoader::import('queries', $com_kbi_admin_model);
+JLoader::import('xslts', $com_kbi_admin_model);
 
 /**
  * JModel for transformator. Transformator calls KBI library's query with combination of source, query and xslt.
@@ -21,8 +22,12 @@ JLoader::import('xslts', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
  */
 class KbiModelTransformator extends JModel
 {
+	/** @var KBIntegrator */
 	private $source = NULL;
+
+	/** @var KBIQuery */
 	private $query = NULL;
+
 	private $xslt = NULL;
 	private $parameters = NULL;
 
@@ -68,26 +73,48 @@ class KbiModelTransformator extends JModel
 
 	function getQuery()
 	{
+		if($this->query === NULL) {
+			$this->query = new KBIQuery();
+		}
+
 		return $this->query;
 	}
 
 	/**
+	 * Sets query to perform.
 	 *
-	 *
-	 * @param mixed $value id | query | ardesigner query
+	 * @param KBIQuery | int | string Query
 	 */
 	function setQuery($value)
 	{
-		if(is_numeric($value)) {
-			$queries = new KbiModelQueries;
-			$this->query = get_object_vars($queries->getQuery($value));
-		} elseif(is_string($value)) {
-			$this->query = array();
-			$this->query['query'] = $value;
+		if($value instanceof KBIQuery) {
+			$this->query = $value;
+			return $this;
 		}
 
-		/*if(empty($this->query) || empty($this->query->query))
-			return $this->getParams();*/
+		if(is_numeric($value)) {
+			$queries = new KbiModelQueries;
+			$db = get_object_vars($queries->getQuery($value));
+			$query = new KBIQuery();
+
+			// TODO: implement all properties
+			$query->setQuery($db['query']);
+			$query->setDelimiter($db['delimiter']);
+			$query->setXslt($db['paramsxsl']);
+
+			$this->query = $query;
+		} elseif(is_string($value)) {
+			$query = new KBIQuery();
+
+			$query->setQuery($value);
+
+			$this->query = $query;
+		}
+
+		if($this->query != NULL)
+			return $this->query->setParameters($this->getParams());
+
+		return $this;
 	}
 
 	function getParams()
@@ -98,6 +125,9 @@ class KbiModelTransformator extends JModel
 	function setParams($value)
 	{
 		$this->parameters = $value;
+
+		if($this->query != NULL)
+			return $this->query->setParameters($this->getParams());
 	}
 
 	function getXslt()

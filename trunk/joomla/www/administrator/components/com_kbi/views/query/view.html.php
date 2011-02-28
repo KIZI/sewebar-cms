@@ -32,6 +32,8 @@ class KbiViewQuery extends JView
 		global $option, $mainframe;
 		self::setToolbar();
 
+		JHTML::_('behavior.tooltip');
+
 		JRequest::setVar('hidemainmenu', 1);
 		$id = JRequest::getVar('id', array(0), 'method', 'array');
 
@@ -49,9 +51,9 @@ class KbiViewQuery extends JView
 					'onclick' => "window.open(this.href,'ardesigner','width=1024,height=600,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=yes');return false;",
 				);
 
-				$this->assign('ardesigner', JHTML::_('link', $url, 'ARDesigner (Feature List, Data Dictionary Query and XSLTs of query should be saved)', $attrs));
+				$this->assign('ardesigner', JHTML::_('link', $url, 'ARDesigner', $attrs));
 			} else {
-				$this->assign('ardesigner', '<span style="color: gray;">ARDesigner (Feature List, Data Dictionary Query and XSLTs of query must be saved)</span>');
+				$this->assign('ardesigner', '<span style="color: gray;">ARDesigner</span>');
 			}
 		} else {
 			$this->assign('ardesigner', NULL);
