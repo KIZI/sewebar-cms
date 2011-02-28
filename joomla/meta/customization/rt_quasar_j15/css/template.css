@@ -19,6 +19,25 @@ body {font-family: Helvetica,Arial,sans-serif;min-width: 960px;}
 ul {list-style: none;padding-left: 0;}
 ul li {list-style: square;margin-left: 15px;}
 
+/**************************************/
+/* SEWEBAR */
+/**************************************/
+.mceContentBody div.kbincludediv {background-color: black !important; border: 1px dotted darkred !important; color: white !important;}
+.mceContentBody div.kbincludediv div.kbincludetitle {color: lightred; display: block !important; font-weight:bold; font-size:1.2em; padding:0px;}
+
+.mceContentBody div.gincludeDiv{
+  background-color: rgb(255,255,153) !important;
+  border: 1px dotted red !important;
+}
+.mceContentBody div.gincludeDiv div.gincludeTitleDiv {
+  color: red;
+  display: block !important;
+}
+
+
+div.gincludeTitleDiv { display:none; }
+/**************************************/
+
 /* Top */
 #rt-top .search .inputbox {width: 236px;height: 20px;line-height: 16px;border: 0;padding: 3px 0 0 5px;}
 #rt-top .search {text-align: right;}
