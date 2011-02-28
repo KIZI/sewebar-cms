@@ -9,9 +9,7 @@
         "featurelist": "",
         "paramsxsl": ""
     }
-]
-
-[
+,
     {
         "name": "Italian Opera Topic Map",
         "url": "http:\/\/nlp.vse.cz:8080\/tmrap\/tmrap\/get-tolog",

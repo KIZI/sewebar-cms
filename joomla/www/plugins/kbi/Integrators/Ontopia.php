@@ -7,7 +7,7 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-require_once dirname(__FILE__).'/KBIntegrator.php';
+require_once dirname(__FILE__).'/../KBIntegrator.php';
 
 /**
  * IKBIntegrator implementation for OKS.

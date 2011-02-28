@@ -21,7 +21,6 @@ class KbiControllerSelector extends JController
 {
 	/**
 	 * Selector is a user window for selecting source, query and coresponding XSLT.
-	 *
 	 */
 	function display()
 	{
@@ -44,7 +43,7 @@ class KbiControllerSelector extends JController
 	}
 
 	/**
-	 * Executes Params XSLT for given query
+	 * Executes Params XSLT (transformation to be used to convert parameters into query) for given query.
 	 */
 	function params()
 	{
@@ -57,39 +56,32 @@ class KbiControllerSelector extends JController
 		$data = JRequest::getVar('data', '', 'post', 'string', JREQUEST_ALLOWRAW);
 		$query_id = JRequest::getInt('id_query', NULL);
 
-		$view->assign('value', '');
+		$result = $data;
 
 		if($query_id != NULL && !empty($data)) {
 			$model_queries = &$this->getModel('queries');
 			$query = $model_queries->getQuery($query_id);
 			if($query != NULL) {
 				$xml = new DOMDocument();
-				$xml->loadXML($data);
+				if($xml->loadXML($data)) {
+					// start xslt
+					$xslt = new XSLTProcessor();
+					$xsl = new DOMDocument();
+					$xsl->loadXML($query->paramsxsl);
+					$xslt->importStylesheet($xsl);
 
-				// start xslt
-				$xslt = new XSLTProcessor();
-				$xsl = new DOMDocument();
-				$xsl->loadXML($query->paramsxsl);
-				$xslt->importStylesheet($xsl);
+					$paramset = $xslt->transformToDoc($xml);
+					$result = $xslt->transformToXML($xml);
 
-				$paramset = $xslt->transformToDoc($xml);
-				$result = $xslt->transformToXML($xml);
-
-				/*
-				$result = '';
-				$paramset = $paramset->getElementsByTagName('Params');
-				foreach($paramset as $params) {
-					foreach($params->childNodes as $param) {
-						$result .= $param->getAttribute('name') . ":'{$param->nodeValue}', ";
+					if($result === false) {
+						// TODO: any joomla function for this?
+						header('HTTP/1.1 500 Internal Server Error');
 					}
 				}
-				$result = substr($result, 0, -2);
-				*/
-
-				$view->assign('value', $result);
 			}
 		}
 
+		$view->assign('value', $result);
 		$view->display();
 	}
 
@@ -106,10 +98,16 @@ class KbiControllerSelector extends JController
 		$viewType = $document->getType();
 		$view =& $this->getView($viewName, $viewType);
 
-		//'{kbi source:' + source + ' query:' + query + ' xslt:' + xslt + ' parameters:\'' + parameters + '\'}'
+		// if parameters are in JSON - take care of it
+		$parameters = JRequest::getVar('parameters', NULL, 'default', 'string', JREQUEST_ALLOWRAW);
+		if($params_json = json_decode("{ $parameters }", true))
+			$parameters = $params_json;
+
 		$data = array(
 			'source' => JRequest::getInt('source', NULL),
 			'query' => JRequest::getInt('query', NULL),
+			'xslt' => JRequest::getInt('xslt', NULL),
+			'parameters' => $parameters
 		);
 
 		$json = json_encode($data);

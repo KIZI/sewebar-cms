@@ -20,7 +20,7 @@ JLoader::import('transformator', JPATH_COMPONENT . DS . 'models');
  *
  * @package com_kbi
  */
-class KbiControllerServer extends JController
+class KbiControllerTransformator extends JController
 {
 	function display()
 	{

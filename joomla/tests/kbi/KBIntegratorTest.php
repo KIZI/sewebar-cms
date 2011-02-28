@@ -1,6 +1,7 @@
 <?php
 
-require_once '/Volumes/Data/svn/sewebar/trunk/joomla/www/plugins/kbi/KBIntegrator.php';
+require_once dirname(__FILE__).'/../../www/plugins/kbi/KBIntegrator.php';
+require_once dirname(__FILE__).'/../data/integrators.php';
 
 /**
  * Test class for KBIntegrator.
@@ -8,10 +9,13 @@ require_once '/Volumes/Data/svn/sewebar/trunk/joomla/www/plugins/kbi/KBIntegrato
  */
 class KBIntegratorTest extends PHPUnit_Framework_TestCase
 {
-    /**
+	/**
      * @var KBIntegrator
      */
     protected $object;
+
+   	private $_testData = array();
+	private $_testObjects = array();
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -19,12 +23,11 @@ class KBIntegratorTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-		$this->object = KBIntegrator::create(array(
-			'type' => 'GENERIC',
-			'url' => 'http://...',
-			'method' => 'POST',
-			'port' => '1234',
-		));
+		$this->_testData = IntegratorsData::getData();
+
+		foreach($this->_testData as $obj) {
+			$this->_testObjects[] = KBIntegrator::create($obj['source']);
+		}
     }
 
     /**
@@ -33,45 +36,45 @@ class KBIntegratorTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-		unset($this->object);
+		unset($this->_testData);
+		unset($this->_testObjects);
     }
 
     public function testCreate()
     {
-		$this->assertInstanceOf('KBIntegrator', $this->object);
-    }
-
-    public function testGetUrl()
-    {
-        $this->assertEquals('http://...', $this->object->getUrl());
+    	foreach($this->_testObjects as $obj) {
+			$this->assertInstanceOf('KBIntegrator', $obj);
+		}
     }
 
     public function testSetUrl()
     {
-        $this->object->setUrl('url');
-		$this->assertEquals('url', $this->object->getUrl());
-    }
+    	foreach($this->_testData as $obj) {
+    		$this->object = KBIntegrator::create($obj['source']);
 
-    public function testGetMethod()
-    {
-       $this->assertEquals('POST', $this->object->getMethod());
+    		$this->object->setUrl($obj['source']['url']);
+			$this->assertEquals($obj['source']['url'], $this->object->getUrl());
+		}
     }
 
     public function testSetMethod()
     {
-        $this->object->setMethod('GET');
-		$this->assertEquals('GET', $this->object->getMethod());
-    }
+       foreach($this->_testData as $obj) {
+    		$this->object = KBIntegrator::create($obj['source']);
 
-    public function testGetPort()
-    {
-		$this->assertEquals('1234', $this->object->getPort());
+    		$this->object->setMethod($obj['source']['method']);
+			$this->assertEquals($obj['source']['method'], $this->object->getMethod());
+		}
     }
 
     public function testSetPort()
     {
-		$this->object->setPort('8080');
-		$this->assertEquals('8080', $this->object->getPort());
+     	foreach($this->_testData as $obj) {
+    		$this->object = KBIntegrator::create($obj['source']);
+
+    		$this->object->setPort($obj['source']['port']);
+			$this->assertEquals($obj['source']['port'], $this->object->getPort());
+		}
     }
 
     /**
@@ -133,17 +136,6 @@ class KBIntegratorTest extends PHPUnit_Framework_TestCase
      * @todo Implement testRequestPost().
      */
     public function testRequestPost()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testParseNameValues().
-     */
-    public function testParseNameValues()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

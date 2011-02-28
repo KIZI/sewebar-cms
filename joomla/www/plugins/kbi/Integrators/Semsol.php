@@ -7,7 +7,7 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-require_once dirname(__FILE__).'/KBIntegrator.php';
+require_once dirname(__FILE__).'/../KBIntegrator.php';
 
 /**
  * IKBIntegrator implementation for Semsol/SPARQL endpoints.
@@ -20,7 +20,7 @@ class Semsol extends KBIntegrator
 	{
 		parent::__construct($config);
 	}
-	
+
 	public function queryGet($query) {
 		$data = array(
 			'query' => $query,
@@ -28,7 +28,7 @@ class Semsol extends KBIntegrator
 			'jsonp' => '',
 			'key' => '',
 		);
-			
-		return $this->requestCurl($this->getUrl(), $data); 
-	}	
+
+		return $this->requestCurl($this->getUrl(), $data);
+	}
 }

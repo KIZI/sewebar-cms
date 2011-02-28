@@ -7,7 +7,7 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-require_once 'KBIntegratorSynchronable.php';
+require_once dirname(__FILE__) . '/../KBIntegratorSynchronable.php';
 
 /**
  * IKBIntegrator implementation for XQuery database.

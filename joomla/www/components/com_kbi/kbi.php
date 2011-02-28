@@ -15,7 +15,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_COMPONENT.DS.'controller.php');
 
 // Create the controller
-$controller = new KbiControllerServer();
+$controller = new KbiControllerTransformator;
 
 // Perform the Request task
 $controller->execute(JRequest::getCmd('task'));

@@ -33,7 +33,8 @@ var KbiManager = {
 				{
 					source: source,
 					query: query,
-					xslt: xslt
+					xslt: xslt,
+					parameters: parameters
 				},
 				onSuccess: function(response){
 					window.parent.jInsertEditorText(response, 'text');
