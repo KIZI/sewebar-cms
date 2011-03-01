@@ -7,6 +7,8 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
+require_once 'Debug.php';
+
 /**
  * Interface for communication between CMSs and KBs.
  *
