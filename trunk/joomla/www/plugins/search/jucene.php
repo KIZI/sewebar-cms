@@ -21,7 +21,7 @@ defined ( '_JEXEC' ) or die ( 'Restricted access' );
 
 //Now define the registerEvent and the language file. Replace 'nameofplugin' with the name of your plugin.
 $mainframe->registerEvent ( 'onJuceneSearch', 'plgSearchJucene' );
-$mainframe->registerEvent ( 'onAfterContentSave', 'plgSearchJucene' );
+
 JPlugin::loadLanguage ( 'plg_search_jucene' );
 class plgSearchJucene extends JPlugin {
 	/**
@@ -41,7 +41,7 @@ class plgSearchJucene extends JPlugin {
 		try {
 			$index = & JuceneHelper::getIndex ();
 		} catch ( Exception $e ) {
-			//var_dump($e);
+			
 			JFactory::getApplication ()->enqueueMessage ( JText::_ ( $e->getMessage () ), 'error' );
 		}
 		//It is time to define the parameters! First get the right plugin; 'search' (the group), 'nameofplugin'.
@@ -50,13 +50,11 @@ class plgSearchJucene extends JPlugin {
 		//load the parameters of the plugin
 		$pluginParams = new JParameter ( $plugin->params );
 		
-		//Search limit is best when set to 0 - lucene returns all results without restriction
-		$limit = $pluginParams->def ( 'search_limit', 0 );
-		
 		//TODO log search query
 		
 
 		//Set query
+		//var_dump($query);
 		$query = JuceneHelper::prepareNumber ( $query );
 		Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding ( 'UTF-8' );
 		try {
