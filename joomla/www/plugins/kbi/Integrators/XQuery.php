@@ -47,13 +47,16 @@ class XQuery extends KBIntegratorSynchronable
 	}
 
 	public function queryPost($query) {
+		$url = $this->getUrl();
+
 		$postdata = array(
 			'action' => $this->getAction(),
 			'variable' => $this->getVariable(),
 			'content' => $query,
 		);
 
-		return $this->requestCurlPost($this->getUrl(), $postdata);
+		KBIDebug::info(array($url, $postdata));
+		return $this->requestCurlPost($url, $postdata);
 	}
 
 	public function getDocuments()
@@ -123,8 +126,8 @@ class XQuery extends KBIntegratorSynchronable
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
-		FB::log($info);
-		FB::log($response);
+		KBIDebug::log($info);
+		KBIDebug::log($response);
 
 		if($info['http_code'] != '200')
 		{

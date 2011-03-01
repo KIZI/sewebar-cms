@@ -41,7 +41,10 @@ class Ontopia extends KBIntegrator
 		parent::__construct($config);
 	}
 
-	public function queryGet($query) {
+	public function queryGet($query)
+	{
+		$url = $this->getUrl();
+
 		$data = array(
 			'topicmap' => $this->getTopicMap(),
 			'tolog' => $query
@@ -52,7 +55,9 @@ class Ontopia extends KBIntegrator
 			$data['syntax'] = $this->getSyntax();
 		}
 
-		return $this->requestCurl($this->getUrl(), $data);
+		KBIDebug::info(array($url, $data));
+
+		return $this->requestCurl($url, $data);
 	}
 
 	protected function querySoap($query) {

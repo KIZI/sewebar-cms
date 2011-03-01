@@ -10,11 +10,6 @@
 require_once 'IKBIntegrator.php';
 require_once 'Query.php';
 
-if(!class_exists('FB'))
-{
-	include_once 'FirePHPCore/fb.php';
-}
-
 /**
  * Generic implementation for IKBIntegrator.
  *
@@ -175,7 +170,7 @@ class KBIntegrator implements IKBIntegrator
 	    }
 	    $data = implode('&', $data);
 
-		FB::info("$url?$data");
+		KBIDebug::info("$url?$data");
 
 		$ch = curl_init("$url?$data");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
