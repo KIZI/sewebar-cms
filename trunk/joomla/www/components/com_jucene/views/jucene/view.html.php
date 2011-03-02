@@ -39,8 +39,8 @@ class JuceneViewJucene extends JView {
 		$rows = null;
 		$total = 0;
 		
-		$params = &JComponentHelper::getParams ( 'com_jucene' );
-		$displayServiceLink = $params->get ( 'service_link', 1 );
+		//$params = &JComponentHelper::getParams ( 'com_jucene' );
+		//$displayServiceLink = $params->get ( 'service_link', 1 );
 		if ($displayServiceLink) {
 			$service_link = 'Powered by Zend Lucene, created by <a href="http://www.drupaler.cz">drupaler.cz</a>, Lukáš Beránek';
 		}
@@ -71,10 +71,7 @@ class JuceneViewJucene extends JView {
 		$document->addScript ( 'components/com_jucene/js/jquery-ui-1.8.10.custom.min.js' );
 		$document->addStyleSheet ( 'components/com_jucene/css/jquery-ui-1.8.10.custom.css' );
 		$document->addStyleSheet ( 'components/com_jucene/css/search.css' );
-		
-		// Get the parameters of the active menu item
-		$params = &$mainframe->getParams ();
-		
+				
 		// built select lists
 		//TODO find a solution how to implement query builder or ordering and search areas e.g. search fields
 		$sorting = array ();
@@ -160,7 +157,7 @@ class JuceneViewJucene extends JView {
 		}
 		
 		if (! $error) {
-			$results = &$this->get ( 'data' );
+			$results = &$this->get ( 'data' );			
 			$total = &$this->get ( 'total' );
 			$pagination = &$this->get ( 'pagination' );
 			
