@@ -16,14 +16,15 @@
 //To prevent accessing the document directly, enter this code:
 // no direct access
 defined ( '_JEXEC' ) or die ( 'Restricted access' );
+//jimport( 'joomla.factory' );
 
 //to prevent loading local zend framework and allow users to run Jucene without Zend installed
 
 //Now define the registerEvent and the language file. Replace 'nameofplugin' with the name of your plugin.
 $mainframe->registerEvent ( 'onJuceneSearch', 'plgSearchJucene' );
-
 JPlugin::loadLanguage ( 'plg_search_jucene' );
-class plgSearchJucene extends JPlugin {
+
+
 	/**
 	 * 
 	 * @param $query
@@ -31,6 +32,7 @@ class plgSearchJucene extends JPlugin {
 	 */
 	function plgSearchJucene($query, $ordering = '') {
 		//import helper
+		
 		require_once (JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . 'helpers' . DS . 'jucene.php');
 		require_once (JPATH_SITE . DS . 'components' . DS . 'com_content' . DS . 'helpers' . DS . 'route.php');
 		
@@ -40,8 +42,7 @@ class plgSearchJucene extends JPlugin {
 		$time = time ();
 		try {
 			$index = & JuceneHelper::getIndex ();
-		} catch ( Exception $e ) {
-			
+		} catch ( Exception $e ) {			
 			JFactory::getApplication ()->enqueueMessage ( JText::_ ( $e->getMessage () ), 'error' );
 		}
 		//It is time to define the parameters! First get the right plugin; 'search' (the group), 'nameofplugin'.
@@ -50,12 +51,18 @@ class plgSearchJucene extends JPlugin {
 		//load the parameters of the plugin
 		$pluginParams = new JParameter ( $plugin->params );
 		
+		$limit = $pluginParams->def( 'search_limit', 0 );
+		
 		//TODO log search query
 		
 
 		//Set query
-		//var_dump($query);
-		$query = JuceneHelper::prepareNumber ( $query );
+		
+		try {
+			$query = JuceneHelper::prepareNumber ( $query );
+		} catch (Exception $e) {
+		}
+		
 		Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding ( 'UTF-8' );
 		try {
 			Zend_Search_Lucene_Search_QueryParser::parse ( $query );
@@ -89,4 +96,3 @@ class plgSearchJucene extends JPlugin {
 	}
 	
 	
-}

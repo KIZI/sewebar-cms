@@ -37,7 +37,7 @@ class JuceneController extends JController {
 	}
 	
 	function search() {
-		$searchword = trim ( JRequest::getString ( 'searchword', null, 'post' ) );
+		$searchword = trim ( JRequest::getString ( 'searchword', '', 'post' ) );
 		
 		$post ['searchword'] = $searchword;
 		$post ['sorting'] = JRequest::getWord ( 'sorting', 'SORT_STRING', 'post' );

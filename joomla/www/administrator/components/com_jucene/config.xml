@@ -5,7 +5,7 @@
   <param name="index_name" scope="com_jucene" type="text" default="default_index" label="Name of an index" size="100" description="Define a name of you search index"/>
   <param name="results_limit" scope="com_jucene" type="text" default="100" label="Results limit" size="100" description="Define the maximum nuber of returned results by search."/>
   
-  <param name="service_link" type="radio" default="1" label="Select an option" description="Display copyright link in the search results.">
+  <param name="service_link" type="radio" default="1" label="Zobrazit odkaz v patičce vyhledávání" description="Display copyright link in the search results.">
    <option value="0">No</option>
    <option value="1">Yes</option>
   </param>

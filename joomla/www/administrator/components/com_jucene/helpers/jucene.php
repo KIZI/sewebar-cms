@@ -50,7 +50,7 @@ class JuceneHelper {
 		$params = &JComponentHelper::getParams ( $component->params );
 		
 		Zend_Search_Lucene_Analysis_Analyzer::setDefault ( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num () );
-		Zend_Search_Lucene::setResultSetLimit ( $params->get('resuls_limit', 100) );
+		Zend_Search_Lucene::setResultSetLimit ( $params->get ( 'resuls_limit', 100 ) );
 		
 		return $index;
 	
@@ -111,7 +111,7 @@ class JuceneHelper {
 	 */
 	function getIndexPath() {
 		$component = JComponentHelper::getComponent ( 'com_jucene' );
-		$params = &JComponentHelper::getParams ( $component->params );		
+		$params = &JComponentHelper::getParams ( $component->params );
 		$dir_path = JPATH_SITE . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . $params->get ( 'index_path', 'search_index' );
 		$index_name = $params->get ( 'index_name', "default_index" );
 		$index_path = $dir_path . DS . $index_name;
@@ -119,11 +119,16 @@ class JuceneHelper {
 	}
 	
 	public function formatNumber($query) {
-		return '1' . sprintf ( '%06d', round ( $query * 1000 ) );
+		
+			return '1' . sprintf ( '%06d', round ( $query * 1000 ) );
+		
+		
 	}
 	
 	public function prepareNumber($strNumber) {
-		return preg_replace ( '/\d+(\.\d+)?/e', 'JuceneHelper::formatNumber(\\0)', $strNumber );
+		
+			return preg_replace ( '/\d+(\.\d+)?/e', 'JuceneHelper::formatNumber(\\0)', $strNumber );
+			
 	}
 	function sanitizeFieldName($name) {
 		

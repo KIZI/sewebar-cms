@@ -14,6 +14,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.model');
+
+
 /**
  * Search Component Search Model
  *
@@ -76,6 +78,7 @@ class JuceneModelJucene extends JModel
 		//TODO find a solution how to implement ordering
 		$ordering		= urldecode(JRequest::getString('ordering',SORT_ASC));
 		$this->setSearch($query,$sorting,$ordering);
+		
 
 	}
 
@@ -113,16 +116,23 @@ class JuceneModelJucene extends JModel
 		
 		if (empty($this->_data))
 		{
-			
-            $query = $this->getState('query');
+			$dispatcher = &JDispatcher::getInstance();  
+            $query = &$this->getState('query');
+            
+            
 			//TODO add here a error message - missing plugin
 			
 			if(substr ( $query, 0, 5 ) == '<?xml' && $arQuery != null){
 			     $query = $this->_prepareARQuery($arQuery);
 		    }
-		    JPluginHelper::importPlugin( 'jucene');
-        	$dispatcher =& JDispatcher::getInstance();
+		    
+		    try {
+		    	JPluginHelper::importPlugin( 'search', 'jucene');
+		    } catch (Exception $e) {
+		    	 
+		    }
         	
+        	     	
 			$results = $dispatcher->trigger( 'onJuceneSearch', array($query));
 
 			$rows = array();
@@ -144,15 +154,8 @@ class JuceneModelJucene extends JModel
 	
 	
 	function _prepareARQuery($query){
-	       $dom = new DOMDocument ();
-        //decide which field contains PMML doc
+	    $dom = new DOMDocument ();
         
-
-        
-        //first test is to decide which field contains the pmml doc. This is just a test to decide if it really is one:-). God help us.
-        //if (substr ( $xml_field, 0, 5 ) == '<?xml'){
-        
-
         $xslt = new DOMDocument ();
         
         $error = false;
