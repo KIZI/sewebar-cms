@@ -1,7 +1,7 @@
 <?php
 //error_reporting(E_ALL);
 
-require_once 'zendcache.php';
+require_once ('Zend/Cache.php');
 
 define('PLUGIN_NAME', 'xsltmagic');
 define("CACHE_DIR", './cache/');
