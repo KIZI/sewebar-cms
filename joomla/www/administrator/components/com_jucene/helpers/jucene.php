@@ -26,11 +26,9 @@ class JuceneHelper {
 	var $index;
 	
 	function getIndex() {
-		//get params
 		
-
 		require_once ('Zend/Search/Lucene.php');
-		//require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers/LuceneDigitAnalyzer.php');
+		
 		$index_path = JuceneHelper::getIndexPath ();
 		
 		if (! JFolder::exists ( $index_path )) {
@@ -112,7 +110,7 @@ class JuceneHelper {
 	function getIndexPath() {
 		$component = JComponentHelper::getComponent ( 'com_jucene' );
 		$params = &JComponentHelper::getParams ( $component->params );
-		$dir_path = JPATH_SITE . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . $params->get ( 'index_path', 'search_index' );
+		$dir_path = JPATH_SITE .DS. 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . $params->get ( 'index_path', 'search_index' );
 		$index_name = $params->get ( 'index_name', "default_index" );
 		$index_path = $dir_path . DS . $index_name;
 		return $index_path;
