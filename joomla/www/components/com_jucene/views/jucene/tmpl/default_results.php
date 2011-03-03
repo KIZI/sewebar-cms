@@ -55,7 +55,7 @@
 	<tr>
 		<td colspan="3">
 			<div align="center">
-				<?php echo $this->serviceLink; ?>
+				<?php echo $this->service_link; ?>
 			</div>
 		</td>
 	</tr>

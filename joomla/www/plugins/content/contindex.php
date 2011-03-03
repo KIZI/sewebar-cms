@@ -75,7 +75,7 @@ class plgContentContindex extends JPlugin {
 		
 		$app = JFactory::getApplication ();
 		try {
-			$zendDoc = Zend_Search_Lucene_Document_Pmml::addPmml ( $rule, false, 'UTF-8' );
+			$zendDoc = Zend_Search_Lucene_Document_Pmml::addPmml ( $rule, $additional, 'UTF-8' );
 			$index->addDocument ( $zendDoc );
 		} catch ( Exception $e ) {
 			$app->enqueueMessage ( JText::_ ( $e->getMessage () ), 'error' );

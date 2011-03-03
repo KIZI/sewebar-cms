@@ -13,10 +13,10 @@
  */
 
 // no direct access
-defined('_JEXEC') or die('Restricted access');
+defined ( '_JEXEC' ) or die ( 'Restricted access' );
 
-jimport( 'joomla.application.component.helper');
-jimport( 'joomla.application.component.model');
+jimport ( 'joomla.application.component.helper' );
+jimport ( 'joomla.application.component.model' );
 
 /**
  * Content Component Article Model
@@ -25,40 +25,44 @@ jimport( 'joomla.application.component.model');
  * @subpackage	Content
  * @since		1.5
  */
-class JuceneModelJucene extends JModel
-{
+class JuceneModelJucene extends JModel {
 	var $_data = null;
 	var $_indexInfo = null;
 	
-	
-	function getIndexInfo(){
-		require_once JPATH_SITE .DS. 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . 'helpers'.DS.'jucene.php';
+	/**
+	 * Information about index
+	 */
+	function getIndexInfo() {
+		require_once JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . 'helpers' . DS . 'jucene.php';
 		
-		$index = JuceneHelper::getIndex();
-		$info['infodocs'] = $index->count();
-		$dir_info = $this->getDirectorySize(JuceneHelper::getIndexPath());
-		$info['folderSize'] = $dir_info['size'];
+		$index = JuceneHelper::getIndex ();
+		$info ['infodocs'] = $index->count ();
+		$dir_info = $this->getDirectorySize ( JuceneHelper::getIndexPath () );
+		$info ['folderSize'] = $dir_info ['size'];
 		
 		return $info;
 	}
-
-	function getData(){
+	
+	/**
+	 * Information about php requirements
+	 */
+	function getData() {
 		
-		if(empty($this->_data)){
+		if (empty ( $this->_data )) {
 			
-			$arr = array();
-			$arr['max_execution_time'] = ini_get('max_execution_time');
-			$arr['memory_limit'] = ini_get('memory_limit');
-			$arr['PCRE'] = @! preg_match ( '/\pL/u', 'a' );
-			
+			$arr = array ();
+			$arr ['max_execution_time'] = ini_get ( 'max_execution_time' );
+			$arr ['memory_limit'] = ini_get ( 'memory_limit' );
+			$arr ['PCRE'] = @! preg_match ( '/\pL/u', 'a' );
 			
 			$this->_data = $arr;
-			
+		
 		}
 		return $this->_data;
 	}
-
-/**
+	
+	/**
+	 * Helper method to help the model count the index directory size
 	 *
 	 * @param $path
 	 */
@@ -89,29 +93,24 @@ class JuceneModelJucene extends JModel
 		$total ['dircount'] = $dircount;
 		return $total;
 	}
-	
+	/**
+	 * Adjust the size format to proper units
+	 * @param $size
+	 */
 	function sizeFormat($size) {
-		/*if($size<1024)
-		 {
-			return $size." bytes";
-			}
-			else if($size<(1024*1024))
-			{*/
-		$size = round ( $size / 1024, 1 );
-		return $size . " KB";
-		/*}
-		 else if($size<(1024*1024*1024))
-		 {
-			$size=round($size/(1024*1024),1);
-			return $size." MB";
-			}
-			else
-			{
-			$size=round($size/(1024*1024*1024),1);
-			return $size." GB";
-			}*/
+		if ($size < 1024) {
+			return $size . " bytes";
+		} else if ($size < (1024 * 1024)) {
+			$size = round ( $size / 1024, 1 );
+			return $size . " KB";
+		} else if ($size < (1024 * 1024 * 1024)) {
+			$size = round ( $size / (1024 * 1024), 1 );
+			return $size . " MB";
+		} else {
+			$size = round ( $size / (1024 * 1024 * 1024), 1 );
+			return $size . " GB";
+		}
 	
 	}
-
 
 }
