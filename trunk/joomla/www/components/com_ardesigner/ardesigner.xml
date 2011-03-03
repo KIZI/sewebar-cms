@@ -48,12 +48,11 @@
 
 	<!-- Site Main File Copy Section -->
 	<files>
+		<folder>ardesigner</folder>
 		<folder>assets</folder>
-		<folder>controllers</folder>
 		<folder>js</folder>
-		<folder>models</folder>
 		<folder>views</folder>
-		<filename>ardesigner.php</filename>
+		<filename>controller.php</filename>
 	</files>
 
 	<!-- Site Main Language File Copy Section -->
