@@ -49,7 +49,7 @@
 	<!-- Site Main File Copy Section -->
 	<files>
 		<folder>assets</folder>
-		<folder>controllers</folder>
+		<folder>models</folder>
 		<folder>views</folder>
 		<filename>kbi.php</filename>
 	</files>
