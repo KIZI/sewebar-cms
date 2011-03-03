@@ -7,15 +7,20 @@
 	<property name="tests" location="tests/"/>
 	<property name="docs" location="meta/docs/"/>
 
+	<tstamp>
+		<format property="today" pattern="yyyy-MM-dd" locale="cs,CZ"/>
+	</tstamp>
+
 	<target name="all"
 		description="creates packages for all extensions"
-		depends="svn_revision, kbi, jucene, bkef, ginclude, uploadxml, xsltmagic">
+		depends="kbi, jucene, bkef, ginclude, uploadxml, xsltmagic">
 	</target>
 
 	<target name="sewebar"
 		description="creates one package for all extensions (use with com_multiinstall)"
 		depends="all">
-			<property name="sewebar" location="${dist}/sewebar-r${Revision}.zip"/>
+			<!-- <property name="sewebar" location="${dist}/sewebar-r${Revision}.zip"/> -->
+			<property name="sewebar" location="${dist}/sewebar-${today}.zip"/>
 			<zip destfile="${sewebar}" basedir="${dist}">
 				<include name="${plg_kbilib}" />
 				<include name="${com_kbi}" />
@@ -46,7 +51,7 @@
 	</target>
 
 	<target name="plg_kbilib">
-		<property name="plg_kbilib" value="lib_kbi-r${Revision}.zip"/>
+		<property name="plg_kbilib" value="lib_kbi-${today}.zip"/>
 		<zip destfile="${dist}/${plg_kbilib}">
 			<zipfileset dir="${www}/plugins/kbi/" excludes="**/.svn"/>
 			<zipfileset file="${docs}/kbi/readme.txt"/>
@@ -54,7 +59,7 @@
 	</target>
 
 	<target name="com_kbi">
-		<property name="com_kbi" value="com_kbi-r${Revision}.zip"/>
+		<property name="com_kbi" value="com_kbi-${today}.zip"/>
 		<zip destfile="${dist}/${com_kbi}">
 			<zipfileset dir="${www}/components/com_kbi/" excludes="**/.svn"/>
 			<zipfileset dir="${www}/administrator/components/com_kbi/" prefix="administrator" excludes="**/.svn"/>
@@ -63,7 +68,7 @@
 	</target>
 
 	<target name="plg_kbi">
-		<property name="plg_kbi" value="plg_kbi-r${Revision}.zip"/>
+		<property name="plg_kbi" value="plg_kbi-${today}.zip"/>
 		<zip destfile="${dist}/${plg_kbi}">
 			<zipfileset dir="${www}/plugins/content/" excludes="**/.svn">
 				<include name="kbi.php"/>
@@ -74,7 +79,7 @@
 	</target>
 
 	<target name="plg_kbinclude">
-		<property name="plg_kbinclude" value="plg_kbinclude-${Revision}.zip"/>
+		<property name="plg_kbinclude" value="plg_kbinclude-${today}.zip"/>
 		<zip destfile="${dist}/${plg_kbinclude}">
 			<zipfileset dir="${www}/plugins/editors-xtd/" excludes="**/.svn">
 				<include name="kbinclude.php"/>
@@ -85,7 +90,7 @@
 	</target>
 
 	<target name="com_ardesigner">
-		<property name="com_ardesigner" value="com_ardesigner-${Revision}.zip"/>
+		<property name="com_ardesigner" value="com_ardesigner-${today}.zip"/>
 		<zip destfile="${dist}/${com_ardesigner}">
 			<zipfileset dir="${www}/components/com_ardesigner/" excludes="**/.svn"/>
 			<zipfileset file="${docs}/kbi/readme.txt"/>
@@ -100,26 +105,26 @@
 	</target>
 
 	<target name="plg_jucene">
-		<property name="plg_jucene" value="plg_jucene-r${Revision}.zip"/>
+		<property name="plg_jucene" value="plg_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${plg_jucene}">
 			<zipfileset dir="${www}/plugins/search/" includes="jucene.*" excludes="**/.svn"/>
 		</zip>
 	</target>
 
 	<target name="plg_contindex">
-		<property name="plg_contindex" value="plg_contindex-r${Revision}.zip"/>
+		<property name="plg_contindex" value="plg_contindex-${today}.zip"/>
 		<zip destfile="${dist}/${plg_contindex}">
 			<zipfileset dir="${www}/plugins/content/" includes="contindex.*" excludes="**/.svn"/>
 		</zip>
 	</target>
 	<target name="plg_library">
-		<property name="plg_library" value="plg_library-r${Revision}.zip"/>
+		<property name="plg_library" value="plg_library-${today}.zip"/>
 		<zip destfile="${dist}/${plg_library}">
 			<zipfileset dir="${www}/plugins/system/" includes="library.*" excludes="**/.svn"/>
 		</zip>
 	</target>
 	<target name="com_jucene">
-		<property name="com_jucene" value="com_jucene-r${Revision}.zip"/>
+		<property name="com_jucene" value="com_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${com_jucene}">
 			<zipfileset dir="${www}/components/com_jucene/" excludes="**/.svn"/>
 			<zipfileset dir="${www}/administrator/components/com_jucene/" prefix="administrator" excludes="**/.svn"/>
@@ -127,7 +132,7 @@
 	</target>
 
 	<target name="mod_jucene">
-		<property name="mod_jucene" value="mod_jucene-r${Revision}.zip"/>
+		<property name="mod_jucene" value="mod_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${mod_jucene}">
 			<zipfileset dir="${www}/modules/mod_jucene/" excludes="**/.svn" />
 		</zip>
@@ -136,7 +141,7 @@
 
 	<!-- BKEF -->
 	<target name="bkef">
-		<property name="com_bkef" value="com_bkef-r${Revision}.zip"/>
+		<property name="com_bkef" value="com_bkef-${today}.zip"/>
 		<zip destfile="${dist}/${com_bkef}">
 			<zipfileset dir="${www}/components/com_bkef/" excludes="**/.svn"/>
 			<zipfileset dir="${www}/administrator/components/com_bkef/" prefix="administrator" excludes="**/.svn"/>
@@ -150,7 +155,7 @@
 	</target>
 
 	<target name="com_ginclude">
-		<property name="com_ginclude" value="com_ginclude-r${Revision}.zip"/>
+		<property name="com_ginclude" value="com_ginclude-${today}.zip"/>
 		<zip destfile="${dist}/${com_ginclude}">
 			<zipfileset dir="${www}/components/com_ginclude/" excludes="**/.svn"/>
 			<zipfileset dir="${www}/administrator/components/com_ginclude/" prefix="administrator" excludes="**/.svn"/>
@@ -158,7 +163,7 @@
 	</target>
 
 	<target name="plg_ginclude">
-		<property name="plg_ginclude" value="plg_ginclude-r${Revision}.zip"/>
+		<property name="plg_ginclude" value="plg_ginclude-${today}.zip"/>
 		<zip destfile="${dist}/${plg_ginclude}">
 			<zipfileset dir="${www}/plugins/editors-xtd/" includes="ginclude/**" excludes="**/.svn"/>
 			<zipfileset dir="${www}/plugins/editors-xtd/" includes="ginclude.*" excludes="**/.svn"/>
@@ -168,7 +173,7 @@
 
 	<!-- uploadxml -->
 	<target name="uploadxml">
-		<property name="plg_uploadxml" value="plg_uploadxml-r${Revision}.zip"/>
+		<property name="plg_uploadxml" value="plg_uploadxml-${today}.zip"/>
 		<zip destfile="${dist}/${plg_uploadxml}">
 			<zipfileset dir="${www}/plugins/xmlrpc/" includes="uploadxml.*" excludes="**/.svn"/>
 		</zip>
@@ -177,7 +182,7 @@
 
 	<!-- xsltmagic -->
 	<target name="xsltmagic">
-		<property name="plg_xsltmagic" value="plg_xsltmagic-r${Revision}.zip"/>
+		<property name="plg_xsltmagic" value="plg_xsltmagic-${today}.zip"/>
 		<zip destfile="${dist}/${plg_xsltmagic}">
 			<zipfileset dir="${www}/plugins/content/" includes="xsltmagic.*" excludes="**/.svn"/>
 			<zipfileset dir="${www}/plugins/content/" includes="zendcache.php" excludes="**/.svn"/>
