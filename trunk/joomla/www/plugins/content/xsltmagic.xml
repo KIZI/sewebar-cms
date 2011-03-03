@@ -24,7 +24,6 @@ Pro zobrazení chybových hlášení přidáme do cookie nebo URL adresy proměn
 </description>
 <files>
 <filename plugin="xsltmagic">xsltmagic.php</filename>
-<filename plugin="xsltmagic">zendcache.php</filename>
 </files>
 <params>
     <param name="config" type="textarea" cols="60" rows="20" label="pravidla" />
