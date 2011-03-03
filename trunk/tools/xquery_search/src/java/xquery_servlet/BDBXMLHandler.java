@@ -13,6 +13,8 @@ import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
@@ -489,6 +491,44 @@ public class BDBXMLHandler {
             //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
             output += "<error>"+ex.toString()+"</error>";
         }
+        return output;
+    }
+
+    public String getDataDescription(XmlManager mgr, String containerName){
+        String output = "";
+        String query =
+                "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
+                + "\nfor $field in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field/@name/string())"
+                + "\nlet $values :=  for $value in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field[@name = $field and @type != \"continuous\"]/fieldValue/text())"
+                + "\nreturn <Category>{$value}</Category>"
+                + "\nlet $ints_from := for $int in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field[@name = $field and @type = \"continuous\"]/fieldValue[1]/@from)"
+                + "\nreturn $int"
+                + "\nlet $ints_to := for $int in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field[@name = $field and @type = \"continuous\"]/fieldValue[last()]/@to)"
+                + "\nreturn $int"
+                + "\nlet $ints := if(count($ints_from) > 0 and count($ints_to) > 0) then <Interval closure=\"\" leftMargin=\"{$ints_from}\" rightMargin=\"{$ints_to}\"/> else ()"
+                + "\nreturn"
+                + "\n<Field name=\"{$field}\">"
+                + "\n{$values union $ints}"
+                + "\n</Field>}</Dictionary></DataDescription>";
+
+        try {
+            XmlContainer cont = mgr.openContainer(containerName);
+            XmlQueryContext qc = mgr.createQueryContext();
+            XmlTransaction txn = mgr.createTransaction();
+            XmlResults res = mgr.query(query, qc);
+
+            XmlValue value = new XmlValue();
+            while ((value = res.next()) != null) {
+                output += value.asString();
+            }
+
+            txn.commit();
+            cleanup(cont);
+
+            } catch (XmlException ex) {
+                //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
+                output += "<error>"+ex.toString()+"</error>";
+            }
         return output;
     }
 

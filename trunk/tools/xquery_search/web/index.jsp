@@ -42,7 +42,7 @@
   </head>
   <script type="text/javascript">
       function zobrazPole(vybrano){
-          if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest" || vybrano == "listIn") {
+          if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest" || vybrano == "listIn" || vybrano == "getDescription") {
               window.document.getElementById("nazev").style.display = "none";
               window.document.getElementById("data").style.display = "none";
           } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "delIndex" || vybrano == "addDocumentMultiple") {
@@ -77,6 +77,7 @@
       <option value="addIndex">Přidat index</option>
       <option value="delIndex">Odstranit index</option>
       <option value="listIn">Zobrazit indexy</option>
+      <option value="getDescription">Zobrazit DataDescription</option>
       <option value="completeTest">Otestování nastavení</option>
       <%--<option value="existQuery">Exist-DB XQuery</option>--%>
     </select>

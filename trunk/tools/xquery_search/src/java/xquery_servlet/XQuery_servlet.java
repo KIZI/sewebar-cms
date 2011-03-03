@@ -31,9 +31,9 @@ public class XQuery_servlet extends HttpServlet {
      * 6 - error messages
      */
 
-    //String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");
+    String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");
     
-    String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
+    //String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
 
 
 
@@ -213,7 +213,8 @@ public class XQuery_servlet extends HttpServlet {
         if (action.equals("completetest")) returnID = 14; else
         if (action.equals("existquery")) returnID = 15; else
         if (action.equals("listin")) returnID = 16; else
-        if (action.equals("delindex")) returnID = 17;
+        if (action.equals("delindex")) returnID = 17; else
+        if (action.equals("getdescription")) returnID = 18;
         return returnID;
 	}
 
@@ -230,7 +231,7 @@ public class XQuery_servlet extends HttpServlet {
     private String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, ExistDBHandler eh, Tester tester){
     	int mappedAction = mapAction(action);
         String output = "";
-        int except[] = {2,7,8,10,13,14,16,17};
+        int except[] = {2,7,8,10,13,14,16,17,18};
 
         Boolean except_bool = false;
         for (int i = 0; i < except.length; i++){
@@ -314,6 +315,7 @@ public class XQuery_servlet extends HttpServlet {
                         String dotaz = content.toString();
                         output += bh.delIndex(dotaz, mgr, containerName);
                     } break;
+            case 18: output += bh.getDataDescription(mgr, containerName); break;
             default: output += "<error>Zadana akce neexistuje</error>"; break;
             }
         }
