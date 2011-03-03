@@ -10,7 +10,7 @@
 	<authorUrl>http://www.drupaler.cz</authorUrl>
 	<copyright>Lukáš Beránek 2010</copyright>
 	<license>GNU/PL</license>
-	<version>1.0</version>
+	<version>RC 1</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Lucene indexer for Joomla! PMML files... with search engine included.</description>
 	<!-- Custom Install Script to execute -->
@@ -18,14 +18,12 @@
 	<installfile></installfile>
 	<uninstallfile></uninstallfile>
 	<install>
-		<sql>
-			<file charset="utf8" driver="mysql">install.sql</file>
+		<sql>			
 		</sql>
 	</install>
 	
 	<uninstall>
-		<sql>
-			<file charset="utf8" driver="mysql">uninstall.sql</file>
+		<sql>			
 		</sql>
 	</uninstall>	
 	

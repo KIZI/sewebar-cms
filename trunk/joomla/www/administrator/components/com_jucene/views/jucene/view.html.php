@@ -19,13 +19,13 @@ jimport ( 'joomla.application.component.view' );
  * 
  * 
  * 
- * @author admin
+ * @author Lukáš Beránek
  *
  */
 class JuceneViewJucene extends JView {
 	
 	/**
-	 * Hellos view display method
+	 * Jucene view display method
 	 * @return void
 	 **/
 	function display($tpl = null) {

@@ -16,6 +16,7 @@
 defined ( '_JEXEC' ) or die ( 'Restricted access' );
 
 /**
+ * Jucen heler class
  * @package		Joomla
  * @subpackage	Search
  */
@@ -25,6 +26,9 @@ class JuceneHelper {
 	 */
 	var $index;
 	
+	/**
+	 * Retrieve the Lucene index object
+	 */
 	function getIndex() {
 		
 		require_once ('Zend/Search/Lucene.php');
@@ -54,9 +58,13 @@ class JuceneHelper {
 	
 	}
 	
+	/**
+	 * Method that removes currently used index. The index name is held in the 
+	 * component parameters
+	 */
 	function removeIndex() {
 		$remove_path = JuceneHelper::getIndexPath ();
-		JuceneHelper::removeDBData ();
+		
 		
 		if (JFolder::exists ( $remove_path )) {
 			
@@ -74,8 +82,10 @@ class JuceneHelper {
 			JFactory::getApplication ()->enqueueMessage ( JTEXT::_ ( "NOTHINGTOREMOVE" ) );
 		}
 	}
+	
+	
 	/**
-	 * 
+	 * Delete selected record from the index. 
 	 */
 	function removeFromIndex($query) {
 		$index = JuceneHelper::getIndex ();
@@ -89,29 +99,15 @@ class JuceneHelper {
 		}
 	}
 	
+	
 	/**
-	 *
-	 */
-	function removeDBData() {
-		
-		$db = JFactory::getDBO ();
-		
-		$query = "DELETE FROM " . $db->nameQuote ( '#__jucene_fields' ) . ";";
-		$db->setQuery ( $query );
-		$db->query ();
-		
-		$query2 = "DELETE FROM " . $db->nameQuote ( '#__jucene_synchronyze' ) . ";";
-		$db->setQuery ( $query2 );
-		$db->query ();
-	}
-	/**
+	 *	Get full path of the index
 	 *
 	 */
 	function getIndexPath() {
-		$component = JComponentHelper::getComponent ( 'com_jucene' );
-		$params = &JComponentHelper::getParams ( $component->params );
+		$params = &JComponentHelper::getParams ( 'com_jucene' );
 		$dir_path = JPATH_SITE .DS. 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . $params->get ( 'index_path', 'search_index' );
-		$index_name = $params->get ( 'index_name', "default_index" );
+		$index_name = $params->get ( 'index_name', 'default_index' );
 		$index_path = $dir_path . DS . $index_name;
 		return $index_path;
 	}
@@ -123,11 +119,22 @@ class JuceneHelper {
 		
 	}
 	
+	/**
+	 * Prepared number to format that can be handled by Lucene
+	 * 
+	 * @param unknown_type $strNumber
+	 */
 	public function prepareNumber($strNumber) {
 		
 			return preg_replace ( '/\d+(\.\d+)?/e', 'JuceneHelper::formatNumber(\\0)', $strNumber );
 			
 	}
+	
+	/**
+	 * Remove bad chars from field name
+	 * 
+	 * @param $name
+	 */
 	function sanitizeFieldName($name) {
 		
 		$replace_chars = array (' ', '\\', '+', '-', '\&', '\|', '!', '(', ')', '{', '}', '[', ']', '^', '\"', '~', '*', '?', ':' );
@@ -136,7 +143,12 @@ class JuceneHelper {
 		$name = strtolower ( $name );
 		return $name;
 	}
-	
+	/**
+	 * Check whether the query is not too short. This is the place where additional
+	 * security checks should be.
+	 * 
+	 * @param $query
+	 */
 	function preprocessQuery($query) {
 		$short = false;
 		
@@ -145,8 +157,9 @@ class JuceneHelper {
 		}
 		return $short;
 	}
+	
 	/**
-	 *
+	 *	Remove bad or harmfull chars from indexed field's value
 	 * @param $value
 	 */
 	function sanitizeFieldValue($value) {
@@ -165,24 +178,17 @@ class JuceneHelper {
 		
 		return $value;
 	}
+	
+	/**
+	 * Same as for field value
+	 */
 	function sanitizeRuleValue($value) {
 		$value = strtolower ( JuceneHelper::removeCzechSpecialChars ( $value ) );
 		return $value;
 	}
-	/**
-	 *
-	 * @param $number
-	 */
-	function prepareNumericValue($number) {
-		
-		$number = number_format ( $number, 3, ',', '' );
-		if ($number == "0,000") {
-			return "";
-		} else {
-			return $number;
-		}
 	
-	}
+	
+	
 	
 	function sanitizeQueryValue($value) {
 		
@@ -201,21 +207,18 @@ class JuceneHelper {
 		$value = str_replace ( $replace_dot, ',', $value );
 		return $value;
 	}
+	
+	/**
+	 * Remove czech language special chars
+	 * 
+	 * @param $czech
+	 */
 	function removeCzechspecialChars($czech) {
 		
 		$char_table = Array ('ä' => 'a', 'Ä' => 'A', 'á' => 'a', 'Á' => 'A', 'à' => 'a', 'À' => 'A', 'ã' => 'a', 'Ã' => 'A', 'â' => 'a', 'Â' => 'A', 'č' => 'c', 'Č' => 'C', 'ć' => 'c', 'Ć' => 'C', 'ď' => 'd', 'Ď' => 'D', 'ě' => 'e', 'Ě' => 'E', 'é' => 'e', 'É' => 'E', 'ë' => 'e', 'Ë' => 'E', 'è' => 'e', 'È' => 'E', 'ê' => 'e', 'Ê' => 'E', 'í' => 'i', 'Í' => 'I', 'ï' => 'i', 'Ï' => 'I', 'ì' => 'i', 'Ì' => 'I', 'î' => 'i', 'Î' => 'I', 'ľ' => 'l', 'Ľ' => 'L', 'ĺ' => 'l', 'Ĺ' => 'L', 'ń' => 'n', 'Ń' => 'N', 'ň' => 'n', 'Ň' => 'N', 'ñ' => 'n', 'Ñ' => 'N', 'ó' => 'o', 'Ó' => 'O', 'ö' => 'o', 'Ö' => 'O', 'ô' => 'o', 'Ô' => 'O', 'ò' => 'o', 'Ò' => 'O', 'õ' => 'o', 'Õ' => 'O', 'ő' => 'o', 'Ő' => 'O', 'ř' => 'r', 'Ř' => 'R', 'ŕ' => 'r', 'Ŕ' => 'R', 'š' => 's', 'Š' => 'S', 'ś' => 's', 'Ś' => 'S', 'ť' => 't', 'Ť' => 'T', 'ú' => 'u', 'Ú' => 'U', 'ů' => 'u', 'Ů' => 'U', 'ü' => 'u', 'Ü' => 'U', 'ù' => 'u', 'Ù' => 'U', 'ũ' => 'u', 'Ũ' => 'U', 'û' => 'u', 'Û' => 'U', 'ý' => 'y', 'Ý' => 'Y', 'ž' => 'z', 'Ž' => 'Z', 'ź' => 'z', 'Ź' => 'Z' );
 		$text = strtr ( $czech, $char_table );
 		
-		return $text;
-		/*setlocale(LC_CTYPE, "cs_CZ.utf-8");
-	$url = $czech;
-    $url = preg_replace('~[^\\pL0-9_.,]+~u', '-', $url);
-    $url = trim($url, "-");
-    $url = iconv("utf-8", "us-ascii//TRANSLIT", $url);
-    $url = strtolower($url);
-    $url = preg_replace('~[^-a-z0-9_]+~', '', $url);
-    return $url;*/
-	
+		return $text;	
 	}
 
 }

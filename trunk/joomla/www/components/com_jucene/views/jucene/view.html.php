@@ -39,8 +39,8 @@ class JuceneViewJucene extends JView {
 		$rows = null;
 		$total = 0;
 		
-		//$params = &JComponentHelper::getParams ( 'com_jucene' );
-		//$displayServiceLink = $params->get ( 'service_link', 1 );
+		$comParams = &JComponentHelper::getParams ( 'com_jucene' );
+		$displayServiceLink = $comParams->get ( 'service_link', 1 );
 		if ($displayServiceLink) {
 			$service_link = 'Powered by Zend Lucene, created by <a href="http://www.drupaler.cz">drupaler.cz</a>, Lukáš Beránek';
 		}

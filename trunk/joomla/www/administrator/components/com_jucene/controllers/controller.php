@@ -21,7 +21,7 @@ jimport ( 'joomla.filesystem.file' );
 
 require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers/jucene.php');
 /**
- *
+ * Basic Jucene index controller
  *
  *
  * @author bery
@@ -47,7 +47,9 @@ class JuceneController extends JController {
 		$this->registerTask ( 'update', 'update' );
 	
 	}
-	
+	/**
+	 * This method controlles the display methods
+	 */
 	function display() {
 		global $mainframe;
 		
@@ -79,7 +81,9 @@ class JuceneController extends JController {
 		
 		parent::display ();
 	}
-	
+	/**
+	 * Core index method used to bulk index the database content
+	 */
 	function index() {
 		
 		$start = time ();
@@ -321,11 +325,9 @@ class JuceneController extends JController {
 	
 	}
 	
-	function cron() {
-		$this->raiseMessage ( 'Cron testing', 'error' );
-	}
-	
+		
 	/**
+	 *	Just use of the JFactory method to save some code writing
 	 *
 	 * @param string $message
 	 * @param string $type
@@ -336,32 +338,10 @@ class JuceneController extends JController {
 		//if($type=='error'){die($message);}
 	}
 	
-	/**
-	 *
-	 * @param $fieldName
-	 */
-	function logSearchField($fieldName) {
-		$db = JFactory::getDBO ();
-		
-		$query = "SELECT * from " . $db->nameQuote ( '#__jucene_fields' ) . " where " . $db->nameQuote ( 'fieldname' ) . "
-				 	= " . $db->quote ( $fieldName );
-		$db->setQuery ( $query );
-		$db->query ();
-		$num_rows = $db->getNumRows ();
-		//$this->raiseMessage("Num rows: ".$num_rows);
-		if ($num_rows == 0) {
-			$fieldQuery = "INSERT INTO " . $db->nameQuote ( '#__jucene_fields' ) . " (fieldname)
-							VALUES (" . $db->quote ( $fieldName ) . ")";
-			//$this->raiseMessage("Field query: ".$fieldQuery);
-			$db->setQuery ( $fieldQuery );
-			if (! $db->query ()) {
-				$this->raiseMessage ( $db->getErrorMsg (), 'error' );
-			
-			}
-		}
-	}
+	
 	
 	/**
+	 * Get Joomla database article record
 	 *
 	 */
 	function getRecord() {
@@ -388,7 +368,7 @@ class JuceneController extends JController {
 		return $res;
 	}
 	/**
-	 *
+	 * Get the record id of the article which is to be indexed next
 	 * @param $currID
 	 */
 	function getNextRecordId($currentId) {
@@ -404,6 +384,7 @@ class JuceneController extends JController {
 		return $db->loadResult ();
 	}
 	/**
+	 * Number of records that wait to be indexed
 	 *
 	 * @param $id
 	 */
@@ -423,7 +404,8 @@ class JuceneController extends JController {
 	}
 	
 	/**
-	 *
+	 * Number of all records in the jos_content table. This method will be used
+	 * in next releas to show bulk index progressbar
 	 * @param $id
 	 */
 	function getAllRecordsCount() {
@@ -440,7 +422,7 @@ class JuceneController extends JController {
 		return $remainingRecords;
 	}
 	/**
-	 *
+	 * Remove index method
 	 */
 	function remove() {
 		
@@ -450,6 +432,12 @@ class JuceneController extends JController {
 	}
 	
 	
+	/**
+	 * Crucial redirect method is used when indexing content. After each article
+	 * is indexes it redirects to next one and continues. It prevents the process from
+	 * php timeouts.
+	 * @param $redirect_url
+	 */
 	function redirect($redirect_url) {
 		?>
 <form method="post" name="redirForm"
