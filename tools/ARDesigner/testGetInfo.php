@@ -8,7 +8,7 @@
     require_once('sources/models/Utils.php');
     
     $DD = "XML/datadescription.xml";
-    $FL = "XML/featurelist.xml";
+    $FL = "XML/featurelistAR.xml";
     //$FL = "XML/featurelist1.xml";
     //$ER = "XML/taskSetting.xml";
     //$ER = "XML/associationRules.xml";
