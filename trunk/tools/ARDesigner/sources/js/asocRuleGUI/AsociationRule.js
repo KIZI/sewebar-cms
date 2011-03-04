@@ -502,7 +502,7 @@ var AsociationRule = new Class({
         if(!this.solveSupportedInterestMeasures()){
             return false;
         }
-        if((this.getBracketDepth(i) + 1) > this.serverInfo.getDepthNesting()){
+        if(this.getDepth(this.elements.length) > this.serverInfo.getDepthNesting()){
             return false;
         }
         for(var i = 0; i < this.elements.length-1; i++){
@@ -596,6 +596,55 @@ var AsociationRule = new Class({
         return false;
     },
 
+    solveDepthNesting: function(position){
+        var elementsDepth = this.elements.slice();
+        // Pri povolene hloubce 0 to znamena, ze musi byt pouze BBA
+        var bracketAmount = this.countBrackets(position);
+        if(elementsDepth[elementsDepth.length-1].getType() == "and" ||
+            elementsDepth[elementsDepth.length-1].getType() == "or" ||
+            elementsDepth[elementsDepth.length-1].getType() == "neg"){
+            elementsDepth.push(new Attribute("supportiveAttribute",new Array(), new Array()));
+        }
+        for(var actualBracket=0; actualBracket < bracketAmount; actualBracket++){
+            elementsDepth.push(new BooleanCl("rbrac","rbrac"));          
+        }
+        var dbaDepth = 0;
+        var lastConnective = null;
+        var isThereConnective = false;
+        for(var actualElement = 0; actualElement < elementsDepth.length; actualElement++){
+            // Mám plne funkcni pravidlo.
+            // Potrebuji si vyrobit praktickou datovou strukturu
+            // Mozna z toho vyrabet strom, ktery by se vlastne dal i docela udrzovat.
+            // BBA jsou listy stromu
+        }
+    },
+
+    solveNegation: function(elements){
+        
+    },
+
+    countBrackets: function(position){
+        var brackNumber = 0;
+        for(var i = 0; i < this.elements.length; i++){
+            if(i-1 == position){
+                break;
+            }
+            if(this.elements[i] == null){
+                continue;
+            }
+            if(this.elements[i].getType() == "lbrac"){
+                brackNumber++;
+            }
+            if(this.elements[i].getType() == "rbrac"){
+                brackNumber--;
+            }
+            if(this.elements[i].getType() == "oper"){
+                brackNumber = 0;
+            }
+        }
+        return brackNumber;
+    },
+
     /**
      * Function: getBracketDepth
      * This function counts how deep the brackets are in themselves.
@@ -633,6 +682,24 @@ var AsociationRule = new Class({
             }
         }
         return brackNumber;
+    },
+
+    getDepth: function(position){
+        var tree = new Tree();
+        console.log(position);
+        var elementsToSolve = this.elements.slice(0,position);
+        var missingBrackets = this.countBrackets();
+        var rbrac = new BooleanCl(")","rbrac");
+        var attr = new Attribute("attr1","",new Array());
+        for(var bracket = 0; bracket < missingBrackets; bracket++){
+            elementsToSolve.push(rbrac);
+        }
+        if(elementsToSolve[elementsToSolve.length-1].isElementBoolean()){
+            elementsToSolve.push(attr);
+        }
+        // I need to have correct rule. Therefore fill in attrs and brackets.
+        tree.solveRule(elementsToSolve);
+        return tree.getLevels()
     },
 
     /**
