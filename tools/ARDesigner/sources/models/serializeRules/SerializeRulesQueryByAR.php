@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Description of SerializeRulesQueryByAR
  *
  * @author balda
  */
-class SerializeRulesQueryByAR  extends AncestorSerializeRules {
+class SerializeRulesQueryByAR extends AncestorSerializeRules {
 
     private $id = 0;
     private $finalXMLDocument;
@@ -106,7 +107,14 @@ class SerializeRulesQueryByAR  extends AncestorSerializeRules {
                         $maxLength = $fields[1]->{'value'};
                     }
                 }
-                $this->createBBASetting($text, $fieldRef, $category);
+                // Hack around. There shall be better way to do it.
+                $literal = true;
+                if ($ruleElement > 0) {
+                    if ($ruleData[$ruleElement - 1]->{'type'} == "neg") {
+                        $literal = false;
+                    }
+                }
+                $this->createBBASetting($text, $fieldRef, $category, $literal);
             }
             if ($actualRuleElement->type == "oper") {
                 $name = $actualRuleElement->name;
@@ -150,7 +158,7 @@ class SerializeRulesQueryByAR  extends AncestorSerializeRules {
         $ARBuilder->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         $ARBuilder->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd");
         $ARBuilder->setAttribute("xmlns:guha", "http://keg.vse.cz/ns/GUHA0.1rev1");
-        $ARBuilder->setAttribute("mode","QueryByAssociationRule");
+        $ARBuilder->setAttribute("mode", "QueryByAssociationRule");
         $root = $this->finalXMLDocument->appendChild($ARBuilder);
 
         $this->createDictionary($root);
@@ -203,11 +211,10 @@ class SerializeRulesQueryByAR  extends AncestorSerializeRules {
      * @param <String> $category CatRef of BBA
      * @return <int> id id of this BBA
      */
-    private function createBBASetting($text, $fieldRef, $category) {
+    private function createBBASetting($text, $fieldRef, $category, $literal = true) {
         $BBASetting = $this->finalXMLDocument->createElement("BBA");
         $id = $this->getNewID();
         $position = $this->getNewRulePosition();
-        $this->rule[$position] = $id;
         $BBASetting->setAttribute("id", $id);
 
         $Text = $this->finalXMLDocument->createElement("Text");
@@ -222,6 +229,10 @@ class SerializeRulesQueryByAR  extends AncestorSerializeRules {
         $BBASetting->appendChild($Text);
         $BBASetting->appendChild($FieldRef);
         $BBASetting->appendChild($Name);
+        if ($literal) {
+            $id = $this->createDBASetting("Literal", array($id));
+        }
+        $this->rule[$position] = $id;
 
         $this->bbas[] = $BBASetting;
     }
@@ -247,17 +258,22 @@ class SerializeRulesQueryByAR  extends AncestorSerializeRules {
      * @return <int> id of DBA
      */
     private function createDBASetting($type, $elements) {
+        $LITERAL = "Literal";
+        $NEGATION = "NEG";
         if ($type == "(" || $type == ")" || $type == null) {
             return;
         }
 
         $types = array();
-        $types["NEG"] = "Negation";
+        $types[$NEGATION] = "Negation";
         $types["AND"] = "Conjunction";
         $types["OR"] = "Disjunction";
-        $types["Literal"] = "Literal";
+        $types[$LITERAL] = "Conjunction";
 
         $DBASetting = $this->finalXMLDocument->createElement("DBA");
+        if ($type == $LITERAL || $type == $NEGATION) {
+            $DBASetting->setAttribute("literal", "true");
+        }
         $DBASetting->setAttribute("connective", $types[$type]);
         $id = $this->getNewID();
         $DBASetting->setAttribute("id", $id);
@@ -336,11 +352,19 @@ class SerializeRulesQueryByAR  extends AncestorSerializeRules {
                 $ruleConPos++;
             }
         }
-        // change antecedent for one DBA
-        $this->antecedent = $this->solvePlainDBA($ruleAntecedent);
+        if (count($ruleAntecedent) > 0) {
+            // change antecedent for one DBA
+            $lastId = $this->solvePlainDBA($ruleAntecedent);
+            $id = $this->createDBASetting("AND", array($lastId));
+            $this->antecedent = $id;
+        } else {
+            $this->antecedent = "";
+        }
         // change consequent for one DBA
         if (count($ruleConsequent) > 0) {
-            $this->consequent = $this->solvePlainDBA($ruleConsequent);
+            $lastId = $this->solvePlainDBA($ruleConsequent);
+            $id = $this->createDBASetting("AND", array($lastId));
+            $this->consequent = $id;
         } else {
             $this->consequent = "";
         }
