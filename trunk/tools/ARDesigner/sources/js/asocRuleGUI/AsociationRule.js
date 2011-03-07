@@ -502,9 +502,6 @@ var AsociationRule = new Class({
         if(!this.solveSupportedInterestMeasures()){
             return false;
         }
-        if(this.getDepth(this.elements.length) > this.serverInfo.getDepthNesting()){
-            return false;
-        }
         for(var i = 0; i < this.elements.length-1; i++){
             element1 = this.elements[i];
             element2 = this.elements[i+1];
@@ -520,6 +517,9 @@ var AsociationRule = new Class({
             if(!this.solveTwoElements(element1, element2, i)){
                 return false;
             }
+        }
+        if(this.getDepth(this.elements.length) > this.serverInfo.getDepthNesting()){
+            return false;
         }
         return true;
     },
