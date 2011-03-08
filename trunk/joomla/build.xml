@@ -31,7 +31,8 @@
 				<include name="${plg_jucene}" />
 				<include name="${com_jucene}" />
 				<include name="${mod_jucene}" />
-
+				<include name="${plg_library}" />
+				
 				<include name="${com_bkef}" />
 
 				<include name="${com_ginclude}" />
@@ -101,26 +102,32 @@
 	<!-- jucene -->
 	<target name="jucene"
 		description="creates packages for all extensions (jucene)"
-		depends="plg_jucene, com_jucene, mod_jucene">
+		depends="plg_jucene, com_jucene, mod_jucene, plg_library">
 	</target>
 
 	<target name="plg_jucene">
 		<property name="plg_jucene" value="plg_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${plg_jucene}">
-			<zipfileset dir="${www}/plugins/search/" includes="jucene.*" excludes="**/.svn"/>
+			<zipfileset dir="${www}/plugins/search/" includes="jucene.*" excludes="**/.svn">
+				<include name="index.html"/>
+			</zipfileset>
 		</zip>
 	</target>
 
 	<target name="plg_contindex">
 		<property name="plg_contindex" value="plg_contindex-${today}.zip"/>
 		<zip destfile="${dist}/${plg_contindex}">
-			<zipfileset dir="${www}/plugins/content/" includes="contindex.*" excludes="**/.svn"/>
+			<zipfileset dir="${www}/plugins/content/" includes="contindex.*" excludes="**/.svn">
+				<include name="index.html"/>
+			</zipfileset>
 		</zip>
 	</target>
 	<target name="plg_library">
 		<property name="plg_library" value="plg_library-${today}.zip"/>
 		<zip destfile="${dist}/${plg_library}">
-			<zipfileset dir="${www}/plugins/system/" includes="library.*" excludes="**/.svn"/>
+			<zipfileset dir="${www}/plugins/system/" includes="library.*" excludes="**/.svn">
+				<include name="index.html"/>
+			</zipfileset>
 		</zip>
 	</target>
 	<target name="com_jucene">
@@ -202,6 +209,7 @@
 				<include name="${plg_jucene}" />
 				<include name="${com_jucene}" />
 				<include name="${mod_jucene}" />
+				<include name="${plg_library}" />
 
 				<include name="${com_bkef}" />
 
