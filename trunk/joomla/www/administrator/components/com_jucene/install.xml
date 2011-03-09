@@ -32,6 +32,8 @@
 		<filename>jucene.php</filename>
 		<filename>router.php</filename>
 		<folder>models</folder>
+		<folder>css</folder>
+		<folder>js</folder>
 		<folder>views</folder>			
 	</files>
 	
