@@ -12,12 +12,13 @@ import java.io.OutputStreamWriter;
  * @author Tomas
  */
 public class QueryHandler {
-
-    public QueryHandler() {
-        
+    String queryDir;
+    
+    public QueryHandler(String queryDir) {
+        this.queryDir = queryDir;
     }
 
-    public String addQuery(String query, String id, String queryDir){
+    public String addQuery(String query, String id){
         File file = new File(queryDir + id + ".txt");
         String output = "";
         try {
@@ -41,7 +42,7 @@ public class QueryHandler {
      * Metoda pro ziskani nazvu ulozenych XQuery
      * @return seznam ulozenych XQuery
      */
-    public String getQueriesNames(String queryDir){
+    public String getQueriesNames(){
         String output = "";
         File uploadFolder = new File(queryDir);
         File uploadFiles[] = uploadFolder.listFiles();
@@ -68,7 +69,7 @@ public class QueryHandler {
      * @param id ID ulozene XQuery
      * @return Zprava - vymazana/nenalezena
      */
-    public String deleteQuery (String id, String queryDir) {
+    public String deleteQuery (String id) {
         String output = "";
         File file = new File(queryDir + id + ".txt");
 
@@ -87,7 +88,7 @@ public class QueryHandler {
      * @param id ID ulozene XQuery
      * @return Vracena XQuery/Zprava - nenalezena
      */
-    public String[] getQuery(String id, String queryDir){
+    public String[] getQuery(String id){
         FileReader rdr = null;
         BufferedReader out = null;
         File file = new File(queryDir + id + ".txt");
@@ -115,5 +116,4 @@ public class QueryHandler {
         }
         return output;
     }
-
 }

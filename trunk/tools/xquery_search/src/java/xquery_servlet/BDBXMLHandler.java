@@ -13,16 +13,25 @@ import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
  * @author Tomas
  */
 public class BDBXMLHandler {
+    XmlManager mgr;
+    QueryHandler qh;
+    String containerName;
+    String useTransformation;
+    String xsltPath;
+    
 
-    public BDBXMLHandler() {
+    public BDBXMLHandler(XmlManager mgr, QueryHandler qh, String containerName, String useTransformation, String xsltPath) {
+        this.mgr = mgr;
+        this.qh = qh;
+        this.containerName = containerName;
+        this.useTransformation = useTransformation;
+        this.xsltPath = xsltPath;
     }
 
     /**
@@ -31,7 +40,7 @@ public class BDBXMLHandler {
      * @param mgr XmlManager
      * @return Zprava - splneno/chyba
      */
-    public String removeDocument (String id, XmlManager mgr, String containerName){
+    public String removeDocument (String id){
         String output = "";
         try {
 
@@ -62,7 +71,7 @@ public class BDBXMLHandler {
      * @param mgr XmlManager
      * @return Zobrazeni dokumentu/chyba
      */
-    public String getDocument(String id, XmlManager mgr, String containerName){
+    public String getDocument(String id){
         String output = "";
         try {
             XmlContainer cont = mgr.openContainer(containerName);
@@ -85,13 +94,13 @@ public class BDBXMLHandler {
     }
 
     
-    public String query_10(String search, XmlManager mgr, QueryHandler qh, String containerName, String queryDir) {
+    public String query_10(String search) {
         String output = "";
         String output_temp = "";
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = query("", search, 0, mgr, qh, containerName, queryDir)[1];
+            output_temp = query("", search, 0)[1];
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
                 output += output_temp;
@@ -108,7 +117,7 @@ public class BDBXMLHandler {
      * @param search Vstupni dotaz pro XQuery
      * @param typ Typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
     */
-    public String[] query(String id, String search, int typ, XmlManager mgr, QueryHandler qh, String containerName, String queryDir){
+    public String[] query(String id, String search, int typ){
         String output[] = new String[2];
         output[1] = "";
         int chyba = 0;
@@ -120,11 +129,11 @@ public class BDBXMLHandler {
             if (typ == 0) {
                 query = search;
             } else {
-                    if (qh.getQuery(id, queryDir)[0].toString().equals("1")) {
-                        output[1] = qh.getQuery(id, queryDir)[1].toString();
+                    if (qh.getQuery(id)[0].toString().equals("1")) {
+                        output[1] = qh.getQuery(id)[1].toString();
                         chyba = 1;
                     } else {
-                        query = qh.getQuery(id, queryDir)[1].toString();
+                        query = qh.getQuery(id)[1].toString();
                         query += "\nlet $zadani := " + search
                                 + "\nreturn local:mainFunction($zadani)";
                     }
@@ -196,7 +205,7 @@ public class BDBXMLHandler {
      * @param mgr XmlManager
      * @return ID vsech dokumentu v XML DB
      */
-    public String getDocsNames(XmlManager mgr, String containerName){
+    public String getDocsNames(){
         String output = "";
 
         try {
@@ -241,40 +250,20 @@ public class BDBXMLHandler {
      * @param id ID dokumentu
      * @return Zprava - ulozeno/chyba
      */
-    public String indexDocument(String document, String id, XmlManager mgr, String containerName, String useTransformation, String xsltPath){
+    public String indexDocument(String document, String id){
 
         String output = "";
         String xml_doc = "";
-        long act_time_long = System.currentTimeMillis();
-        //String act_time = Long.toString(act_time_long);
+        
         try {
             if (useTransformation.equals("true")) {
-            /*File xmlFile = new File(tempDir + act_time +".xml");
-            File xsltFile = new File(xsltPath);
-
-            XSLTTransformer xslt = new XSLTTransformer();
-            FileOutputStream fos = new FileOutputStream(xmlFile);
-                    OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-                    osw.write(document);
-                    osw.close();*/
-
+        
             File xsltFile = new File(xsltPath);
             XSLTTransformer xslt = new XSLTTransformer();
             xml_doc = xslt.XSLT_transformation(document, xsltFile);
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
-            /*File xml_to_save = new File(xslt_output);
-
-            FileReader fr = new FileReader(xml_to_save);
-            BufferedReader br = new BufferedReader(fr);
-            String radek = br.readLine();
-            while (radek != null) {
-                    xml_doc += radek + "\n";
-                    radek = br.readLine();
-            }
-            br.close();
-            fr.close();
-            xml_to_save.delete();*/
+            
         } else {
                 xml_doc = document;
         }
@@ -306,7 +295,7 @@ public class BDBXMLHandler {
      * @param id ID dokumentu
      * @return Zprava - ulozeno/chyba
      */
-    public String indexDocument(File document, String id, XmlManager mgr, String containerName, String useTransformation, String xsltPath){
+    public String indexDocument(File document, String id){
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
@@ -321,18 +310,6 @@ public class BDBXMLHandler {
             output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
-            /*File xml_to_save = new File(xslt_output);
-
-            FileReader fr = new FileReader(xml_to_save);
-            BufferedReader br = new BufferedReader(fr);
-            String radek = br.readLine();
-            while (radek != null) {
-                    xml_doc += radek + "\n";
-                    radek = br.readLine();
-            }
-            br.close();
-            fr.close();
-            xml_to_save.delete();*/
         } else {
             FileReader rdr = null;
             BufferedReader out = null;
@@ -364,7 +341,6 @@ public class BDBXMLHandler {
         } catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
         }
-
         return output;
     }
 
@@ -377,14 +353,14 @@ public class BDBXMLHandler {
      * @param xsltPath
      * @return
      */
-    public String indexDocumentMultiple (String folder, XmlManager mgr, String containerName, String useTransformation, String xsltPath) {
+    public String indexDocumentMultiple (String folder) {
         String output = "";
         File uploadFolder = new File(folder);
         File uploadFiles[] = uploadFolder.listFiles();
 
 
         for(int i = 0; i < uploadFiles.length; i++){
-            output += indexDocument(uploadFiles[i], uploadFiles[i].getName(), mgr, containerName, useTransformation, xsltPath);
+            output += indexDocument(uploadFiles[i], uploadFiles[i].getName());
         }
         //output += "AHOJ";
         return output;
@@ -399,7 +375,7 @@ public class BDBXMLHandler {
      * @param containerName nazev kontajneru
      * @return
      */
-    public String addIndex(String index, XmlManager mgr, String containerName) {
+    public String addIndex(String index) {
         String output = "";
 
         try {
@@ -434,7 +410,7 @@ public class BDBXMLHandler {
      * @param containerName nazev kontajneru
      * @return
      */
-    public String delIndex (String index, XmlManager mgr, String containerName){
+    public String delIndex (String index){
         String output = "";
 
         try {
@@ -469,7 +445,7 @@ public class BDBXMLHandler {
      * @param containerName nazev kontajneru
      * @return
      */
-    public String listIndex(XmlManager mgr, String containerName) {
+    public String listIndex() {
         String output = "";
         String outputEnd = "";
         try {
@@ -494,7 +470,7 @@ public class BDBXMLHandler {
         return output;
     }
 
-    public String getDataDescription(XmlManager mgr, String containerName){
+    public String getDataDescription(){
         String output = "";
         String query =
                 "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
