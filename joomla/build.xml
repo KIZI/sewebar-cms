@@ -32,6 +32,7 @@
 				<include name="${com_jucene}" />
 				<include name="${mod_jucene}" />
 				<include name="${plg_library}" />
+				<include name="${plg_contindex}" />
 				
 				<include name="${com_bkef}" />
 
@@ -102,7 +103,7 @@
 	<!-- jucene -->
 	<target name="jucene"
 		description="creates packages for all extensions (jucene)"
-		depends="plg_jucene, com_jucene, mod_jucene, plg_library">
+		depends="plg_jucene, com_jucene, mod_jucene, plg_library, plg_contindex">
 	</target>
 
 	<target name="plg_jucene">
@@ -113,7 +114,7 @@
 			</zipfileset>
 		</zip>
 	</target>
-
+	
 	<target name="plg_contindex">
 		<property name="plg_contindex" value="plg_contindex-${today}.zip"/>
 		<zip destfile="${dist}/${plg_contindex}">
@@ -122,6 +123,7 @@
 			</zipfileset>
 		</zip>
 	</target>
+	
 	<target name="plg_library">
 		<property name="plg_library" value="plg_library-${today}.zip"/>
 		<zip destfile="${dist}/${plg_library}">
@@ -210,6 +212,7 @@
 				<include name="${com_jucene}" />
 				<include name="${mod_jucene}" />
 				<include name="${plg_library}" />
+				<include name="${plg_contindex}" />
 
 				<include name="${com_bkef}" />
 

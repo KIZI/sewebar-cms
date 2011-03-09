@@ -14,7 +14,6 @@
         Lucene Search for fulltext content searching</description>
     <files>
         <filename plugin="contindex">contindex.php</filename>
-        <filename plugin="contindex">index.html</filename>
     </files>
     <params>
         <param name="results" type="text" default="20" label="Max results" description="Please set the number of maximum results returned by the search module."/>
