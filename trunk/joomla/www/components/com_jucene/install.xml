@@ -52,8 +52,6 @@
 		<files folder="administrator">	
 			<filename>config.xml</filename>
 			<filename>jucene.php</filename>
-			<filename>install.sql</filename>
-			<filename>uninstall.sql</filename>
 			<folder>controllers</folder>
 			<folder>helpers</folder>			
 			<folder>models</folder>			
