@@ -38,12 +38,12 @@ public class Tester {
                     "<tempDir>" + tempDir + "</tempDir>" +
                     "<err>" + settingsError + "</err>" +
                 "</settings>";
-            output += "<addQuery>" + qh.addQuery("Pokusná query určená k testu", "pokusTest", queryDir) + "</addQuery>";
-            output += "<getQuery>" + qh.getQuery("pokusTest", queryDir)[1] + "</getQuery>";
-            output += "<deleteQuery>" + qh.deleteQuery("pokusTest", queryDir) + "</deleteQuery>";
-            output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokusTest", mgr, containerName, useTransformation, xsltPath) + "</indexDocument>";
-            output += "<getDocument>" + bh.getDocument("pokusTest", mgr, containerName) + "</getDocument>";
-            output += "<removeDocument>" + bh.removeDocument("pokusTest", mgr, containerName) + "</removeDocument>";
+            output += "<addQuery>" + qh.addQuery("Pokusná query určená k testu", "pokusTest") + "</addQuery>";
+            output += "<getQuery>" + qh.getQuery("pokusTest")[1] + "</getQuery>";
+            output += "<deleteQuery>" + qh.deleteQuery("pokusTest") + "</deleteQuery>";
+            output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokusTest") + "</indexDocument>";
+            output += "<getDocument>" + bh.getDocument("pokusTest") + "</getDocument>";
+            output += "<removeDocument>" + bh.removeDocument("pokusTest") + "</removeDocument>";
         output += "</testOutput>";
         return output;
     }

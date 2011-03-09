@@ -92,8 +92,8 @@ public class XQuery_servlet extends HttpServlet {
          // Parametr action neni vyplnen => error, jinak naplneni promennych
          // a odeslani ke zpracovani
 
-        QueryHandler qh = new QueryHandler();
-        BDBXMLHandler bh = new BDBXMLHandler();
+        QueryHandler qh = new QueryHandler(queryDir);
+        BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
         Tester tester = new Tester();
         ExistDBHandler eh = new ExistDBHandler();
 
@@ -167,7 +167,7 @@ public class XQuery_servlet extends HttpServlet {
             config.setAllowCreate(true);
             config.setInitializeCache(true);
             config.setRunRecovery(recover);
-            config.setCacheSize(128 * 1024 * 1024); // 128MB cache
+            config.setCacheSize(32 * 1024 * 1024); // 32MB cache
             config.setInitializeLocking(true);
             config.setInitializeLogging(true);
             config.setErrorStream(System.err);
@@ -241,81 +241,74 @@ public class XQuery_servlet extends HttpServlet {
         }
 
         if (except_bool == false && variable.isEmpty()) {
-            //output += "<b>" + except_bool + "|" + variable.isEmpty() + "</b>";
             output += "<error>Neni zadan parametr ID!</error>";
         } else {
-
-        /*if ((mappedAction != 2 && mappedAction != 7 && mappedAction != 8 && mappedAction != 10 && mappedAction != 13 && mappedAction != 14 && mappedAction != 16) && variable.equals("")) {
-            //output += "<MA>"+mappedAction+"</MA>";
-            output += "<error>Neni zadan parametr ID!</error>";
-        } else {*/
-
         switch (mappedAction) {
             case 0: output += "<error>Zadana akce neexistuje</error>"; break;
             case 1: if (content.equals("")) {
                         output += "<error>Neni zadan obsah query</error>";
                     } else {
                         String dotaz = content.toString();
-                        String[] message = bh.query(variable, dotaz, 1, mgr, qh, containerName, queryDir);
+                        String[] message = bh.query(variable, dotaz, 1);
                         output += message[1].toString();
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error>Query nebyla zadana!</error>";
                     } else {
                         String dotaz = content.toString();
-                        String[] message = bh.query("", dotaz, 0, mgr, qh, containerName, queryDir); 
+                        String[] message = bh.query("", dotaz, 0); 
                         output += message[1].toString();
                     } break;
             case 3: if (content.equals("")) {
                         output += "<error>Query nebyla zadana!</error>";
                     } else {
                         String dotaz = content.toString();
-                        String message = bh.query_10(dotaz, mgr, qh, containerName, queryDir);
+                        String message = bh.query_10(dotaz);
                         output += message.toString();
                     } break;
             case 4: if (content.equals("")) {
                         output += "<error>Neni zadan obsah query</error>";
                     } else {
                         content = content.toString();
-                        output += qh.addQuery(content, variable, queryDir);
+                        output += qh.addQuery(content, variable);
                     } break;
-            case 5: output += "<query>" + qh.getQuery(variable, queryDir)[1].toString() + "</query>"; break;
-            case 6: output += qh.deleteQuery(variable, queryDir); break;
-            case 7: output += qh.getQueriesNames(queryDir); break;
-            case 8: output += bh.getDocsNames(mgr, containerName); break;
+            case 5: output += "<query><![CDATA[" + qh.getQuery(variable)[1].toString() + "]]></query>"; break;
+            case 6: output += qh.deleteQuery(variable); break;
+            case 7: output += qh.getQueriesNames(); break;
+            case 8: output += bh.getDocsNames(); break;
             case 9: if (content.equals("")) {
                         output += "<error>Neni zadan obsah dokumentu</error>";
                     } else {
                         content = content.toString();
-                        output += bh.indexDocument(content, variable, mgr, containerName, useTransformation, xsltPath);
+                        output += bh.indexDocument(content, variable);
                     } break;
             case 10: if (content.equals("")) {
                         output += "<error>Neni zadano umisteni slozky!</error>";
                     } else {
-                        output += bh.indexDocumentMultiple(content, mgr, containerName, useTransformation, xsltPath); break;
+                        output += bh.indexDocumentMultiple(content); break;
                     } break;
             case 11: if (variable == null){
                         output += "<error>Neni zadan nazev dokumentu</error>";
                     } else {
-                        output += bh.getDocument(variable, mgr, containerName);
+                        output += bh.getDocument(variable);
                     } break;
-            case 12: output += bh.removeDocument(variable, mgr, containerName); break;
+            case 12: output += bh.removeDocument(variable); break;
             case 13: if (content.equals("")){
                         output += "<error>Index nebyl zadan!</error>";
                     } else {
                         String dotaz = content.toString();
-                        output += bh.addIndex(dotaz, mgr, containerName);
+                        output += bh.addIndex(dotaz);
                     } break;
             case 14: output += tester.runTest(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError); break;
             case 15: break; //output += eh.test(content); break;
-            case 16: output += bh.listIndex(mgr, containerName); break;
+            case 16: output += bh.listIndex(); break;
             case 17: if (content.equals("")){
                         output += "<error>Index nebyl zadan!</error>";
                     } else {
                         String dotaz = content.toString();
-                        output += bh.delIndex(dotaz, mgr, containerName);
+                        output += bh.delIndex(dotaz);
                     } break;
-            case 18: output += bh.getDataDescription(mgr, containerName); break;
+            case 18: output += bh.getDataDescription(); break;
             default: output += "<error>Zadana akce neexistuje</error>"; break;
             }
         }
