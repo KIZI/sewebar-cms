@@ -13,7 +13,7 @@
     <description>This plugin enables you to use any library. It was build to provide means of integrating with Zend Framework library, but if you set up include path relatively from the JOOMLA document root you can use it to load any standalone library.</description>
     <files>
         <filename plugin="library">library.php</filename>
-        <filename plugin="library">index.html</filename>
+        
     </files>
     <params>
         <param name="paths" type="textarea" rows="10" cols="40" default="libraries/" label="Library paths" description="Enter desired paths separated by semicolon."/>

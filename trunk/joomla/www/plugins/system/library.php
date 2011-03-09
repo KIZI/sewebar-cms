@@ -48,6 +48,10 @@ class plgSystemLibrary extends JPlugin {
 				set_include_path ( $newPath . PATH_SEPARATOR . get_include_path () );
 			}
 		}
+		if(JDEBUG){
+			$app = JFactory::getApplication ();
+			$app->enqueueMessage ( JText::_ ( get_include_path() ), 'error' );
+		}
 		
 	}
 }
