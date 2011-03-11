@@ -13,6 +13,7 @@ import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.regex.Pattern;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
@@ -24,7 +25,8 @@ public class BDBXMLHandler {
     String containerName;
     String useTransformation;
     String xsltPath;
-    
+    Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\'.,?ˇ´<>¨;¤×÷§]");
+    String replaceBy = "_";
 
     public BDBXMLHandler(XmlManager mgr, QueryHandler qh, String containerName, String useTransformation, String xsltPath) {
         this.mgr = mgr;
@@ -217,9 +219,11 @@ public class BDBXMLHandler {
                     </docs>
              */
             //for $a in collection(\""+containerName+"\") return dbxml:metadata(\"dbxml:name\", $a)
-            String query = "for $a in collection(\""+containerName+"\")"
-                    + "order by dbxml:metadata(\"dbxml:name\", $a)"
-                    + "return dbxml:metadata(\"dbxml:name\", $a)";
+            String query = "let $docs := for $x in collection(\""+containerName+"\") return $x"
+                    + "\nreturn"
+                    + "\n<docs><count>{count($docs)}</count>{for $a in $docs"
+                    + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
+                    + "\nreturn <doc>{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
             XmlContainer cont = mgr.openContainer(containerName);
 
@@ -231,7 +235,7 @@ public class BDBXMLHandler {
 
             XmlValue value = new XmlValue();
             while ((value = res.next()) != null) {
-                output += ("<doc>" + value.asString() + "</doc>");
+                output += value.asString();
             }
 
             txn.commit();
@@ -272,7 +276,7 @@ public class BDBXMLHandler {
 
             XmlTransaction txn = mgr.createTransaction();
             
-            id = id.replaceAll("[^a-zA-Z_0-9][^-_=+]", "_");
+            id = id.replaceAll(replaceMask.toString(), replaceBy);
             
             cont.putDocument(id, xml_doc);
             output += "<message>Dokument " + id + " vlozen</message>";
@@ -327,7 +331,7 @@ public class BDBXMLHandler {
 
             XmlTransaction txn = mgr.createTransaction();
             
-            id = id.replaceAll("[^a-zA-Z_0-9][^-_=+]", "_");
+            id = id.replaceAll(replaceMask.toString(), replaceBy);
 
             cont.putDocument(id, xml_doc);
             output += "<message>Dokument " + id + " vlozen</message>";
