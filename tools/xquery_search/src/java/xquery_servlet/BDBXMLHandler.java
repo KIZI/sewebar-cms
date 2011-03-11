@@ -55,11 +55,8 @@ public class BDBXMLHandler {
             } else {
                 output += "<error>Dokument nenalezen!</error>";
             }
-
             txn.commit();
-
-            cleanup(cont);
-
+            closeContainer(cont);
         } catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
         }
@@ -86,9 +83,7 @@ public class BDBXMLHandler {
                 output += "<error>Dokument nenalezen!</error>";
             }
             txn.commit();
-
-            cleanup(cont);
-
+            closeContainer(cont);
         } catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
         }
@@ -159,10 +154,8 @@ public class BDBXMLHandler {
                 output[1] = "<error>Zadny vysledek</error>";
             }
             txn.commit();
-
-         res.delete();
-
-            cleanup(cont);
+            res.delete();
+            closeContainer(cont);
             }
         } catch (XmlException e) {
                 output[1] += "<error>"+e.toString()+"</error>";
@@ -209,39 +202,24 @@ public class BDBXMLHandler {
      */
     public String getDocsNames(){
         String output = "";
-
         try {
-            /*
-                    <docs><count>{count(for $a in collection(\""+containerName+"\")
-                    return $a)}</count>
-                    <names>{for $a in collection(\""+containerName+"\")
-                    return <doc>{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</names>
-                    </docs>
-             */
-            //for $a in collection(\""+containerName+"\") return dbxml:metadata(\"dbxml:name\", $a)
             String query = "let $docs := for $x in collection(\""+containerName+"\") return $x"
                     + "\nreturn"
-                    + "\n<docs><count>{count($docs)}</count>{for $a in $docs"
+                    + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
                     + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
                     + "\nreturn <doc>{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
             XmlContainer cont = mgr.openContainer(containerName);
-
             XmlQueryContext qc = mgr.createQueryContext();
-
             XmlTransaction txn = mgr.createTransaction();
-
             XmlResults res = mgr.query(query, qc);
 
             XmlValue value = new XmlValue();
             while ((value = res.next()) != null) {
                 output += value.asString();
             }
-
             txn.commit();
-
-            output += cleanup(cont);
-
+            closeContainer(cont);
         } catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
         }
@@ -273,7 +251,6 @@ public class BDBXMLHandler {
         }
 
             XmlContainer cont = mgr.openContainer(containerName);
-
             XmlTransaction txn = mgr.createTransaction();
             
             id = id.replaceAll(replaceMask.toString(), replaceBy);
@@ -282,9 +259,7 @@ public class BDBXMLHandler {
             output += "<message>Dokument " + id + " vlozen</message>";
 
             txn.commit();
-
-            cleanup(cont);
-
+            closeContainer(cont);
         } catch (XmlException e) {
                 output += "<error>"+e.toString()+"</error>";
         } catch (Throwable e) {
@@ -324,11 +299,9 @@ public class BDBXMLHandler {
                 xml_doc += radek + "\n";
                 radek = out.readLine();
             }
-
         }
 
             XmlContainer cont = mgr.openContainer(containerName);
-
             XmlTransaction txn = mgr.createTransaction();
             
             id = id.replaceAll(replaceMask.toString(), replaceBy);
@@ -337,10 +310,8 @@ public class BDBXMLHandler {
             output += "<message>Dokument " + id + " vlozen</message>";
             output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
             txn.commit();
-
-            cleanup(cont);
-
-        } catch (XmlException e) {
+            closeContainer(cont);
+            } catch (XmlException e) {
                 output += "<error>"+e.toString()+"</error>";
         } catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
@@ -361,16 +332,12 @@ public class BDBXMLHandler {
         String output = "";
         File uploadFolder = new File(folder);
         File uploadFiles[] = uploadFolder.listFiles();
-
-
+        
         for(int i = 0; i < uploadFiles.length; i++){
             output += indexDocument(uploadFiles[i], uploadFiles[i].getName());
-        }
-        //output += "AHOJ";
+        }        
         return output;
     }
-
-
 
     /**
      * Metoda pro pridani indexu XML DB
@@ -395,10 +362,10 @@ public class BDBXMLHandler {
 
                 txn.commit();
                 indexSpec.delete();
+                closeContainer(cont);
             } else {
                 output = "<error>Spatne zadany index</error>";
             }
-            cleanup(cont);
         } catch (XmlException e) {
                 output += "<error>"+e.toString()+"</error>";
         }catch (Throwable e) {
@@ -430,16 +397,14 @@ public class BDBXMLHandler {
 
                 txn.commit();
                 indexSpec.delete();
+                closeContainer(cont);
             } else {
                 output = "<error>Spatne zadany index</error>";
             }
-            cleanup(cont);
         } catch (XmlException ex) {
             //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
             output += "<error>"+ex.toString()+"</error>";
         }
-
-        
         return output;
     }
 
@@ -467,6 +432,7 @@ public class BDBXMLHandler {
             }
             output += "<indexCount>" + count + "</indexCount>" + outputEnd;
             indexSpec.delete();
+            closeContainer(cont);
         } catch (XmlException ex) {
             //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
             output += "<error>"+ex.toString()+"</error>";
@@ -501,10 +467,9 @@ public class BDBXMLHandler {
             while ((value = res.next()) != null) {
                 output += value.asString();
             }
-
             txn.commit();
-            cleanup(cont);
-
+            res.delete();
+            closeContainer(cont);
             } catch (XmlException ex) {
                 //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
                 output += "<error>"+ex.toString()+"</error>";
@@ -512,18 +477,12 @@ public class BDBXMLHandler {
         return output;
     }
 
-    /**
-     * Metoda pro uklizeni spojeni - container
-     * @param cont Pouzity container
-     * @return
-     */
-    private static String cleanup(XmlContainer cont) {
-    try {
+    private void closeContainer (XmlContainer cont) {
         if (cont != null) {
-            cont.delete();
-        }
-    } catch (Exception e) {
+            try {
+                cont.close();
+            } catch (XmlException ex) {
             }
-    return "";//output+"</cleanup_err>";
+        }
     }
 }

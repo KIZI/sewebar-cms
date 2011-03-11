@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.05 (26.2.2011)
+ * @version 1.06 (11.3.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
@@ -108,9 +108,12 @@ public class XQuery_servlet extends HttpServlet {
         }
 
         // Ukonceni spojeni s BDB XML a vycisteni
-        mgr.close();
-        mgr.delete();
-        env.close();
+        if (mgr != null) {
+            mgr.close();
+        }
+        if (env != null) {
+            env.close();
+        }
     }
     catch (Throwable ex) {
         //Logger.getLogger(XQuery_servlet.class.getName()).log(Level.SEVERE, null, ex);
