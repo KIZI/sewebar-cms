@@ -119,6 +119,7 @@ public class BDBXMLHandler {
         output[1] = "";
         int chyba = 0;
         double cas_zacatek = System.currentTimeMillis();
+        search = deleteDeclaration(search);
 
         try {
             XmlContainer cont = mgr.openContainer(containerName);
@@ -137,11 +138,7 @@ public class BDBXMLHandler {
             }
             if (chyba != 1) {
             XmlQueryContext qc = mgr.createQueryContext();
-            //qc.setVariableValue("zadani", search);
-
             XmlTransaction txn = mgr.createTransaction();
-
-            //XmlQueryExpression expr = mgr.prepare(txn, query, qc);
             XmlResults res = mgr.query(query, qc);
 
             if (res != null) {
@@ -476,6 +473,28 @@ public class BDBXMLHandler {
             }
         return output;
     }
+
+    private String deleteDeclaration(String query) {
+        String output = "";
+        String splitXMLBegin[] = query.split("[<][?][x][m][l]");
+        if (splitXMLBegin.length == 1) {
+            output = query;
+        } else {
+            for (int i = 0; i <= (splitXMLBegin.length - 1); i++) {
+                if (i == 0) {
+                    output += splitXMLBegin[i];
+                } else {
+                    String splitXMLEnd[] = splitXMLBegin[i].split("[?][>]");
+                    if (splitXMLEnd.length > 1) {
+                        String splitXMLBack = splitXMLEnd[1];
+                        output += splitXMLBack;
+                    }
+                }
+            }
+        }
+        return output;
+    }
+
 
     private void closeContainer (XmlContainer cont) {
         if (cont != null) {
