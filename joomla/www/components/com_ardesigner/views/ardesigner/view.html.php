@@ -45,6 +45,7 @@ class ARDesignerViewARDesigner extends JView
 		JHTML::script('FieldAR.js', $ui);
 		JHTML::script('ServerInfo.js', $ui);
 		JHTML::script('LanguageSupport.js', $ui);
+		JHTML::script('Tree.js', $ui);
 
 		JHTML::script('DomReady.js', $root . 'js/');
 
