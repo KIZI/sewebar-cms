@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * @package Quasar Template - RocketTheme
  * @version @VERSION@ @BUILD_DATE@
@@ -20,27 +22,24 @@ $gantry->init();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $gantry->language; ?>" lang="<?php echo $gantry->language;?>" >
 <head>
-	<?php 
+	<?php
 		$gantry->displayHead();
 		$gantry->addStyles(array('template.css','joomla.css','style.css','typography.css'));
 	?>
 	<!-- sewebar specific imports-->
-	<link rel="stylesheet" href="/xml/css/sewebar.css" type="text/css" />
-	<link rel="stylesheet" href="/xml/bkef/css/bkef.css" type="text/css" />
-	<link rel="stylesheet" href="/xml/pmml/css/pmml.css" type="text/css" />
-	<link rel="stylesheet" href="/xml/pmml/css/navigation.css" type="text/css" />
-	<link rel="stylesheet" href="/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
-	<link rel="stylesheet" href="/components/com_kbi/assets/kbi.css" type="text/css" />
-	<script type="text/javascript" src="/xml/bkef/js/influences.js"></script>
+	  <link rel="stylesheet" href="/xml/bkef/css/bkef.css" type="text/css" />
+	  <link rel="stylesheet" href="/xml/pmml/css/pmml.css" type="text/css" />
+	  <link rel="stylesheet" href="/xml/pmml/css/navigation.css" type="text/css" />
+	  <link rel="stylesheet" href="/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
+	  <link rel="stylesheet" href="/components/com_kbi/assets/kbi.css" type="text/css" />
+    <script type="text/javascript" src="/xml/bkef/js/influences.js"></script>
 
-	<!-- end of sewebar specific imports (some javascript imports are below)-->    
+	<!-- end of sewebar specific imports (some javascript imports are below)-->
 </head>
 	<body <?php echo $gantry->displayBodyTag(array('backgroundLevel','bodyLevel')); ?>>
     <script type="text/javascript" src="/xml/bkef/js/wz_tooltip.js"></script>
-<script type="text/javascript" src="/cardio/xml/pmml/js/graph_url.js">;</script>
 		<?php /** Begin Top **/ if ($gantry->countModules('top')) : ?>
-
-
+  <script type="text/javascript" src="/xml/bkef/js/wz_tooltip.js"></script>
 		<div id="rt-top">
 			<div class="rt-container">
 				<div id="rt-top2">
@@ -162,6 +161,6 @@ $gantry->init();
 		<?php /** End Debug **/ endif; ?>
 	</body>
 </html>
-<?php 
+<?php
 $gantry->finalize();
 ?>
