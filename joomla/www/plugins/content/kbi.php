@@ -23,7 +23,7 @@ class plgContentKbi extends JPlugin
 	function onPrepareContent (&$row, &$params)
 	{
 		$pattern = '/\<!-- kbiLink({.*\}) \/kbiLink -->/U';
-		$row->text = preg_replace_callback($pattern, __CLASS__."::replace", $row->text);
+		$row->text = preg_replace_callback($pattern, array(__CLASS__, 'replace'), $row->text);
 
 		return true;
 	}
@@ -32,13 +32,21 @@ class plgContentKbi extends JPlugin
 	{
 		if(!isset($match[1]) || empty($match[1])) return;
 
-		$config = json_decode($match[1], true);
+		try
+		{
+			KBIDebug::info($match[1]);
+			$config = json_decode($match[1], true);
 
-		$transfomator = new KbiModelTransformator($config);
-		//var_dump($match);
-		//var_dump($config);
-		//var_dump($transfomator);
+			$transfomator = new KbiModelTransformator($config);
+			//var_dump($match);
+			//var_dump($config);
+			//var_dump($transfomator);
 
-		return $transfomator->transform();;
+			return $transfomator->transform();
+		}
+		catch (Exception $ex)
+		{
+			return $ex->getMessage();
+		}
 	}
 }
