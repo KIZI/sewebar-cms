@@ -4,12 +4,12 @@ function getRules(data) {
 	var form = document.forms['adminForm'];
 
 	if(form) {
-		var query = $$('#query');
 		var qid = form.elements['id'].value;
+		var query = $$('#query');
 		var loader = $$('#query');
 	} else {
-		var query = $$('#query');
-		var qid = query.getValue();
+		var qid = $$('#query').getValue();
+		var query = $$('#parameters');
 		var loader = $$('#parameters');
 		var params_raw = $$('#parameter_raw div.text');
 
@@ -23,7 +23,6 @@ function getRules(data) {
 		//update: $('someelement'),
 		data: {data: params},
 		onComplete: function() {
-			var query = $$('#query');
 			loader.removeClass('ajax-loading');
 			query.appendText(this.response.text);
 		}

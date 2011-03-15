@@ -7,13 +7,10 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-$com_kbi_admin_model = JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi' . DS . 'models';
+define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi');
 
 jimport( 'joomla.application.component.model' );
 JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
-JLoader::import('sources', $com_kbi_admin_model);
-JLoader::import('queries', $com_kbi_admin_model);
-JLoader::import('xslts', $com_kbi_admin_model);
 
 /**
  * JModel for transformator. Transformator calls KBI library's query with combination of source, query and xslt.
@@ -56,6 +53,10 @@ class KbiModelTransformator extends JModel
 		$config = array();
 
 		if(is_numeric($value)) {
+			if(!class_exists('KbiModelSources')) {
+				JLoader::import('sources', COM_KBI_ADMIN . DS . 'models');
+			}
+
 			$sources = new KbiModelSources;
 		 	$config = get_object_vars($sources->getSource($value));
 		} elseif (is_array($value)) {
@@ -93,6 +94,10 @@ class KbiModelTransformator extends JModel
 		}
 
 		if(is_numeric($value)) {
+			if(!class_exists('KbiModelQueries')) {
+				JLoader::import('queries', COM_KBI_ADMIN . DS . 'models');
+			}
+
 			$queries = new KbiModelQueries;
 			$db = get_object_vars($queries->getQuery($value));
 			$query = new KBIQuery();
@@ -143,6 +148,10 @@ class KbiModelTransformator extends JModel
 	public function setXslt($value)
 	{
 		if(is_numeric($value)) {
+			if(!class_exists('KbiModelXslts')) {
+				JLoader::import('xslts', COM_KBI_ADMIN . DS . 'models');
+			}
+
 			$xslts = new KbiModelXslts;
 			$this->xslt = $xslts->getStyle($value);
 		} elseif(is_string($value)) {

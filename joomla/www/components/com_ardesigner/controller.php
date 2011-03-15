@@ -30,6 +30,19 @@ require_once(dirname(__FILE__).'/ardesigner/models/Utils.php');
  */
 class ARDesignerController extends JController
 {
+	protected static $com_kbi_admin;
+	protected $featurelist;
+	protected $datadescription;
+
+	function __construct($config = array())
+	{
+		parent::__construct($config);
+
+		self::$com_kbi_admin = JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi';
+		$this->featurelist = dirname(__FILE__).'/assets/featurelist.xml';
+		$this->datadescription = dirname(__FILE__).'/assets/datadescription.xml';
+	}
+
 	function display()
 	{
 		$document =& JFactory::getDocument();
@@ -59,21 +72,28 @@ class ARDesignerController extends JController
 		$view->assign('value', '');
 
 		if($query_id != NULL) {
-			// TODO: do it more clever (load component)
-			// $arbuilder = JComponentHelper::getComponent('com_ardesigner', true);
-			require_once(dirname(__FILE__).'/../../administrator/components/com_kbi/models/queries.php');
+
+			if(!class_exists('KbiModelQueries')) {
+				$kbi = JComponentHelper::getComponent('com_kbi', true);
+				if($kbi->enabled) {
+					JLoader::import('queries', self::$com_kbi_admin . DS . 'models');
+				} else {
+					throw new Exception(JText::_('Component com_kbi not found / enabled!'));
+				}
+			}
+
 			$model_queries = new KbiModelQueries;
 			$query = $model_queries->getQuery($query_id);
-			$featurelist = !empty($query->featurelist) ? $query->featurelist : dirname(__FILE__).'/assets/featurelist.xml';
+
+			$featurelist = !empty($query->featurelist) ? $query->featurelist : $this->featurelist;
+			$datadescription = !empty($query->dictionaryquery) ? $query->dictionaryquery : $this->datadescription;
 		} else {
-			$featurelist = dirname(__FILE__).'/assets/featurelist.xml';
+			$featurelist = $this->featurelist;
+			$datadescription = $this->datadescription;
 		}
 
-		$datadescriptionfile = dirname(__FILE__).'/assets/datadescription.xml';
-
-		$sr = new GetDataARBuilderQuery($datadescriptionfile, $featurelist, null, 'en');
+		$sr = new GetDataARBuilderQuery($datadescription, $featurelist, null, 'en');
 		$result = $sr->getData();
-		//var_dump($result);
 		$view->assignRef('value', $result);
 
 		$view->display();

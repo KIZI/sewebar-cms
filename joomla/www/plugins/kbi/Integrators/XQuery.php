@@ -102,7 +102,7 @@ class XQuery extends KBIntegratorSynchronable
 		return $documents;
 	}
 
-	/*
+	/**
 	 *
 	 * @see http://dtbaker.com.au/random-bits/uploading-a-file-using-curl-in-php.html
 	 */

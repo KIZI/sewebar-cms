@@ -61,7 +61,7 @@ class KbiControllerSelector extends JController
 		if($query_id != NULL && !empty($data)) {
 			$model_queries = &$this->getModel('queries');
 			$query = $model_queries->getQuery($query_id);
-			if($query != NULL) {
+			if($query != NULL && !empty($query->paramsxsl)) {
 				$xml = new DOMDocument();
 				if($xml->loadXML($data)) {
 					// start xslt

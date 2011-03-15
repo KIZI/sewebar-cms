@@ -26,6 +26,7 @@ interface ISynchronable
 
 	/**
 	 * Metoda pro vloĂ„ĹąÄąÄ˝Ă‹ĹĄenĂ„ĹąÄąÄ˝Ă‹ĹĄ dokumentu do XML databĂ„ĹąÄąÄ˝Ă‹ĹĄze
+	 *
 	 * @param document obsah novĂ„ĹąÄąÄ˝Ă‹ĹĄho dokumentu
 	 * @param id nĂ„ĹąÄąÄ˝Ă‹ĹĄzev novĂ„ĹąÄąÄ˝Ă‹ĹĄho dokumentu
 	 * @return String output - uloĂ„ĹąÄąÄ˝Ă‹ĹĄeno/neuloĂ„ĹąÄąÄ˝Ă‹ĹĄeno
