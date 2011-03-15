@@ -1,21 +1,31 @@
 //from: components/com_kbi/assets/js.js
 
-function KbiPostArb(id,src_type,query_type)
+function KbiPostArb(id, src_type, query_type)
 {
-  var params = document.getElementById('arb'+id).innerHTML;
-  alert('Pravidlo '+id+': ajax');
-	var myAjax = new Ajax('http://sewebar-dev.vse.cz/index.php?option=com_kbi&amp;controller=server&amp;format=raw',
+	var service_url = 'index.php?option=com_kbi&amp;task=query&amp;format=raw';
+	var params = document.getElementById('arb' + id).innerHTML;
+	// element, do ktereho prijde vysledek
+	var result = $('arb_result' + id);
+
+	result.empty().addClass('ajax-loading');
+	result.removeClass('hidden');
+	result.addEvent('click', function(){result.removeClass('ajax-loading');});
+
+	var myAjax = new Ajax(service_url,
 		{
-			method: 'post',
-			update: $('arb_result'+id), //id element, do ktereho prijde vysledek
-			data:
-			{
-				source: src_type, //typ_zdroje (Lucene, Ontopia..) 
-				query: query_type, //typ_dotazu (vyjimka, podobnost)
-				params: params, //arBuilder = vygenerovane XML
-				xslt: null //nic
+			method : 'post',
+			update : result,
+			data : {
+				source : 3, // typ_zdroje (Lucene, Ontopia..)
+				query : 2, // typ_dotazu (vyjimka, podobnost)
+				params : params, // arBuilder = vygenerovane XML
+				xslt : 2, // nic
+			},
+			onComplete : function(response) {
+				result.removeClass('ajax-loading');
 			}
-		}).request();	
+		}
+	).request();
+
 	return false;
 }
-

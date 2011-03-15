@@ -31,7 +31,7 @@
         <xsl:copy-of select="$query"/>
       </div>
       <input type="button" onclick="return KbiPostArb({position()},'src_type','query_type');" value="ajax" />
-      <div id="arb_result{position()}"></div>
+      <div id="arb_result{position()}" class="hidden">...</div>
       <!-- table of values of test criteria (quantifiers) -->
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule_Quantifiers',$arText,'start')"/></xsl:comment>
       <xsl:apply-templates select="." mode="sect5-qtable">
