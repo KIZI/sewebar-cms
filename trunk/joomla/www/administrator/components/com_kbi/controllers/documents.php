@@ -132,9 +132,10 @@ class KbiControllerDocuments extends JController
 
 				foreach ($cid as $document_id)
 				{
-					$document = $documents_model->getArticle($document_id);
+					$document = $documents_model->getArticle($document_id, 'all', true);
 					if($document)
 					{
+						KBIDebug::log($document);
 						$source->addDocument($document->title, $document->text, FALSE);
 						$success ++;
 					}
@@ -148,7 +149,7 @@ class KbiControllerDocuments extends JController
 			$this->setError( JText::_( 'ERROR ADDING FILE' ) . "<br />" . $ex->getMessage());
 		}
 
-		//$this->setRedirect("index.php?option={$option}&controller=documents&id[]={$id[0]}");
+		$this->setRedirect("index.php?option={$option}&controller=documents&id[]={$id[0]}");
 	}
 
 	function add()
@@ -180,7 +181,7 @@ class KbiControllerDocuments extends JController
 		$view->display();
 	}
 
-	/*
+	/**
 	 * Uploads XML/PMML document to temporary location and uploads to ISynchronable
 	 *
 	 * @see http://docs.joomla.org/Creating_a_file_uploader_in_your_component
@@ -208,13 +209,13 @@ class KbiControllerDocuments extends JController
 		$fileError = $_FILES[$fieldName]['error'];
 		if ($fileError > 0)
 		{
-		        switch ($fileError)
-		        {
-			        case 1: $this->setError( JText::_( 'FILE TO LARGE THAN PHP INI ALLOWS' ) ); return;
-			        case 2: $this->setError( JText::_( 'FILE TO LARGE THAN HTML FORM ALLOWS' ) ); return;
-			        case 3: $this->setError( JText::_( 'ERROR PARTIAL UPLOAD' ) ); return;
-			        case 4: $this->setError( JText::_( 'ERROR NO FILE' ) ); return;
-		        }
+			switch ($fileError)
+			{
+				case 1: $this->setError( JText::_( 'FILE TO LARGE THAN PHP INI ALLOWS' ) ); return;
+				case 2: $this->setError( JText::_( 'FILE TO LARGE THAN HTML FORM ALLOWS' ) ); return;
+				case 3: $this->setError( JText::_( 'ERROR PARTIAL UPLOAD' ) ); return;
+				case 4: $this->setError( JText::_( 'ERROR NO FILE' ) ); return;
+			}
 		}
 
 		//check the file extension is ok

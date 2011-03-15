@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @version		$Id$
  * @package		com_kbi
@@ -16,50 +16,50 @@ jimport( 'joomla.application.component.view' );
  * @package com_kbi
  */
 class KbiViewDocuments extends JView
-{	
+{
 	function setDefaultToolbar()
 	{
 		JToolBarHelper::title(JText::_('KBI Remote Documents') . " <small>[{$this->source->name}]</small>", 'article.png');
-		
+
 		// Synchronize documents
 		JToolBarHelper::custom('synchronize', 'copy', '', 'Synchronize', false, true);
-		
+
 		// View / download document
 		JToolBarHelper::custom('view', 'preview', '', 'View', false);
-		
+
 		// Delete document
 		JToolBarHelper::deleteList('', 'delete');
-		
+
 		// Upload document
 		JToolBarHelper::addNewX('add');
-				
+
 		//JToolBarHelper::help( 'screen.banners.client' );
 	}
-	
+
 	function setSynchronizeToolbar()
 	{
 		JToolBarHelper::title(JText::_('KBI Documents Synchronization') . " <small>[{$this->source->name}]</small>", 'article.png');
-		
+
 		JToolBarHelper::apply('apply');
 		JToolBarHelper::cancel('cancel');
 	}
-	
+
 	function setUploadToolbar()
 	{
 		JToolBarHelper::title(JText::_('KBI Remote Document upload') . " <small>[{$this->source->name}]</small>", 'article.png');
-		
+
 		// View / download document
 		JToolBarHelper::custom('upload', 'apply', '', 'Upload', false);
 		JToolBarHelper::cancel('cancel');
 	}
-	
+
 	function setViewToolbar()
 	{
 		JToolBarHelper::title(JText::_('KBI Remote Document upload') . " <small>[{$this->source->name}]</small>", 'article.png');
-		
-		JToolBarHelper::cancel('cancel');
+
+		JToolBarHelper::cancel('cancel', 'Close');
 	}
-	
+
 	function display($tpl = NULL)
 	{
 		switch($this->getLayout())
@@ -75,8 +75,8 @@ class KbiViewDocuments extends JView
 				break;
 			default:
 				self::setDefaultToolbar();
-		}	
-		
+		}
+
 		parent::display($tpl);
 	}
 }

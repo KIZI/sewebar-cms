@@ -7,7 +7,13 @@
 		<label for="source">Source<span>(id or JSON)</span></label>
 		<textarea id="source" name="source" rows="10" cols="80">
 {
-    "type": "JUCENE"
+    "url": "http:\/\/nlp.vse.cz:8081\/xquery_search\/xquery_servlet",
+    "type": "XQUERY",
+    "method": "POST",
+    "params": {
+        "variable": "query_test1",
+        "action": "useQuery"
+    }
 }
 		</textarea>
 		<label>Examples</label>

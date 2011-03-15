@@ -47,9 +47,13 @@ class Jucene extends KBIntegratorSynchronable
 		return $this->requestCurlPost($url, $postdata);
 	}
 
+	/**
+	 *
+	 * @todo Implement
+	 * @see ISynchronable::getDocuments()
+	 */
 	public function getDocuments()
 	{
-		//TODO
 		$documents = array();
 
 		return $documents;
@@ -66,13 +70,21 @@ class Jucene extends KBIntegratorSynchronable
 		$jucene->kbiInsertToIndex($path ? file_get_contents($document) : $document);
 	}
 
+	/**
+	 *
+	 * @todo Implement
+	 * @see ISynchronable::getDocument()
+	 */
 	public function getDocument($id)
 	{
-		//TODO
 	}
 
+	/**
+	 *
+	 * @todo Implement
+	 * @see ISynchronable::deleteDocument()
+	 */
 	public function deleteDocument($id)
 	{
-		//TODO
 	}
 }
