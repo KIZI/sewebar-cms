@@ -1,0 +1,42 @@
+<?php
+/**
+ * @version		$Id$
+ * @package		KBI
+ * @author		Andrej Hazucha
+ * @copyright	Copyright (C) 2010 All rights reserved.
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+if(!class_exists('FirePHP'))
+{
+	include_once 'FirePHPCore/fb.php';
+}
+
+/**
+ * Wrapper for debugging tools (FirePHP, file...).
+ *
+ * @package KBI
+ */
+class KBIDebug
+{
+	/** @var FirePHP */
+	protected static $singleton;
+
+	protected static function getInstance()
+	{
+		return FirePHP::getInstance(true);
+	}
+
+	public static function log($Object, $Label=null)
+	{
+		$instance = self::getInstance();
+		$instance->log($Object, $Label);
+	}
+
+	public static function info($Object, $Label=null)
+	{
+		$instance = self::getInstance();
+		$instance->info($Object, $Label);
+	}
+
+}
