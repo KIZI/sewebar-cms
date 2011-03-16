@@ -25,7 +25,7 @@ public class BDBXMLHandler {
     String containerName;
     String useTransformation;
     String xsltPath;
-    Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\'.,?ˇ´<>¨;¤×÷§]");
+    Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\',?ˇ´<>¨;¤×÷§]");
     String replaceBy = "_";
 
     public BDBXMLHandler(XmlManager mgr, QueryHandler qh, String containerName, String useTransformation, String xsltPath) {
@@ -439,7 +439,21 @@ public class BDBXMLHandler {
 
     public String getDataDescription(){
         String output = "";
-        String query =
+        String query = "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
+            + "\nfor $field in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField/@name/string()) "
+    		+ "\nlet $values :=  for $value in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $field and @type != \"continuous\"]/Value/text())"
+			+ "\nreturn <Category>{$value}</Category>"
+			+ "\nlet $leftMargin := for $LM in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $field and @type = \"continuous\"]/Interval/@leftMargin)"
+			+ "\nreturn min($LM)"
+			+ "\nlet $rightMargin := for $RM in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $field and @type = \"continuous\"]/Interval/@rightMargin)"
+			+ "\nreturn max($RM)"
+			+ "\nlet $int := if (count($leftMargin) > 0 and count($leftMargin) > 0) then <Interval leftMargin = \"{$leftMargin}\" rightMargin = \"{$rightMargin}\" closure = \"\"/> else ()"
+            + "\nreturn"
+            + "\n<Field name=\"{$field}\">"
+            + "\n{$values union $int}"
+            + "\n</Field>}</Dictionary></DataDescription>";
+        
+        /*String query =
                 "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
                 + "\nfor $field in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field/@name/string())"
                 + "\nlet $values :=  for $value in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field[@name = $field and @type != \"continuous\"]/fieldValue/text())"
@@ -452,7 +466,7 @@ public class BDBXMLHandler {
                 + "\nreturn"
                 + "\n<Field name=\"{$field}\">"
                 + "\n{$values union $ints}"
-                + "\n</Field>}</Dictionary></DataDescription>";
+                + "\n</Field>}</Dictionary></DataDescription>";*/
 
         try {
             XmlContainer cont = mgr.openContainer(containerName);
