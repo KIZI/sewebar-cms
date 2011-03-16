@@ -20,7 +20,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class XQuery_servlet extends HttpServlet {
 
-    XMLSettingsReader xmlSettings = new XMLSettingsReader();
+	private static final long serialVersionUID = 1L;
+
+	XMLSettingsReader xmlSettings = new XMLSettingsReader();
     /*
      * 0 - envDir
      * 1 - queryDir
@@ -35,8 +37,6 @@ public class XQuery_servlet extends HttpServlet {
     
     //String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
 
-
-
     String envDir = settings[0];
     String queryDir = settings[1];
     String containerName = settings[2];
@@ -44,16 +44,6 @@ public class XQuery_servlet extends HttpServlet {
     String xsltPath = settings[4];
     String tempDir = settings[5];
     String settingsError = settings[6];
-
-    //static FileInputStream xsltTrans = xsltPrepare(new File(xsltPath));
-
-    /*static String envDir = "";
-    static String queryDir = "";
-    static String containerName = "";
-    static String useTransformation = "";
-    static String xsltPath = "";
-    static String tempDir = "";
-    static String settingsError = "";*/
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -95,7 +85,6 @@ public class XQuery_servlet extends HttpServlet {
         QueryHandler qh = new QueryHandler(queryDir);
         BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
         Tester tester = new Tester();
-        ExistDBHandler eh = new ExistDBHandler();
 
         if (request.getParameter("action").equals("")){
                 output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!</error>";
@@ -104,7 +93,7 @@ public class XQuery_servlet extends HttpServlet {
                 String promenna = request.getParameter("variable").toString();
                 String obsah = request.getParameter("content").toString();
 
-                output += processRequest(akce, promenna, obsah, mgr, qh, bh, eh, tester);
+                output += processRequest(akce, promenna, obsah, mgr, qh, bh, tester);
         }
 
         // Ukonceni spojeni s BDB XML a vycisteni
@@ -198,6 +187,10 @@ public class XQuery_servlet extends HttpServlet {
          - deletedocument
          - addindex
          - completetest
+         - existquery (not used)
+         - listin
+         - delindex
+         - getdescription
          */
         int returnID = 0;
         if (action.equals("usequery")) returnID = 1; else
@@ -231,7 +224,7 @@ public class XQuery_servlet extends HttpServlet {
      * @param mgr XmlManager
      * @return Sestaveny vystup
      */
-    private String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, ExistDBHandler eh, Tester tester){
+    private String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, Tester tester){
     	int mappedAction = mapAction(action);
         String output = "";
         int except[] = {2,7,8,10,13,14,16,17,18};
