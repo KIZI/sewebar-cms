@@ -14,14 +14,15 @@ import javax.xml.transform.TransformerException;
 public class XSLTTransformer {
 
     /**
-     * @param args
+     * Metoda pro pouziti XSLT transformace (vstup typu File)
+     * @param xmlFile vstupni soubor
+     * @param xsltFile soubor s xslt transformaci
+     * @return prevedeny soubor ve forme Stringu
      */
-    public String XSLT_transformation (File xmlFile, File xsltFile)
+    public String xsltTransformation (File xmlFile, File xsltFile)
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        //File xml_output = new File(xmlFile.getAbsolutePath().toString() + "transformed.xml");
 
         try {
         javax.xml.transform.Source xmlSource =
@@ -43,27 +44,27 @@ public class XSLTTransformer {
         
         } catch (TransformerConfigurationException ex) {
                 output += "<err>" + ex.toString() + "</err>";
-                //ex.printStackTrace();
         }
         catch (TransformerException ex) {
                 output += "<err>" + ex.toString() + "</err>";
-                //ex.printStackTrace();
         }
-        //output += xmlFile.getAbsolutePath().toString() + "\n";
-        //output += xsltFile.getAbsolutePath().toString() + "\n";
         output += baos.toString();
         return output;
    }
-
-    public String XSLT_transformation (String xmlString, File xsltFile)
+    
+    /**
+     * Metoda pro pouziti XSLT transformace (vstup typu String)
+     * @param xmlString String obsahujici dokument k prevedeni
+     * @param xsltFile soubor s xslt transformaci
+     * @return prevedeny soubor ve forme Stringu
+     */
+    public String xsltTransformation (String xmlString, File xsltFile)
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         byte[] bytes = xmlString.getBytes();
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        
-        //File xml_output = new File(xmlFile.getAbsolutePath().toString() + "transformed.xml");
 
         try {
         javax.xml.transform.Source xmlSource =
@@ -85,14 +86,10 @@ public class XSLTTransformer {
 
         } catch (TransformerConfigurationException ex) {
                 output += "<err>" + ex.toString() + "</err>";
-                //ex.printStackTrace();
         }
         catch (TransformerException ex) {
                 output += "<err>" + ex.toString() + "</err>";
-                //ex.printStackTrace();
         }
-        //output += xmlFile.getAbsolutePath().toString() + "\n";
-        //output += xsltFile.getAbsolutePath().toString() + "\n";
         output += baos.toString();
         return output;
    }
