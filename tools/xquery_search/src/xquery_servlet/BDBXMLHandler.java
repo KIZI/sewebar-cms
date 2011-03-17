@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
- * @author Tomas
+ * @author Tomas Marek
  */
 public class BDBXMLHandler {
     XmlManager mgr;
@@ -239,7 +239,7 @@ public class BDBXMLHandler {
         
             File xsltFile = new File(xsltPath);
             XSLTTransformer xslt = new XSLTTransformer();
-            xml_doc = xslt.XSLT_transformation(document, xsltFile);
+            xml_doc = xslt.xsltTransformation(document, xsltFile);
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
             
@@ -282,7 +282,7 @@ public class BDBXMLHandler {
 
             XSLTTransformer xslt = new XSLTTransformer();
 
-            xml_doc = xslt.XSLT_transformation(document, xsltFile);
+            xml_doc = xslt.xsltTransformation(document, xsltFile);
             output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();

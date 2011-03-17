@@ -9,15 +9,25 @@ import java.io.OutputStreamWriter;
 
 /**
  * Trida umoznuje praci s dotazy - ukladani, mazani atd.
- * @author Tomas
+ * @author Tomas Marek
  */
 public class QueryHandler {
     String queryDir;
     
+    /**
+     * Konstruktor instance tridy
+     * @param queryDir slozka obsahujici ulozene query
+     */
     public QueryHandler(String queryDir) {
         this.queryDir = queryDir;
     }
-
+    
+    /**
+     * Metoda pro ulozeni query
+     * @param query ukladana query
+     * @param id nazev ukladane query
+     * @return zprava o ulozeni / chybe
+     */
     public String addQuery(String query, String id){
         File file = new File(queryDir + id + ".txt");
         String output = "";
@@ -60,14 +70,13 @@ public class QueryHandler {
                 }
             }
         }
-        //output += "AHOJ";
         return output;
     }
 
     /**
      * Metoda pro vymazani ulozene XQuery
      * @param id ID ulozene XQuery
-     * @return Zprava - vymazana/nenalezena
+     * @return zprava - vymazana/nenalezena
      */
     public String deleteQuery (String id) {
         String output = "";
@@ -86,7 +95,7 @@ public class QueryHandler {
     /**
      * Metoda pro ziskani ulozene XQuery
      * @param id ID ulozene XQuery
-     * @return Vracena XQuery/Zprava - nenalezena
+     * @return vracena XQuery/Zprava - nenalezena
      */
     public String[] getQuery(String id){
         FileReader rdr = null;

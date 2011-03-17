@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Trida obstaravajici cteni z XML souboru
  * @author Tomas Marek
  */
 public class XMLSettingsReader {

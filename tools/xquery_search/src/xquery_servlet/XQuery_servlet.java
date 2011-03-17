@@ -22,8 +22,12 @@ public class XQuery_servlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	// Nacteni nastaveni z konfiguracniho souboru
 	XMLSettingsReader xmlSettings = new XMLSettingsReader();
-    /*
+    String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");    
+    //String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
+
+    /* Popis vracenych poli
      * 0 - envDir
      * 1 - queryDir
      * 2 - containerName
@@ -32,11 +36,6 @@ public class XQuery_servlet extends HttpServlet {
      * 5 - tempDir
      * 6 - error messages
      */
-
-    String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");
-    
-    //String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
-
     String envDir = settings[0];
     String queryDir = settings[1];
     String containerName = settings[2];
@@ -46,11 +45,11 @@ public class XQuery_servlet extends HttpServlet {
     String settingsError = settings[6];
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Metoda zpracovavajici vstup a vytvarejici vystup. Podporuje <code>GET</code> a <code>POST</code> metody.
+     * @param request prijaty pozadavek
+     * @param response vytvorena odpoved (vystup)
+     * @throws ServletException chyba tykajici se servletu
+     * @throws IOException I/O chyba
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -69,30 +68,24 @@ public class XQuery_servlet extends HttpServlet {
                 output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: " + settingsError + "</error>";
         } else {
         try {
-
-
         // Vytvoreni spojeni s BDB XML
-
         Environment env = createEnvironment(envDir, false);
         XmlManagerConfig mconfig = new XmlManagerConfig();
         mconfig.setAllowExternalAccess(true);
         XmlManager mgr = new XmlManager(env, mconfig);
 
-
-         // Parametr action neni vyplnen => error, jinak naplneni promennych
-         // a odeslani ke zpracovani
-
+        // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
         QueryHandler qh = new QueryHandler(queryDir);
         BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
         Tester tester = new Tester();
 
+        // Parametr action neni vyplnen => error, jinak naplneni promennych a odeslani ke zpracovani
         if (request.getParameter("action").equals("")){
                 output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!</error>";
         } else {
                 String akce = request.getParameter("action").toString().toLowerCase();
                 String promenna = request.getParameter("variable").toString();
                 String obsah = request.getParameter("content").toString();
-
                 output += processRequest(akce, promenna, obsah, mgr, qh, bh, tester);
         }
 
@@ -105,7 +98,6 @@ public class XQuery_servlet extends HttpServlet {
         }
     }
     catch (Throwable ex) {
-        //Logger.getLogger(XQuery_servlet.class.getName()).log(Level.SEVERE, null, ex);
         //StringWriter sw = new StringWriter();
         //ex.printStackTrace(new PrintWriter(sw));
         output += "<error>Trida:  XQuery_servlet | Metoda: processRequest | Chyba: " + ex.toString() +"</error>";
@@ -116,9 +108,11 @@ public class XQuery_servlet extends HttpServlet {
         double time_end = System.currentTimeMillis();
         String cas = Double.toString(((time_end - time_start)));
 
+        // Pokud je pozadavek na zobrazeni dokumentu -> nepridava se XML deklarace a obalovy element s casem
         if (request.getParameter("action").equals("getDocument")) {
             out.println(output);
         } else {
+        	// Vypsani vystupu
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             out.println("<result milisecs=\"" + cas + "\">");
             out.println(output);
@@ -127,11 +121,11 @@ public class XQuery_servlet extends HttpServlet {
     } 
 
     /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Metoda zpracovavajici HTTP <code>POST</code> metodu.
+     * @param request dotaz na servlet
+     * @param response odpoved servletu
+     * @throws ServletException chyby tykajici se servletu
+     * @throws IOException I/O chyby
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -140,17 +134,20 @@ public class XQuery_servlet extends HttpServlet {
     }
 
     /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
+     * Metoda vraci kratky popis servletu
+     * @return String s popisem servletu
      */
     @Override
     public String getServletInfo() {
         return "XQuery servlet slouzi ke komunikaci s Berkeley XML DB";
     }// </editor-fold>
 
-    /*
-     * Metoda pro vytvoreni spojujiciho prostredi pro BDB XML,
-     * jeho nastaveni
+    /**
+     * 
+     * @param home umisteni DB
+     * @param recover true/false pouziti recovery (standartne false)
+     * @return nastavene prostredi pro spojeni s XML DB
+     * @throws Throwable
      */
     private static Environment createEnvironment(String home, boolean recover)
     throws Throwable {
@@ -170,9 +167,14 @@ public class XQuery_servlet extends HttpServlet {
             File f = new File(home);
             return new Environment(f, config);
     }
-
+    
+    /**
+     * Metoda pro namapovani nazvu akce na cislo -> jednodussi pouziti v rozhodovani, kterou metodu pouzit
+     * @param action nazev akce
+     * @return cislo akce
+     */
     private static int mapAction (String action){
-        /*
+        /* Vypis nazvu metod z index.jsp
          - usequery
          - directquery
          - directquery10
@@ -218,15 +220,20 @@ public class XQuery_servlet extends HttpServlet {
     /**
      * Metoda provadejici rozbor vstupnich promennych,
      * nasledne vola jednotlive metody
-     * @param action Nazev akce, ktera se ma provest
-     * @param variable Promenna - vetsinou ID (dokumentu/XQuery)
-     * @param content Obsah - vetsinou telo (dokumentu, XQuery, index)
-     * @param mgr XmlManager
-     * @return Sestaveny vystup
+     * @param action nazev akce, ktera se ma provest
+     * @param variable promenna - vetsinou ID (dokumentu/XQuery)
+     * @param content obsah - vetsinou telo (dokumentu, XQuery, index)
+     * @param mgr XmlManager instance XMLManager
+     * @param qh instance tridy QueryHandler
+     * @param bh instance tridy BDBXMLHandler
+     * @param tester instance tridy Tester
+     * @return predpripraveny vystup
      */
     private String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, Tester tester){
+    	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
+        // Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content 
         int except[] = {2,7,8,10,13,14,16,17,18};
 
         Boolean except_bool = false;
