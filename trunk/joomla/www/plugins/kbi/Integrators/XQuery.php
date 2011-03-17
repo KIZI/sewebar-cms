@@ -46,7 +46,8 @@ class XQuery extends KBIntegratorSynchronable
 		parent::__construct($config);
 	}
 
-	public function queryPost($query) {
+	public function queryPost($query)
+	{
 		$url = $this->getUrl();
 
 		$postdata = array(
@@ -80,6 +81,8 @@ class XQuery extends KBIntegratorSynchronable
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
+		KBIDebug::log(array($response, $info));
+
 		if($info['http_code'] != '200')
 		{
 			throw new Exception('Error in communication');
@@ -87,15 +90,18 @@ class XQuery extends KBIntegratorSynchronable
 		else
 		{
 			$xml = simplexml_load_string($response);
-
-			foreach($xml->children() as $doc)
+			$docs = $xml->children();
+			if(!empty($docs))
 			{
-				$document = new stdClass;
-				//$document->id = $doc->__toString();
-				//http://bugs.php.net/bug.php?id=44484
-				$document->id = $doc;
-				$document->name = $doc;
-				$documents[] = $document;
+				foreach($docs[0] as $doc)
+				{
+					$document = new stdClass;
+					//$document->id = $doc->__toString();
+					//http://bugs.php.net/bug.php?id=44484
+					$document->id = $doc;
+					$document->name = $doc;
+					$documents[] = $document;
+				}
 			}
 		}
 

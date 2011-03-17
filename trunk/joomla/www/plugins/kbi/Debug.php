@@ -9,7 +9,7 @@
 
 if(!class_exists('FirePHP'))
 {
-	include_once 'FirePHPCore/fb.php';
+	include_once dirname(__FILE__) . '/FirePHPCore/fb.php';
 }
 
 /**

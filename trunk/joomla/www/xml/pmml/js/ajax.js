@@ -18,7 +18,7 @@ function KbiPostArb(id, src_type, query_type)
 			data : {
 				source : 3, // typ_zdroje (Lucene, Ontopia..)
 				query : 2, // typ_dotazu (vyjimka, podobnost)
-				params : params, // arBuilder = vygenerovane XML
+				parameters : params, // arBuilder = vygenerovane XML
 				xslt : 2, // nic
 			},
 			onComplete : function(response) {
