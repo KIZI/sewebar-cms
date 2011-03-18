@@ -8,6 +8,8 @@ import com.sleepycat.dbxml.XmlManagerConfig;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,28 +24,6 @@ public class XQuery_servlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	// Nacteni nastaveni z konfiguracniho souboru
-	XMLSettingsReader xmlSettings = new XMLSettingsReader();
-    String[] settings = xmlSettings.readSettings("c:/users/Tomas/Sewebar/dbxml_settings.xml");    
-    //String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
-
-    /* Popis vracenych poli
-     * 0 - envDir
-     * 1 - queryDir
-     * 2 - containerName
-     * 3 - useTransformation
-     * 4 - xsltPath
-     * 5 - tempDir
-     * 6 - error messages
-     */
-    String envDir = settings[0];
-    String queryDir = settings[1];
-    String containerName = settings[2];
-    String useTransformation = settings[3];
-    String xsltPath = settings[4];
-    String tempDir = settings[5];
-    String settingsError = settings[6];
-
     /**
      * Metoda zpracovavajici vstup a vytvarejici vystup. Podporuje <code>GET</code> a <code>POST</code> metody.
      * @param request prijaty pozadavek
@@ -57,66 +37,102 @@ public class XQuery_servlet extends HttpServlet {
          * Nastaveni zpusobu a kodovani vystupu a vstupu,
          * inicializace promennych pro vystup
          */
-        response.setContentType("text/xml;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         String output = "";
-        double time_start = System.currentTimeMillis();
-
-        if (settingsError != null) {
-                output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: " + settingsError + "</error>";
+        double time_start = System.currentTimeMillis();        
+        
+    	// Nacteni nastaveni z konfiguracniho souboru
+        XMLSettingsReader xmlSettings = new XMLSettingsReader();
+        String getSettings[] = getSettingsFile();
+        if (getSettings[0].toString().equals("1")) {
+	        	output += getSettings[2].toString(); 
         } else {
-        try {
-        // Vytvoreni spojeni s BDB XML
-        Environment env = createEnvironment(envDir, false);
-        XmlManagerConfig mconfig = new XmlManagerConfig();
-        mconfig.setAllowExternalAccess(true);
-        XmlManager mgr = new XmlManager(env, mconfig);
-
-        // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
-        QueryHandler qh = new QueryHandler(queryDir);
-        BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
-        Tester tester = new Tester();
-
-        // Parametr action neni vyplnen => error, jinak naplneni promennych a odeslani ke zpracovani
-        if (request.getParameter("action").equals("")){
-                output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!</error>";
-        } else {
-                String akce = request.getParameter("action").toString().toLowerCase();
-                String promenna = request.getParameter("variable").toString();
-                String obsah = request.getParameter("content").toString();
-                output += processRequest(akce, promenna, obsah, mgr, qh, bh, tester);
+	    	String[] settings = xmlSettings.readSettings(getSettings[1].toString());
+	    	
+	    	/* Popis vracenych poli
+	         * 0 - envDir
+	         * 1 - queryDir
+	         * 2 - containerName
+	         * 3 - useTransformation
+	         * 4 - xsltPath
+	         * 5 - tempDir
+	         * 6 - error messages
+	         */
+	        String envDir = settings[0];
+	        String queryDir = settings[1];
+	        String containerName = settings[2];
+	        String useTransformation = settings[3];
+	        String xsltPath = settings[4];
+	        String tempDir = settings[5];
+	        String settingsError = settings[6];
+	        
+	        if (settingsError != null) {
+	                output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: " + settingsError + "</error>";
+	        } else {
+		        try {
+		        // Vytvoreni spojeni s BDB XML
+		        Environment env = createEnvironment(envDir, false);
+		        XmlManagerConfig mconfig = new XmlManagerConfig();
+		        mconfig.setAllowExternalAccess(true);
+		        XmlManager mgr = new XmlManager(env, mconfig);
+		
+		        // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
+		        QueryHandler qh = new QueryHandler(queryDir);
+		        BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
+		        Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
+		
+		        // Parametr action neni vyplnen => error, jinak naplneni promennych a odeslani ke zpracovani
+		        if (request.getParameter("action").equals("")){
+		                output += "<error>Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!</error>";
+		        } else {
+		                String akce = request.getParameter("action").toString().toLowerCase();
+		                if (akce.equals("settings")) {
+		                	output += createSettingsPage();
+		                } else {
+		                	String promenna = request.getParameter("variable").toString();
+		                    String obsah = request.getParameter("content").toString();
+		                	output += processRequest(akce, promenna, obsah, mgr, qh, bh, tester);
+		                }
+		        }
+		
+		        // Ukonceni spojeni s BDB XML a vycisteni
+		        if (mgr != null) {
+		            mgr.close();
+		        }
+		        if (env != null) {
+		            env.close();
+		        }
+	        }
+		    catch (Throwable ex) {
+		        StringWriter sw = new StringWriter();
+		        ex.printStackTrace(new PrintWriter(sw));
+		        output += "<error>Trida:  XQuery_servlet | Metoda: processRequest | Chyba: " + sw.toString() +"</error>";
+		        }
+		    }
         }
-
-        // Ukonceni spojeni s BDB XML a vycisteni
-        if (mgr != null) {
-            mgr.close();
-        }
-        if (env != null) {
-            env.close();
-        }
-    }
-    catch (Throwable ex) {
-        //StringWriter sw = new StringWriter();
-        //ex.printStackTrace(new PrintWriter(sw));
-        output += "<error>Trida:  XQuery_servlet | Metoda: processRequest | Chyba: " + ex.toString() +"</error>";
-        }
-    }
         // Vypocet doby zpracovani,
         // vytvoreni a odeslani vystupu
         double time_end = System.currentTimeMillis();
         String cas = Double.toString(((time_end - time_start)));
 
         // Pokud je pozadavek na zobrazeni dokumentu -> nepridava se XML deklarace a obalovy element s casem
-        if (request.getParameter("action").equals("getDocument")) {
-            out.println(output);
+        if (request.getParameter("action").equals("settings")) {
+        	response.setContentType("text/html;charset=UTF-8");
+        	out.println(output);
         } else {
-        	// Vypsani vystupu
-            out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            out.println("<result milisecs=\"" + cas + "\">");
-            out.println(output);
-            out.println("</result>");
+	        if (request.getParameter("action").equals("getDocument")) {
+	        	response.setContentType("text/xml;charset=UTF-8");
+	        	out.println(output);
+	        } else {
+	        	// Vypsani vystupu
+	        	response.setContentType("text/xml;charset=UTF-8");
+	            out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+	            out.println("<result milisecs=\"" + cas + "\">");
+	            out.println(output);
+	            out.println("</result>");
+	        }
         }
     } 
 
@@ -166,6 +182,54 @@ public class XQuery_servlet extends HttpServlet {
             config.setLogAutoRemove(true);
             File f = new File(home);
             return new Environment(f, config);
+    }
+    
+    private String createSettingsPage(){
+    	String output = "";
+    	output += 
+    		"<html><body>" +
+    		"<h2>Nastavení</h2> " +
+    			"<div id=\"settings\">" +
+    			"<form method=\"post\" action=\"xquery_servlet\">" +
+	    			"<input type=\"hidden\" name=\"action\" value=\"settings\">" +
+	    			"DB Environment directory: <input type=\"text\" name=\"envDir\"><br />" +
+					"Query directory: <input type=\"text\" name=\"queryDir\"><br />" +
+					"Container name: <input type=\"text\" name=\"containerName\"><br />" +
+					"Use transformation: <select name=\"useTransformation\">" +
+							"<option value=\"true\">True</option>" +
+							"<option value=\"false\">False</option>" +
+					"</select><br />" +
+					"XSLT path: <input type=\"text\" name=\"xsltPath\"><br />" +
+					"Temporary directory: <input type=\"text\" name=\"tempDir\"><br />" +
+				"</form>" +
+			"</div></body></html>";
+    	return output;
+    }
+    
+    
+    /**
+     * Metoda obsluhujici konfiguracni soubor
+     * @return zprava / chyba
+     */
+    private String[] getSettingsFile(){
+    	String output[] = new String[3];
+    	output[0] = "0";
+    	File settingFile = new File("dbxml_settings.xml");   	
+		try {
+			if (!settingFile.exists()) {
+				settingFile.createNewFile();
+				output[0] = "1";
+				output[1] = settingFile.getAbsolutePath(); 
+				output[2] += "<message>Novy konfiguracni soubor vytvoren: " + settingFile.getAbsolutePath() + ".";
+			} else {
+				output[0] = "0";
+				output[1] = settingFile.getAbsolutePath();
+			}
+		} catch (IOException e) {
+			output[0] = "1";
+			output[2] += "<error>" + e.toString() + "</error>";
+		}
+    	return output;
     }
     
     /**
@@ -302,7 +366,7 @@ public class XQuery_servlet extends HttpServlet {
                         String dotaz = content.toString();
                         output += bh.addIndex(dotaz);
                     } break;
-            case 14: output += tester.runTest(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError); break;
+            case 14: output += tester.runTest(); break;
             case 15: break; //output += eh.test(content); break;
             case 16: output += bh.listIndex(); break;
             case 17: if (content.equals("")){

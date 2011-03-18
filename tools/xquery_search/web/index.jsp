@@ -111,5 +111,10 @@
     <br />
     <br />
     <i>verze 1.06 (11.3.2011)</i>
+    <hr />    
+    <form action="xquery_servlet" method="post" target="_blank">
+    	<input type="hidden" name="action" value="settings">
+    	<input type="submit" value="Nastavení"> 
+    </form>
   </body>
 </html>

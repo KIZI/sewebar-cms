@@ -7,16 +7,20 @@ import com.sleepycat.dbxml.XmlManager;
  * @author Tomas Marek
  */
 public class Tester {
+	QueryHandler qh;
+	BDBXMLHandler bh;
+	XmlManager mgr;
+	String envDir;
+	String queryDir;
+	String containerName;
+	String useTransformation;
+	String xsltPath;
+	String tempDir;
+	String settingsError;
 
 	/**
 	 * Konstruktor
-	 */
-    public Tester() {
-    }
-
-    /**
-     * Metoda pro provedeni testu spravnosti nastaveni aplikace
-     * @param qh instance tridy QueryHandler
+	 * @param qh instance tridy QueryHandler
      * @param bh instance tridy BDBXMLHandler
      * @param mgr instance XmlManager
      * @param envDir umisteni DB
@@ -26,9 +30,25 @@ public class Tester {
      * @param xsltPath umisteni xslt transformace
      * @param tempDir slozka pro docasne soubory
      * @param settingsError chyby pri nacitani nastaveni
+	 */
+    public Tester(QueryHandler qh, BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPath, String tempDir, String settingsError) {
+    	this.qh = qh;
+    	this.bh = bh;
+    	this.mgr = mgr;
+    	this.envDir = envDir;
+    	this.queryDir = queryDir;
+    	this.containerName = containerName;
+    	this.useTransformation = useTransformation;
+    	this.xsltPath = xsltPath;
+    	this.tempDir = tempDir;
+    	this.settingsError = settingsError;
+    }
+
+    /**
+     * Metoda pro provedeni testu spravnosti nastaveni aplikace
      * @return vypis testu
      */
-    public String runTest(QueryHandler qh, BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPath, String tempDir, String settingsError){
+    public String runTest(){
         String output = "<testOutput>";
             output +=
                 "<settings>" +
