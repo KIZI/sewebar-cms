@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataDescription>
+    <Dictionary sourceSubType="DataDictionary" sourceType="PMML" default="true">
+        <Field name="Age">
+            <Interval closure="" leftMargin="21" rightMargin="71"/>
+        </Field>
+        <Field name="Amount">
+            <Interval closure="" leftMargin="0" rightMargin="INF"/>
+        </Field>
+        <Field name="DistrictR">
+            <Category>Benesov</Category>
+            <Category>Beroun</Category>
+            <Category>Blansko</Category>
+            <Category>Breclav</Category>
+            <Category>Brno</Category>
+            <Category>Brno - venkov</Category>
+            <Category>Bruntal</Category>
+            <Category>Ceska Lipa</Category>
+            <Category>Ceske Budejovice</Category>
+            <Category>Cesky Krumlov</Category>
+            <Category>Decin</Category>
+            <Category>Domazlice</Category>
+            <Category>Frydek - Mistek</Category>
+            <Category>Havlickuv Brod</Category>
+            <Category>Hodonin</Category>
+            <Category>Hradec Kralove</Category>
+            <Category>Cheb</Category>
+            <Category>Chomutov</Category>
+            <Category>Chrudim</Category>
+            <Category>Jablonec n. Nisou</Category>
+            <Category>Jesenik</Category>
+            <Category>Jicin</Category>
+            <Category>Jihlava</Category>
+            <Category>Jindrichuv Hradec</Category>
+            <Category>Karlovy Vary</Category>
+            <Category>Karvina</Category>
+            <Category>Kladno</Category>
+            <Category>Klatovy</Category>
+            <Category>Kolin</Category>
+            <Category>Kromeriz</Category>
+            <Category>Kutna Hora</Category>
+            <Category>Liberec</Category>
+            <Category>Litomerice</Category>
+            <Category>Louny</Category>
+            <Category>Melnik</Category>
+            <Category>Mlada Boleslav</Category>
+            <Category>Most</Category>
+            <Category>Nachod</Category>
+            <Category>Novy Jicin</Category>
+            <Category>Nymburk</Category>
+            <Category>Olomouc</Category>
+            <Category>Opava</Category>
+            <Category>Ostrava - mesto</Category>
+            <Category>Pardubice</Category>
+            <Category>Pelhrimov</Category>
+            <Category>Pisek</Category>
+            <Category>Plzen</Category>
+            <Category>Plzen - jih</Category>
+            <Category>Plzen - sever</Category>
+            <Category>Praha</Category>
+            <Category>Praha - vychod</Category>
+            <Category>Praha - zapad</Category>
+            <Category>Prachatice</Category>
+            <Category>Prerov</Category>
+            <Category>Pribram</Category>
+            <Category>Prostejov</Category>
+            <Category>Rakovnik</Category>
+            <Category>Rokycany</Category>
+            <Category>Rychnov nad Kneznou</Category>
+            <Category>Semily</Category>
+            <Category>Sokolov</Category>
+            <Category>Strakonice</Category>
+            <Category>Sumperk</Category>
+            <Category>Svitavy</Category>
+            <Category>Tabor</Category>
+            <Category>Tachov</Category>
+            <Category>Teplice</Category>
+            <Category>Trebic</Category>
+            <Category>Trutnov</Category>
+            <Category>Uherske Hradiste</Category>
+            <Category>Usti nad Labem</Category>
+            <Category>Usti nad Orlici</Category>
+            <Category>Vsetin</Category>
+            <Category>Vyskov</Category>
+            <Category>Zdar nad Sazavou</Category>
+            <Category>Zlin</Category>
+            <Category>Znojmo</Category>
+        </Field>
+        <Field name="Quality">
+            <Category>good</Category>
+            <Category>bad</Category>
+            <Category>good-s2</Category>
+            <Category>bad-s2</Category>
+            <Category>good-s1</Category>
+            <Category>bad-s1</Category>
+            <Category>good-s5</Category>
+            <Category>bad-s5</Category>
+            <Category>good-s4</Category>
+            <Category>bad-s4</Category>
+            <Category>good-s3</Category>
+            <Category>bad-s3</Category>
+            <Category>good-s6</Category>
+            <Category>bad-s6</Category>
+            <Category>good-s8</Category>
+            <Category>bad-s8</Category>
+            <Category>good-s7</Category>
+            <Category>bad-s7</Category>
+            <Category>good-s10</Category>
+            <Category>bad-s10</Category>
+            <Category>good-s9</Category>
+            <Category>bad-s9</Category>
+            <Category>good-s11</Category>
+            <Category>bad-s11</Category>
+            <Category>good-s13</Category>
+            <Category>bad-s13</Category>
+            <Category>good-s12</Category>
+            <Category>bad-s12</Category>
+            <Category>good-s14</Category>
+            <Category>bad-s14</Category>
+            <Category>good-s16</Category>
+            <Category>bad-s16</Category>
+            <Category>good-s17</Category>
+            <Category>bad-s17</Category>
+            <Category>good-s15</Category>
+            <Category>bad-s15</Category>
+            <Category>good-s19</Category>
+            <Category>bad-s19</Category>
+            <Category>good-s18</Category>
+            <Category>bad-s18</Category>
+        </Field>
+        <Field name="Repayment">
+            <Interval closure="" leftMargin="0" rightMargin="10000"/>
+        </Field>
+        <Field name="Salary">
+            <Interval closure="" leftMargin="8110" rightMargin="12541"/>
+        </Field>
+        <Field name="Sex">
+            <Category>F</Category>
+            <Category>M</Category>
+        </Field>
+    </Dictionary>
+</DataDescription>
