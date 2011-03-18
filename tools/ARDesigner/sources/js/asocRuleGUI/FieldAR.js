@@ -1,3 +1,7 @@
+/**
+ * Class: FieldBase
+ * This class is just the container for information about Field
+ */
 var FieldBase = new Class({
     /**
      * Function: display
@@ -79,7 +83,7 @@ var FieldBase = new Class({
 });
 
 /**
- * Class: Field
+ * Class: FieldInput
  * This class is just the container for information about Field
  */
 var FieldInput = new Class({
@@ -150,7 +154,7 @@ var FieldInput = new Class({
 });
 
 /**
- * Class: Field
+ * Class: FieldSelect
  * This class is just the container for information about Field
  */
 var FieldSelect = new Class({
@@ -211,15 +215,20 @@ var FieldSelect = new Class({
                 html: this.proposedValue
             });
             option.inject(fieldSelect);
-        }
-        else{
-            this.proposedValue = this.oneCategoryInfo[0];
+            this.proposedValue = this.proposedValue.replace("&gt;",">");
+            this.proposedValue = this.proposedValue.replace("&lt;","<");
         }
         for(var actualOption = 0; actualOption < this.oneCategoryInfo.length; actualOption++){
+            if(this.oneCategoryInfo[actualOption].trim() == this.proposedValue.trim()){
+                continue;
+            }
             option = new Element('option', {
                 html: this.oneCategoryInfo[actualOption]
             });
             option.inject(fieldSelect);
+        }
+        if(this.proposedValue == ""){
+            this.proposedValue = this.oneCategoryInfo[0];
         }
 
         fieldExpression.inject(mainDiv);

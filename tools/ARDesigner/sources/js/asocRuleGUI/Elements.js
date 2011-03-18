@@ -293,6 +293,9 @@ var Attribute = new Class({
         // Create all reamining options
         for(var actualAttributeChoice = 0; actualAttributeChoice < attributeFields.length; actualAttributeChoice++){
             // Create options
+            if(this.actualAttrField == attributeFields[actualAttributeChoice]){
+                continue;
+            }
             option = this.createOption(attributeFields[actualAttributeChoice]);
             option.inject(topSelect);
         }
