@@ -45,11 +45,11 @@ public class XQuery_servlet extends HttpServlet {
         
     	// Nacteni nastaveni z konfiguracniho souboru
         XMLSettingsReader xmlSettings = new XMLSettingsReader();
-        String getSettings[] = getSettingsFile();
+        /*String getSettings[] = getSettingsFile();
         if (getSettings[0].toString().equals("1")) {
 	        	output += getSettings[2].toString(); 
-        } else {
-	    	String[] settings = xmlSettings.readSettings(getSettings[1].toString());
+        } else {*/
+	    	String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
 	    	
 	    	/* Popis vracenych poli
 	         * 0 - envDir
@@ -111,7 +111,7 @@ public class XQuery_servlet extends HttpServlet {
 		        output += "<error>Trida:  XQuery_servlet | Metoda: processRequest | Chyba: " + sw.toString() +"</error>";
 		        }
 		    }
-        }
+        //}
         // Vypocet doby zpracovani,
         // vytvoreni a odeslani vystupu
         double time_end = System.currentTimeMillis();
