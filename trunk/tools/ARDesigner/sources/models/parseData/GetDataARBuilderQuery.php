@@ -166,7 +166,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $OPEN = "open";
         //$CLOSED = "closed";
         $xPath = new DOMXPath($this->domDD);
-        $anXPathExpr = "//DataDescription/Dictionary[@default='true']/Field";
+        $anXPathExpr = "//dd:DataDescription/Dictionary[@default='true']/Field";
         $field = $xPath->query($anXPathExpr);
         $attributeArray = array();
         foreach ($field as $elField) {

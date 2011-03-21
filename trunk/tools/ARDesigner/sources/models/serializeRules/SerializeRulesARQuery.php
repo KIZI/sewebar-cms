@@ -152,7 +152,10 @@ class SerializeRulesARQuery extends AncestorSerializeRules {
      * It means get dictionary from elsewhere and just inject it here.
      */
     private function createDictionary($root) {
-        $Dictionary = $this->finalXMLDocument->createElement("DataDescription");
+        $Dictionary = $this->finalXMLDocument->createElement("dd:DataDescription");
+        $Dictionary->setAttribute("xmlns:dd", "http://keg.vse.cz/ns/datadescription0_1");
+        $Dictionary->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $Dictionary->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/datadescription0_1 http://sewebar.vse.cz/schemas/DataDescription0_1.xsd");
         $this->Dictionary = $root->appendChild($Dictionary);
         // Get data from Session
         $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
