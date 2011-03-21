@@ -27,7 +27,15 @@ public class BDBXMLHandler {
     String xsltPath;
     Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\',?ˇ´<>¨;¤×÷§]");
     String replaceBy = "_";
-
+    
+    /**
+     * Konstruktor
+     * @param mgr instance XmlManager
+     * @param qh instance tridy QueryHandler
+     * @param containerName nazev pouzivaneho kontejneru
+     * @param useTransformation pouzit transformaci - true/false
+     * @param xsltPath cesta k souboru s xslt transformaci
+     */
     public BDBXMLHandler(XmlManager mgr, QueryHandler qh, String containerName, String useTransformation, String xsltPath) {
         this.mgr = mgr;
         this.qh = qh;
@@ -39,7 +47,6 @@ public class BDBXMLHandler {
     /**
      * Metoda pro vymazani dokumentu z XML DB
      * @param id ID dokumentu v DB
-     * @param mgr XmlManager
      * @return Zprava - splneno/chyba
      */
     public String removeDocument (String id){
@@ -67,7 +74,6 @@ public class BDBXMLHandler {
     /**
      * Metoda pro zobrazeni dokumentu z XML DB
      * @param id ID dokumentu v DB
-     * @param mgr XmlManager
      * @return Zobrazeni dokumentu/chyba
      */
     public String getDocument(String id){
@@ -90,14 +96,18 @@ public class BDBXMLHandler {
         return output;
     }
 
-    
+    /**
+     * Cyklycke dotazovani - 10x za sebou stejny dotaz na XML DB (pouzito pri testovani)
+     * @param search XQuery dotaz
+     * @return cas a vysledky dotazovani 
+     */
     public String query_10(String search) {
         String output = "";
         String output_temp = "";
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = query("", search, 0)[1];
+            output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
                 output += output_temp;
@@ -111,24 +121,21 @@ public class BDBXMLHandler {
      * Metoda slouzici k vyhledavani v BDB XML pomoci XQuery
      * Moznosti zadani - prima XQuery/pouziti ulozene XQuery a pridani vstupniho dotazu
      * @param id ID ulozene XQuery
-     * @param search Vstupni dotaz pro XQuery
-     * @param typ Typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
+     * @param search vstupni dotaz pro XQuery
+     * @param type typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
     */
-    public String[] query(String id, String search, int typ){
-        String output[] = new String[2];
-        output[1] = "";
+    public String query(String id, String search, int type){
+        String output = "";
         int chyba = 0;
-        double cas_zacatek = System.currentTimeMillis();
-        search = deleteDeclaration(search);
 
         try {
             XmlContainer cont = mgr.openContainer(containerName);
             String query = "";
-            if (typ == 0) {
+            if (type == 0) {
                 query = search;
             } else {
                     if (qh.getQuery(id)[0].toString().equals("1")) {
-                        output[1] = qh.getQuery(id)[1].toString();
+                        output = qh.getQuery(id)[1].toString();
                         chyba = 1;
                     } else {
                         query = qh.getQuery(id)[1].toString();
@@ -137,43 +144,42 @@ public class BDBXMLHandler {
                     }
             }
             if (chyba != 1) {
-            XmlQueryContext qc = mgr.createQueryContext();
-            XmlTransaction txn = mgr.createTransaction();
-            XmlResults res = mgr.query(query, qc);
-
-            if (res != null) {
-            // Process results -- just print them
-                    XmlValue value = new XmlValue();
-                    while ((value = res.next()) != null) {
-                        output[1] += (value.asString());
-                    }
-            } else {
-                output[1] = "<error>Zadny vysledek</error>";
+            	query = deleteDeclaration(query);
+	            XmlQueryContext qc = mgr.createQueryContext();
+	            XmlTransaction txn = mgr.createTransaction();
+	            XmlResults res = mgr.query(query, qc);
+	
+	            if (res != null) {
+	            // Process results -- just print them
+	                    XmlValue value = new XmlValue();
+	                    while ((value = res.next()) != null) {
+	                        output += (value.asString());
+	                    }
+	            } else {
+	                output = "<error>Zadny vysledek</error>";
+	            }
+	            txn.commit();
+	            res.delete();
+	            closeContainer(cont);
             }
-            txn.commit();
-            res.delete();
-            closeContainer(cont);
-            }
-        } catch (XmlException e) {
-                output[1] += "<error>"+e.toString()+"</error>";
-        } catch (Throwable e) {
-                output[1] += "<error>"+e.toString()+"</error>";
-        }
-                double cas_konec = System.currentTimeMillis();
-                output[0] = "" + ((cas_konec - cas_zacatek)/1000);
+	        } catch (XmlException e) {
+	                output += "<error>"+e.toString()+"</error>";
+	        } catch (Throwable e) {
+	                output += "<error>"+e.toString()+"</error>";
+	        }
         return output;
     }
 
     /**
+     * !!! NEPOUZITO !!!
      * Metoda pro vlozeni vice dokumentu najednou,
      * dokumenty rozdeleny sekvenci znaku ;;;NEXTPMML;;;
-     * @param docs Vsechny tela vkladanych dokumentu oddelene danou sekvenci znaku
-     * @param names Vsechny ID vkladanych dokumentu oddelene danou sekvenci znaku
-     * @param mgr XmlManager
+     * @param docs vsechny tela vkladanych dokumentu oddelene danou sekvenci znaku
+     * @param names vsechny ID vkladanych dokumentu oddelene danou sekvenci znaku
      * @return Zprava pro kazdy dokument - vlozeno/chyba
      */
 
-    /*public String[] moreDocuments(String docs, String names, XmlManager mgr){
+    /*public String[] moreDocuments(String docs, String names){
     String output[] = new String[2];
         output[1] = "";
         long cas_zacatek = System.currentTimeMillis();
@@ -193,9 +199,7 @@ public class BDBXMLHandler {
     }*/
 
     /**
-     * Metoda pro ziskani ID dokumentu ulozenych v XML DB
-     * @param mgr XmlManager
-     * @return ID vsech dokumentu v XML DB
+     * Metoda pro ziskani nazvu dokumentu ulozenych v XML DB
      */
     public String getDocsNames(){
         String output = "";
@@ -225,7 +229,7 @@ public class BDBXMLHandler {
 
     /**
      * Metoda pro vlozeni dokumentu do XML DB
-     * @param document Telo dokumentu (String)
+     * @param document telo dokumentu (String)
      * @param id ID dokumentu
      * @return Zprava - ulozeno/chyba
      */
@@ -267,9 +271,9 @@ public class BDBXMLHandler {
 
     /**
      * Metoda pro vlozeni dokumentu do XML DB
-     * @param document Telo dokumentu (File)
-     * @param id ID dokumentu
-     * @return Zprava - ulozeno/chyba
+     * @param document telo dokumentu (File)
+     * @param id nazev dokumentu
+     * @return zprava - ulozeno/chyba
      */
     public String indexDocument(File document, String id){
         String xml_doc = "";
@@ -319,11 +323,7 @@ public class BDBXMLHandler {
     /**
      * Metoda pro nahrani vice dokumentu ze slozky
      * @param folder slozka, ze ktere se maji soubory nahrat
-     * @param mgr
-     * @param containerName
-     * @param useTransformation
-     * @param xsltPath
-     * @return
+     * @return zprava o ulozeni / chyba
      */
     public String indexDocumentMultiple (String folder) {
         String output = "";
@@ -339,9 +339,7 @@ public class BDBXMLHandler {
     /**
      * Metoda pro pridani indexu XML DB
      * @param index zadani indexu - namespace;node;index type
-     * @param mgr XmlManager
-     * @param containerName nazev kontajneru
-     * @return
+     * @return zprava o pridani indexu / chybe
      */
     public String addIndex(String index) {
         String output = "";
@@ -374,9 +372,7 @@ public class BDBXMLHandler {
     /**
      * Metoda zajistujici smazani indexu
      * @param index zadani indexu - namespace;node;index type
-     * @param mgr
-     * @param containerName nazev kontajneru
-     * @return
+     * @return zprava o smazani indexu / chybe
      */
     public String delIndex (String index){
         String output = "";
@@ -407,9 +403,7 @@ public class BDBXMLHandler {
 
     /**
      * Metoda pro zobrazeni indexu v XML DB
-     * @param mgr
-     * @param containerName nazev kontajneru
-     * @return
+     * @return vypis pouzivanych indexu v XML DB
      */
     public String listIndex() {
         String output = "";
@@ -437,6 +431,10 @@ public class BDBXMLHandler {
         return output;
     }
 
+    /**
+     * Metoda pro vytvoreni DataDescription dat ulozenych v XML DB
+     * @return DataDescription
+     */
     public String getDataDescription(){
         String output = "";
         String query = "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
@@ -492,6 +490,11 @@ public class BDBXMLHandler {
         return output;
     }
 
+    /**
+     * Metoda zajistujici odstraneni XML deklarace z XQuery dotazu
+     * @param query vstupni XQuery dotaz
+     * @return vraceny dotaz bez XML deklarace / chyba
+     */
     private String deleteDeclaration(String query) {
         String output = "";
         String splitXMLBegin[] = query.split("[<][?][x][m][l]");
@@ -513,7 +516,10 @@ public class BDBXMLHandler {
         return output;
     }
 
-
+    /**
+     * Metoda zajistujici uzavreni pouzivaneho kontejneru
+     * @param cont instance XmlContainer
+     */
     private void closeContainer (XmlContainer cont) {
         if (cont != null) {
             try {

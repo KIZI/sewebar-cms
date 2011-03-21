@@ -316,15 +316,13 @@ public class XQuery_servlet extends HttpServlet {
                         output += "<error>Neni zadan obsah query</error>";
                     } else {
                         String dotaz = content.toString();
-                        String[] message = bh.query(variable, dotaz, 1);
-                        output += message[1].toString();
+                        output += bh.query(variable, dotaz, 1);
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error>Query nebyla zadana!</error>";
                     } else {
                         String dotaz = content.toString();
-                        String[] message = bh.query("", dotaz, 0); 
-                        output += message[1].toString();
+                        output += bh.query("", dotaz, 0);
                     } break;
             case 3: if (content.equals("")) {
                         output += "<error>Query nebyla zadana!</error>";
