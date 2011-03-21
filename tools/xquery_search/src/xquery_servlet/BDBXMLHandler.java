@@ -127,7 +127,7 @@ public class BDBXMLHandler {
     public String query(String id, String search, int type){
         String output = "";
         int chyba = 0;
-
+        
         try {
             XmlContainer cont = mgr.openContainer(containerName);
             String query = "";
@@ -498,7 +498,7 @@ public class BDBXMLHandler {
      */
     private String deleteDeclaration(String query) {
         String output = "";
-        String splitXMLBegin[] = query.split("[<][?][x][m][l]");
+        String splitXMLBegin[] = query.split("([<][?][x][m][l])|([<][?][o][x][y][g][e][n])");
         if (splitXMLBegin.length == 1) {
             output = query;
         } else {
