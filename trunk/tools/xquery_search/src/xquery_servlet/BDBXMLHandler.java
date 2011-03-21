@@ -437,7 +437,8 @@ public class BDBXMLHandler {
      */
     public String getDataDescription(){
         String output = "";
-        String query = "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
+        String query = "<dd:DataDescription xmlns:dd=\"http://keg.vse.cz/ns/datadescription0_1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:pmml=\"http://www.dmg.org/PMML-4_0\" xsi:schemaLocation=\"http://keg.vse.cz/ns/datadescription0_1 http://sewebar.vse.cz/schemas/DataDescription0_1.xsd\">"
+        	+ "<Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
             + "\nfor $field in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField/@name/string()) "
     		+ "\nlet $values :=  for $value in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $field and @type != \"continuous\"]/Category/text())"
 			+ "\nreturn <Category>{$value}</Category>"
@@ -453,7 +454,7 @@ public class BDBXMLHandler {
             + "\n<Field name=\"{$field}\">"
             + "\n{$values union $int}"
             + "\n{for $IC in $intCats return <Category>{$IC}</Category>}"
-            + "\n</Field>}</Dictionary></DataDescription>";
+            + "\n</Field>}</Dictionary></dd:DataDescription>";
         
         /*String query =
                 "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
