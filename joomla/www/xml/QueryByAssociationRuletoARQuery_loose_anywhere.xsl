@@ -95,6 +95,7 @@ xmlns:arb="http://keg.vse.cz/ns/arbuilder0_1"
             <xsl:variable name="dictionary">
                 <xsl:choose>
                     <xsl:when test="FieldRef/@dictionary"><xsl:value-of select="FieldRef/@dictionary"/></xsl:when>
+                    <xsl:when test="/arb:ARBuilder/DataDescription/Dictionary/@default='true'"><xsl:value-of select="/arb:ARBuilder/DataDescription/Dictionary[@default='true']/@sourceSubType"/></xsl:when>
                     <xsl:otherwise>TransformationDictionary</xsl:otherwise>
                 </xsl:choose>            
             </xsl:variable>

@@ -102,6 +102,7 @@ Output:  An association rule complying to the query created by this stylesheet c
             <xsl:variable name="dictionary">
                 <xsl:choose>
                     <xsl:when test="FieldRef/@dictionary"><xsl:value-of select="FieldRef/@dictionary"/></xsl:when>
+                    <xsl:when test="/arb:ARBuilder/DataDescription/Dictionary/@default='true'"><xsl:value-of select="/arb:ARBuilder/DataDescription/Dictionary[@default='true']/@sourceSubType"/></xsl:when>
                     <xsl:otherwise>TransformationDictionary</xsl:otherwise>
                 </xsl:choose>            
             </xsl:variable>
