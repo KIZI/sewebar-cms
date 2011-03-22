@@ -55,16 +55,21 @@
     display: none;
   }
 
-  .ajax-loading {
+  .ajax-loading, .ajax-error {
     display: block;
     background-color: #FFFFFF;
-    background-image: url(loader.gif);
+    background-image: url('loader.gif');
     background-repeat: no-repeat;
     background-position: center center;
     height: 20px;
     padding: 10px;
     width: 20px;
   }
+  
+  .ajax-error {
+    background-image: url('warning-icon.png');
+  }
+  
 
   p.kbierror {
   	padding: 5px;
