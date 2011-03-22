@@ -504,7 +504,9 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
     private function createInterestMeasureSetting($name, $antecedent, $consequent, $value) {
         $InterestMeasureTreshold = $this->finalXMLDocument->createElement("AssociationRule");
         $InterestMeasureTreshold->setAttribute("antecedent", $antecedent);
-        $InterestMeasureTreshold->setAttribute("consequent", $consequent);
+        if($consequent != ""){
+            $InterestMeasureTreshold->setAttribute("consequent", $consequent);
+        }
         $InterestMeasure = null;
 
         $namesCount = count($name);
