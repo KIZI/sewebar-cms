@@ -155,6 +155,7 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
         $ARBuilder = $this->finalXMLDocument->createElement("ar:ARBuilder");
         $ARBuilder->setAttribute("xmlns:ar", "http://keg.vse.cz/ns/arbuilder0_1");
         $ARBuilder->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $ARBuilder->setAttribute("xmlns:dd", "http://keg.vse.cz/ns/datadescription0_1");
         $ARBuilder->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd");
         $ARBuilder->setAttribute("xmlns:guha", "http://keg.vse.cz/ns/GUHA0.1rev1");
         $root = $this->finalXMLDocument->appendChild($ARBuilder);
