@@ -159,7 +159,11 @@ class SerializeRulesARQuery extends AncestorSerializeRules {
         $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
         // load XML
         $domDD = new DomDocument();
-        $domDD->load($domDD1);
+        if (file_exists($domDD1)) {
+            $domDD->load($domDD1);
+        } else {
+            $domDD->loadXML($domDD1);
+        }
         // get <Dictionary>
         $fields = $domDD->getElementsByTagName("Dictionary");
 
