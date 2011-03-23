@@ -67,10 +67,31 @@ public class BDBXMLHandler {
         } catch (Throwable e) {
                 output += "<error>"+e.toString()+"</error>";
         }
-
         return output;
     }
 
+    /*public String removeAllDocuments(){
+        String output = "";
+        try {
+            XmlContainer cont = mgr.openContainer(containerName);
+            XmlTransaction txn = mgr.createTransaction();
+            XmlResults allDocs = cont.getAllDocuments(XmlDocumentConfig.DEFAULT);
+            int pocitadlo = 0;
+            while (allDocs.hasNext()) {
+                if (!allDocs.next().isNull()) {
+                    XmlDocument doc = allDocs.next().asDocument();
+                    output += "<doc id=\""+ pocitadlo +"\">" + doc.getName().toString() + "</doc>";
+                    pocitadlo++;
+                }
+            }
+            txn.commit();
+            closeContainer(cont);
+        } catch (XmlException ex) {
+            output += "<error>" + ex.toString() + "</error>";
+        }
+        return output;
+    }*/
+    
     /**
      * Metoda pro zobrazeni dokumentu z XML DB
      * @param id ID dokumentu v DB
@@ -437,7 +458,67 @@ public class BDBXMLHandler {
      */
     public String getDataDescription(){
         String output = "";
-        String query = "<dd:DataDescription xmlns:dd=\"http://keg.vse.cz/ns/datadescription0_1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:pmml=\"http://www.dmg.org/PMML-4_0\" xsi:schemaLocation=\"http://keg.vse.cz/ns/datadescription0_1 http://sewebar.vse.cz/schemas/DataDescription0_1.xsd\">"
+
+        String query = "let $distinctNamesCategorical :="
+                    + "\nfor $dataField in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@type != \"continuous\"]/@name/string())"
+                    + "\nreturn $dataField"
+                + "\n"
+                + "\nlet $distinctNamesContinuous :="
+                    + "\nfor $dataField in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@type = \"continuous\"]/@name/string())"
+                    + "\nreturn $dataField"
+                + "\n"
+                + "\nlet $transDict := "
+                    + "\nfor $name in ($distinctNamesCategorical, $distinctNamesContinuous)"
+                    + "\nreturn"
+                    + "\n<DataField name=\"{$name}\">{"
+                    + "\nlet $cats :="
+                    + "\nfor $cat in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category/text())"
+                    + "\nreturn <Category>{$cat}</Category>"
+                    + "\nreturn $cats"
+                    + "\n} </DataField>"
+                    + "\n"
+                + "\nlet $dataDict := "
+                    + "\nfor $name in $distinctNamesContinuous"
+                    + "\nreturn"
+                    + "\n<DataField name=\"{$name}\">{"
+                    + "\nfor $catText in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category/text())"
+                    + "\nfor $lm in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category[text() = $catText]/@leftMargin)"
+                    + "\nlet $rm := distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category[@leftMargin = $lm]/@rightMargin)"
+                    + "\nlet $clos := distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category[@leftMargin = $lm]/@closure)"
+                    + "\nreturn <Interval leftMargin=\"{$lm}\" rightMargin=\"{$rm}\" closure=\"{$clos}\"/>"
+                    + "\n}</DataField>"
+                + "\n"
+                + "\nlet $valueMapping := "
+                    + "\nfor $name in $distinctNamesContinuous"
+                    + "\nreturn"
+                    + "\n"
+                    + "\nfor $catText in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category/text())"
+                    + "\nfor $lm in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category[text() = $catText]/@leftMargin)"
+                    + "\nlet $rm := distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category[@leftMargin = $lm]/@rightMargin)"
+                    + "\nlet $clos := distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $name]/Category[@leftMargin = $lm]/@closure)"
+                    + "\nreturn "
+                    + "\n<ValueMapping name=\"{$name}\">"
+                    + "\n<Field dictionary=\"DataDictionary\">"
+                    + "\n<Interval leftMargin=\"{$lm}\" rightMargin=\"{$rm}\" closure=\"{$clos}\"/>"
+                    + "\n</Field>"
+                    + "\n<Field dictionary=\"TransformationDictionary\">"
+                    + "\n<Category>{$catText}</Category>"
+                    + "\n</Field>"
+                    + "\n</ValueMapping>"
+                + "\nreturn"
+                + "\n<DataDescription>"
+                    + "\n<Dictionary sourceSubType=\"TransformationDictionary\" sourceType = \"PMML\" default=\"true\">"
+                    + "\n{$transDict}"
+                    + "\n</Dictionary>"
+                    + "\n<Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\">"
+                    + "\n{$dataDict}"
+                    + "\n</Dictionary>"
+                    + "\n<DictionaryMapping>"
+                    + "\n{$valueMapping}"
+                    + "\n</DictionaryMapping>"
+                + "\n</DataDescription>";
+
+        /*String query = "<dd:DataDescription xmlns:dd=\"http://keg.vse.cz/ns/datadescription0_1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:pmml=\"http://www.dmg.org/PMML-4_0\" xsi:schemaLocation=\"http://keg.vse.cz/ns/datadescription0_1 http://sewebar.vse.cz/schemas/DataDescription0_1.xsd\">"
         	+ "<Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
             + "\nfor $field in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField/@name/string()) "
     		+ "\nlet $values :=  for $value in distinct-values(collection(\"" + containerName + "\")/PMML/DataDescription/DataField[@name = $field and @type != \"continuous\"]/Category/text())"
@@ -455,7 +536,7 @@ public class BDBXMLHandler {
             + "\n{$values union $int}"
             + "\n{for $IC in $intCats return <Category>{$IC}</Category>}"
             + "\n</Field>}</Dictionary></dd:DataDescription>";
-        
+        */
         /*String query =
                 "<DataDescription><Dictionary sourceSubType=\"DataDictionary\" sourceType = \"PMML\" default=\"true\">{"
                 + "\nfor $field in distinct-values(collection(\"" + containerName + "\")/PMML/fieldValuesSet/Field/@name/string())"
