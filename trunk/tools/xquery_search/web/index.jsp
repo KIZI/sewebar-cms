@@ -111,11 +111,12 @@
     </form>
     <br />
     <br />
-    <i>verze 1.06 (11.3.2011)</i>
+    <i>verze 1.08 (24.3.2011)</i>
     <hr />    
-    <form action="xquery_servlet" method="post" target="_blank">
-    	<input type="hidden" name="action" value="settings">
-    	<input type="submit" value="Nastavení"> 
+    <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
+    	<input type="hidden" name="action" value="showsettings">
+        <%-- <input type="submit" value="Nastavení"> --%>
+        <a href="javascript:document.settingsForm.submit()">Zobrazit nastavení</a>
     </form>
   </body>
 </html>
