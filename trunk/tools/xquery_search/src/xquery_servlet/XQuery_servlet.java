@@ -47,8 +47,9 @@ public class XQuery_servlet extends HttpServlet {
         if (getSettings[0].toString().equals("1")) {
             output += getSettings[2].toString();
         } else {
+            //String[] settings = xmlSettings.readSettings("/home/marek/dbxml_settings.xml");
             String[] settings = xmlSettings.readSettings(getSettings[1].toString());
-
+            
             /* Popis vracenych poli
              * 0 - envDir
              * 1 - queryDir
