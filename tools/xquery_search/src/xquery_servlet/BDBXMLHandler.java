@@ -502,7 +502,7 @@ public class BDBXMLHandler {
                     + "\n<Interval leftMargin=\"{$lm}\" rightMargin=\"{$rm}\" closure=\"{$clos}\"/>"
                     + "\n</Field>"
                     + "\n<Field dictionary=\"TransformationDictionary\" name=\"{$name}\">"
-                    + "\n<Category>{$catText}</Category>"
+                    + "\n<Value>{$catText}</Value>"
                     + "\n</Field>"
                     + "\n</ValueMapping>"
                 + "\nreturn"
