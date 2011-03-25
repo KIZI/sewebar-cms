@@ -185,10 +185,15 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
             $domDD->loadXML($domDD1);
         }
         // get <Dictionary>
-        $fields = $domDD->getElementsByTagName("Dictionary");
-
-        foreach ($fields as $field) {
-            $this->Dictionary->appendChild($this->finalXMLDocument->importNode($field, true));
+        $xPath = new DOMXPath($domDD);
+        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+        $anXPathExpr = "//dd:DataDescription";
+        $field = $xPath->query($anXPathExpr);
+        foreach ($field as $elField) {
+            $fields = $elField->childNodes;
+            foreach ($fields as $fieldSmall) {
+                $this->Dictionary->appendChild($this->finalXMLDocument->importNode($fieldSmall, true));
+            }
         }
         //return $this->finalXMLDocument->createElement("Dictionary");
     }
