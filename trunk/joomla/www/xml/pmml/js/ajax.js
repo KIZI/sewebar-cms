@@ -7,7 +7,7 @@ function KbiPostArb(id, src_type, query_type)
 	// element, do ktereho prijde vysledek
 	var result = $('arb_result' + id);
 
-	result.empty().addClass('ajax-loading');
+	result.empty().addClass('ajax-loading').removeClass('ajax-error');;
 	result.removeClass('hidden');
 	result.addEvent('click', function(){result.removeClass('ajax-loading');});
 

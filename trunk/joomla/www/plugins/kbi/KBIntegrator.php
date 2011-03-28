@@ -116,6 +116,8 @@ class KBIntegrator implements IKBIntegrator
 				break;
 		}
 
+		KBIDebug::log(array($xml_data), 'Raw result');
+
 		if(empty($xsl)){
 			return $xml_data;
 		}
@@ -129,6 +131,8 @@ class KBIntegrator implements IKBIntegrator
 			// Process XSLT
 			$xslt = new XSLTProcessor();
 			$xslt->importStylesheet($xsl_document);
+
+			KBIDebug::info('Applying post-query transformation.');
 
 			return $xslt->transformToXML($xml);
 		} else {
