@@ -94,9 +94,10 @@
 								var myAjax = new Ajax(url,
 										{
 											method : 'post',
-											update : result,
+											//update : result,
 											onComplete : function(response) {
 												loader.removeClass('ajax-loading');
+												result.value = response;
 											},
 											onFailure : function(error) {
 												loader.removeClass('ajax-loading');
