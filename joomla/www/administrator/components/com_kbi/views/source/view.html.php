@@ -36,6 +36,7 @@ class KbiViewSource extends JView
 		JRequest::setVar( 'hidemainmenu', 1 );
 		$id = JRequest::getVar('id', array(0), 'method', 'array');
 
+		$document = &JFactory::getDocument();
 		$model =& $this->getModel();
 		$user =& JFactory::getUser();
 		$source = $model->getSource($id[0]);
@@ -50,6 +51,11 @@ class KbiViewSource extends JView
 		$this->assignRef('option', $option);
 		$this->assignRef('name', $user->name);
 		$this->assignRef('lists', $lists);
+
+		$style = "#dictionaryLink.ajax-loading {background: url('/components/com_kbi/assets/loader.gif') no-repeat center right; padding-right: 20px;}";
+		$style.= ' ';
+		$style.= "#dictionaryLink.ajax-error {background: url('/components/com_kbi/assets/warning-icon.gif') no-repeat center right; padding-right: 20px;}";
+		$document->addStyleDeclaration($style);
 
 		parent::display($tpl);
 	}

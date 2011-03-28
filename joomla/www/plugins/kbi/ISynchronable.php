@@ -43,6 +43,8 @@ interface ISynchronable
 	 */
 	public function deleteDocument($id);
 
+	public function getDataDescription();
+
 	/**
 	 * Metoda pro uloĂ„ĹąÄąÄ˝Ă‹ĹĄenĂ„ĹąÄąÄ˝Ă‹ĹĄ query
 	 * @param query obsah query

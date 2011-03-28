@@ -10,7 +10,8 @@ ALTER TABLE `#__kbi_sources` ADD COLUMN `url` VARCHAR( 255 );
 ALTER TABLE `#__kbi_sources` ADD COLUMN `ontology` VARCHAR( 255 );
 ALTER TABLE `#__kbi_sources` ADD COLUMN `type` VARCHAR( 31 );
 ALTER TABLE `#__kbi_sources` ADD COLUMN `method` VARCHAR( 15 );
-ALTER TABLE `#__kbi_sources` ADD COLUMN `params` TEXT;   
+ALTER TABLE `#__kbi_sources` ADD COLUMN `params` TEXT;
+ALTER TABLE `#__kbi_sources` ADD COLUMN `dictionaryquery` TEXT;
 
 /* Queries */
 DROP TABLE IF EXISTS `#__kbi_queries`;

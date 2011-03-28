@@ -194,4 +194,29 @@ class XQuery extends KBIntegratorSynchronable
 			throw new Exception('Error in communication');
 		}
 	}
+
+	public function getDataDescription()
+	{
+		$postdata = array(
+			'action' => 'getDescription',
+			'variable' => '',
+			'content'=> '',
+		);
+
+		$url = $this->getUrl();
+
+		KBIDebug::info(array($url, $postdata));
+		$dd = $this->requestCurlPost($url, $postdata);
+
+		$replace1 = '<?xml version="1.0" encoding="UTF-8"?>';
+		$replace2 = '</result>';
+		$replace3 = '/\<result milisecs=".*">/U';
+		//$replace3 = '/\<!-- kbiLink({.*\}) \/kbiLink -->/U';
+
+		$dd = str_replace($replace1, '', $dd);
+		$dd = str_replace($replace2, '', $dd);
+		$dd = preg_replace($replace3, '', $dd);
+
+		return trim($dd);
+	}
 }

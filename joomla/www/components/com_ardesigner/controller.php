@@ -11,9 +11,10 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
+JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
 
 require_once(dirname(__FILE__).'/ardesigner/models/serializeRules/AncestorSerializeRules.php');
-require_once(dirname(__FILE__).'/ardesigner/models/serializeRules/SerializeRulesBackgroundAssociationRules.php');
+require_once(dirname(__FILE__).'/ardesigner/models/serializeRules/SerializeRulesQueryByAR.php');
 
 require_once(dirname(__FILE__).'/ardesigner/models/JSON.php');
 require_once(dirname(__FILE__).'/ardesigner/models/parseData/AncestorGetData.php');
@@ -77,6 +78,7 @@ class ARDesignerController extends JController
 				$kbi = JComponentHelper::getComponent('com_kbi', true);
 				if($kbi->enabled) {
 					JLoader::import('queries', self::$com_kbi_admin . DS . 'models');
+					JLoader::import('sources', self::$com_kbi_admin . DS . 'models');
 				} else {
 					throw new Exception(JText::_('Component com_kbi not found / enabled!'));
 				}
@@ -85,11 +87,30 @@ class ARDesignerController extends JController
 			$model_queries = new KbiModelQueries;
 			$query = $model_queries->getQuery($query_id);
 
+			$model_sources = new KbiModelSources;
+			$source = $model_sources->getSource(JRequest::getInt('id_source', NULL));
+
+			KBIDebug::log($source);
+
 			$featurelist = !empty($query->featurelist) ? $query->featurelist : $this->featurelist;
-			$datadescription = !empty($query->dictionaryquery) ? $query->dictionaryquery : $this->datadescription;
+
+			if(!empty($source->dictionaryquery)) {
+				$datadescription = $source->dictionaryquery;
+			} else {
+				$kbi_source = KBIntegrator::create(get_object_vars($source));
+				if($kbi_source instanceof ISynchronable) {
+					$datadescription = $kbi_source->getDataDescription();
+				} else {
+					$datadescription = $this->datadescription;
+				}
+			}
 		} else {
 			$featurelist = $this->featurelist;
 			$datadescription = $this->datadescription;
+		}
+
+		if(class_exists('KBIDebug')) {
+			KBIDebug::log(array('featurelist' => $featurelist, 'datadescription' => $datadescription), 'Loading ARD with FL and DL');
 		}
 
 		$sr = new GetDataARBuilderQuery($datadescription, $featurelist, null, 'en');
@@ -118,7 +139,7 @@ class ARDesignerController extends JController
 			//var_dump($toSolve);
 			//session_start();
 
-			$sr = new SerializeRulesBackgroundAssociationRules();
+			$sr = new SerializeRulesQueryByAR();
 			//$sr = new SerializeRulesTaskSetting();
 			//$sr = new SerializeRulesARQuery();
 			$view->assignRef('value', $sr->serializeRules($toSolve));
