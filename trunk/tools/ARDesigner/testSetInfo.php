@@ -11,6 +11,7 @@
 
     $toSolve = $_POST['data'];
     $toSolve = str_replace("\\\"", "\"", $toSolve);
+    //echo $toSolve;
 
     //$sr = new SerializeRulesBackgroundAssociationRules();
     //$sr = new SerializeRulesTaskSetting();
