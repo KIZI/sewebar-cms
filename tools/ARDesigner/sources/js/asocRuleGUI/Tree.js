@@ -33,6 +33,11 @@ var Tree = new Class({
      */
     solveRule: function(elementsIn){
         var elements = elementsIn.slice(0);
+        for(var i = 0; i < elements.length; i++){
+            if(elements[i] == null){
+                return;
+            }
+        }
         var rBracketPos = -1;
         var lBracketPos = -1;
         var plainDBA; // Type Node
@@ -176,6 +181,9 @@ var Tree = new Class({
         var actualLevel = null;
         if(this.root != null){
             actualLevel = this.root.getChildren();
+        }
+        else{
+            return -1;
         }
         var newLevel = new Array();
         newLevel.push("begin");

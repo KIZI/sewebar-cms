@@ -666,12 +666,14 @@ var AsociationRule = new Class({
         for(var bracket = 0; bracket < missingBrackets; bracket++){
             elementsToSolve.push(rbrac);
         }
-        if(elementsToSolve[elementsToSolve.length-1].isElementBoolean()){
-            elementsToSolve.push(attr);
+        if(elementsToSolve[elementsToSolve.length-1] != null){
+            if(elementsToSolve[elementsToSolve.length-1].isElementBoolean()){
+                elementsToSolve.push(attr);
+            }
         }
         // I need to have correct rule. Therefore fill in attrs and brackets.
         tree.solveRule(elementsToSolve);
-        return tree.getLevels()
+        return tree.getLevels();
     },
 
     /**
@@ -707,6 +709,7 @@ var AsociationRule = new Class({
             var elementsSup = this.copyElements();
             this.elements.push(elementAR);
             if(this.isRuleCorrect()){
+                this.lastElement = elementAR;
                 return true;
             }
             else{
@@ -734,6 +737,7 @@ var AsociationRule = new Class({
         var elementsBackup = this.copyElements();
         this.elements.splice(position, 1, elementAR);
         if(this.isRuleCorrect()){
+            this.lastElement = elementAR;
             return true;
         }
         else{
@@ -778,6 +782,7 @@ var AsociationRule = new Class({
                 this.ruleDiv.empty();
                 this.display().replaces(actualDiv);
                 this.fireEvent("display");
+                this.lastElement = elementAR;
                 return true;
             }
             else{
@@ -809,6 +814,7 @@ var AsociationRule = new Class({
             this.ruleDiv.empty();
             this.display().replaces(actualDiv);
             this.fireEvent("display");
+            this.lastElement = elementAR;
             return true;
         }
         else{
@@ -829,6 +835,14 @@ var AsociationRule = new Class({
         for(var i = 0; i < this.elements.length; i++){
             if(this.elements[i] === mainElement){
                 this.elements[i] = null;
+            }
+        }
+        for(var j = this.elements.length-1; j >= 0; j--){
+            if(this.elements[j] == null){
+                this.elements.splice(j,1);
+            }
+            else{
+                break;
             }
         }
         var actualDiv = this.ruleDiv
@@ -867,7 +881,7 @@ var AsociationRule = new Class({
         this.placeHTML.inject(this.ruleDiv);
 
         if(lastElement != null){
-            this.lastElement = lastElement;
+            //this.lastElement = lastElement;
         }
 
         return this.ruleDiv;
@@ -937,6 +951,9 @@ var AsociationRule = new Class({
      */
     toJSON: function(){
         var jsonObject = new Array();
+        if(this.getDepth(this.elements.length) == -1){
+            return null;
+        }
         if(!this.isRuleCorrect()){
             return null;
         }
