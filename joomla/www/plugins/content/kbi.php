@@ -45,7 +45,7 @@ class plgContentKbi extends JPlugin
 		}
 		catch (Exception $ex)
 		{
-			KBIDebug::log($ex->getMessage(), 'Query not succesfull');
+			KBIDebug::log(array($ex, $match[1]), 'Query not succesfull');
 		}
 	}
 }
