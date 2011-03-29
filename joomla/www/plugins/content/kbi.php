@@ -34,7 +34,10 @@ class plgContentKbi extends JPlugin
 
 		try
 		{
-			$config = json_decode($match[1], true);
+			$json = str_ireplace($match[1], '\ ', '');
+			$config = json_decode($json, true);
+
+			//TODO: if(!$config) throw...
 
 			$transfomator = new KbiModelTransformator($config);
 			//var_dump($match);
