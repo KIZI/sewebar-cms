@@ -37,7 +37,8 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
         // Create basic structure of Document.
         $this->createBasicStructure();
         // get Data from JSON
-        $jsonData = json_decode($json);
+        $json = str_replace("&amp;","&",$json);
+        s$jsonData = json_decode($json);
         if ($jsonData->{'rules'} < 1) {
             return $this->finalXMLDocument->saveXML();
         }
