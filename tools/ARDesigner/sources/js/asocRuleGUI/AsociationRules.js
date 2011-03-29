@@ -85,7 +85,6 @@ var AsociationRules = new Class({
                     }
                     wholeJson.rules = actualRule;
                     var jsonString = JSON.encode(wholeJson);
-                    console.log(jsonString);
                     $$('.rule').each(function(ele){
                         ele.dispose();
                     });
