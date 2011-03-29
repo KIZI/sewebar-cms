@@ -35,6 +35,7 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
         // Create basic structure of Document.
         $this->createBasicStructure();
         // get Data from JSON
+        $json = str_replace("&amp;","&",$json);
         $jsonData = json_decode($json);
         if ($jsonData->{'rules'} < 1) {
             return $this->finalXMLDocument->saveXML();
