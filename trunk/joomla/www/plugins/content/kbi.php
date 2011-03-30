@@ -34,10 +34,14 @@ class plgContentKbi extends JPlugin
 
 		try
 		{
-			$json = str_ireplace($match[1], '\ ', '');
+			//WYSIWYG editor zalamuje XHTML neparove znacky na \ /> aby zustal validni JSON je potreba to vratit spet na \/>
+			$json = str_ireplace($match[1], '\ />', '\/>');
 			$config = json_decode($json, true);
 
-			//TODO: if(!$config) throw...
+			if($config === NULL) {
+				KBIDebug::log($match[1], 'Element not parsed as JSON');
+				return $match[1];
+			}
 
 			$transfomator = new KbiModelTransformator($config);
 			//var_dump($match);
@@ -48,7 +52,7 @@ class plgContentKbi extends JPlugin
 		}
 		catch (Exception $ex)
 		{
-			KBIDebug::log(array($ex, $match[1]), 'Query not succesfull');
+			KBIDebug::log(array($ex, $config), 'Query not succesfull');
 		}
 	}
 }
