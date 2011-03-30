@@ -22,13 +22,15 @@ class TableSource extends JTable
 	/** @var string */
 	var $name = '';
 	/** @var string */
-	var $url = ''; 
+	var $url = '';
 	/** @var string */
 	var $type;
 	/** @var string */
 	var $method;
 	/** @var string */
-	var $params;	
+	var $params;
+	/** @var string */
+	var $dictionaryquery = '';
 
 	function __construct( &$_db )
 	{

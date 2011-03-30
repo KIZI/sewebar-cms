@@ -55,4 +55,28 @@ class KbiControllerTransformator extends JController
 
 		$view->display();
 	}
+
+	function dataDescription()
+	{
+		$viewName = JRequest::getVar('view', 'results');
+		$viewType = 'raw';
+
+		$view =& $this->getView($viewName, $viewType);
+
+		$config = array(
+			'source' => JRequest::getVar('source', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+			'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+			'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
+		);
+
+		try {
+			$model = new KbiModelTransformator($config);
+			$view->assignRef('value', $model->getDataDescription());
+		} catch (Exception $e) {
+			$view->assign('value', "<p class=\"kbierror\">Chyba dotazu: {$e->getMessage()}</p>");
+		}
+
+		$view->display();
+	}
 }

@@ -28,7 +28,9 @@
         <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arText,'end')"/></xsl:comment>
       </p>
       <div id="arb{position()}" class="hidden">
+      	<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
         <xsl:copy-of select="$query"/>
+        <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
       </div>
       <input type="button" onclick="return KbiPostArb({position()},'src_type','query_type');" value="ajax" />
       <div id="arb_result{position()}" class="hidden">...</div>

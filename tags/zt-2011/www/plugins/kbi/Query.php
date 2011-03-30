@@ -91,10 +91,13 @@ class KBIQuery
 					$replace_pairs[$delimiter.$name.$delimiter] = $value;
 				}
 
+				KBIDebug::log($replace_pairs, 'Applying parameters.');
+
 				$this->query = strtr($this->query, $replace_pairs);
 			} elseif(empty($this->query) && is_string($parameters)) {
 				// in case query is empty and parameters is string then we assume parameters to be query itself
-				return $parameters;
+				KBIDebug::info('Parameters considered as query.');
+				$this->setQuery($parameters);
 			}
 		}
 
@@ -109,7 +112,11 @@ class KBIQuery
 				$xslt = new XSLTProcessor();
 				$xslt->importStylesheet($xsl_document);
 
+				KBIDebug::info('Applying pre-query transformation.');
+
 				$this->query = $xslt->transformToXML($xml);
+			} else {
+				KBIDebug::info('Query is not valid XML therefore XSLT could not be executed.');
 			}
 		}
 
@@ -118,7 +125,9 @@ class KBIQuery
 
 	protected function recleanup($p)
 	{
-		return str_replace('&gt;', '>',
-			str_replace('&lt;', '<', $p));
+		return str_replace('<!--[CDATA[<?oxygen SCHSchema="http://sewebar.vse.cz/schemas/QueryByAssociationRule0_1.sch"?>', '',
+			str_replace(']]-->', '', $p));
+		/*return str_replace('&gt;', '>',
+			str_replace('&lt;', '<', $p));*/
 	}
 }
