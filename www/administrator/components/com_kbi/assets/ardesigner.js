@@ -16,6 +16,10 @@ function getRules(data) {
 		params_raw.empty().appendText(data);
 	}
 
+	query.appendText(data);
+
+	/*
+	Transformace se vykonava az pri vykonavani Query.
 	loader.empty().addClass('ajax-loading');
 
 	new Ajax(url + '&id_query=' + qid, {
@@ -27,4 +31,5 @@ function getRules(data) {
 			query.appendText(this.response.text);
 		}
 	}).request();
+	*/
 }

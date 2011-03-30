@@ -87,4 +87,13 @@ class Jucene extends KBIntegratorSynchronable
 	public function deleteDocument($id)
 	{
 	}
+
+	/**
+	 * @todo Implement
+	 * @see ISynchronable::getDataDescription()
+	 */
+	public function getDataDescription()
+	{
+		return '';
+	}
 }

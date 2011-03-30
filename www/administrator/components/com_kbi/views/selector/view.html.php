@@ -42,7 +42,7 @@ class KbiViewSelector extends JView
 			$url = '/index.php?option=com_ardesigner&tmpl=component';
 			$attrs = array(
 				'target' => '_blank',
-				'onclick' => "window.open(this.href + '&id_query=' + $$('#query').getValue(),'ardesigner','width=1050,height=600,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=yes');return false;",
+				'onclick' => "window.open(this.href + '&id_query=' + $$('#query').getValue() + '&id_source=' + $$('#sources').getValue() ,'ardesigner','width=1050,height=600,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');return false;",
 			);
 
 			$this->assign('ardesigner', JHTML::_('link', $url, 'ARDesigner', $attrs));

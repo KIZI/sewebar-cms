@@ -115,6 +115,9 @@ class KbiControllerSources extends JController
 		if (!$table->bind( JRequest::get( 'post' ) )) {
 			return JError::raiseWarning( 500, $table->getError() );
 		}
+
+		$table->dictionaryquery = JRequest::getVar( 'dictionaryquery', '','post', 'string', JREQUEST_ALLOWRAW );
+
 		if (!$table->check()) {
 			return JError::raiseWarning( 500, $table->getError() );
 		}

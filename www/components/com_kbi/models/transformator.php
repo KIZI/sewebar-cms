@@ -164,7 +164,22 @@ class KbiModelTransformator extends JModel
 		$source = $this->getSource();
 
 		if($source != NULL) {
-			return $source->query($this->getQuery(), $this->getXslt());
+			$q = $this->getQuery();
+			$x = $this->getXslt();
+			KBIDebug::log(array('source' => $source, 'query' => $q, 'XSLT (post)' => $x), 'Query');
+			return $source->query($q, $x);
+		} else {
+			return JText::_('Chyba');
+		}
+	}
+
+	public function getDataDescription()
+	{
+		$source = $this->getSource();
+
+		if($source != NULL && $source instanceof ISynchronable) {
+			KBIDebug::log(array('source' => $source), 'DataDescription Source');
+			return $source->getDataDescription();
 		} else {
 			return JText::_('Chyba');
 		}
