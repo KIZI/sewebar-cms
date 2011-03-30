@@ -35,7 +35,7 @@ class plgContentKbi extends JPlugin
 		try
 		{
 			//WYSIWYG editor zalamuje XHTML neparove znacky na \ /> aby zustal validni JSON je potreba to vratit spet na \/>
-			$json = str_ireplace($match[1], '\ />', '\/>');
+			$json = str_replace('\ />', '\/>', $match[1]);
 			$config = json_decode($json, true);
 
 			if($config === NULL) {
