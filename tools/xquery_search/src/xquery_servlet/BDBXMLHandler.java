@@ -13,6 +13,7 @@ import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -169,7 +170,7 @@ public class BDBXMLHandler {
 	            XmlQueryContext qc = mgr.createQueryContext();
 	            XmlTransaction txn = mgr.createTransaction();
 	            XmlResults res = mgr.query(query, qc);
-	
+
 	            if (res != null) {
 	            // Process results -- just print them
 	                    XmlValue value = new XmlValue();
@@ -251,10 +252,11 @@ public class BDBXMLHandler {
     /**
      * Metoda pro vlozeni dokumentu do XML DB
      * @param document telo dokumentu (String)
-     * @param id ID dokumentu
-     * @return Zprava - ulozeno/chyba
+     * @param docID id dokumentu (joomlaID)
+     * @param docName nazev doumentu (pro ulozeni v XMLDB)
+     * @param creationTime datum a cas vytvoreni dokumentu
      */
-    public String indexDocument(String document, String id){
+    public String indexDocument(String document, String docID, String docName, String creationTime){
 
         String output = "";
         String xml_doc = "";
@@ -264,7 +266,7 @@ public class BDBXMLHandler {
         
             File xsltFile = new File(xsltPath);
             XSLTTransformer xslt = new XSLTTransformer();
-            xml_doc = xslt.xsltTransformation(document, xsltFile);
+            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime);
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
             
@@ -275,10 +277,10 @@ public class BDBXMLHandler {
             XmlContainer cont = mgr.openContainer(containerName);
             XmlTransaction txn = mgr.createTransaction();
             
-            id = id.replaceAll(replaceMask.toString(), replaceBy);
+            docName = docName.replaceAll(replaceMask.toString(), replaceBy);
             
-            cont.putDocument(id, xml_doc);
-            output += "<message>Dokument " + id + " vlozen</message>";
+            cont.putDocument(docName, xml_doc);
+            output += "<message>Dokument " + docName + " vlozen</message>";
 
             txn.commit();
             closeContainer(cont);
@@ -293,10 +295,12 @@ public class BDBXMLHandler {
     /**
      * Metoda pro vlozeni dokumentu do XML DB
      * @param document telo dokumentu (File)
-     * @param id nazev dokumentu
+     * @param docID id dokumentu (joomlaID)
+     * @param docName nazev doumentu (pro ulozeni v XMLDB)
+     * @param creationTime datum a cas vytvoreni dokumentu
      * @return zprava - ulozeno/chyba
      */
-    public String indexDocument(File document, String id){
+    public String indexDocument(File document, String docID, String docName, String creationTime){
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
@@ -307,7 +311,7 @@ public class BDBXMLHandler {
 
             XSLTTransformer xslt = new XSLTTransformer();
 
-            xml_doc = xslt.xsltTransformation(document, xsltFile);
+            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime);
             output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
@@ -326,10 +330,10 @@ public class BDBXMLHandler {
             XmlContainer cont = mgr.openContainer(containerName);
             XmlTransaction txn = mgr.createTransaction();
             
-            id = id.replaceAll(replaceMask.toString(), replaceBy);
+            docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 
-            cont.putDocument(id, xml_doc);
-            output += "<message>Dokument " + id + " vlozen</message>";
+            cont.putDocument(docName, xml_doc);
+            output += "<message>Dokument " + docName + " vlozen</message>";
             output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
             txn.commit();
             closeContainer(cont);
@@ -352,7 +356,7 @@ public class BDBXMLHandler {
         File uploadFiles[] = uploadFolder.listFiles();
         
         for(int i = 0; i < uploadFiles.length; i++){
-            output += indexDocument(uploadFiles[i], uploadFiles[i].getName());
+            output += indexDocument(uploadFiles[i], uploadFiles[i].getName(), "", new Date().toString());
         }        
         return output;
     }

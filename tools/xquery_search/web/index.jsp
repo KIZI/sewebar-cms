@@ -19,6 +19,9 @@
       h1{
         color: #4682B4;
       }
+      div{
+        padding: 1px 1px 10px 1px;
+      }
       input, select{
         padding: 1px 1px 1px 10px;
         border-width: 1px;
@@ -43,17 +46,30 @@
   <script type="text/javascript">
       function zobrazPole(vybrano){
           if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest" || vybrano == "listIn" || vybrano == "getDescription" || vybrano == "removeAllDocuments") {
-              window.document.getElementById("nazev").style.display = "none";
-              window.document.getElementById("data").style.display = "none";
+              window.document.getElementById("id").style.display = "none";
+              window.document.getElementById("content").style.display = "none";
+              window.document.getElementById("docName").style.display = "none";
+              window.document.getElementById("creationTime").style.display = "none";
           } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "delIndex" || vybrano == "addDocumentMultiple") {
-              window.document.getElementById("nazev").style.display = "none";
-              window.document.getElementById("data").style.display = "block";
+              window.document.getElementById("id").style.display = "none";
+              window.document.getElementById("docName").style.display = "none";
+              window.document.getElementById("creationTime").style.display = "none";
+              window.document.getElementById("content").style.display = "block";
           } else if (vybrano == "getQuery" || vybrano == "deleteQuery" || vybrano == "getDocument" || vybrano == "deleteDocument") {
-              window.document.getElementById("nazev").style.display = "block";
-              window.document.getElementById("data").style.display = "none";
+              window.document.getElementById("id").style.display = "block";
+              window.document.getElementById("content").style.display = "none";
+              window.document.getElementById("docName").style.display = "none";
+              window.document.getElementById("creationTime").style.display = "none";
+          } else if (vybrano == "addDocument") {
+              window.document.getElementById("id").style.display = "block";
+              window.document.getElementById("content").style.display = "block";
+              window.document.getElementById("docName").style.display = "block";
+              window.document.getElementById("creationTime").style.display = "block";
           } else {
-              window.document.getElementById("nazev").style.display = "block";
-              window.document.getElementById("data").style.display = "block";
+              window.document.getElementById("id").style.display = "block";
+              window.document.getElementById("content").style.display = "block";
+              window.document.getElementById("docName").style.display = "none";
+              window.document.getElementById("creationTime").style.display = "none";
           }
       }
   </script>
@@ -84,13 +100,20 @@
     </select>
     <br />
     <br />
-    <div id="nazev">
-    <b>ID:&nbsp;&nbsp;&nbsp;</b><input type="text" name="variable" id="variable" size="150">
+    <div id="id">
+    <b>Doc ID/Query ID: </b><input type="text" name="id" id="id" size="150">
     <br /><i>Nápověda: Pole slouží pro zadání názvu query nebo názvu dokumentu</i>
     </div>
-    <br />
-    <div id="data">
-    <b>Data:</b>
+    <div id="docName">
+    <b>Doc Name: </b><input type="text" name="docName" id="docName" size="150">
+    <br /><i>Nápověda: Pole pro zadání názvu dokumentu</i>
+    </div>
+    <div id="creationTime">
+    <b>Creation Time: </b><input type="text" name="creationTime" id="creationTime" size="150" value="<%= new java.util.Date() %>">
+    <br /><i>Nápověda: Pole slouží pro zadání času vytvoření dokumentu</i>
+    </div>
+    <div id="content">
+    <b>Doc content/Query content:</b>
     <br />
     <textarea name="content" rows="20%" cols="120%" id="content"></textarea>
     <br /><i>Nápověda: Pole slouží pro zadání těla query, těla dokuentu nebo indexu</i>
@@ -111,7 +134,7 @@
     </form>
     <br />
     <br />
-    <i>verze 1.08 (24.3.2011)</i>
+    <i>verze 1.09 (31.3.2011)</i>
     <hr />    
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
