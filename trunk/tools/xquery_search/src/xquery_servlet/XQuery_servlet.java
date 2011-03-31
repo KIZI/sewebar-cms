@@ -81,8 +81,8 @@ public class XQuery_servlet extends HttpServlet {
                         if (request.getParameter("action").equals("")){
                                 output += "<error><![CDATA[Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!]]></error>";
                         } else {
-                                String akce = request.getParameter("action").toString().toLowerCase();
-                                if (akce.equals("showsettings")) {
+                                String action = request.getParameter("action").toString().toLowerCase();
+                                if (action.equals("showsettings")) {
                                         output += createSettingsPage(settings);
                                 } else {
                                     // Vytvoreni spojeni s BDB XML
@@ -96,9 +96,18 @@ public class XQuery_servlet extends HttpServlet {
                                     BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
                                     Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
 
-                                    String promenna = request.getParameter("variable").toString();
-                                    String obsah = request.getParameter("content").toString();
-                                    output += processRequest(akce, promenna, obsah, mgr, qh, bh, tester);
+                                    String id = request.getParameter("id").toString();
+                                    String content = request.getParameter("content").toString();
+                                    String docName = "";
+                                    String creationTime = "";
+                                    if (request.getParameter("docname").toString() != null) {
+                                        docName = request.getParameter("docname").toString();
+                                    }
+                                    if (request.getParameter("docname").toString() != null) {
+                                        creationTime = request.getParameter("creationtime").toString();
+                                    }
+                                    
+                                    output += processRequest(action, id, docName, creationTime, content, mgr, qh, bh, tester);
 
 
                                     // Ukonceni spojeni s BDB XML a vycisteni
@@ -329,15 +338,17 @@ public class XQuery_servlet extends HttpServlet {
      * Metoda provadejici rozbor vstupnich promennych,
      * nasledne vola jednotlive metody
      * @param action nazev akce, ktera se ma provest
-     * @param variable promenna - vetsinou ID (dokumentu/XQuery)
-     * @param content obsah - vetsinou telo (dokumentu, XQuery, index)
+     * @param id vetsinou ID (dokumentu/XQuery)
+     * @param docName nazev dokumentu pro ulozeni v XMLDB
+     * @param creationTime cas a datum vytvoreni dokumentu
+     * @param content vetsinou telo (dokumentu, XQuery, index)
      * @param mgr XmlManager instance XMLManager
      * @param qh instance tridy QueryHandler
      * @param bh instance tridy BDBXMLHandler
      * @param tester instance tridy Tester
      * @return predpripraveny vystup
      */
-    private String processRequest(String action, String variable, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, Tester tester){
+    private String processRequest(String action, String id, String docName, String creationTime, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, Tester tester){
     	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
@@ -351,7 +362,7 @@ public class XQuery_servlet extends HttpServlet {
             }
         }
 
-        if (except_bool == false && variable.isEmpty()) {
+        if (except_bool == false && id.isEmpty()) {
             output += "<error><![CDATA[Neni zadan parametr ID!]]></error>";
         } else {
         switch (mappedAction) {
@@ -360,7 +371,7 @@ public class XQuery_servlet extends HttpServlet {
                         output += "<error><![CDATA[Neni zadan obsah query]]></error>";
                     } else {
                         String dotaz = content.toString();
-                        output += bh.query(variable, dotaz, 1);
+                        output += bh.query(id, dotaz, 1);
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error><![CDATA[Query nebyla zadana!]]></error>";
@@ -379,29 +390,33 @@ public class XQuery_servlet extends HttpServlet {
                         output += "<error><![CDATA[Neni zadan obsah query]]></error>";
                     } else {
                         content = content.toString();
-                        output += qh.addQuery(content, variable);
+                        output += qh.addQuery(content, id);
                     } break;
-            case 5: output += "<query><![CDATA[" + qh.getQuery(variable)[1].toString() + "]]></query>"; break;
-            case 6: output += qh.deleteQuery(variable); break;
+            case 5: output += "<query><![CDATA[" + qh.getQuery(id)[1].toString() + "]]></query>"; break;
+            case 6: output += qh.deleteQuery(id); break;
             case 7: output += qh.getQueriesNames(); break;
             case 8: output += bh.getDocsNames(); break;
             case 9: if (content.equals("")) {
                         output += "<error><![CDATA[Neni zadan obsah dokumentu]]></error>";
+                    } else if (docName.equals("")) {
+                        output += "<error><![CDATA[Neni zadan nazev dokumentu]]></error>";
+                    } else if (creationTime.equals("")) {
+                        output += "<error><![CDATA[Neni zadan datum vytvoreni dokumentu]]></error>";
                     } else {
                         content = content.toString();
-                        output += bh.indexDocument(content, variable);
+                        output += bh.indexDocument(content, id, docName, creationTime);
                     } break;
             case 10: if (content.equals("")) {
                         output += "<error><![CDATA[Neni zadano umisteni slozky!]]></error>";
                     } else {
                         output += bh.indexDocumentMultiple(content); break;
                     } break;
-            case 11: if (variable == null){
+            case 11: if (id == null){
                         output += "<error><![CDATA[Neni zadan nazev dokumentu]]></error>";
                     } else {
-                        output += bh.getDocument(variable);
+                        output += bh.getDocument(id);
                     } break;
-            case 12: output += bh.removeDocument(variable); break;
+            case 12: output += bh.removeDocument(id); break;
             case 13: if (content.equals("")){
                         output += "<error><![CDATA[Index nebyl zadan!]]></error>";
                     } else {
