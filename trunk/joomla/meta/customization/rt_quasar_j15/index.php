@@ -27,19 +27,17 @@ $gantry->init();
 		$gantry->addStyles(array('template.css','joomla.css','style.css','typography.css'));
 	?>
 	<!-- sewebar specific imports-->
-	  <link rel="stylesheet" href="/xml/bkef/css/bkef.css" type="text/css" />
-	  <link rel="stylesheet" href="/xml/pmml/css/pmml.css" type="text/css" />
-	  <link rel="stylesheet" href="/xml/pmml/css/navigation.css" type="text/css" />
-	  <link rel="stylesheet" href="/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
-	  <link rel="stylesheet" href="/components/com_kbi/assets/kbi.css" type="text/css" />
-    <script type="text/javascript" src="/xml/bkef/js/influences.js"></script>
-
+	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/bkef/css/bkef.css" type="text/css" />
+	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/pmml/css/pmml.css" type="text/css" />
+	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/pmml/css/navigation.css" type="text/css" />
+	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
+	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/components/com_kbi/assets/kbi.css" type="text/css" />
+	<script type="text/javascript" src="<?php echo $this->baseurl ?>/xml/bkef/js/influences.js"></script>
 	<!-- end of sewebar specific imports (some javascript imports are below)-->
 </head>
 	<body <?php echo $gantry->displayBodyTag(array('backgroundLevel','bodyLevel')); ?>>
-    <script type="text/javascript" src="/xml/bkef/js/wz_tooltip.js"></script>
+	<script type="text/javascript" src="<?php echo $this->baseurl ?>/xml/bkef/js/wz_tooltip.js"></script>
 		<?php /** Begin Top **/ if ($gantry->countModules('top')) : ?>
-  <script type="text/javascript" src="/xml/bkef/js/wz_tooltip.js"></script>
 		<div id="rt-top">
 			<div class="rt-container">
 				<div id="rt-top2">
