@@ -198,7 +198,7 @@ class KbiControllerDocuments extends JController
 		$id = JRequest::getVar('id', array(0), 'method', 'array');
 		$fieldName = 'document';
 
-		//$this->setRedirect("index.php?option={$option}&controller=documents&id[]={$id[0]}");
+		$this->setRedirect("index.php?option={$option}&controller=documents&id[]={$id[0]}");
 
 		if(empty($_FILES) || !isset($_FILES[$fieldName]))
 		{
