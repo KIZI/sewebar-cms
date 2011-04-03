@@ -59,10 +59,10 @@
 			<folder>xslt</folder>	
 			<folder>search_index</folder>
 		</files>	
-	<!--	Language	-->
+		<!--	Language	-->
 		<languages folder="administrator">
 			<language tag="cs-CZ">cs-CZ.com_jucene.ini</language>
-	    </languages>		
+		</languages>		
 	</administration>
 	
 </install>

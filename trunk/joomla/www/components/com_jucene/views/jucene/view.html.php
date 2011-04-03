@@ -102,8 +102,8 @@ class JuceneViewJucene extends JView {
 			$field_list .= '"' . $field . '",';
 		}
 		$document->addScriptDeclaration ( '
-			
-        	$(function() {
+			jQuery.noConflict();
+		    $(function() {
         		var availableTags = [' . $field_list . '];
         		function split( val ) {
         			return val.split( /:\s*/ );
