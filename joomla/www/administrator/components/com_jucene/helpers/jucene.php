@@ -27,13 +27,15 @@ class JuceneHelper {
 	var $index;
 	
 	/**
-	 * Retrieve the Lucene index object
+	 * 
+	 * @param $name
+	 * index name can be specified
 	 */
-	function getIndex() {
+	function getIndex($name = NULL) {
 		
 		require_once ('Zend/Search/Lucene.php');
 		
-		$index_path = JuceneHelper::getIndexPath ();
+		$index_path = JuceneHelper::getIndexPath ( $name );
 		
 		if (! JFolder::exists ( $index_path )) {
 			
@@ -65,7 +67,6 @@ class JuceneHelper {
 	function removeIndex() {
 		$remove_path = JuceneHelper::getIndexPath ();
 		
-		
 		if (JFolder::exists ( $remove_path )) {
 			
 			if (JFolder::delete ( $remove_path )) {
@@ -83,40 +84,70 @@ class JuceneHelper {
 		}
 	}
 	
-	
 	/**
 	 * Delete selected record from the index. 
 	 */
-	function removeFromIndex($query) {
+	function removeFromIndexByQuery($query) {
+		$message = "";
+		
 		$index = JuceneHelper::getIndex ();
 		$hits = $index->find ( $query );
 		if (count ( $hits > 0 )) {
 			foreach ( $hits as $hit ) {
 				
 				$index->delete ( $hit->id );
+				$message .= "Deleted " . $hit->id;
 				//$this->raiseMessage("removed: ".$hit->id,'error');
 			}
 		}
+		JFactory::getApplication ()->enqueueMessage ( $message );
+	}
+	
+	/**
+	 * 
+	 * @param $doc_id
+	 */
+	function removeFromIndexById($doc_id) {
+		if(!is_numeric()){
+			return false;
+		}
+		
+		$message = "";
+		
+		$index = JuceneHelper::getIndex ();
+		$hits = $index->find ( "pk:".$doc_id );
+		if (count ( $hits > 0 )) {
+			foreach ( $hits as $hit ) {				
+				try {
+					$index->delete ( $hit->id );
+				} catch (Exception $e) {
+					JFactory::getApplication ()->enqueueMessage ( $e->getMessage() );
+				}
+				$message .= "Deleted " . $hit->id;
+				//$this->raiseMessage("removed: ".$hit->id,'error');
+			}
+		}
+		JFactory::getApplication ()->enqueueMessage ( $message );
 	}
 	
 	
 	/**
-	 *	Get full path of the index
-	 *
+	 * Get index path
+	 * @param $index_name
+	 * index name can be specified to open specific index
 	 */
-	function getIndexPath() {
+	function getIndexPath($index_name = NULL) {
 		$params = &JComponentHelper::getParams ( 'com_jucene' );
-		$dir_path = JPATH_SITE .DS. 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . $params->get ( 'index_path', 'search_index' );
-		$index_name = $params->get ( 'index_name', 'default_index' );
+		$dir_path = JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . $params->get ( 'index_path', 'search_index' );
+		$index_name = empty ( $index_name ) ? $params->get ( 'index_name', 'default_index' ) : $index_name;
 		$index_path = $dir_path . DS . $index_name;
 		return $index_path;
 	}
 	
 	public function formatNumber($query) {
 		
-			return '1' . sprintf ( '%06d', round ( $query * 1000 ) );
-		
-		
+		return '1' . sprintf ( '%06d', round ( $query * 1000 ) );
+	
 	}
 	
 	/**
@@ -126,8 +157,8 @@ class JuceneHelper {
 	 */
 	public function prepareNumber($strNumber) {
 		
-			return preg_replace ( '/\d+(\.\d+)?/e', 'JuceneHelper::formatNumber(\\0)', $strNumber );
-			
+		return preg_replace ( '/\d+(\.\d+)?/e', 'JuceneHelper::formatNumber(\\0)', $strNumber );
+	
 	}
 	
 	/**
@@ -159,7 +190,7 @@ class JuceneHelper {
 	}
 	
 	/**
-	 *	Remove bad or harmfull chars from indexed field's value
+	 * Remove bad or harmfull chars from indexed field's value
 	 * @param $value
 	 */
 	function sanitizeFieldValue($value) {
@@ -186,9 +217,6 @@ class JuceneHelper {
 		$value = strtolower ( JuceneHelper::removeCzechSpecialChars ( $value ) );
 		return $value;
 	}
-	
-	
-	
 	
 	function sanitizeQueryValue($value) {
 		
@@ -218,7 +246,23 @@ class JuceneHelper {
 		$char_table = Array ('ä' => 'a', 'Ä' => 'A', 'á' => 'a', 'Á' => 'A', 'à' => 'a', 'À' => 'A', 'ã' => 'a', 'Ã' => 'A', 'â' => 'a', 'Â' => 'A', 'č' => 'c', 'Č' => 'C', 'ć' => 'c', 'Ć' => 'C', 'ď' => 'd', 'Ď' => 'D', 'ě' => 'e', 'Ě' => 'E', 'é' => 'e', 'É' => 'E', 'ë' => 'e', 'Ë' => 'E', 'è' => 'e', 'È' => 'E', 'ê' => 'e', 'Ê' => 'E', 'í' => 'i', 'Í' => 'I', 'ï' => 'i', 'Ï' => 'I', 'ì' => 'i', 'Ì' => 'I', 'î' => 'i', 'Î' => 'I', 'ľ' => 'l', 'Ľ' => 'L', 'ĺ' => 'l', 'Ĺ' => 'L', 'ń' => 'n', 'Ń' => 'N', 'ň' => 'n', 'Ň' => 'N', 'ñ' => 'n', 'Ñ' => 'N', 'ó' => 'o', 'Ó' => 'O', 'ö' => 'o', 'Ö' => 'O', 'ô' => 'o', 'Ô' => 'O', 'ò' => 'o', 'Ò' => 'O', 'õ' => 'o', 'Õ' => 'O', 'ő' => 'o', 'Ő' => 'O', 'ř' => 'r', 'Ř' => 'R', 'ŕ' => 'r', 'Ŕ' => 'R', 'š' => 's', 'Š' => 'S', 'ś' => 's', 'Ś' => 'S', 'ť' => 't', 'Ť' => 'T', 'ú' => 'u', 'Ú' => 'U', 'ů' => 'u', 'Ů' => 'U', 'ü' => 'u', 'Ü' => 'U', 'ù' => 'u', 'Ù' => 'U', 'ũ' => 'u', 'Ũ' => 'U', 'û' => 'u', 'Û' => 'U', 'ý' => 'y', 'Ý' => 'Y', 'ž' => 'z', 'Ž' => 'Z', 'ź' => 'z', 'Ź' => 'Z' );
 		$text = strtr ( $czech, $char_table );
 		
-		return $text;	
+		return $text;
+	}
+	
+	function stringContains($str, $content, $ignorecase = true) {
+		$retval = false;
+		
+		if ($ignorecase) {
+			$str = strtolower ( $str );
+			$content = strtolower ( $content );
+		}
+		
+		// php type system sucks so we may need a "special check"...
+		$_strpos = strpos ( $str, $content );
+		if ($_strpos === 0 || $_strpos > 0) {
+			$retval = true;
+		}
+		return $retval;
 	}
 
 }

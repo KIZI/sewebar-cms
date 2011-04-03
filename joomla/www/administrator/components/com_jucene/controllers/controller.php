@@ -119,8 +119,7 @@ class JuceneController extends JController {
 		$documents = $index->numDocs ();
 		$this->raiseMessage ( JText::sprintf ( 'INDEXRECORDCOUNT', $documents ) );
 		
-		//TODO move the removal to helper class 
-		JuceneHelper::removeFromIndex ( 'pk:' . $currId );
+		JuceneHelper::removeFromIndexById ( $currId );
 		
 		$pmml = false;
 		//TODO devide this into index methods based on content types- JUCENE helper!!! - no reason to try to transform it if it' HTML document
@@ -251,81 +250,6 @@ class JuceneController extends JController {
 	
 	}
 	
-	/**
-	 * There should be even the ID of the document to get this working properly
-	 *
-	 * @param $pmmlDoc PMML document XML string representation
-	 */
-	public function kbiInsertToIndex($pmmlDoc) {
-		
-		$index = JuceneHelper::getIndex ();
-		
-		$dom = new DOMDocument ();
-		$xslt = new DOMDocument ();
-		
-		$error = false;
-		//load xslt stylesheet
-		if (! @$xslt->load ( JPATH_SITE . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . 'xslt/jucene.xsl' )) {
-			$error = true;
-			$this->raiseMessage ( "XSLTLOADERROR", 'error' );
-		
-		}
-		
-		$proc = new XSLTProcessor ();
-		if (! $proc->importStylesheet ( $xslt )) {
-			$error = true;
-			$this->raiseMessage ( "XSLTIMPORTERROR", 'error' );
-		}
-		
-		if ($dom->loadXML ( $pmmlDoc ) && ! $error) {
-			
-			//simplify the document - prepare it for the indexation process
-			$xslOutput = $proc->transformToXml ( $dom );
-			
-			//create new DOM document to preserve output and transform the XML to the indexable one
-			$transXml = new DOMDocument ();
-			$transXml->preserveWhitespace = false;
-			@$transXml->loadXML ( $xslOutput );
-			//unset unneccessary variables
-			unset ( $xslOutput );
-			unset ( $dom );
-			unset ( $xslt );
-			
-			//index every assoc rule as document with same credentials
-			if (! $error) {
-				$rules = $transXml->getElementsByTagName ( "AssociationRule" );
-				$rulesCount = $rules->length;
-				if ($rulesCount == 0) {
-					$error = true;
-					$this->raiseMessage ( 'XMLDOCUMENTNORULES', 'error' );
-				}
-				
-				$rule_doc_position = 0;
-				
-				foreach ( $rules as $rule ) {
-					$additional ['position'] = $rule_doc_position;
-					$zendDoc = Zend_Search_Lucene_Document_Pmml::addPmml ( $rule, $additional, false );
-					/*print'<pre>';
-                    var_dump($zendDoc);
-                    print '</pre>';
-                    die();*/
-					$index->addDocument ( $zendDoc );
-					$rule_doc_position ++;
-				}
-				return true;
-			} else {
-				
-				return (false);
-			}
-		
-		} else {
-			
-			$this->raiseMessage ( 'XMLDOCLOADERROR', 'error' );
-		}
-	
-	}
-	
-		
 	/**
 	 *	Just use of the JFactory method to save some code writing
 	 *
