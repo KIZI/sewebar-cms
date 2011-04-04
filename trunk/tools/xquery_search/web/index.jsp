@@ -50,7 +50,7 @@
               window.document.getElementById("content").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
-          } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "delIndex" || vybrano == "addDocumentMultiple") {
+          } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "delIndex" || vybrano == "addDocumentMultiple" || vybrano == "jaxpQuery") {
               window.document.getElementById("id").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
@@ -96,6 +96,7 @@
       <option value="getDescription">Zobrazit DataDescription</option>
       <option value="completeTest">Otestování nastavení</option>
       <option value="removeAllDocuments">!!! Odstranit všechny dokumenty !!!</option>
+      <option value="jaxpQuery">JAXP Query test</option>
       <%--<option value="existQuery">Exist-DB XQuery</option>--%>
     </select>
     <br />
