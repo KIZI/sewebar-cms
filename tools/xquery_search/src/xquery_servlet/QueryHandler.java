@@ -1,11 +1,25 @@
 package xquery_servlet;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.Properties;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.query.DynamicQueryContext;
+import net.sf.saxon.query.StaticQueryContext;
+import net.sf.saxon.query.XQueryExpression;
+import net.sf.saxon.trans.XPathException;
 
 /**
  * Trida umoznuje praci s dotazy - ukladani, mazani atd.
@@ -124,5 +138,33 @@ public class QueryHandler {
                 output[0] = "1";
         }
         return output;
+    }
+
+    /**
+     * 
+     * @param query
+     * @return
+     */
+    public ByteArrayOutputStream queryPrepare(String query){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            InputStream  queryFile = new FileInputStream("c:/Users/Tomas/Sewebar/query_prepare.xquery");
+            Configuration config = new Configuration();
+            StaticQueryContext sqc = config.newStaticQueryContext();
+            XQueryExpression xqe = sqc.compileQuery(queryFile, "UTF-8");
+            DynamicQueryContext dqc = new DynamicQueryContext(config);
+            dqc.setContextItem(config.buildDocument(new StreamSource(new ByteArrayInputStream(query.getBytes()))));
+            Properties props = new Properties();
+            props.setProperty(OutputKeys.METHOD, "html");
+            props.setProperty(OutputKeys.INDENT, "no");
+            xqe.run(dqc, new StreamResult(baos), props);
+        } catch (FileNotFoundException ex) {
+            //output += "<error>" + ex.toString() + "</error>";
+        } catch (XPathException ex) {
+            //output += "<error>" + ex.toString() + "</error>";
+        } catch (IOException ex) {
+            //output += "<error>" + ex.toString() + "</error>";
+        }
+        return baos;
     }
 }

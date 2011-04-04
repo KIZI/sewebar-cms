@@ -47,35 +47,35 @@ public class XMLSettingsReader {
                 Element queryDirElement = (Element)queryDirList.item(0);
                 NodeList queryDir = queryDirElement.getChildNodes();
                 Node queryDirNode = queryDir.item(0);
-                if (queryDirNode == null) { output[0] = ""; }
+                if (queryDirNode == null) { output[1] = ""; }
                 else { output[1] = (queryDirNode.getNodeValue()); }
 
                 NodeList contNameList = doc.getElementsByTagName("containerName");
                 Element contNameElement = (Element)contNameList.item(0);
                 NodeList contName = contNameElement.getChildNodes();
                 Node containerNameNode = contName.item(0);
-                if (containerNameNode == null) { output[0] = ""; }
+                if (containerNameNode == null) { output[2] = ""; }
                 else { output[2] = (containerNameNode.getNodeValue()); }
 
                 NodeList useTransList = doc.getElementsByTagName("useTransformation");
                 Element useTransElement = (Element)useTransList.item(0);
                 NodeList useTrans = useTransElement.getChildNodes();
                 Node useTransNode = useTrans.item(0);
-                if (useTransNode == null) { output[0] = ""; }
+                if (useTransNode == null) { output[3] = ""; }
                 else { output[3] = (useTransNode.getNodeValue()); }
 
                 NodeList transPathList = doc.getElementsByTagName("transformationPath");
                 Element transPathElement = (Element)transPathList.item(0);
                 NodeList transPath = transPathElement.getChildNodes();
                 Node transPathNode = transPath.item(0);
-                if (transPathNode == null) { output[0] = ""; }
+                if (transPathNode == null) { output[4] = ""; }
                 else { output[4] = (transPathNode.getNodeValue()); }
 
                 NodeList tempDirList = doc.getElementsByTagName("tempDir");
                 Element tempDirElement = (Element)tempDirList.item(0);
                 NodeList tempDir = tempDirElement.getChildNodes();
                 Node tempDirNode = tempDir.item(0);
-                if (tempDirNode == null) { output[0] = ""; }
+                if (tempDirNode == null) { output[5] = ""; }
                 else { output[5] = (tempDirNode.getNodeValue()); }
 
         } catch (ParserConfigurationException e) {

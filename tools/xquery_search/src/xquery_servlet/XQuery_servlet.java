@@ -5,17 +5,22 @@ import com.sleepycat.db.EnvironmentConfig;
 import com.sleepycat.db.LockDetectMode;
 import com.sleepycat.dbxml.XmlManager;
 import com.sleepycat.dbxml.XmlManagerConfig;
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.xml.sax.InputSource;
 
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
@@ -94,20 +99,20 @@ public class XQuery_servlet extends HttpServlet {
                                     // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
                                     QueryHandler qh = new QueryHandler(queryDir);
                                     BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
+                                    QueryMaker qm = new QueryMaker();
                                     Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
 
                                     String id = request.getParameter("id").toString();
                                     String content = request.getParameter("content").toString();
                                     String docName = "";
                                     String creationTime = "";
-                                    if (request.getParameter("docname").toString() != null) {
-                                        docName = request.getParameter("docname").toString();
+                                    if (request.getParameter("docName") != null) {
+                                        docName = request.getParameter("docName").toString();
                                     }
-                                    if (request.getParameter("docname").toString() != null) {
-                                        creationTime = request.getParameter("creationtime").toString();
+                                    if (request.getParameter("creationTime") != null) {
+                                        creationTime = request.getParameter("creationTime").toString();
                                     }
-                                    
-                                    output += processRequest(action, id, docName, creationTime, content, mgr, qh, bh, tester);
+                                    output += processRequest(action, id, docName, creationTime, content, mgr, qh, bh, qm, tester);
 
 
                                     // Ukonceni spojeni s BDB XML a vycisteni
@@ -309,6 +314,8 @@ public class XQuery_servlet extends HttpServlet {
          - listin
          - delindex
          - getdescription
+         - removealldocuments
+         - jaxpquery
          */
         int returnID = 0;
         if (action.equals("usequery")) returnID = 1; else
@@ -329,7 +336,8 @@ public class XQuery_servlet extends HttpServlet {
         if (action.equals("listin")) returnID = 16; else
         if (action.equals("delindex")) returnID = 17; else
         if (action.equals("getdescription")) returnID = 18; else
-        if (action.equals("removealldocuments")) returnID = 19;
+        if (action.equals("removealldocuments")) returnID = 19; else
+        if (action.equals("jaxpquery")) returnID = 20;
         return returnID;
 	}
 
@@ -348,12 +356,12 @@ public class XQuery_servlet extends HttpServlet {
      * @param tester instance tridy Tester
      * @return predpripraveny vystup
      */
-    private String processRequest(String action, String id, String docName, String creationTime, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, Tester tester){
+    private String processRequest(String action, String id, String docName, String creationTime, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester){
     	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
         // Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content 
-        int except[] = {2,7,8,10,13,14,16,17,18,19};
+        int except[] = {2,7,8,10,13,14,16,17,18,19,20};
 
         Boolean except_bool = false;
         for (int i = 0; i < except.length; i++){
@@ -434,6 +442,12 @@ public class XQuery_servlet extends HttpServlet {
                     } break;
             case 18: output += bh.getDataDescription(); break;
             case 19: output += /*bh.removeAllDocuments();*/"<deprecated/>"; break;
+            case 20: if (content.equals("")) {
+                        output += "<error><![CDATA[Nebyl zadan dotaz!]]></error>";
+                    } else {
+                        InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
+                        output += qm.makeXPath(is);
+                    } break;
             default: output += "<error><![CDATA[Zadana akce neexistuje]]></error>"; break;
             }
         }
