@@ -67,7 +67,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$data = array(
 			'action' => 'getDocsNames',
-			'variable' => '',
+			'id' => '',
 			'content' => '',
 		);
 
@@ -116,11 +116,25 @@ class XQuery extends KBIntegratorSynchronable
 	{
 		$ch = curl_init();
 
-		$data = array(
-			'action' => 'addDocument',
-			'variable' => $id,
-			'content'=> $path ? file_get_contents($document) : $document,
-		);
+		if(is_object($document)) {
+			$data = array(
+				'action' => 'addDocument',
+				'id' => $id,
+				'docName' => $document->title,
+				'creationTime' => $document->modified,
+				'content'=> $document->text,
+
+			);
+		} else {
+			$data = array(
+				'action' => 'addDocument',
+				'id' => $id,
+				'docName' => '',
+				'creationTime' => '',
+				'content'=> $path ? file_get_contents($document) : $document,
+
+			);
+		}
 
 		curl_setopt($ch, CURLOPT_URL, $this->getUrl());
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
@@ -175,7 +189,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$data = array(
 			'action' => 'deleteDocument',
-			'variable' => $id,
+			'id' => $id,
 			'content'=> '',
 		);
 
