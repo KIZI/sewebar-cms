@@ -83,40 +83,40 @@ public class XQuery_servlet extends HttpServlet {
                         if (request.getParameter("action").equals("")){
                                 output += "<error><![CDATA[Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!]]></error>";
                         } else {
-                                String action = request.getParameter("action").toString().toLowerCase();
-                                if (action.equals("showsettings")) {
-                                        output += createSettingsPage(settings);
-                                } else {
-                                    // Vytvoreni spojeni s BDB XML
-                                    Environment env = createEnvironment(envDir, false);
-                                    XmlManagerConfig mconfig = new XmlManagerConfig();
-                                    mconfig.setAllowExternalAccess(true);
-                                    XmlManager mgr = new XmlManager(env, mconfig);
+                            String action = request.getParameter("action").toString().toLowerCase();
+                            if (action.equals("showsettings")) {
+                                    output += createSettingsPage(settings);
+                            } else {
+                                // Vytvoreni spojeni s BDB XML
+                                Environment env = createEnvironment(envDir, false);
+                                XmlManagerConfig mconfig = new XmlManagerConfig();
+                                mconfig.setAllowExternalAccess(true);
+                                XmlManager mgr = new XmlManager(env, mconfig);
 
-                                    // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
-                                    QueryHandler qh = new QueryHandler(queryDir);
-                                    BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
-                                    QueryMaker qm = new QueryMaker();
-                                    Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
+                                // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
+                                QueryHandler qh = new QueryHandler(queryDir);
+                                BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, containerName, useTransformation, xsltPath);
+                                QueryMaker qm = new QueryMaker(containerName);
+                                Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
 
-                                    String id = request.getParameter("id").toString();
-                                    String content = request.getParameter("content").toString();
-                                    String docName = "";
-                                    String creationTime = "";
-                                    if (request.getParameter("docName") != null) {
-                                        docName = request.getParameter("docName").toString();
-                                    }
-                                    if (request.getParameter("creationTime") != null) {
-                                        creationTime = request.getParameter("creationTime").toString();
-                                    }
-                                    output += processRequest(action, id, docName, creationTime, content, mgr, qh, bh, qm, tester);
-
-
-                                    // Ukonceni spojeni s BDB XML a vycisteni
-                                    if (mgr != null) {
-                                        mgr.close();
-                                    }
+                                String id = request.getParameter("id").toString();
+                                String content = request.getParameter("content").toString();
+                                String docName = "";
+                                String creationTime = "";
+                                if (request.getParameter("docName") != null) {
+                                    docName = request.getParameter("docName").toString();
                                 }
+                                if (request.getParameter("creationTime") != null) {
+                                    creationTime = request.getParameter("creationTime").toString();
+                                }
+                                output += processRequest(action, id, docName, creationTime, content, mgr, qh, bh, qm, tester);
+
+
+                                // Ukonceni spojeni s BDB XML a vycisteni
+                                if (mgr != null) {
+                                    mgr.close();
+                                }
+                            }
                         }
                 }
                 catch (Throwable ex) {
