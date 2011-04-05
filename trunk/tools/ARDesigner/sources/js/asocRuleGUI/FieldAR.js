@@ -210,16 +210,18 @@ var FieldSelect = new Class({
         }.bind(this))
 
         var option = null;
+        var copyProposedValue = "";
         if(this.proposedValue != ""){
+            copyProposedValue = this.proposedValue;
             option = new Element('option', {
                 html: this.proposedValue
             });
             option.inject(fieldSelect);
-            this.proposedValue = this.proposedValue.replace("&gt;",">");
-            this.proposedValue = this.proposedValue.replace("&lt;","<");
+            copyProposedValue = copyProposedValue.replace("&gt;",">");
+            copyProposedValue = copyProposedValue.replace("&lt;","<");
         }
         for(var actualOption = 0; actualOption < this.oneCategoryInfo.length; actualOption++){
-            if(this.oneCategoryInfo[actualOption].trim() == this.proposedValue.trim()){
+            if(this.oneCategoryInfo[actualOption].trim() == copyProposedValue.trim()){
                 continue;
             }
             option = new Element('option', {
