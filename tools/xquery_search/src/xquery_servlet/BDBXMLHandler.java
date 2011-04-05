@@ -230,7 +230,7 @@ public class BDBXMLHandler {
                     + "\nreturn"
                     + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
                     + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
-                    + "\nreturn <doc>{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
+                    + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
             XmlContainer cont = mgr.openContainer(containerName);
             XmlQueryContext qc = mgr.createQueryContext();
