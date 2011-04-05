@@ -136,7 +136,7 @@ class KbiControllerDocuments extends JController
 					if($document)
 					{
 						KBIDebug::log($document);
-						$source->addDocument($document->title, $document->text, FALSE);
+						$source->addDocument($document->id, $document, FALSE);
 						$success ++;
 					}
 				}
