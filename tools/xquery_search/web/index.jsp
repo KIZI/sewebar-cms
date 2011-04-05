@@ -4,9 +4,9 @@
 
 <html>
   <head>
-    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    	<title>Vyhledávání v Berkeley XML DB</title>
-        <style type="text/css" >
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Vyhledávání v Berkeley XML DB</title>
+    <style type="text/css" >
       body{
         font-family: Tahoma, Arial;
         margin: 50px;
@@ -41,7 +41,7 @@
       #send_btn{
         font-weight: bold;
       }
-      </style>
+    </style>
   </head>
   <script type="text/javascript">
       function zobrazPole(vybrano){
