@@ -1,20 +1,15 @@
 package xquery_servlet;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
 import net.sf.saxon.query.StaticQueryContext;
@@ -27,7 +22,7 @@ import net.sf.saxon.trans.XPathException;
  */
 public class QueryHandler {
     String queryDir;
-    
+
     /**
      * Konstruktor instance tridy
      * @param queryDir slozka obsahujici ulozene query
@@ -35,7 +30,7 @@ public class QueryHandler {
     public QueryHandler(String queryDir) {
         this.queryDir = queryDir;
     }
-    
+
     /**
      * Metoda pro ulozeni query
      * @param query ukladana query
@@ -141,28 +136,56 @@ public class QueryHandler {
     }
 
     /**
-     * 
+     *
      * @param query
      * @return
      */
-    public ByteArrayOutputStream queryPrepare(String query){
+    public ByteArrayOutputStream queryPrepare(String request){
+        String query =
+                "declare function local:processRequest($request as node()) {"
+                    + "\n let $generalSet := $request/ARQuery/GeneralSetting"
+                    + "\n let $attribs := for $MBA in $generalSet/MandatoryPresenceConstraint/MandatoryBA/text() return "
+                        + "\n for $DBA in $request//DBASetting[@id = $MBA] return local:DBAtoBBARecursion($DBA//BASettingRef, $request, \"\")"
+                    + "\n return <AR_query><IMSetting>{$request/ARQuery/InterestMeasureSetting/InterestMeasureThreshold[1]/InterestMeasure/text()}</IMSetting><Scope>{$generalSet/Scope/node()}</Scope>{$attribs}</AR_query>};"
+                + "\n declare function local:getBBAs($BBAs as node()*, $request as node()) as node()*{"
+                    + "\n for $BBA in $BBAs return local:BBABuild($BBA, $request//DictionaryMapping)};"
+                + "\n declare function local:DBAtoBBARecursion($BARefs as node()*, $request as node(), $literal as xs:string){"
+                    + "\n for $odkaz in $BARefs let $liter := if ($literal = \"\") then \"Both\" else $literal return "
+                        + "\n if (count($request//BBASetting[@id = $odkaz/text()])>0) then local:BBABuild($request//BBASetting[@id = $odkaz/text()], $request//DictionaryMapping) else local:DBAtoBBARecursion($request//DBASetting[@id = $odkaz/text()]//BASettingRef, $request, $request//DBASetting[@id = $odkaz/text()]/LiteralSign)};"
+                + "\n declare function local:BBABuild($BBA as node(), $mapping) as node(){"
+                    + "\n let $dictionary := $BBA/FieldRef/@dictionary/string()"
+                    + "\n let $field := $BBA/FieldRef/text()"
+                    + "\n let $coefficient := $BBA/Coefficient"
+                    + "\n let $category := for $cat in $coefficient//Category return "
+                        + "\n if ($cat/name() = \"Category\") then <Category>{$cat/text()}</Category> else"
+                            + "\n if ($cat/name() = \"Interval\") then <Interval closure=\"{$cat/@closure}\" left=\"{$cat/@leftMargin}\" right=\"{$cat/@rightMargin}\"/> else $cat"
+                    + "\n return if (count($mapping/ValueMapping/Field[@name = $field]) = 0) then "
+                        + "\n <BBA id=\"{$BBA/@id}\">"
+                            + "\n <Field dictionary=\"TransformationDictionary\"><Name>{$field}</Name><Type>{$coefficient/Type/text()}</Type>{$category}</Field>"
+                            + "\n <Field dictionary=\"DataDictionary\"><Name>{$field}</Name><Type>{$coefficient/Type/text()}</Type>{$category}</Field>"
+                        + "\n </BBA> else"
+                        + "\n <BBA id=\"{$BBA/@id}\"><Field dictionary=\"{$dictionary}\"><Name>{$field}</Name><Type>{$coefficient/Type/text()}</Type>{$category}</Field>{local:DictionarySwitch($dictionary, $field, $coefficient, $mapping)}</BBA>};"
+                + "\n declare function local:DictionarySwitch($dict, $field, $coeff, $mapping){"
+                    + "\n let $valueMapping := $mapping//Field[@name = $field and @dictionary = $dict]/parent::node()"
+                    + "\n let $fieldTrans := $valueMapping/Field[@dictionary != $dict]"
+                    + "\n let $category := let $catTrans := $fieldTrans/child::node() for $everyCat in $catTrans return "
+                        + "\n if ($everyCat/name() = \"Value\") then <Category>{$everyCat/text()}</Category> else "
+                            + "\n if ($everyCat/name() = \"Interval\") then <Interval closure=\"{$everyCat/@closure}\" left=\"{$everyCat/@leftMargin}\" right=\"{$everyCat/@rightMargin}\"/> else $everyCat"
+                    + "\n return if (count($fieldTrans) > 0) then "
+                        + "\n <Field dictionary=\"{distinct-values($fieldTrans[1]/@dictionary)}\"><Name>{distinct-values($fieldTrans[1]/@name/string())}</Name><Type>{$coeff/Type/text()}</Type>{$category}</Field> else ()};"
+                + "\n let $vstup := "+request
+                + "\n return local:processRequest($vstup)";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            InputStream  queryFile = new FileInputStream("c:/Users/Tomas/Sewebar/query_prepare.xquery");
             Configuration config = new Configuration();
             StaticQueryContext sqc = config.newStaticQueryContext();
-            XQueryExpression xqe = sqc.compileQuery(queryFile, "UTF-8");
+            XQueryExpression xqe = sqc.compileQuery(query);
             DynamicQueryContext dqc = new DynamicQueryContext(config);
-            dqc.setContextItem(config.buildDocument(new StreamSource(new ByteArrayInputStream(query.getBytes()))));
             Properties props = new Properties();
             props.setProperty(OutputKeys.METHOD, "html");
             props.setProperty(OutputKeys.INDENT, "no");
             xqe.run(dqc, new StreamResult(baos), props);
-        } catch (FileNotFoundException ex) {
-            //output += "<error>" + ex.toString() + "</error>";
         } catch (XPathException ex) {
-            //output += "<error>" + ex.toString() + "</error>";
-        } catch (IOException ex) {
             //output += "<error>" + ex.toString() + "</error>";
         }
         return baos;
