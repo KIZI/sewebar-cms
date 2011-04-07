@@ -353,7 +353,7 @@ public class XQuery_servlet extends HttpServlet {
      * @param tester instance tridy Tester
      * @return predpripraveny vystup
      */
-    private String processRequest(String action, String id, String docName, String creationTime, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester){
+    private String processRequest(String action, String id, String docName, String creationTime, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
     	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
@@ -443,7 +443,7 @@ public class XQuery_servlet extends HttpServlet {
                         output += "<error><![CDATA[Nebyl zadan dotaz!]]></error>";
                     } else {
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        output += qm.makeXPath(is);
+                        output += bh.query("", qm.makeXPath(is), 0);
                     } break;
             default: output += "<error><![CDATA[Zadana akce neexistuje]]></error>"; break;
             }
