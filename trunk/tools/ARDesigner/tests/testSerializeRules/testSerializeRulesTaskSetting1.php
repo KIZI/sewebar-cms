@@ -1,13 +1,13 @@
 <?php
-require_once('../../serializeRules/AncestorSerializeRules.php');
-require_once('../../serializeRules/SerializeRulesTaskSetting.php');
+require_once('../../sources/models/serializeRules/AncestorSerializeRules.php');
+require_once('../../sources/models/serializeRules/SerializeRulesTaskSetting.php');
 
 session_start();
 $_SESSION["ARBuilder_domDataDescr"] = "../../XML/datadescription.xml";
 
 $json = "{\"rule0\":[{\"name\":\"NEG\",\"type\":\"neg\"},{\"name\":\"statusAgregovane\",\"type\":\"attr\",\"category\":\"Interval\",\"fields\":[{\"name\":\"maxLength\",\"value\":\"\"}]},{\"name\":\"AND\",\"type\":\"and\"},{\"name\":\"duration\",\"type\":\"attr\",\"category\":\"Interval\",\"fields\":[{\"name\":\"maxLength\",\"value\":\"\"}]},{\"name\":\"Support\",\"type\":\"oper\",\"fields\":[{\"name\":\"min value\",\"value\":\"\"}]},{\"name\":\"NEG\",\"type\":\"neg\"},{\"name\":\"name3\",\"type\":\"attr\",\"category\":\"Interval\",\"fields\":[{\"name\":\"maxLength\",\"value\":\"\"}]},{\"name\":\"AND\",\"type\":\"and\"},{\"name\":\"statusAgregovane\",\"type\":\"attr\",\"category\":\"Interval\",\"fields\":[{\"name\":\"maxLength\",\"value\":\"\"}]},{\"name\":\"OR\",\"type\":\"or\"},{\"name\":\"name6\",\"type\":\"attr\",\"category\":\"Interval\",\"fields\":[{\"name\":\"maxLength\",\"value\":\"\"}]}],\"rules\":1}";
 
-$sr = new SerializeRulesARQuery();
+$sr = new SerializeRulesTaskSetting();
 $xmlFileFinal = $sr->serializeRules($json);
 
 libxml_use_internal_errors(true);

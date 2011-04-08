@@ -127,7 +127,7 @@ class BBA{
         $fields = array();
         for($actualField = 0; $actualField < sizeof($this->catRef); $actualField++){
             $field = array();
-            $field['name'] = "any";
+            $field['name'] = "category";
             $field['value'] = $this->catRef[$actualField];
 
             $fields[] = $field;

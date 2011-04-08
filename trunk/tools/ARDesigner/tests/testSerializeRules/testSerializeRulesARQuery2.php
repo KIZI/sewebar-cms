@@ -1,6 +1,6 @@
 <?php
-require_once('../../serializeRules/AncestorSerializeRules.php');
-require_once('../../serializeRules/SerializeRulesARQuery.php');
+require_once('../../sources/models/serializeRules/AncestorSerializeRules.php');
+require_once('../../sources/models/serializeRules/SerializeRulesARQuery.php');
 
 session_start();
 $_SESSION["ARBuilder_domDataDescr"] = "../../XML/datadescription.xml";
