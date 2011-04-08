@@ -960,6 +960,9 @@ var AsociationRule = new Class({
         if(!this.solveAmountsMin()){
             return null;
         }
+        if(this.countBrackets(this.elements.length) > 0){
+            return null;
+        }
         for(var actualElement = 0; actualElement < this.elements.length; actualElement++){
             if(this.elements[actualElement] != null){
                 jsonObject.push(this.elements[actualElement].toJSON());
