@@ -1,12 +1,13 @@
 <?php
 
-require_once('../../../../lib/JSON.php');
-require_once('../../../../parseData/AncestorGetData.php');
-require_once('../../../../parseData/GetDataARBuilderQuery.php');
-require_once('../../../../parseData/AsociationRulesParser.php');
-require_once('../../../../parseData/ARQueryParser.php');
-require_once('../../../../parseData/TaskSettingParser.php');
-require_once('../../../../lib/Utils.php');
+require_once('../../../../sources/models/JSON.php');
+require_once('../../../../sources/models/parseData/AncestorGetData.php');
+require_once('../../../../sources/models/parseData/GetDataARBuilderQuery.php');
+require_once('../../../../sources/models/parseData/AsociationRulesParser.php');
+require_once('../../../../sources/models/parseData/ARQueryParser.php');
+require_once('../../../../sources/models/parseData/TaskSettingParser.php');
+require_once('../../../../sources/models/parseData/TaskSettingParser.php');
+require_once('../../../../sources/models/Utils.php');
 
 $DD = "dataDescription.xml";
 $FL = "ARQuery-FeatureList.xml";
@@ -27,8 +28,8 @@ $json = $sr->getData();
 print("<textarea rows='10' cols='100'>$json</textarea>");
 
 
-require_once('../../../../serializeRules/AncestorSerializeRules.php');
-require_once('../../../../serializeRules/SerializeRulesARQuery.php');
+require_once('../../../../sources/models/serializeRules/AncestorSerializeRules.php');
+require_once('../../../../sources/models/serializeRules/SerializeRulesARQuery.php');
 
 //session_start();
 //$_SESSION["ARBuilder_domDataDescr"] = "datadescription.xml";
@@ -58,7 +59,7 @@ if (!$objDom->schemaValidate("../../../../XML/ARBuilder0_1.xsd")) {
     print "<h2>Validation was finished correctly</h2>";
 }
 
-require_once("../../../../lib/Schematron.php");
+require_once("../../../../sources/models/Schematron.php");
 
 $s = new Schematron();
 
