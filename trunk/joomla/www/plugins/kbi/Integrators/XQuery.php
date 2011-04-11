@@ -52,7 +52,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$postdata = array(
 			'action' => $this->getAction(),
-			'variable' => $this->getVariable(),
+			'id' => $this->getVariable(),
 			'content' => $query,
 		);
 
@@ -146,6 +146,7 @@ class XQuery extends KBIntegratorSynchronable
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
+		KBIDebug::log($data);
 		KBIDebug::log($info);
 		KBIDebug::log($response);
 
