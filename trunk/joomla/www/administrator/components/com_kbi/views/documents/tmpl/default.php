@@ -24,6 +24,12 @@
 			<th nowrap="nowrap" class="title">
 				<?php echo JText::_( 'Name' ); ?>
 			</th>
+			<th nowrap="nowrap" class="title">
+				<?php echo JText::_( 'Timestamp' ); ?>
+			</th>
+			<th nowrap="nowrap" class="title">
+				<?php echo JText::_( 'Link' ); ?>
+			</th>
 		</tr>
 	</thead>
 	<tfoot>
@@ -40,13 +46,34 @@
 				<?php echo $i+1 //echo $this->pageNav->getRowOffset($i); ?>
 			</td>
 			<td align="center">
-				<?php $row->checked_out = false; ?>
+				<?php
+					$row->checked_out = false;
+					$row->livelink = $row->id != '' ? JRoute::_("/index.php?option=com_content&view=article&id={$row->id}") : NULL;
+					// TODO: XQuery delete by id not name
+					//$row->id = $row->id == '' ? $row->name : $row->id;
+					$row->id = $row->name;
+
+				?>
 				<?php echo JHTML::_('grid.checkedout', $row, $i); ?>
 			</td>
 			<td align="center">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'Edit' );?>::<?php echo $row->name; ?>">
-					<a href="<?php echo JRoute::_("index.php?option=com_kbi&controller=documents&id[]={$this->source->id}&cid[]={$row->name}&task=view"); ?>"><?php echo $row->name; ?></a>
-				</span>
+				<a href="<?php echo JRoute::_("index.php?option=com_kbi&controller=documents&id[]={$this->source->id}&cid[]={$row->name}&task=view"); ?>">
+					<?php echo $row->name; ?>
+				</a>
+			</td>
+			<td align="center">
+				<?php if($row->timestamp != '') :?>
+				<?php echo date("d.m.Y H:i:s", strtotime($row->timestamp)) ?>
+				<?php else: ?>
+				?
+				<?php endif; ?>
+			</td>
+			<td align="center">
+				<?php if(!empty($row->livelink)) :?>
+				<a href="<?php echo $row->livelink; ?>" target="_blank">Live link</a>
+				<?php else: ?>
+				-
+				<?php endif; ?>
 			</td>
 		</tr>
 	<?php endfor; ?>

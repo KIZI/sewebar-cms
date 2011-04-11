@@ -98,8 +98,9 @@ class XQuery extends KBIntegratorSynchronable
 					$document = new stdClass;
 					//$document->id = $doc->__toString();
 					//http://bugs.php.net/bug.php?id=44484
-					$document->id = $doc;
+					$document->id = $doc['joomlaID'];
 					$document->name = $doc;
+					$document->timestamp = $doc['timestamp'];
 					$documents[] = $document;
 				}
 			}
