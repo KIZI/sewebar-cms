@@ -67,7 +67,13 @@ class DocumentsModel extends JModel
 	function getCategories($section)
 	{
 		$db = & JFactory::getDBO();
-		if ($section!=-1){$whereClause="where section='".$section."'";} //pokud je nastavena sekce, tak ji budeme filtrovat...
+
+		//pokud je nastavena sekce, tak ji budeme filtrovat...
+		if ($section!=-1) {
+			$whereClause = "where section='$section'";
+		} else {
+			$whereClause = '';
+		}
 		$db->setQuery( "SELECT title,id FROM #__categories $whereClause order by title;" );
 		$rows = $db->loadObjectList();
 		$result=array();

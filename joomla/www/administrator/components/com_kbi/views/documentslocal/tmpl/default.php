@@ -1,13 +1,13 @@
 <form action="index.php?option=com_kbi&amp;controller=documents" name="adminForm" id="adminForm" method="post">
 	<div style="position:relative;">
-		<?php print JText::_(FILTER) ?>:
+		<?php print JText::_('FILTER') ?>:
 		<input type="text" name="filter" value="<?php print JRequest::getString('filter','') ?>" id="filter" />
 		<button onclick="this.form.submit();">OK</button>
 		<button onclick="document.getElementById('filter').value='';this.form.submit();">Reset</button>
 
 		<div style="display:inline;position:absolute;right:5px;top:2px;">
 			<select name="section" onchange="document.adminForm.submit();">
-				<option value="-1">--<?php print JText::_(SELECT_SECTION) ?>--</option>
+				<option value="-1">--<?php print JText::_('SELECT_SECTION') ?>--</option>
 				<?php foreach ($this->sections as $key=>$value) : ?>
 				<option value="<?php print $key ?>"	<?php print JRequest::getInt('section', -1) == $key ? ' selected="selected" ' : '' ?>>
 					<?php print $value?>
@@ -15,7 +15,7 @@
 				<?php endforeach ?>
 			</select>
 			<select name="categorie" onchange="document.adminForm.submit();">
-				<option value="-1">--<?php print JText::_(SELECT_CATEGORY) ?>--</option>
+				<option value="-1">--<?php print JText::_('SELECT_CATEGORY') ?>--</option>
 				<?php foreach ($this->categories as $key=>$value) : ?>
 				<option value="<?php print $key ?>"	<?php print JRequest::getInt('categorie', -1) == $key ? ' selected="selected" ' : '' ?>>
 					<?php print $value?>
@@ -42,11 +42,7 @@
 		<?php if ($this->total > 0 && count($this->articles) > 0): ?>
 			<?php foreach ($this->articles as $article): ?>
 				<tr class="<?php if ($rowClass=='row0'){$rowClass='row1';}else{$rowClass='row0';} print $rowClass ?>">
-					<td>
-						<a href="index.php?option=com_ginclude&amp;tmpl=component&amp;task=insert&amp;article=<?php print $article->id ?>">
-							<?php print $article->title ?>
-						</a>
-					</td>
+					<td><?php print $article->title ?></td>
 					<td><?php print $article->section ?></td>
 					<td><?php print $article->categorie ?></td>
 					<td><?php print $article->cdate ?></td>
@@ -56,5 +52,5 @@
 	</table>
 
 	<input type="hidden" name="filter_order" value="<?php print JRequest::getCmd('filter_order','title') ?>" />
-	<input type="hidden" name="filter_order_Dir" value="<?php print $orderDir ?>" />
+	<input type="hidden" name="filter_order_Dir" value="<?php //print $orderDir ?>" />
 </form>
