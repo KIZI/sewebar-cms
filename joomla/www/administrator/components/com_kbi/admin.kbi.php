@@ -37,8 +37,13 @@ switch($controller)
 	case 'queries':
 		$controller = new KbiControllerQueries();
 		break;
+	case 'queryDefinitions':
+	case 'querydefinitions':
+		$controller = new KbiControllerQueryDefinitions();
+		break;
 	case 'sources':
 	default:
+		require_once(JPATH_COMPONENT.DS.'controllers'.DS.'sources.php');
 		$controller   = new KbiControllerSources();
 		break;
 }

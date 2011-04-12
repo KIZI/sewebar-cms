@@ -67,6 +67,7 @@
 		<!-- Name to display at the component menu. Should be the same as the extension commercial name -->
 		<menu controller="sources">Knowledge Base Integration</menu>
 		<submenu>
+			<menu controller="querydefinitions">Query Definitions</menu>
 			<menu controller="documents">PMML Documents</menu>
 			<menu controller="sources">Remote Sources</menu>
 			<menu controller="queries">Queries</menu>
