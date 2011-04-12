@@ -103,13 +103,21 @@ public class XQuery_servlet extends HttpServlet {
                                 String content = request.getParameter("content").toString();
                                 String docName = "";
                                 String creationTime = "";
+                                String database = "";
+                                String reportUri = "";
                                 if (request.getParameter("docName") != null) {
                                     docName = request.getParameter("docName").toString();
                                 }
                                 if (request.getParameter("creationTime") != null) {
                                     creationTime = request.getParameter("creationTime").toString();
                                 }
-                                output += processRequest(action, id, docName, creationTime, content, mgr, qh, bh, qm, tester);
+                                if (request.getParameter("reportUri") != null) {
+                                    reportUri = request.getParameter("reportUri").toString();
+                                }
+                                if (request.getParameter("database") != null) {
+                                    database = request.getParameter("database").toString();
+                                }
+                                output += processRequest(action, id, docName, creationTime, reportUri, database, content, mgr, qh, bh, qm, tester);
 
 
                                 // Ukonceni spojeni s BDB XML a vycisteni
@@ -353,7 +361,7 @@ public class XQuery_servlet extends HttpServlet {
      * @param tester instance tridy Tester
      * @return predpripraveny vystup
      */
-    private String processRequest(String action, String id, String docName, String creationTime, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
+    private String processRequest(String action, String id, String docName, String creationTime, String reportUri, String database, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
     	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
@@ -375,8 +383,10 @@ public class XQuery_servlet extends HttpServlet {
             case 1: if (content.equals("")) {
                         output += "<error><![CDATA[Neni zadan obsah query]]></error>";
                     } else {
-                        String dotaz = content.toString();
-                        output += bh.query(id, dotaz, 1);
+                        /*String dotaz = content.toString();
+                        output += bh.query(id, dotaz, 1);*/
+                        InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
+                        output += bh.queryShortened(qm.makeXPath(is));
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error><![CDATA[Query nebyla zadana!]]></error>";
@@ -409,7 +419,7 @@ public class XQuery_servlet extends HttpServlet {
                         output += "<error><![CDATA[Neni zadan datum vytvoreni dokumentu]]></error>";
                     } else {
                         content = content.toString();
-                        output += bh.indexDocument(content, id, docName, creationTime);
+                        output += bh.indexDocument(content, id, docName, creationTime, reportUri, database);
                     } break;
             case 10: if (content.equals("")) {
                         output += "<error><![CDATA[Neni zadano umisteni slozky!]]></error>";
@@ -438,13 +448,13 @@ public class XQuery_servlet extends HttpServlet {
                         output += bh.delIndex(dotaz);
                     } break;
             case 18: output += bh.getDataDescription(); break;
-            case 19: output += /*bh.removeAllDocuments();*/"<deprecated/>"; break;
-            case 20: if (content.equals("")) {
+            case 19: output += /*bh.removeAllDocuments();*/"<not implemented yet/>"; break;
+            case 20: /*if (content.equals("")) {
                         output += "<error><![CDATA[Nebyl zadan dotaz!]]></error>";
                     } else {
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        output += bh.query("", qm.makeXPath(is), 0);
-                    } break;
+                        output += bh.queryShortened(qm.makeXPath(is));
+                    }*/ break;
             default: output += "<error><![CDATA[Zadana akce neexistuje]]></error>"; break;
             }
         }

@@ -55,21 +55,29 @@
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
               window.document.getElementById("content").style.display = "block";
+              window.document.getElementById("reportUri").style.display = "none";
+              window.document.getElementById("database").style.display = "none";
           } else if (vybrano == "getQuery" || vybrano == "deleteQuery" || vybrano == "getDocument" || vybrano == "deleteDocument") {
               window.document.getElementById("id").style.display = "block";
               window.document.getElementById("content").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
+              window.document.getElementById("reportUri").style.display = "none";
+              window.document.getElementById("database").style.display = "none";
           } else if (vybrano == "addDocument") {
               window.document.getElementById("id").style.display = "block";
               window.document.getElementById("content").style.display = "block";
               window.document.getElementById("docName").style.display = "block";
               window.document.getElementById("creationTime").style.display = "block";
+              window.document.getElementById("reportUri").style.display = "block";
+              window.document.getElementById("database").style.display = "block";
           } else {
               window.document.getElementById("id").style.display = "block";
               window.document.getElementById("content").style.display = "block";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
+              window.document.getElementById("reportUri").style.display = "none";
+              window.document.getElementById("database").style.display = "none";
           }
       }
   </script>
@@ -96,7 +104,7 @@
       <option value="getDescription">Zobrazit DataDescription</option>
       <option value="completeTest">Otestování nastavení</option>
       <option value="removeAllDocuments">!!! Odstranit všechny dokumenty !!!</option>
-      <option value="jaxpQuery">JAXP Query test</option>
+      <%--<option value="jaxpQuery">JAXP Query test</option>--%>
       <%--<option value="existQuery">Exist-DB XQuery</option>--%>
     </select>
     <br />
@@ -112,6 +120,14 @@
     <div id="creationTime">
     <b>Creation Time: </b><input type="text" name="creationTime" id="creationTime" size="150" value="<%= new java.util.Date() %>">
     <br /><i>Nápověda: Pole slouží pro zadání času vytvoření dokumentu</i>
+    </div>
+    <div id="reportUri">
+    <b>Report URI: </b><input type="text" name="reportUri" id="reportUri" size="150">
+    <br /><i>Nápověda: Pole slouží pro zadání URI adresy reportu</i>
+    </div>
+    <div id="database">
+    <b>Database: </b><input type="text" name="database" id="database" size="150">
+    <br /><i>Nápověda: Pole slouží pro zadání DB, ze ktere pochazeji data reportu</i>
     </div>
     <div id="content">
     <b>Doc content/Query content:</b>
