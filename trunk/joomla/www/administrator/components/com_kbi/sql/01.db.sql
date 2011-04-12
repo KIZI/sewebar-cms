@@ -37,3 +37,15 @@ CREATE TABLE `#__kbi_xslts` (
 );
 
 ALTER TABLE `#__kbi_xslts` ADD COLUMN `style` TEXT;
+
+/* Queries */
+DROP TABLE IF EXISTS `#__kbi_querydefinitions`;
+CREATE TABLE `#__kbi_querydefinitions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR( 255 ) NOT NULL ,
+  `source` text,
+  `query` text,
+  `xslt` text,
+  `icon` VARCHAR( 255 ) NOT NULL ,
+  PRIMARY KEY (`id`)
+);
