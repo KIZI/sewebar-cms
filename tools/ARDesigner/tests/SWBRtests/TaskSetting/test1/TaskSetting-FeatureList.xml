@@ -13,7 +13,8 @@
         <!-- Interest Measure must be specified. 
             There can be any number of interest measures - provided that conditions in BuildingBlocks/InterestMeasures are met.
         -->
-        <InterestMeasureConstraint minNumberOfInterestMeasures="1"/>
+        <!-- InterestMeasureConstraint is not necessary, because minimum number of interest measures can be inferred from -->
+        <!--InterestMeasureConstraint minNumberOfInterestMeasures="1"/-->
         <!-- Consequent may or may not be specified. There can be only one (basic boolean) attribute in negation.-->
         <Consequent minNumberOfBBAs="1" maxNumberOfBBAs="1" />
         <!-- Condition must not be specified. 
@@ -38,7 +39,7 @@
                     <LocalizedName lang="cs">Podpora</LocalizedName>
                     <Explanation lang="cs">Omezení naminimální procento objektů v matici, které musí splňovat pravidlo</Explanation>
                     
-                    <!-- For each interest measure, there are different fields displayed-->
+                    <!-- For each interest measure, there are different fields displayed from SupportedInterestMeasureCombinations-->
                     <Field>
                         <!-- master name usedARQuery for serialization -->
                         <Name>min value</Name>
