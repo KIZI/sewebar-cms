@@ -73,7 +73,7 @@ public class QueryMaker {
                     i++;
                 }
             }
-            output += "]/Text";
+            output += "]";
         } catch (SAXException ex) {
             //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

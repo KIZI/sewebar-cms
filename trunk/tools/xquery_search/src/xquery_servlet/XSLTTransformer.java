@@ -19,7 +19,7 @@ public class XSLTTransformer {
      * @param xsltFile soubor s xslt transformaci
      * @return prevedeny soubor ve forme Stringu
      */
-    public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime)
+    public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime, String reportUri, String database)
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -41,6 +41,8 @@ public class XSLTTransformer {
         trans = transFact.newTransformer(xsltSource);
         trans.setParameter("joomlaID", docID);
         trans.setParameter("creationTime", creationTime);
+        trans.setParameter("reportURI", reportUri);
+        trans.setParameter("database", database);
         trans.transform(xmlSource, result);
 
         
@@ -60,7 +62,7 @@ public class XSLTTransformer {
      * @param xsltFile soubor s xslt transformaci
      * @return prevedeny soubor ve forme Stringu
      */
-    public String xsltTransformation (String xmlString, File xsltFile, String docID, String creationTime)
+    public String xsltTransformation (String xmlString, File xsltFile, String docID, String creationTime, String reportUri, String database)
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -85,6 +87,8 @@ public class XSLTTransformer {
         trans = transFact.newTransformer(xsltSource);
         trans.setParameter("joomlaID", docID);
         trans.setParameter("creationTime", creationTime);
+        trans.setParameter("reportURI", reportUri);
+        trans.setParameter("database", database);
         trans.transform(xmlSource, result);
 
 

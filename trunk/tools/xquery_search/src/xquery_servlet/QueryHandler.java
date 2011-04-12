@@ -136,6 +136,32 @@ public class QueryHandler {
     }
 
     /**
+     * Metoda zajistujici odstraneni XML deklarace z XQuery dotazu
+     * @param query vstupni XQuery dotaz
+     * @return vraceny dotaz bez XML deklarace / chyba
+     */
+    public String deleteDeclaration(String query) {
+        String output = "";
+        String splitXMLBegin[] = query.split("([<][?][x][m][l])|([<][?][o][x][y][g][e][n])");
+        if (splitXMLBegin.length == 1) {
+            output = query;
+        } else {
+            for (int i = 0; i <= (splitXMLBegin.length - 1); i++) {
+                if (i == 0) {
+                    output += splitXMLBegin[i];
+                } else {
+                    String splitXMLEnd[] = splitXMLBegin[i].split("[?][>]");
+                    if (splitXMLEnd.length > 1) {
+                        String splitXMLBack = splitXMLEnd[1];
+                        output += splitXMLBack;
+                    }
+                }
+            }
+        }
+        return output;
+    }
+
+    /**
      *
      * @param query
      * @return
@@ -173,7 +199,7 @@ public class QueryHandler {
                             + "\n if ($everyCat/name() = \"Interval\") then <Interval closure=\"{$everyCat/@closure}\" left=\"{$everyCat/@leftMargin}\" right=\"{$everyCat/@rightMargin}\"/> else $everyCat"
                     + "\n return if (count($fieldTrans) > 0) then "
                         + "\n <Field dictionary=\"{distinct-values($fieldTrans[1]/@dictionary)}\"><Name>{distinct-values($fieldTrans[1]/@name/string())}</Name><Type>{$coeff/Type/text()}</Type>{$category}</Field> else ()};"
-                + "\n let $vstup := "+request
+                + "\n let $vstup := "+deleteDeclaration(request)
                 + "\n return local:processRequest($vstup)";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {

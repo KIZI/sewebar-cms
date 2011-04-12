@@ -13,6 +13,8 @@ import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -166,7 +168,7 @@ public class BDBXMLHandler {
                     }
             }
             if (chyba != 1) {
-            	query = deleteDeclaration(query);
+            	query = qh.deleteDeclaration(query);
 	            XmlQueryContext qc = mgr.createQueryContext();
 	            XmlTransaction txn = mgr.createTransaction();
 	            XmlResults res = mgr.query(query, qc);
@@ -256,7 +258,7 @@ public class BDBXMLHandler {
      * @param docName nazev doumentu (pro ulozeni v XMLDB)
      * @param creationTime datum a cas vytvoreni dokumentu
      */
-    public String indexDocument(String document, String docID, String docName, String creationTime){
+    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri, String database){
 
         String output = "";
         String xml_doc = "";
@@ -266,7 +268,7 @@ public class BDBXMLHandler {
         
             File xsltFile = new File(xsltPath);
             XSLTTransformer xslt = new XSLTTransformer();
-            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime);
+            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri, database);
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
             
@@ -300,7 +302,7 @@ public class BDBXMLHandler {
      * @param creationTime datum a cas vytvoreni dokumentu
      * @return zprava - ulozeno/chyba
      */
-    public String indexDocument(File document, String docID, String docName, String creationTime){
+    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri, String database){
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
@@ -311,7 +313,7 @@ public class BDBXMLHandler {
 
             XSLTTransformer xslt = new XSLTTransformer();
 
-            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime);
+            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri, database);
             output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
@@ -356,7 +358,7 @@ public class BDBXMLHandler {
         File uploadFiles[] = uploadFolder.listFiles();
         
         for(int i = 0; i < uploadFiles.length; i++){
-            output += indexDocument(uploadFiles[i], uploadFiles[i].getName(), "", new Date().toString());
+            output += indexDocument(uploadFiles[i], uploadFiles[i].getName(), "", new Date().toString(), "", "");
         }        
         return output;
     }
@@ -576,29 +578,31 @@ public class BDBXMLHandler {
         return output;
     }
 
-    /**
-     * Metoda zajistujici odstraneni XML deklarace z XQuery dotazu
-     * @param query vstupni XQuery dotaz
-     * @return vraceny dotaz bez XML deklarace / chyba
-     */
-    private String deleteDeclaration(String query) {
+    public String queryShortened(String XPathRequest){
+        long startTime = System.currentTimeMillis();
         String output = "";
-        String splitXMLBegin[] = query.split("([<][?][x][m][l])|([<][?][o][x][y][g][e][n])");
-        if (splitXMLBegin.length == 1) {
-            output = query;
-        } else {
-            for (int i = 0; i <= (splitXMLBegin.length - 1); i++) {
-                if (i == 0) {
-                    output += splitXMLBegin[i];
-                } else {
-                    String splitXMLEnd[] = splitXMLBegin[i].split("[?][>]");
-                    if (splitXMLEnd.length > 1) {
-                        String splitXMLBack = splitXMLEnd[1];
-                        output += splitXMLBack;
-                    }
-                }
-            }
-        }
+        String query = "for $ar in " + XPathRequest
+            + "\n return"
+            + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportUri}\" database=\"{$ar/parent::node()/@database}\">"
+                + "\n {$ar/Text}"
+            + "\n </Hit>";
+        String queryResult = query("", query, 0);
+        output += "<SearchResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                + "xsi:noNamespaceSchemaLocation=\"http://sewebar.vse.cz./schemas/SearchResult0_1.xsd\">"
+                + "<Metadata>"
+                    + "<SearchTimestamp>" + getDateTime() + "</SearchTimestamp>"
+                    + "<LastIndexUpdate>2002-05-30T09:00:00</LastIndexUpdate>"
+                    + "<SearchAlgorithm>xquery</SearchAlgorithm>"
+                    + "<SearchAlgorithmVersion>xquery 3/4/2011</SearchAlgorithmVersion>"
+                + "</Metadata>"
+                + "<Statistics>"
+                    + "<ExecutionTime>" + (System.currentTimeMillis() - startTime) + "</ExecutionTime>"
+                    + "<DocumentsSearched></DocumentsSearched>"
+                    + "<RulesSearched></RulesSearched>"
+                + "</Statistics>"
+                + "<Hits>";
+        output += queryResult;
+        output += "</Hits></SearchResult>";
         return output;
     }
 
@@ -613,5 +617,11 @@ public class BDBXMLHandler {
             } catch (XmlException ex) {
             }
         }
+    }
+
+    private String getDateTime(){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return df.format(date);
     }
 }
