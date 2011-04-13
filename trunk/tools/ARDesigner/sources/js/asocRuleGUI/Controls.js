@@ -24,6 +24,9 @@ var Control = new Class({
             if(isNaN(elementValue.toFloat())){
                 return false;
             }
+            if(Math.ceil(elementValue) != Math.floor(elementValue)){
+                return false;
+            }
             if(elementValue < minValue || elementValue > maxValue){
                 return false;
             }
