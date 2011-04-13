@@ -179,6 +179,14 @@ body{
     
 }
 
+.fieldExpression{
+    font-style: italic;
+}
+
+.topDivAW{
+    font-weight: bold;
+}
+
 .headersLeft{
     position: relative;
     color: black;
