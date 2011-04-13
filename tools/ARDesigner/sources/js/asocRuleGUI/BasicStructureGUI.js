@@ -97,7 +97,7 @@ var BasicStructureGUI = new Class({
         buttonPlaceDown.inject(rightDivButton);
 
         if(this.moreRules){
-            nextRule.inject(rightDivButton);
+            nextRule.inject(buttonPlaceDown);
             nextRuleInnerDiv.inject(nextRule);
         }
 

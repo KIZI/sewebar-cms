@@ -139,7 +139,6 @@ body{
     margin: 2px;
     width: 100px;
     height: 20px;
-    position: relative;
     text-align: center;
 }
 
@@ -153,7 +152,6 @@ body{
     margin: 2px;
     width: 100px;
     height: 20px;
-    position: relative;
     text-align: center;
 }
 
@@ -178,9 +176,7 @@ body{
 }
 
 .newRule{
-    position: absolute;
-    bottom: 0px;
-    left: -32px;
+    
 }
 
 .headersLeft{
@@ -238,9 +234,7 @@ body{
 }
 
 .saveWhole{
-    position: absolute;
-    top: 0px;
-    left: 0px;
+    
 }
 
 #tableAsking{
