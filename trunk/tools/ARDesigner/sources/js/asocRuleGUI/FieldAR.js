@@ -137,12 +137,16 @@ var FieldInput = new Class({
             value: this.actualValue,
             'class': "fieldInput"
         });
+        this.fieldInputt = fieldInput;
         fieldInput.addEvent('change', function(event){
             if(this.control.control(this.datatype, this.minValue, this.maxValue, event.target.get("value"))){
                 this.proposedValue = event.target.get("value");
             }
             else{
+                var language = new LanguageSupport();
+                new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
                 event.target.set("value","");
+                this.proposedValue = "";
             }
         }.bind(this))
         fieldExpression.inject(mainDiv);

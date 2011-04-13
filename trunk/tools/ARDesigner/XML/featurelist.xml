@@ -4,7 +4,7 @@
     schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
      mode="TaskSetting" procedure="4ft"> 
     <UserInterface>
-        <AllowMultipleRules>true</AllowMultipleRules>
+        <AllowMultipleRules>false</AllowMultipleRules>
     </UserInterface>
     <RulePattern>
         <!-- Antecedent may or may not be specified. There can be any number of (basic boolean) attributes.

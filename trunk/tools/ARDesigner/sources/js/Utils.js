@@ -232,7 +232,7 @@ var Hlaseni = new Class({
         prepravkaStyl.vloz("top","100px");
         prepravkaStyl.vloz("left","200px");
         prepravkaStyl.vloz("width","400px");
-        prepravkaStyl.vloz("height","200px");
+        prepravkaStyl.vloz("height","250px");
         prepravkaStyl.vloz("display","");
         prepravkaStyl.vloz("background-color","white");
         prepravkaStyl.vloz("z-index","10");
@@ -240,6 +240,45 @@ var Hlaseni = new Class({
         prepravkaAtribut.vloz("id",this.HLASENI);
         prepravkaAtribut.vloz("html", "<table><tr><td style=\"font-size: 20px;\">"+this.obsah+"</td></tr><tr><td>&nbsp;</td></tr><tr><td style=\"text-align: center;\"><input id=\"btHlaseni\"  style=\"font-size: 30px;\" type='button' value='OK'></td></tr></table>");
         this.elementTv.vytvorMeziVrstvu();
+        this.elementTv.vytvorDiv(prepravkaStyl, prepravkaAtribut, document.getElementsByTagName("body")[0]);
+        $('btHlaseni').addEvent("click",function(){
+            this.uklidHlaseni();
+            this.fireEvent("closehlaseni");
+        }.bind(this));
+    }
+});
+
+var HlaseniAbove = new Class({
+    Implements: Events,
+
+    PODKLAD: "podklad",
+    HLASENI: "hlaseni",
+    obsah: "",
+
+    initialize: function(obsah){
+        this.elementTv = new TvorbaElementu();
+        this.obsah = obsah;
+        this.hlasChybu();
+    },
+
+    uklidHlaseni: function(){
+        $(this.HLASENI).parentNode.removeChild($(this.HLASENI));
+    },
+
+    hlasChybu: function(){
+        var prepravkaStyl = new Prepravka();
+        var prepravkaAtribut = new Prepravka();
+        prepravkaStyl.vloz("position","absolute");
+        prepravkaStyl.vloz("top","100px");
+        prepravkaStyl.vloz("left","200px");
+        prepravkaStyl.vloz("width","400px");
+        prepravkaStyl.vloz("height","250px");
+        prepravkaStyl.vloz("display","");
+        prepravkaStyl.vloz("background-color","white");
+        prepravkaStyl.vloz("z-index","10");
+        prepravkaStyl.vloz("border","solid 4px black");
+        prepravkaAtribut.vloz("id",this.HLASENI);
+        prepravkaAtribut.vloz("html", "<table><tr><td style=\"font-size: 20px;\">"+this.obsah+"</td></tr><tr><td>&nbsp;</td></tr><tr><td style=\"text-align: center;\"><input id=\"btHlaseni\"  style=\"font-size: 30px;\" type='button' value='OK'></td></tr></table>");
         this.elementTv.vytvorDiv(prepravkaStyl, prepravkaAtribut, document.getElementsByTagName("body")[0]);
         $('btHlaseni').addEvent("click",function(){
             this.uklidHlaseni();
