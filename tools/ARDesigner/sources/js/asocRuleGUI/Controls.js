@@ -20,6 +20,9 @@ var Control = new Class({
      */
     control: function(datatype, minValue, maxValue, elementValue){
         var lowerDatatype = datatype.toLowerCase();
+        if(elementValue == ""){
+            return true;
+        }
         if(lowerDatatype == "integer"){
             if(isNaN(elementValue.toFloat())){
                 return false;

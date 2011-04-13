@@ -11,6 +11,8 @@ var LanguageSupport = new Class({
     NEED_MORE_ELEMENTS: "NeedMoreElements",
     EVERYTHING_OK: "EverythingOK",
     INCORRECT_RULE: "IncorrectRule",
+    INCORRECT_FIELD_VALUE: "IncorrectField",
+    actualLang: "cs",
 
     /**
      * Function: initialize
@@ -36,6 +38,7 @@ var LanguageSupport = new Class({
         specificLangCs[this.NEED_MORE_ELEMENTS] = "Je potøeba vìtší množství prvkù buï celkovì nebo v antecedentu nebo v consequentu nebo více mìr zajímavosti.";
         specificLangCs[this.EVERYTHING_OK] = "Vše bylo v poøádku uloženo.";
         specificLangCs[this.INCORRECT_RULE] = "Nìkteré z pravidel není v poøádku.";
+        specificLangCs[this.INCORRECT_FIELD_VALUE] = "Hodnota zadaná v poli nesplòuje parametry.";
         this.langDatas["cs"] = specificLangCs;
 
         var specificLangEn = new Array();
@@ -47,6 +50,7 @@ var LanguageSupport = new Class({
         specificLangEn[this.NEED_MORE_ELEMENTS] = "It is necessary to add more elements of the rule either in antecedent or in consequent or there must be more interest measures. ";
         specificLangEn[this.EVERYTHING_OK] = "Everything was saved succesfully.";
         specificLangEn[this.INCORRECT_RULE] = "Some of the rules was not correct.";
+        specificLangEn[this.INCORRECT_FIELD_VALUE] = "Field value is incorrect.";
         this.langDatas["en"] = specificLangEn;
     },
 

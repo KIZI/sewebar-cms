@@ -46,6 +46,7 @@ var AsociationRules = new Class({
             url: url,
             onComplete: function(item){
                 this.lang = item.lang;
+                LanguageSupport.actualLang = this.lang;
 
                 this.serverInfo = new ServerInfo(item)
                 var moreRules = this.serverInfo.getMoreRules();
