@@ -881,7 +881,7 @@ var AsociationRule = new Class({
         this.placeHTML.inject(this.ruleDiv);
 
         if(lastElement != null){
-            //this.lastElement = lastElement;
+        //this.lastElement = lastElement;
         }
 
         return this.ruleDiv;
@@ -907,10 +907,7 @@ var AsociationRule = new Class({
                 actualElement.onClickMy();
             }.bind(this));
             actualElement.addEvent("save", function(event){
-                var actualDiv = this.ruleDiv
-                this.ruleDiv.empty();
-                this.display().replaces(actualDiv);
-                this.fireEvent("display");
+                
             }.bind(this))
             actualElement.correctPlace = false;
             actualElement.shouldBeCreated = false;

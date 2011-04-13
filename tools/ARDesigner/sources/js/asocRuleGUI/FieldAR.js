@@ -137,7 +137,6 @@ var FieldInput = new Class({
             value: this.actualValue,
             'class': "fieldInput"
         });
-        this.fieldInputt = fieldInput;
         fieldInput.addEvent('change', function(event){
             if(this.control.control(this.datatype, this.minValue, this.maxValue, event.target.get("value"))){
                 this.proposedValue = event.target.get("value");
