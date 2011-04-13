@@ -117,7 +117,7 @@ public class XQuery_servlet extends HttpServlet {
                                 if (request.getParameter("database") != null) {
                                     database = request.getParameter("database").toString();
                                 }
-                                output += processRequest(action, id, docName, creationTime, reportUri, database, content, mgr, qh, bh, qm, tester);
+                                output += processRequest(action, id, docName, creationTime, reportUri, content, mgr, qh, bh, qm, tester);
 
 
                                 // Ukonceni spojeni s BDB XML a vycisteni
@@ -361,7 +361,7 @@ public class XQuery_servlet extends HttpServlet {
      * @param tester instance tridy Tester
      * @return predpripraveny vystup
      */
-    private String processRequest(String action, String id, String docName, String creationTime, String reportUri, String database, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
+    private String processRequest(String action, String id, String docName, String creationTime, String reportUri, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
     	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
@@ -419,7 +419,7 @@ public class XQuery_servlet extends HttpServlet {
                         output += "<error><![CDATA[Neni zadan datum vytvoreni dokumentu]]></error>";
                     } else {
                         content = content.toString();
-                        output += bh.indexDocument(content, id, docName, creationTime, reportUri, database);
+                        output += bh.indexDocument(content, id, docName, creationTime, reportUri);
                     } break;
             case 10: if (content.equals("")) {
                         output += "<error><![CDATA[Neni zadano umisteni slozky!]]></error>";

@@ -63,7 +63,7 @@ public class Tester {
             output += "<addQuery>" + qh.addQuery("Pokusná query určená k testu", "pokusTest") + "</addQuery>";
             output += "<getQuery>" + qh.getQuery("pokusTest")[1] + "</getQuery>";
             output += "<deleteQuery>" + qh.deleteQuery("pokusTest") + "</deleteQuery>";
-            output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokus1", "pokusTest", "", "", "") + "</indexDocument>";
+            output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokus1", "pokusTest", "", "") + "</indexDocument>";
             output += "<getDocument>" + bh.getDocument("pokusTest") + "</getDocument>";
             output += "<removeDocument>" + bh.removeDocument("pokusTest") + "</removeDocument>";
         output += "</testOutput>";

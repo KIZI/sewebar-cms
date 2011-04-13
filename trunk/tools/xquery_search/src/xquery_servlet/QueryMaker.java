@@ -63,11 +63,11 @@ public class QueryMaker {
                                     connective = " and ";
                                 }
                             }
-                            output += connective+".//BBA[DDName=\""+name.getNodeValue()+"\"]/DDValue=\""+cat.getNodeValue()+"\"";
+                            output += connective+".//BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName=\""+cat.getNodeValue()+"\"";
                         }
                     } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
                         Element intElement = (Element)intsList.item(0);
-                        output += ".//BBA[DDName=\""+name.getNodeValue()+"\" and Interval/@left = "+intElement.getAttribute("left")+"  and Interval/@right = "+intElement.getAttribute("right")+"]";
+                        output += ".//BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left = "+intElement.getAttribute("left")+"  and Interval/@right = "+intElement.getAttribute("right")+"]";
                     }
                     output += ")";
                     i++;

@@ -232,7 +232,7 @@ public class BDBXMLHandler {
                     + "\nreturn"
                     + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
                     + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
-                    + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
+                    + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
             XmlContainer cont = mgr.openContainer(containerName);
             XmlQueryContext qc = mgr.createQueryContext();
@@ -258,7 +258,7 @@ public class BDBXMLHandler {
      * @param docName nazev doumentu (pro ulozeni v XMLDB)
      * @param creationTime datum a cas vytvoreni dokumentu
      */
-    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri, String database){
+    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri){
 
         String output = "";
         String xml_doc = "";
@@ -268,7 +268,7 @@ public class BDBXMLHandler {
         
             File xsltFile = new File(xsltPath);
             XSLTTransformer xslt = new XSLTTransformer();
-            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri, database);
+            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
             
@@ -302,7 +302,7 @@ public class BDBXMLHandler {
      * @param creationTime datum a cas vytvoreni dokumentu
      * @return zprava - ulozeno/chyba
      */
-    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri, String database){
+    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri){
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
@@ -313,7 +313,7 @@ public class BDBXMLHandler {
 
             XSLTTransformer xslt = new XSLTTransformer();
 
-            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri, database);
+            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
             output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
             //output += "<xslt>" + xslt_output + "</xslt>";
             //xmlFile.delete();
@@ -358,7 +358,7 @@ public class BDBXMLHandler {
         File uploadFiles[] = uploadFolder.listFiles();
         
         for(int i = 0; i < uploadFiles.length; i++){
-            output += indexDocument(uploadFiles[i], uploadFiles[i].getName(), "", new Date().toString(), "", "");
+            output += indexDocument(uploadFiles[i], "", uploadFiles[i].getName(), new Date().toString(), "");
         }        
         return output;
     }
@@ -583,7 +583,7 @@ public class BDBXMLHandler {
         String output = "";
         String query = "for $ar in " + XPathRequest
             + "\n return"
-            + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportUri}\" database=\"{$ar/parent::node()/@database}\">"
+            + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
                 + "\n {$ar/Text}"
             + "\n </Hit>";
         String queryResult = query("", query, 0);
