@@ -169,6 +169,9 @@ var Attribute = new Class({
         var attributeElement = utils.createPrvek(this.ATTR_CLASS, textToDisplay);
         attributeElement.element = this;
         attributeElement.shouldBeCreated = shouldBeCreated;
+        this.specificId = "attr"+Counter.counter;
+        attributeElement.set('id',this.specificId);
+        Counter.counter++;
         return attributeElement;
     },
 
@@ -338,7 +341,15 @@ var Attribute = new Class({
         this.actualAttrField.save();
         this.askingWindowDiv.dispose();
         this.podklad.dispose();
-        this.fireEvent("save");
+        var textToDisplay = "";
+        if(this.actualAttrField != null){
+            textToDisplay = this.nameLang+"<br>"+this.actualAttrField.getFieldNameValues();
+        }
+        else{
+            textToDisplay = this.nameLang;
+        }
+        $(this.specificId).set('html',textToDisplay);
+        //this.fireEvent("save");
     },
 
     /**
@@ -546,6 +557,9 @@ var InterestMeasure = new Class({
         var interestMeasureElement = utils.createPrvek(this.IM_CLASS, textToDisplay);
         interestMeasureElement.element = this;
         interestMeasureElement.shouldBeCreated = shouldBeCreated;
+        this.specificId = "im"+Counter.counter;
+        interestMeasureElement.set('id',this.specificId);
+        Counter.counter++;
         return interestMeasureElement;
     },
 
@@ -690,7 +704,9 @@ var InterestMeasure = new Class({
             this.fields[actualField].save();
         }
         this.podklad.dispose();
-        this.fireEvent("save");
+        var textToDisplay = this.nameLang+"<br>"+this.getFieldNameValues();
+        $(this.specificId).set('html',textToDisplay);
+        //this.fireEvent("save");
     },
 
     /**

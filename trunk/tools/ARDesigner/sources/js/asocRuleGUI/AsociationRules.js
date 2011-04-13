@@ -182,3 +182,11 @@ var AsociationRules = new Class({
 var JSONHelp = new Class({
 
     });
+
+function Counter(){
+    if ( typeof Counter.counter == 'undefined' ) {
+        // It has not... perform the initilization
+        Counter.counter = 0;
+    }
+}
+Counter.counter = 0;
