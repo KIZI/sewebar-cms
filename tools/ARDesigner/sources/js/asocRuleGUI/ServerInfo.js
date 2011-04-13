@@ -72,7 +72,7 @@ var ServerInfo = new Class({
      */
     solveInterestMeasures: function(item){
         var actualIM = null;
-        var name, nameLang, explanation, fieldNames, fieldLangs, fieldMinValues, fieldMaxValues, fieldDatatypes, fieldExplanations;
+        var name, nameLang, explanation, fieldNames, fieldLangs, fieldMinValues, fieldMaxValues, fieldDatatypes, fieldExplanations, fieldMin, fieldMax;
         var fields = new Array();
         for(var i = 0; i < item.interestMeasures.length; i++){
             actualIM = item.interestMeasures[i];
@@ -107,8 +107,16 @@ var ServerInfo = new Class({
             if(fieldExplanations == undefined){
                 fieldExplanations = new Array();
             }
-
-            fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "")
+            fieldMin = fields.fieldInclusivesMin;
+            if(fieldMin == undefined){
+                fieldMin = new Array();
+            }
+            fieldMax = fields.fieldInclusivesMax;
+            if(fieldMax == undefined){
+                fieldMax = new Array();
+            }
+            
+            fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "", fieldMin, fieldMax);
             
             this.interestMeasures.push(new InterestMeasure(name, nameLang, explanation, fields));
         }
@@ -130,8 +138,8 @@ var ServerInfo = new Class({
      * Returns:
      * {Array} Array of fields
      */
-    solveFields: function(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, fNameTest){
-        var fName,fLang,fMinValue,fMaxValue,fDatatype,fExplanation, newField;
+    solveFields: function(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, fNameTest, fieldMinInc, fieldMaxInc){
+        var fName,fLang,fMinValue,fMaxValue,fDatatype,fExplanation, newField, fieldMin, fieldMax;
         var fields = new Array();
         for(var actualField = 0; actualField < fieldNames.length; actualField++){
             fName = fieldNames[actualField]
@@ -170,8 +178,32 @@ var ServerInfo = new Class({
                 fExplanation = fieldExplanations[actualField]
             }
 
+            if(fieldMinInc.length < actualField){
+                fieldMin = true;
+            }
+            else{
+                if(fieldMinInc[actualField] == "false"){
+                    fieldMin = false;
+                }
+                else{
+                    fieldMin = true;
+                }
+            }
+
+            if(fieldMaxInc.length < actualField){
+                fieldMax = true;
+            }
+            else{
+                if(fieldMaxInc[actualField] == "false"){
+                    fieldMax = false;
+                }
+                else{
+                    fieldMax = true;
+                }
+            }
+
             if(fNameTest.toLowerCase() != "one category"){
-                newField = new FieldInput(fName,fLang,fMinValue,fMaxValue,fDatatype,fExplanation);
+                newField = new FieldInput(fName,fLang,fMinValue,fMaxValue,fDatatype,fExplanation, fieldMin, fieldMax);
             }
             else{
                 newField = new FieldSelect(fName,fLang,fExplanation);
@@ -215,7 +247,7 @@ var ServerInfo = new Class({
      */
     solvePossibleCoefficients: function(item){
         var coef, category, localizedCategory;
-        var fieldNames, fieldLangs, fieldMinValues, fieldMaxValues, fieldDatatypes, fieldExplanations;
+        var fieldNames, fieldLangs, fieldMinValues, fieldMaxValues, fieldDatatypes, fieldExplanations, fieldMin, fieldMax;
         var fields = new Array();
         var fieldsData;
         for(var actualCoef = 0; actualCoef < item.possibleCoef.length; actualCoef++){
@@ -252,7 +284,16 @@ var ServerInfo = new Class({
             if(fieldExplanations == undefined){
                 fieldExplanations = new Array();
             }
-            fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, category)
+            fieldMin = fields.fieldInclusivesMin;
+            if(fieldMin == undefined){
+                fieldMin = new Array();
+            }
+            fieldMax = fields.fieldInclusivesMax;
+            if(fieldMax == undefined){
+                fieldMax = new Array();
+            }
+
+            fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, category, fieldMin, fieldMax)
 
             this.attributesFields.push(new AttributeFields(category, localizedCategory, fields));
         }

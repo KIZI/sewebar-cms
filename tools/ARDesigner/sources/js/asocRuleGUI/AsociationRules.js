@@ -46,6 +46,9 @@ var AsociationRules = new Class({
             url: url,
             onComplete: function(item){
                 this.lang = item.lang;
+                // optional - nynìjší stav, prohibited - nezobrazí se displayAskingWindow, required - "" není funkèní øešení."
+                AsociationRules.imThreshold = item.imThreshold;
+                AsociationRules.attrCoef = item.attrCoef;
                 LanguageSupport.actualLang = this.lang;
 
                 this.serverInfo = new ServerInfo(item)

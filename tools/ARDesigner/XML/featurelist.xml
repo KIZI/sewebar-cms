@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
     xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
-    schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
      mode="TaskSetting" procedure="4ft"> 
     <UserInterface>
         <AllowMultipleRules>false</AllowMultipleRules>
     </UserInterface>
     <RulePattern>
-        <!-- Antecedent may or may not be specified. There can be any number of (basic boolean) attributes.
-        For each BBA, the user has to specify coefficient        -->
-        <Antecedent minNumberOfBBAs="1" maxNumberOfBBA="6"/>
-        <!-- Interest Measure must be specified. 
-            There can be any number of interest measures - provided that conditions in BuildingBlocks/InterestMeasures are met.
-            The user must specify the thresholds.
-        -->
-        <InterestMeasureConstraint minNumberOfInterestMeasures="0" maxNumberOfInterestMeasures="3"/>
-        <!-- Consequent may or may not be specified. There can be only one (basic boolean) attribute in negation.-->
-        <Consequent minNumberOfBBAs="0" maxNumberOfBBA="6" />
-        <!-- Condition must not be specified. 
-        -->
-        <Condition minNumberOfBBAs="0" maxNumberOfBBA="0"/>
-        <!-- The whole rule (Ant+Cons+Cond) must contain at least 1 BBA and at most 10 BBAs  -->
-        <GeneralConstraint minNumberOfBBAs="1" maxNumberOfBBA="10"/>
+        <Antecedent minNumberOfBBAs="1"/>
+        <Consequent minNumberOfBBAs="0"/>
+        <Condition minNumberOfBBAs="0"/>
+        <GeneralConstraint minNumberOfBBAs="1"/>
     </RulePattern>
 
     <!-- Details for each building block -->
@@ -218,6 +206,7 @@
                     <Connectives>
                         <Conjunction allowed="yes"/>
                         <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
                         <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
@@ -225,6 +214,7 @@
                     <Connectives>
                         <Conjunction allowed="yes"/>
                         <Disjunction allowed="yes"/>
+                        <Any allowed="no"/>
                         <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
@@ -232,6 +222,7 @@
                     <Connectives>
                         <Conjunction allowed="no"/>
                         <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
                         <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
