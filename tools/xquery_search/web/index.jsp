@@ -50,34 +50,31 @@
               window.document.getElementById("content").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
+              window.document.getElementById("reportUri").style.display = "none";
           } else if (vybrano == "directQuery" || vybrano == "directQuery10" || vybrano == "addIndex" || vybrano == "delIndex" || vybrano == "addDocumentMultiple" || vybrano == "jaxpQuery") {
               window.document.getElementById("id").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
               window.document.getElementById("content").style.display = "block";
               window.document.getElementById("reportUri").style.display = "none";
-              window.document.getElementById("database").style.display = "none";
           } else if (vybrano == "getQuery" || vybrano == "deleteQuery" || vybrano == "getDocument" || vybrano == "deleteDocument") {
               window.document.getElementById("id").style.display = "block";
               window.document.getElementById("content").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
               window.document.getElementById("reportUri").style.display = "none";
-              window.document.getElementById("database").style.display = "none";
           } else if (vybrano == "addDocument") {
               window.document.getElementById("id").style.display = "block";
               window.document.getElementById("content").style.display = "block";
               window.document.getElementById("docName").style.display = "block";
               window.document.getElementById("creationTime").style.display = "block";
               window.document.getElementById("reportUri").style.display = "block";
-              window.document.getElementById("database").style.display = "block";
           } else {
               window.document.getElementById("id").style.display = "block";
               window.document.getElementById("content").style.display = "block";
               window.document.getElementById("docName").style.display = "none";
               window.document.getElementById("creationTime").style.display = "none";
               window.document.getElementById("reportUri").style.display = "none";
-              window.document.getElementById("database").style.display = "none";
           }
       }
   </script>
@@ -124,10 +121,6 @@
     <div id="reportUri">
     <b>Report URI: </b><input type="text" name="reportUri" id="reportUri" size="150">
     <br /><i>Nápověda: Pole slouží pro zadání URI adresy reportu</i>
-    </div>
-    <div id="database">
-    <b>Database: </b><input type="text" name="database" id="database" size="150">
-    <br /><i>Nápověda: Pole slouží pro zadání DB, ze ktere pochazeji data reportu</i>
     </div>
     <div id="content">
     <b>Doc content/Query content:</b>
