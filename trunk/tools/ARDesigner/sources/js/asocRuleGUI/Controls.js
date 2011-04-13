@@ -18,7 +18,13 @@ var Control = new Class({
      * Returns:
      * {Boolean} true if it is ok.
      */
-    control: function(datatype, minValue, maxValue, elementValue){
+    control: function(datatype, minValue, maxValue, elementValue, inclusiveMin, inclusiveMax){
+        if(inclusiveMin == undefined){
+            inclusiveMin = true;
+        }
+        if(inclusiveMax == undefined){
+            inclusiveMax = true;
+        }
         var lowerDatatype = datatype.toLowerCase();
         if(elementValue == ""){
             return true;
@@ -30,6 +36,12 @@ var Control = new Class({
             if(Math.ceil(elementValue) != Math.floor(elementValue)){
                 return false;
             }
+            if(!inclusiveMin && elementValue == minValue){
+                return false;
+            }
+            if(!inclusiveMax && elementValue == maxValue){
+                return false;
+            }
             if(elementValue < minValue || elementValue > maxValue){
                 return false;
             }
@@ -38,12 +50,24 @@ var Control = new Class({
             if(isNaN(elementValue.toFloat())){
                 return false;
             }
+            if(!inclusiveMin && elementValue == minValue){
+                return false;
+            }
+            if(!inclusiveMax && elementValue == maxValue){
+                return false;
+            }
             if(elementValue < minValue || elementValue > maxValue){
                 return false;
             }
         }
         if(lowerDatatype == "double"){
             if(isNaN(elementValue.toFloat())){
+                return false;
+            }
+            if(!inclusiveMin && elementValue == minValue){
+                return false;
+            }
+            if(!inclusiveMax && elementValue == maxValue){
                 return false;
             }
             if(elementValue < minValue || elementValue > maxValue){

@@ -70,6 +70,22 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $this->solveDepthNesting();
         $this->solveMoreRules();
 
+        $interestMeasure = $this->domFL->getElementsByTagName("InterestMeasures")->item(0);
+        $bba = $this->domFL->getElementsByTagName("BasicBooleanAttribute")->item(0);
+
+        $threshold = "optional";
+        $coefficient = "optional";
+
+        if($interestMeasure->getAttribute("threshold") != ""){
+            $threshold = $interestMeasure->getAttribute("threshold");
+        }
+        if($bba->getAttribute("coefficient") != ""){
+            $coefficient = $bba->getAttribute("coefficient");
+        }
+
+        $this->jsonObject['imThreshold'] = $threshold;
+        $this->jsonObject['attrCoef'] = $coefficient;
+
         $posCoef = $this->solvePosCoef();
         $this->jsonObject['possibleCoef'] = $posCoef;
 
@@ -233,6 +249,8 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $maxValues = array();
         $datatypes = array();
         $explanations = array();
+        $inclusivesMin = array();
+        $inclusivesMax = array();
 
         foreach ($fields as $fieldChild) {
             if($fieldChild->nodeName != "Field"){
@@ -255,15 +273,23 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $minValue = -9999999;
                     $maxValue = 99999999;
                     $datatype = "integer";
+                    $inclusiveSingleMin = "true";
+                    $inclusiveSingleMax = "true";
                     foreach ($fieldValidations as $validation) {
                         if ($validation->nodeName == "MinValue") {
                             if ($validation->nodeValue != "" && $validation->nodeValue != null) {
                                 $minValue = $validation->nodeValue;
                             }
+                            if($validation->getAttribute("inclusive") == "no"){
+                                $inclusiveSingleMin = "false";
+                            }
                         }
                         if ($validation->nodeName == "MaxValue") {
                             if ($validation->nodeValue != "" && $validation->nodeValue != null) {
                                 $maxValue = $validation->nodeValue;
+                            }
+                            if($validation->getAttribute("inclusive") == "no"){
+                                $inclusiveSingleMax = "false";
                             }
                         }
                         if ($validation->nodeName == "Datatype") {
@@ -275,6 +301,8 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $minValues[] = $minValue;
                     $maxValues[] = $maxValue;
                     $datatypes[] = $datatype;
+                    $inclusivesMin[] = $inclusiveSingleMin;
+                    $inclusivesMax[] = $inclusiveSingleMax;
                 }
             }
         }
@@ -283,7 +311,9 @@ class GetDataARBuilderQuery extends AncestorGetData {
             'fieldMinValues' => $minValues,
             'fieldMaxValues' => $maxValues,
             'fieldDatatypes' => $datatypes,
-            'fieldExplanations' => $explanations);
+            'fieldExplanations' => $explanations,
+            'fieldInclusivesMin' => $inclusivesMin,
+            'fieldInclusivesMax' => $inclusivesMax);
         return $fieldsArray;
     }
 

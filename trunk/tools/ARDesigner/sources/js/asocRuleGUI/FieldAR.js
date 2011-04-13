@@ -101,13 +101,15 @@ var FieldInput = new Class({
      * datatype  {String} datatype
      * explanation {String} explanation
      */
-    initialize: function(name, nameLang, minValue, maxValue, datatype, explanation){
+    initialize: function(name, nameLang, minValue, maxValue, datatype, explanation, inclusiveMin, inclusiveMax){
         this.name = name;
         this.nameLang = nameLang;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.datatype = datatype;
         this.explanation = explanation;
+        this.inclusiveMin = inclusiveMin;
+        this.inclusiveMax = inclusiveMax;
         this.actualValue = "";
         this.proposedValue = "";
         this.control = new Control();
@@ -138,7 +140,7 @@ var FieldInput = new Class({
             'class': "fieldInput"
         });
         fieldInput.addEvent('change', function(event){
-            if(this.control.control(this.datatype, this.minValue, this.maxValue, event.target.get("value"))){
+            if(this.control.control(this.datatype, this.minValue, this.maxValue, event.target.get("value"), this.inclusiveMin, this.inclusiveMax)){
                 this.proposedValue = event.target.get("value");
             }
             else{

@@ -239,6 +239,9 @@ var Attribute = new Class({
      * event {Event} event
      */
     onClickMy: function(event){
+        if(AsociationRules.attrCoef == "prohibited"){
+            return;
+        }
         var askingWindow = this.displayAskingWindow();
         this.podklad.inject($('mainDiv'));
         askingWindow.inject($('mainDiv'));
@@ -339,6 +342,13 @@ var Attribute = new Class({
      */
     save: function(){
         this.actualAttrField.save();
+        if(this.actualAttrField.getValue() == ""){
+            if(AsociationRules.attrCoef == "required"){
+                var language = new LanguageSupport();
+                new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
+                return;
+            }
+        }
         this.askingWindowDiv.dispose();
         this.podklad.dispose();
         var textToDisplay = "";
@@ -349,7 +359,7 @@ var Attribute = new Class({
             textToDisplay = this.nameLang;
         }
         $(this.specificId).set('html',textToDisplay);
-        //this.fireEvent("save");
+    //this.fireEvent("save");
     },
 
     /**
@@ -594,6 +604,9 @@ var InterestMeasure = new Class({
      * event {Event} event
      */
     onClickMy: function(event){
+        if(AsociationRules.imThreshold == "prohibited"){
+            return;
+        }
         var askingWindow = this.displayAskingWindow();
         this.podklad.inject($('mainDiv'));
         askingWindow.inject($('mainDiv'));
@@ -689,7 +702,6 @@ var InterestMeasure = new Class({
             value: saveLang
         });
         button.addEvent('click', function(event){
-            this.askingWindowDiv.dispose();
             this.save();
         }.bind(this));
         button.inject(buttonPart);
@@ -702,11 +714,19 @@ var InterestMeasure = new Class({
     save: function(){
         for(var actualField = 0; actualField < this.fields.length; actualField++){
             this.fields[actualField].save();
+            if(this.fields[actualField].getValue() == ""){
+                if(AsociationRules.imThreshold == "required"){
+                    var language = new LanguageSupport();
+                    new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
+                    return;
+                }
+            }
         }
+        this.askingWindowDiv.dispose();
         this.podklad.dispose();
         var textToDisplay = this.nameLang+"<br>"+this.getFieldNameValues();
         $(this.specificId).set('html',textToDisplay);
-        //this.fireEvent("save");
+    //this.fireEvent("save");
     },
 
     /**

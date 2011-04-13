@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
     xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
-    schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
-     mode="TaskSetting" procedure="4ft"> 
+    mode="AssociationRules" procedure="4ft"> 
     <UserInterface>
         <AllowMultipleRules>false</AllowMultipleRules>
     </UserInterface>
 
     <RulePattern>
         <Antecedent minNumberOfBBAs="1" />
-        <InterestMeasureConstraint minNumberOfInterestMeasures="0" maxNumberOfInterestMeasures="1"/>
         <Consequent minNumberOfBBAs="0" />
-        <Condition minNumberOfBBAs="0" maxNumberOfBBA="0"/>
+        <Condition minNumberOfBBAs="0"/>
         <GeneralConstraint minNumberOfBBAs="1"/>
     </RulePattern>
 
@@ -346,6 +344,7 @@
                     <Connectives>
                         <Conjunction allowed="yes"/>
                         <Disjunction allowed="yes"/>
+                        <Any allowed="no"/>
                         <Negation allowed="no"/>
                     </Connectives>
                 </NestingConstraint>
