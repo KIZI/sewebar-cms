@@ -184,17 +184,15 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $rightMargin = $elFieldChildren->getAttribute("rightMargin");
                     $type = $elFieldChildren->getAttribute("closure");
                     $value = "";
-                    if($this->startsWith($type, $OPEN, false)){
+                    if ($this->startsWith($type, $OPEN, false)) {
                         $value .= "(";
-                    }
-                    else{
+                    } else {
                         $value .= "<";
                     }
-                    $value .= $leftMargin.";".$rightMargin;
-                    if($this->endsWith($type, $OPEN, false)){
+                    $value .= $leftMargin . ";" . $rightMargin;
+                    if ($this->endsWith($type, $OPEN, false)) {
                         $value .= ")";
-                    }
-                    else{
+                    } else {
                         $value .= ">";
                     }
                     $choices[] = $value;
@@ -221,9 +219,9 @@ class GetDataARBuilderQuery extends AncestorGetData {
     }
 
     /**
-     * It adds additional information about one Interest Measure.
+     * It adds additional information about all fields.
      *
-     * @param <DomNode> $fieldNode Field of feature List
+     * @param <DomNode> $fieldNode Type of feature List
      * @param <String> $name Name of Interest Measure
      * @return <String> part of final JSON
      */
@@ -236,40 +234,48 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $datatypes = array();
         $explanations = array();
 
-        foreach ($fields as $field) {
-            if ($field->nodeName == "Name" && !$field->hasAttributes()) {
-                $names[] = $field->nodeValue;
+        foreach ($fields as $fieldChild) {
+            if($fieldChild->nodeName != "Field"){
+                continue;
             }
-            if ($field->nodeName == "LocalizedName" && ($field->getAttribute("lang") == $this->lang)) {
-                $localizedNames[] = $field->nodeValue;
-            }
-            //$json2 .= "FieldName ".$field->nodeName."<br><br>";
-            if ($field->nodeName == "Validation") {
-                $fieldValidations = $field->childNodes;
-                $minValue = -9999999;
-                $maxValue = 99999999;
-                $datatype = "integer";
-                foreach ($fieldValidations as $validation) {
-                    if ($validation->nodeName == "MinValue") {
-                        if ($validation->nodeValue != "" && $validation->nodeValue != null) {
-                            $minValue = $validation->nodeValue;
-                        }
-                    }
-                    if ($validation->nodeName == "MaxValue") {
-                        if ($validation->nodeValue != "" && $validation->nodeValue != null) {
-                            $maxValue = $validation->nodeValue;
-                        }
-                    }
-                    if ($validation->nodeName == "Datatype") {
-                        if ($validation->nodeValue != "" && $validation->nodeValue != null) {
-                            $datatype = $validation->nodeValue;
-                        }
-                    }
+            $fieldChildren = $fieldChild->childNodes;
+            foreach ($fieldChildren as $field) {
+                if ($field->nodeName == "Name" && !$field->hasAttributes()) {
+                    $names[] = $field->nodeValue;
                 }
-                $minValues[] = $minValue;
-                $maxValues[] = $maxValue;
-                $datatypes[] = $datatype;
-                $explanations[] = "";
+                if ($field->nodeName == "LocalizedName" && ($field->getAttribute("lang") == $this->lang)) {
+                    $localizedNames[] = $field->nodeValue;
+                }
+                if ($field->nodeName == "Explanation" && ($field->getAttribute("lang") == $this->lang)) {
+                    $explanations[] = $field->nodeValue;
+                }
+                //$json2 .= "FieldName ".$field->nodeName."<br><br>";
+                if ($field->nodeName == "Validation") {
+                    $fieldValidations = $field->childNodes;
+                    $minValue = -9999999;
+                    $maxValue = 99999999;
+                    $datatype = "integer";
+                    foreach ($fieldValidations as $validation) {
+                        if ($validation->nodeName == "MinValue") {
+                            if ($validation->nodeValue != "" && $validation->nodeValue != null) {
+                                $minValue = $validation->nodeValue;
+                            }
+                        }
+                        if ($validation->nodeName == "MaxValue") {
+                            if ($validation->nodeValue != "" && $validation->nodeValue != null) {
+                                $maxValue = $validation->nodeValue;
+                            }
+                        }
+                        if ($validation->nodeName == "Datatype") {
+                            if ($validation->nodeValue != "" && $validation->nodeValue != null) {
+                                $datatype = $validation->nodeValue;
+                            }
+                        }
+                    }
+                    $minValues[] = $minValue;
+                    $maxValues[] = $maxValue;
+                    $datatypes[] = $datatype;
+                }
             }
         }
         $fieldsArray = array('fieldNames' => $names,
@@ -304,14 +310,15 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $interestMeasure['localizedName'] = $type->nodeValue;
                 }
                 if ($type->nodeName == "Field") {
-                    $fields = array();
-                    $fields = $this->solveIMFields($type, $name);
-                    $interestMeasure['fields'] = $fields;
+                    
                 }
                 if ($type->nodeName == "Explanation" && ($type->getAttribute("lang") == $this->lang)) {
                     $interestMeasure['explanation'] = $type->nodeValue;
                 }
             }
+            $fields = array();
+            $fields = $this->solveIMFields($typeS, $name);
+            $interestMeasure['fields'] = $fields;
             $interestMeasures[] = $interestMeasure;
         }
         $this->solveSupportedIM();
@@ -428,9 +435,10 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $poesCoef['explanation'] = $type->nodeValue;
                 }
                 if ($type->nodeName == "Field") {
-                    $poesCoef['fields'] = $this->solveIMFields($type, $name);
+                    
                 }
             }
+            $poesCoef['fields'] = $this->solveIMFields($typeS, $name);
             $posCoefs[] = $poesCoef;
         }
         return $posCoefs;
