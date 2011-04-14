@@ -44,13 +44,13 @@ class KbiViewQueryDefinition extends JView
 		$lists = array();
 
 		// sources
-		$lists['sources'] = JHTML::_('select.genericlist',  $this->sources, 'sources', '', 'id', 'name', $query->source);
+		$lists['sources'] = JHTML::_('select.genericlist',  $this->sources, 'sources', '', 'id', 'name', !empty($query) ? $query->source : '');
 
 		// queries
-		$lists['queries'] = JHTML::_('select.genericlist',  $this->queries, 'query', '', 'id', 'name', $query->query);
+		$lists['queries'] = JHTML::_('select.genericlist',  $this->queries, 'query', '', 'id', 'name', !empty($query) ? $query->query : '');
 
 		// xslt
-		$lists['xslt'] = JHTML::_('select.genericlist',  $this->xslts, 'xslt', '', 'id', 'name', $query->xslt);
+		$lists['xslt'] = JHTML::_('select.genericlist',  $this->xslts, 'xslt', '', 'id', 'name', !empty($query) ? $query->xslt : '');
 
 		// ARDesigner
 		/*$ardesigner = JComponentHelper::getComponent('com_ardesigner', true);

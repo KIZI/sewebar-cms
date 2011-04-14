@@ -4,6 +4,8 @@
 defined('_JEXEC') or die('Restricted access');
 jimport( 'joomla.application.component.model');
 
+include dirname(__FILE__).'/../../../../components/com_content/helpers/route.php';
+
 class DocumentsModel extends JModel
 {
 	/**
@@ -37,10 +39,10 @@ class DocumentsModel extends JModel
 			$rows[0]->parameters = new JParameter($rows[0]->attribs);//vytvoříme objekt s parametry článku
 			$results = $dispatcher->trigger('onPrepareContent', array (& $rows[0], & $rows[0]->parameters, 0)); //načtení pluginů
 		}
-		/*nahradíme event. špatný tvar komentářů*/
-		$rows[0]->text=str_replace('<!--gInclude{','<!-- gInclude{',$rows[0]->text);
-		$rows[0]->text=str_replace('}-->','} -->',$rows[0]->text);
-		/**/
+
+		//doplnime uri na clanek
+		$rows[0]->uri = JRoute::_(ContentHelperRoute::getArticleRoute($rows[0]->id), true, -1);
+
 		return $rows[0];
 	}
 
