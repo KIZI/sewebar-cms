@@ -124,7 +124,7 @@ class XQuery extends KBIntegratorSynchronable
 				'docName' => $document->title,
 				'creationTime' => $document->modified,
 				'content'=> $document->text,
-
+				'reportUri' => $document->uri,
 			);
 		} else {
 			$data = array(
@@ -133,7 +133,6 @@ class XQuery extends KBIntegratorSynchronable
 				'docName' => '',
 				'creationTime' => '',
 				'content'=> $path ? file_get_contents($document) : $document,
-
 			);
 		}
 

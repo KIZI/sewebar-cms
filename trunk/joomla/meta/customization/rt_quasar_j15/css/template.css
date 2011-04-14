@@ -34,6 +34,8 @@ ul li {list-style: square;margin-left: 15px;}
   display: block !important;
 }
 
+/* zobrazovani menu reportu nad joomla menu v pripade mensiho rozliseni */
+#navMenu { z-index: 100; }
 
 div.gincludeTitleDiv { display:none; }
 /**************************************/
