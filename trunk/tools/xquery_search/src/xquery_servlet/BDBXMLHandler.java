@@ -147,6 +147,7 @@ public class BDBXMLHandler {
      * @param id ID ulozene XQuery
      * @param search vstupni dotaz pro XQuery
      * @param type typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
+     * @return vysledek vyhledavani
     */
     public String query(String id, String search, int type){
         String output = "";
@@ -258,6 +259,7 @@ public class BDBXMLHandler {
      * @param docID id dokumentu (joomlaID)
      * @param docName nazev doumentu (pro ulozeni v XMLDB)
      * @param creationTime datum a cas vytvoreni dokumentu
+     * @param reportUri url adresa reportu
      * @return informace o ulozeni/chybe
      */
     public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri){
@@ -302,6 +304,7 @@ public class BDBXMLHandler {
      * @param docID id dokumentu (joomlaID)
      * @param docName nazev doumentu (pro ulozeni v XMLDB)
      * @param creationTime datum a cas vytvoreni dokumentu
+     * @param reportUri url adresa reportu
      * @return zprava - ulozeno/chyba
      */
     public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri){
