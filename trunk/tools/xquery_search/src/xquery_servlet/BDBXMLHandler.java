@@ -224,6 +224,7 @@ public class BDBXMLHandler {
 
     /**
      * Metoda pro ziskani nazvu dokumentu ulozenych v XML DB
+     * @return seznam ulozenych dokumentu
      */
     public String getDocsNames(){
         String output = "";
@@ -257,6 +258,7 @@ public class BDBXMLHandler {
      * @param docID id dokumentu (joomlaID)
      * @param docName nazev doumentu (pro ulozeni v XMLDB)
      * @param creationTime datum a cas vytvoreni dokumentu
+     * @return informace o ulozeni/chybe
      */
     public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri){
 
@@ -578,6 +580,11 @@ public class BDBXMLHandler {
         return output;
     }
 
+    /**
+     * Metoda pro dotazovani pomoci vytvoreneho XPath dotazu
+     * @param XPathRequest XPath dotaz
+     * @return vysledky hledani v SearchResult formatu
+     */
     public String queryShortened(String XPathRequest){
         long startTime = System.currentTimeMillis();
         String output = "";
@@ -585,6 +592,7 @@ public class BDBXMLHandler {
             + "\n return"
             + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
                 + "\n {$ar/Text}"
+                + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
             + "\n </Hit>";
         String queryResult = query("", query, 0);
         output += "<SearchResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
@@ -619,6 +627,10 @@ public class BDBXMLHandler {
         }
     }
 
+    /**
+     * Metoda pro vypsani data a casu v danem formatu
+     * @return aktualni datum a cas
+     */
     private String getDateTime(){
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();

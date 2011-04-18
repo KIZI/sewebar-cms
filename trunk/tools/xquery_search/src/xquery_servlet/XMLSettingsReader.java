@@ -91,6 +91,11 @@ public class XMLSettingsReader {
         return output;
     }
 
+    /**
+     * Metoda zapisujici nastaveni do souboru s nastavenim
+     * @param xmlFile soubor s nastavenim
+     * @param settings pole nastaveni
+     */
     public void writeSettings(File xmlFile, String settings[]){
         String output = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "\n<settings>"

@@ -21,6 +21,11 @@ public class QueryMaker {
         this.containerName = containerName;
     }
 
+    /**
+     * Metoda provadejici prevedeni query na XPath dotaz
+     * @param xmlQuery query ve formatu XML
+     * @return XPath dotaz
+     */
     public String makeXPath(InputStream xmlQuery){
         String output = "";
         try {
