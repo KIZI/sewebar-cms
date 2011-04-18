@@ -33,7 +33,7 @@
         <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
       </div>
       <xsl:for-each select="document('queries.xml')/queries/query">
-        <img src="{icon}" onclick="return KbiPostArb({position()}, {source/@id}, {@id}, {xslt/@id});" title="{name}" alt="{name}" />
+        <img src="{icon}" onclick="return KbiPostArb({$rulePos}, {source/@id}, {@id}, {xslt/@id});" title="{name}" alt="{name}" />
       </xsl:for-each>
       <div id="arb_result{position()}" class="hidden">...</div>
       <!-- table of values of test criteria (quantifiers) -->
