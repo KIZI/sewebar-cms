@@ -21,15 +21,15 @@ public class Tester {
 	/**
 	 * Konstruktor
 	 * @param qh instance tridy QueryHandler
-     * @param bh instance tridy BDBXMLHandler
-     * @param mgr instance XmlManager
-     * @param envDir umisteni DB
-     * @param queryDir slozka pro ukladani query
-     * @param containerName nazev pouzivaneho kontejneru
-     * @param useTransformation true/false, zda pouzivat xslt transformaci pri ukladani dokumentu
-     * @param xsltPath umisteni xslt transformace
-     * @param tempDir slozka pro docasne soubory
-     * @param settingsError chyby pri nacitani nastaveni
+         * @param bh instance tridy BDBXMLHandler
+         * @param mgr instance XmlManager
+         * @param envDir umisteni DB
+         * @param queryDir slozka pro ukladani query
+         * @param containerName nazev pouzivaneho kontejneru
+         * @param useTransformation true/false, zda pouzivat xslt transformaci pri ukladani dokumentu
+         * @param xsltPath umisteni xslt transformace
+         * @param tempDir slozka pro docasne soubory
+         * @param settingsError chyby pri nacitani nastaveni
 	 */
     public Tester(QueryHandler qh, BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPath, String tempDir, String settingsError) {
     	this.qh = qh;

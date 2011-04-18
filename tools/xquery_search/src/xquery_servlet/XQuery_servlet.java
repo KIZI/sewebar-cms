@@ -182,7 +182,7 @@ public class XQuery_servlet extends HttpServlet {
     }// </editor-fold>
 
     /**
-     * 
+     * Metoda vytvarejici prostredi pro spojeni s XML databazi
      * @param home umisteni DB
      * @param recover true/false pouziti recovery (standartne false)
      * @return nastavene prostredi pro spojeni s XML DB
@@ -206,7 +206,12 @@ public class XQuery_servlet extends HttpServlet {
             File f = new File(home);
             return new Environment(f, config);
     }
-    
+
+    /**
+      * Metoda slouzi k sestaveni stranky s nastavenim
+      * @param settings pole nastaveni
+      * @return html stranka s nastavenim
+      */
     private String createSettingsPage(String[] settings){
     	String output = "";
         String TR = " selected=\"selected\"";
@@ -243,6 +248,12 @@ public class XQuery_servlet extends HttpServlet {
     	return output;
     }
 
+    /**
+     * Metoda pro nacteni dat z html formulare ze stranky s nastavenim a odeslani nastaveni k zapisu do souboru
+     * @param sr instance tridy XMLSettingsReader
+     * @param settingsFile soubor s nastavenim
+     * @param request prijaty http request
+     */
     private void changeSettings(XMLSettingsReader sr, File settingsFile, HttpServletRequest request){
         String[] settings = new String[6];
         settings[0] = request.getParameter("envDir").toString();
