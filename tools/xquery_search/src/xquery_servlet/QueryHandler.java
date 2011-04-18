@@ -163,7 +163,7 @@ public class QueryHandler {
 
     /**
      * Metoda prevadi query ze vstupniho ARBuilder formatu do formatu pro dalsi zpracovani
-     * @param query vstupni query
+     * @param request vstupni dotaz (ve formatu ARBuilder)
      * @return query v novem formatu
      */
     public ByteArrayOutputStream queryPrepare(String request){

@@ -17,6 +17,9 @@ public class XSLTTransformer {
      * Metoda pro pouziti XSLT transformace (vstup typu File)
      * @param xmlFile vstupni soubor
      * @param xsltFile soubor s xslt transformaci
+     * @param docID id dokumentu
+     * @param creationTime cas vytvoreni
+     * @param reportUri url adresa reportu
      * @return prevedeny soubor ve forme Stringu
      */
     public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime, String reportUri)
@@ -59,6 +62,9 @@ public class XSLTTransformer {
      * Metoda pro pouziti XSLT transformace (vstup typu String)
      * @param xmlString String obsahujici dokument k prevedeni
      * @param xsltFile soubor s xslt transformaci
+     * @param docID id dokumentu
+     * @param creationTime cas vytvoreni
+     * @param reportUri url adresa reportu
      * @return prevedeny soubor ve forme Stringu
      */
     public String xsltTransformation (String xmlString, File xsltFile, String docID, String creationTime, String reportUri)

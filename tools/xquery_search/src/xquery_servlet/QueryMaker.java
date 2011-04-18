@@ -17,6 +17,10 @@ import org.xml.sax.SAXException;
  */
 public class QueryMaker {
     String containerName;
+    /**
+     * Konstruktor instance tridy QueryMaker
+     * @param containerName
+     */
     public QueryMaker(String containerName) {
         this.containerName = containerName;
     }
