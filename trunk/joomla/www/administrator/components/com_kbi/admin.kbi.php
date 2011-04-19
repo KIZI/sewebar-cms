@@ -37,9 +37,8 @@ switch($controller)
 	case 'queries':
 		$controller = new KbiControllerQueries();
 		break;
-	case 'queryDefinitions':
 	case 'querydefinitions':
-		$controller = new KbiControllerQueryDefinitions();
+		$controller = new KbiControllerQuerydefinitions();
 		break;
 	case 'sources':
 	default:
