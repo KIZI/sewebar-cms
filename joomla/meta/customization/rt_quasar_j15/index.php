@@ -32,6 +32,9 @@ $gantry->init();
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/pmml/css/navigation.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/plugins/editors-xtd/ginclude/css/gIncludefrontent.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/components/com_kbi/assets/kbi.css" type="text/css" />
+  <script type="text/javascript" src="<?php echo $this->baseurl ?>/xml/pmml/js/showhide.js"></script>
+  <script type="text/javascript" src="<?php echo $this->baseurl ?>/xml/pmml/js/graph_url.js"></script>
+  <script type="text/javascript" src="<?php echo $this->baseurl ?>/xml/pmml/js/ajax.js"></script>
 	<script type="text/javascript" src="<?php echo $this->baseurl ?>/xml/bkef/js/influences.js"></script>
 	<!-- end of sewebar specific imports (some javascript imports are below)-->
 </head>
