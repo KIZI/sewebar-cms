@@ -100,7 +100,7 @@
 
 	<input type="hidden" name="controller" value="queries" />
 	<input type="hidden" name="option" value="com_kbi" />
-	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
+	<input type="hidden" name="id" value="<?php echo isset($this->row->id) ? $this->row->id : '' ?>" />
 	<input type="hidden" name="task" value="" />
 	<?php echo JHTML::_( 'form.token' ); ?>
 </form>
