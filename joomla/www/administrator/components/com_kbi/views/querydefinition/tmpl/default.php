@@ -63,7 +63,7 @@
 	</div>
 	<div class="clr"></div>
 
-	<input type="hidden" name="controller" value="queryDefinitions" />
+	<input type="hidden" name="controller" value="querydefinitions" />
 	<input type="hidden" name="option" value="com_kbi" />
 	<input type="hidden" name="id" value="<?php echo isset($this->row->id) ? $this->row->id : '' ?>" />
 	<input type="hidden" name="task" value="" />
