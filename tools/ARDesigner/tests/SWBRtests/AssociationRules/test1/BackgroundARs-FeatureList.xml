@@ -9,7 +9,6 @@
     </UserInterface>
     <RulePattern>        
         <Antecedent minNumberOfBBAs="1" maxNumberOfBBAs="10"/>
-        <InterestMeasureConstraint minNumberOfInterestMeasures="0" maxNumberOfInterestMeasures="0"/>
         <Consequent minNumberOfBBAs="1" maxNumberOfBBAs="5"/>
         <Condition minNumberOfBBAs="0" maxNumberOfBBAs="1"/>
         <GeneralConstraint minNumberOfBBAs="0"/>
