@@ -299,7 +299,7 @@ var Attribute = new Class({
         // Create all reamining options
         for(var actualAttributeChoice = 0; actualAttributeChoice < attributeFields.length; actualAttributeChoice++){
             // Create options
-            if(this.actualAttrField == attributeFields[actualAttributeChoice]){
+            if(this.actualAttrField.getName() == attributeFields[actualAttributeChoice].getName()){
                 continue;
             }
             option = this.createOption(attributeFields[actualAttributeChoice]);
@@ -341,14 +341,10 @@ var Attribute = new Class({
      * When user clicks on the save button, this function saves data he filled in.
      */
     save: function(){
-        this.actualAttrField.save();
-        if(this.actualAttrField.getValue() == ""){
-            if(AsociationRules.attrCoef == "required"){
-                var language = new LanguageSupport();
-                new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
-                return;
-            }
+        if(!this.actualAttrField.save()){
+            return;
         }
+
         this.askingWindowDiv.dispose();
         this.podklad.dispose();
         var textToDisplay = "";
@@ -504,8 +500,11 @@ var AttributeFields = new Class({
      */
     save: function(){
         for(var actualField = 0; actualField < this.fields.length; actualField++){
-            this.fields[actualField].save();
+            if(!this.fields[actualField].save()){
+                return false;
+            }
         }
+        return true;
     },
 
     /**

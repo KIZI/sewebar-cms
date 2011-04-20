@@ -44,8 +44,16 @@ var FieldBase = new Class({
      * Function: save
      * This saves proposed Value to actualValue
      */
-    save: function(){ 
+    save: function(){
+        if(this.proposedValue == ""){
+            if(AsociationRules.attrCoef == "required"){
+                var language = new LanguageSupport();
+                new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
+                return false;
+            }
+        }
         this.actualValue = this.proposedValue;
+        return true;
     },
 
     /**

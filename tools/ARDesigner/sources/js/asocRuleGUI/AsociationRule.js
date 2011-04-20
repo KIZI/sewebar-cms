@@ -960,6 +960,10 @@ var AsociationRule = new Class({
         if(this.countBrackets(this.elements.length) > 0){
             return null;
         }
+        var type = this.elements[this.elements.length-1].getType();
+        if(type == "and" || type == "or" || type == "neg"){
+            return null;
+        }
         for(var actualElement = 0; actualElement < this.elements.length; actualElement++){
             if(this.elements[actualElement] != null){
                 jsonObject.push(this.elements[actualElement].toJSON());

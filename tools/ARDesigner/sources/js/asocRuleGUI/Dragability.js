@@ -37,8 +37,16 @@ var Dragability = new Class({
         var canAdd = false
         // Tohle není dobré odlišení
         var position = dropedOn.get("name").replace("rule", "");
-        if(asociationRule.insertItem(element.element, position)){
-            canAdd = true;
+        if(element.element.isInRule != undefined){
+            if(element.element.isInRule){
+                asociationRule.removeItem(element);
+                asociationRule.insertItem(element.element, position)
+            }
+        }
+        else{
+            if(asociationRule.insertItem(element.element, position)){
+                canAdd = true;
+            }
         }
         if(!canAdd){
             element.dispose();
@@ -68,6 +76,12 @@ var Dragability = new Class({
             element.dispose();
         }
         else{
+            if(element.parentNode != null && element.parentNode.parentNode != null &&
+                element.parentNode.parentNode.asociationRule != null){
+                var asociationRule1 = element.parentNode.parentNode.asociationRule;
+                asociationRule1.removeItem(element);
+            }
+            element.element.isInRule = true;
             element.correctPlace = false;
             element.dispose();
         }
@@ -90,7 +104,7 @@ var Dragability = new Class({
             newElement.correctPlace = false;
             newElement.shouldBeCreated = true;
             newElement.rulePosition = null;
-
+            
             newElement.element = clone_obj(element.element);
 
             element.shouldBeCreated = false;
