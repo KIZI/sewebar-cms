@@ -193,7 +193,7 @@ class KbiControllerQuerydefinitions extends JController
 			foreach ($ids as $id) {
 				$qd = $model->getQuery($id);
 				$query = $queries->addChild('query');
-				$query->addAttribute('id', $qd->id);
+				$query->addAttribute('id', $qd->query);
 				$query->addChild('name', $qd->name);
 				$query->addChild('icon', $qd->icon);
 				$query->addChild('source', '')
