@@ -34,17 +34,17 @@ class KbiViewSynchronize extends JView
 			$orderDir2='asc';
 		}
 
-		$limit = JRequest::getVar('limit',$mainframe->getCfg(list_limit));
+		$limit = JRequest::getVar('limit',$mainframe->getCfg('list_limit'));
 		$limitstart=JRequest::getVar('limitstart',0);
 
 		/*kontrola, jestli je v session nastavena sekce a kategorie -> pouze při prvním zobrazení*/
-		if ((JRequest::getInt('section',-1)==-1)&&($_SESSION['ginclude']['section']>0)){
-			JRequest::setVar('section',$_SESSION['ginclude']['section']);
-			$_SESSION['ginclude']['section']=-1;
+		if ((JRequest::getInt('section',-1)==-1) && isset($_SESSION['kbisync']['section'])){
+			JRequest::setVar('section', $_SESSION['kbisync']['section']);
+			$_SESSION['ginclude']['section'] = -1;
 		}
-		if ((JRequest::getInt('categorie',-1)==-1)&&($_SESSION['ginclude']['categorie']>0)){
-			JRequest::setVar('categorie',$_SESSION['ginclude']['categorie']);
-			$_SESSION['ginclude']['categorie']=-1;
+		if ((JRequest::getInt('categorie',-1)==-1) && isset($_SESSION['kbisync']['categorie'])){
+			JRequest::setVar('categorie', $_SESSION['kbisync']['categorie']);
+			$_SESSION['ginclude']['categorie'] = -1;
 		}
 		/**/
 

@@ -10,6 +10,9 @@
 /**
  * Interface for document management between CMSs and KBs
  *
+ * @todo ve výsledcích vyhedávání je potřeba  provázat nalezené pravidlo hypertextovým odkazem s konkrétním pravidlem v konkrétním reportu. Např. hyperlink "http://sewebar-dev2.vse.cz/home/1-xslt#sect5-rule2" -> Xquery je tedy při indexaci potřeba předat i Joomla id indexovaného dokumentu. -> bude nutné rozšířit výsledky vyhledávání o joomla id (zatím je tam jen XQuery ID)
+ * @todo Při synchronizaci by se měli porovnávat dokumenty, tak aby se zbytečně nesynchronizvaly stejné dokumenty, nebo se omylem nepřepsal novější dokument.
+ *
  * @package KBI
  */
 interface ISynchronable

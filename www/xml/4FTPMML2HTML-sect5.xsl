@@ -28,11 +28,13 @@
         <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arText,'end')"/></xsl:comment>
       </p>
       <div id="arb{position()}" class="hidden">
-      	<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
+        <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
         <xsl:copy-of select="$query"/>
         <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
       </div>
-      <input type="button" onclick="return KbiPostArb({position()},'src_type','query_type');" value="ajax" />
+      <xsl:for-each select="document('queries.xml')/queries/query">
+        <img src="{icon}" onclick="return KbiPostArb({$rulePos}, {source/@id}, {@id}, {xslt/@id});" title="{name}" alt="{name}" />
+      </xsl:for-each>
       <div id="arb_result{position()}" class="hidden">...</div>
       <!-- table of values of test criteria (quantifiers) -->
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule_Quantifiers',$arText,'start')"/></xsl:comment>
