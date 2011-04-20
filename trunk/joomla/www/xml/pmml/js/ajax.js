@@ -6,7 +6,7 @@ function KbiPostArb(id, src_type, query_type, xslt)
 	var results_element = $('arb_result' + id);
 
 	src_type = typeof(src_type) != 'undefined' ? src_type : 3;
-	query_type = typeof(query_type) != 'undefined' ? src_type : 2;
+	query_type = typeof(query_type) != 'undefined' ? query_type : 2;
 	xslt = typeof(xslt) != 'undefined' ? xslt : 2;
 
 	KbiQueryPost(query_type, src_type, params, xslt, results_element);
