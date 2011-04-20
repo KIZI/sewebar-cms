@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: queryDefinition.php 180 2011-04-12 09:33:58Z hazucha.andrej@gmail.com $
+ * @version		$Id$
  * @package		com_kbi
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.
