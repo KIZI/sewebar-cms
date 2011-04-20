@@ -12,7 +12,9 @@ import com.sleepycat.dbxml.XmlTransaction;
 import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +27,7 @@ import java.util.regex.Pattern;
 public class BDBXMLHandler {
     XmlManager mgr;
     QueryHandler qh;
+    SchemaChecker sc;
     String containerName;
     String useTransformation;
     String xsltPath;
@@ -39,9 +42,10 @@ public class BDBXMLHandler {
      * @param useTransformation pouzit transformaci - true/false
      * @param xsltPath cesta k souboru s xslt transformaci
      */
-    public BDBXMLHandler(XmlManager mgr, QueryHandler qh, String containerName, String useTransformation, String xsltPath) {
+    public BDBXMLHandler(XmlManager mgr, QueryHandler qh, SchemaChecker sc, String containerName, String useTransformation, String xsltPath) {
         this.mgr = mgr;
         this.qh = qh;
+        this.sc = sc;
         this.containerName = containerName;
         this.useTransformation = useTransformation;
         this.xsltPath = xsltPath;
@@ -262,38 +266,37 @@ public class BDBXMLHandler {
      * @param reportUri url adresa reportu
      * @return informace o ulozeni/chybe
      */
-    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri){
-
+    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) throws IOException{
         String output = "";
         String xml_doc = "";
-        
-        try {
-            if (useTransformation.equals("true")) {
-        
-            File xsltFile = new File(xsltPath);
-            XSLTTransformer xslt = new XSLTTransformer();
-            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
-            //output += "<xslt>" + xslt_output + "</xslt>";
-            //xmlFile.delete();
-            
+        String validation[] = sc.validate(document);
+        if(validation[0].equals("1")){
+            try {
+                if (useTransformation.equals("true")) {
+                    File xsltFile = new File(xsltPath);
+                    XSLTTransformer xslt = new XSLTTransformer();
+                    xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
+                } else {
+                    xml_doc = document;
+                }
+
+                XmlContainer cont = mgr.openContainer(containerName);
+                XmlTransaction txn = mgr.createTransaction();
+
+                docName = docName.replaceAll(replaceMask.toString(), replaceBy);
+
+                cont.putDocument(docName, xml_doc);
+                output += "<message>Dokument " + docName + " vlozen</message>";
+
+                txn.commit();
+                closeContainer(cont);
+            } catch (XmlException e) {
+                    output += "<error>"+e.toString()+"</error>";
+            } catch (Throwable e) {
+                    output += "<error>"+e.toString()+"</error>";
+            }
         } else {
-                xml_doc = document;
-        }
-
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
-            
-            docName = docName.replaceAll(replaceMask.toString(), replaceBy);
-            
-            cont.putDocument(docName, xml_doc);
-            output += "<message>Dokument " + docName + " vlozen</message>";
-
-            txn.commit();
-            closeContainer(cont);
-        } catch (XmlException e) {
-                output += "<error>"+e.toString()+"</error>";
-        } catch (Throwable e) {
-                output += "<error>"+e.toString()+"</error>";
+            output += "<error>"+validation[1]+"</error>";
         }
         return output;
     }
@@ -307,47 +310,48 @@ public class BDBXMLHandler {
      * @param reportUri url adresa reportu
      * @return zprava - ulozeno/chyba
      */
-    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri){
+    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) throws FileNotFoundException, IOException{
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
-        //String act_time = Long.toString(act_time_long);
-        try {
-            if (useTransformation.equals("true")) {
-            File xsltFile = new File(xsltPath);
 
-            XSLTTransformer xslt = new XSLTTransformer();
-
-            xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
-            output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
-            //output += "<xslt>" + xslt_output + "</xslt>";
-            //xmlFile.delete();
-        } else {
-            FileReader rdr = null;
-            BufferedReader out = null;
-            rdr = new FileReader(document);
-            out = new BufferedReader(rdr);
-            String radek = out.readLine();
-            while (radek != null){
-                xml_doc += radek + "\n";
-                radek = out.readLine();
-            }
+        FileReader rdr = null;
+        BufferedReader out = null;
+        rdr = new FileReader(document);
+        out = new BufferedReader(rdr);
+        String radek = out.readLine();
+        while (radek != null){
+            xml_doc += radek + "\n";
+            radek = out.readLine();
         }
 
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
-            
-            docName = docName.replaceAll(replaceMask.toString(), replaceBy);
+        String validation[] = sc.validate(xml_doc);
+        if(validation[0].equals("1")){
+            try {
+                if (useTransformation.equals("true")) {
+                    File xsltFile = new File(xsltPath);
+                    XSLTTransformer xslt = new XSLTTransformer();
+                    xml_doc = xslt.xsltTransformation(xml_doc, xsltFile, docID, creationTime, reportUri);
+                    output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
+               }
 
-            cont.putDocument(docName, xml_doc);
-            output += "<message>Dokument " + docName + " vlozen</message>";
-            output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
-            txn.commit();
-            closeContainer(cont);
-            } catch (XmlException e) {
-                output += "<error>"+e.toString()+"</error>";
-        } catch (Throwable e) {
-                output += "<error>"+e.toString()+"</error>";
+                XmlContainer cont = mgr.openContainer(containerName);
+                XmlTransaction txn = mgr.createTransaction();
+
+                docName = docName.replaceAll(replaceMask.toString(), replaceBy);
+
+                cont.putDocument(docName, xml_doc);
+                output += "<message>Dokument " + docName + " vlozen</message>";
+                output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
+                txn.commit();
+                closeContainer(cont);
+                } catch (XmlException e) {
+                    output += "<error>"+e.toString()+"</error>";
+            } catch (Throwable e) {
+                    output += "<error>"+e.toString()+"</error>";
+            }
+        } else {
+            output += "<error>"+validation[1]+"</error>";
         }
         return output;
     }
@@ -357,14 +361,14 @@ public class BDBXMLHandler {
      * @param folder slozka, ze ktere se maji soubory nahrat
      * @return zprava o ulozeni / chyba
      */
-    public String indexDocumentMultiple (String folder) {
+    public String indexDocumentMultiple (String folder) throws FileNotFoundException, IOException {
         String output = "";
         File uploadFolder = new File(folder);
         File uploadFiles[] = uploadFolder.listFiles();
         
         for(int i = 0; i < uploadFiles.length; i++){
             output += indexDocument(uploadFiles[i], "", uploadFiles[i].getName(), new Date().toString(), "");
-        }        
+        }
         return output;
     }
 
