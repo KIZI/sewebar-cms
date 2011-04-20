@@ -182,7 +182,8 @@ class KbiControllerQuerydefinitions extends JController
 	function export()
 	{
 		global $option;
-		$output_xml_file = realpath(dirname(__FILE__).'/../../../../xml/queries-dynamic.xml');
+		$output_xml_file = realpath(dirname(__FILE__).'/../../../../xml/queries.xml');
+		//var_dump($output_xml_file);
 
 		$queries = new SimpleXMLElement('<?xml version="1.0"?><queries></queries>');
 
