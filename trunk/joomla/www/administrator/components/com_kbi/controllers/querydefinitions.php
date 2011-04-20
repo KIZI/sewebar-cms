@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: queryDefinitions.php 180 2011-04-12 09:33:58Z hazucha.andrej@gmail.com $
+ * @version		$Id$
  * @package		com_kbi
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.
@@ -36,8 +36,8 @@ class KbiControllerQuerydefinitions extends JController
 
 		$document =& JFactory::getDocument();
 
-		$view =& $this->getView(JRequest::getVar('controller', 'queryDefinitions'), $document->getType());
-		$model = &$this->getModel('queryDefinitions');
+		$view =& $this->getView(JRequest::getVar('controller', 'querydefinitions'), $document->getType());
+		$model = &$this->getModel('querydefinitions');
 
 		$user	=& JFactory::getUser();
 		$context			= 'com_kbi.querydefinitions.list';
@@ -78,7 +78,7 @@ class KbiControllerQuerydefinitions extends JController
 		$view =& $this->getView('queryDefinition', $document->getType());
 
 		// Get/Create the model
-		if ($model = &$this->getModel('queryDefinitions')) {
+		if ($model = &$this->getModel('querydefinitions')) {
 			// Push the model into the view (as default)
 			$view->setModel($model, true);
 		}
@@ -103,7 +103,7 @@ class KbiControllerQuerydefinitions extends JController
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		$this->setRedirect( "index.php?option=$option&controller=queryDefinitions" );
+		$this->setRedirect( "index.php?option=$option&controller=querydefinitions" );
 
 		// Initialize variables
 		$db		=& JFactory::getDBO();
@@ -131,7 +131,7 @@ class KbiControllerQuerydefinitions extends JController
 		switch (JRequest::getCmd( 'task' ))
 		{
 			case 'apply':
-				$this->setRedirect( "index.php?option=$option&controller=queryDefinitions&task=edit&id[]={$table->id}" );
+				$this->setRedirect( "index.php?option=$option&controller=querydefinitions&task=edit&id[]={$table->id}" );
 				break;
 		}
 
@@ -145,7 +145,7 @@ class KbiControllerQuerydefinitions extends JController
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		$this->setRedirect( "index.php?option=$option&controller=queryDefinitions" );
+		$this->setRedirect( "index.php?option=$option&controller=querydefinitions" );
 
 		// Initialize variables
 		$db		=& JFactory::getDBO();
@@ -170,7 +170,7 @@ class KbiControllerQuerydefinitions extends JController
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		$this->setRedirect( "index.php?option=$option&controller=queryDefinitions" );
+		$this->setRedirect( "index.php?option=$option&controller=querydefinitions" );
 
 		// Initialize variables
 		//$db			=& JFactory::getDBO();
@@ -186,7 +186,7 @@ class KbiControllerQuerydefinitions extends JController
 
 		$queries = new SimpleXMLElement('<?xml version="1.0"?><queries></queries>');
 
-		if ($model = &$this->getModel('queryDefinitions')) {
+		if ($model = &$this->getModel('querydefinitions')) {
 			$ids = JRequest::getVar( 'cid', array(), 'request', 'array' );
 
 			foreach ($ids as $id) {
@@ -207,6 +207,6 @@ class KbiControllerQuerydefinitions extends JController
 
 		$this->setMessage( JText::_( "Query definitions exported to $output_xml_file." ) );
 
-		$this->setRedirect( "index.php?option=$option&controller=queryDefinitions" );
+		$this->setRedirect( "index.php?option=$option&controller=querydefinitions" );
 	}
 }
