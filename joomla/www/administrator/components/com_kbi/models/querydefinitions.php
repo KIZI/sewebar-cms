@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: queryDefinitions.php 180 2011-04-12 09:33:58Z hazucha.andrej@gmail.com $
+ * @version		$Id$
  * @package		com_kbi
  * @author		Andrej Hazucha
  * @copyright	Copyright (C) 2010 All rights reserved.
@@ -46,7 +46,7 @@ class KbiModelQuerydefinitions extends JModel
 
 			foreach($this->_qds as &$row)
 			{
-				$row->link = JRoute::_("index.php?option={$option}&id[]={$row->id}&task=edit&controller=queryDefinitions");
+				$row->link = JRoute::_("index.php?option={$option}&id[]={$row->id}&task=edit&controller=querydefinitions");
 				$row->checked_out = false;
 			}
 		}
