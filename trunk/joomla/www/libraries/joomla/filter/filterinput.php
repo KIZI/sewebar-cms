@@ -274,19 +274,20 @@ class JFilterInput extends JObject
 		while ($tagOpen_start !== false)
 		{
 			/* zachovani komentaru */
-			if (strpos($postTag,'<!--')===0) {
+			if (strpos($postTag,'<!--') === 0) {
 				$posCommentEnd = strpos($postTag,'-->') + 3;
-			if (!($posCommentEnd === false)) {
-				$preTag .= substr($postTag, 0, $posCommentEnd);
-				$postTag = substr($postTag, $posCommentEnd);
-				$tagOpen_start = strpos($postTag, '<');
-			} else {
-				$preTag .= $postTag.'-->';
-				$postTag = '';
-				$tagOpen_start = false;
-			}
+				if (!($posCommentEnd === false)) {
+					$preTag .= substr($postTag, 0, $posCommentEnd);
+					$postTag = substr($postTag, $posCommentEnd);
+					$tagOpen_start = strpos($postTag, '<');
+				} else {
+					$preTag .= $postTag.'-->';
+					$postTag = '';
+					$tagOpen_start = false;
+				}
 
-			continue;
+				continue;
+			}
 			/**/
 
 			// Get some information about the tag we are processing
