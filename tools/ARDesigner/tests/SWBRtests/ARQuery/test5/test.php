@@ -8,6 +8,7 @@ require_once('../../../../sources/models/parseData/ARQueryParser.php');
 require_once('../../../../sources/models/parseData/TaskSettingParser.php');
 require_once('../../../../sources/models/parseData/TaskSettingParser.php');
 require_once('../../../../sources/models/Utils.php');
+require_once('../../../../sources/models/CompareXml.php');
 
 $DD = "dataDescription.xml";
 $FL = "ARQuery-FeatureList.xml";
@@ -49,7 +50,7 @@ $objDom = new DomDocument();
 /* loading the xml data */
 $objDom->loadXML($xmlFileFinal);
 /* tries to validade your data */
-if (!$objDom->schemaValidate("../../../../XML/ARBuilder0_1.xsd")) {
+if (!$objDom->schemaValidate("../../../../XML/schemas/ARBuilder0_1.xsd")) {
     /* if anything goes wrong you can get all errors at once */
     $allErrors = libxml_get_errors();
     /* each element of the array $allErrors will be a LibXmlError Object */
@@ -79,4 +80,16 @@ print("<h3>Schematron Test</h3>");
 /* MEM USING MEM */
 $ret = $s->schematronValidate($xmlFileFinal, $uncompiled);
 print("<textarea rows='10' cols='100'>$ret</textarea>");
+
+$filePath = "ARQuery-Sample.xml";
+$file = fopen($filePath, "r");
+$expectedResult = fread($file, filesize($filePath));
+
+if(areXmlSame($xmlFileFinal, $expectedResult)){
+    print "<h2>XML file is as expected</h2>";
+}
+else{
+    print "<h2>XML file is NOT as expected</h2>";
+}
+
 ?>
