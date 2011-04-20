@@ -1,251 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ar:ARBuilder xmlns:ar="http://keg.vse.cz/ns/arbuilder0_1"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dd="http://keg.vse.cz/ns/datadescription0_1"
     xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd"
     xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1">
     <DataDescription>
-        <Dictionary numberOfFields="0" sourceType="PMML" sourceSubType="TransformationDictionary"
-            sourceName="sourceName0" complete="true">
-            <Field optype="categorical" dataType="string" name="duration" derived="false">
-                <AuxilliaryIdentifier display="false">
-                    <Name>Name0</Name>
-                    <Value>Value0</Value>
+
+        <Dictionary numberOfFields="4" sourceType="BKEF" sourceName="Barbora" default="true">
+            <Field name="Loan Quality [AD Scale]" optype="categorical" dataType="string"
+                derived="true">
+                <AuxilliaryIdentifier display="true">
+                    <Name>Preprocessing Hint</Name>
+                    <Value>Verbal [Loan Quality/AD Scale]</Value>
+
                 </AuxilliaryIdentifier>
                 <AuxilliaryIdentifier display="false">
-                    <Name>Name1</Name>
-
-                    <Value>Value1</Value>
+                    <Name>Bin Type</Name>
+                    <Value>Metafield Enumeration Bin</Value>
                 </AuxilliaryIdentifier>
-                <Statistics>
-                    <Min>0</Min>
-                    <Max>0</Max>
-                    <Average>0</Average>
-                </Statistics>
+                <Category>Bad</Category>
+                <Category>Good</Category>
 
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName0"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName1"/>
-                <Category frequency="0">Category0</Category>
-                <Category frequency="0">Category1</Category>
+                <Category>Medium</Category>
             </Field>
-            <Field optype="categorical" dataType="string" name="district" derived="false">
-                <AuxilliaryIdentifier display="false">
-                    <Name>Name2</Name>
-
-                    <Value>Value2</Value>
+            <Field name="Loan Duration [months]" optype="categorical" dataType="string"
+                derived="true">
+                <AuxilliaryIdentifier display="true">
+                    <Name>Preprocessing Hint</Name>
+                    <Value>coarse grained [Loan Duration / months]</Value>
                 </AuxilliaryIdentifier>
+
                 <AuxilliaryIdentifier display="false">
-                    <Name>Name3</Name>
-                    <Value>Value3</Value>
+                    <Name>Bin Type</Name>
+                    <Value>Metafield Interval Bin</Value>
                 </AuxilliaryIdentifier>
-                <Statistics>
+                <Category>&lt;13;23&gt;</Category>
+                <Category>&lt;0;12&gt;</Category>
+                <Category>&lt;24;INF&gt;</Category>
 
-                    <Min>0</Min>
-                    <Max>0</Max>
-                    <Average>0</Average>
-                </Statistics>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName2"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName3"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName4"/>
-
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName5"/>
             </Field>
-        </Dictionary>
-        <Dictionary numberOfFields="0" sourceType="PMML" sourceSubType="TransformationDictionary"
-            sourceName="sourceName1" complete="true">
-            <Field optype="categorical" dataType="string" name="statusAgregovane" derived="false">
+
+            <Field dataType="string" optype="categorical" name="district [district]" derived="true">
+                <AuxilliaryIdentifier display="true">
+                    <Name>Preprocessing Hint</Name>
+                    <Value>district [district / district]</Value>
+                </AuxilliaryIdentifier>
                 <AuxilliaryIdentifier display="false">
-                    <Name>Name4</Name>
-                    <Value>Value4</Value>
+
+                    <Name>Bin Type</Name>
+                    <Value>Metafield Interval Bin</Value>
                 </AuxilliaryIdentifier>
 
-                <AuxilliaryIdentifier display="false">
-                    <Name>Name5</Name>
-                    <Value>Value5</Value>
-                </AuxilliaryIdentifier>
-                <Statistics>
-                    <Min>0</Min>
-                    <Max>0</Max>
+                <Category>Brno</Category>
+                <Category>Praha</Category>
+                <Category>Other</Category>
 
-                    <Average>0</Average>
-                </Statistics>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName6"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName7"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName8"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName9"/>
             </Field>
-            <Field optype="categorical" dataType="string" name="name3" derived="false">
-
-                <AuxilliaryIdentifier display="false">
-                    <Name>Name6</Name>
-                    <Value>Value6</Value>
+            <Field dataType="string" optype="categorical" name="sex [abbrev]" derived="true">
+                <AuxilliaryIdentifier display="true">
+                    <Name>Preprocessing Hint</Name>
+                    <Value>sex [sex / abbrev]</Value>
                 </AuxilliaryIdentifier>
                 <AuxilliaryIdentifier display="false">
-                    <Name>Name7</Name>
-                    <Value>Value7</Value>
+                    <Name>Bin Type</Name>
 
+                    <Value>Metafield Interval Bin</Value>
                 </AuxilliaryIdentifier>
-                <Statistics>
-                    <Min>0</Min>
-                    <Max>0</Max>
-                    <Average>0</Average>
-                </Statistics>
-                <Category frequency="0">Category2</Category>
-
-                <Category frequency="0">Category3</Category>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName10"/>
-                <Interval closure="openClosed" leftMargin="0" rightMargin="0" binName="binName11"/>
+                <Category>F</Category>
+                <Category>M</Category>
             </Field>
+
         </Dictionary>
     </DataDescription>
-    <ARQuery>
-        <BBASettings>
-            <BBASetting id="1">
-                <Text>duration</Text>
-                <Name>duration</Name>
-                <FieldRef>duration</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="3">
-                <Text>district</Text>
-                <Name>district</Name>
-                <FieldRef>district</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="5">
-                <Text>duration</Text>
-                <Name>duration</Name>
-                <FieldRef>duration</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="7">
-                <Text>district</Text>
-                <Name>district</Name>
-                <FieldRef>district</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="10">
-                <Text>duration</Text>
-                <Name>duration</Name>
-                <FieldRef>duration</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="12">
-                <Text>district</Text>
-                <Name>district</Name>
-                <FieldRef>district</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="14">
-                <Text>duration</Text>
-                <Name>duration</Name>
-                <FieldRef>duration</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-            <BBASetting id="16">
-                <Text>district</Text>
-                <Name>district</Name>
-                <FieldRef>district</FieldRef>
-                <Coefficient>
-                    <Type>Interval</Type>
-                    <Category/>
-                    <Category/>
-                </Coefficient>
-            </BBASetting>
-        </BBASettings>
-        <DBASettings>
-            <DBASetting type="Literal" id="2">
-                <BASettingRef>1</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="4">
-                <BASettingRef>3</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="6">
-                <BASettingRef>5</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="8">
-                <BASettingRef>7</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="11">
-                <BASettingRef>10</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="13">
-                <BASettingRef>12</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="15">
-                <BASettingRef>14</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Literal" id="17">
-                <BASettingRef>16</BASettingRef>
-                <LiteralSign>Positive</LiteralSign>
-            </DBASetting>
-            <DBASetting type="Conjunction" id="18">
-                <BASettingRef>2</BASettingRef>
-                <BASettingRef>4</BASettingRef>
-            </DBASetting>
-            <DBASetting type="Conjunction" id="19">
-                <BASettingRef>6</BASettingRef>
-                <BASettingRef>8</BASettingRef>
-            </DBASetting>
-            <DBASetting type="Conjunction" id="20">
-                <BASettingRef>18</BASettingRef>
-                <BASettingRef>19</BASettingRef>
-            </DBASetting>
-            <DBASetting type="Conjunction" id="21">
-                <BASettingRef>11</BASettingRef>
-                <BASettingRef>13</BASettingRef>
-            </DBASetting>
-            <DBASetting type="Conjunction" id="22">
-                <BASettingRef>15</BASettingRef>
-                <BASettingRef>17</BASettingRef>
-            </DBASetting>
-            <DBASetting type="Conjunction" id="23">
-                <BASettingRef>21</BASettingRef>
-                <BASettingRef>22</BASettingRef>
-            </DBASetting>
-        </DBASettings>
-        <AntecedentSetting>20</AntecedentSetting>
-        <ConsequentSetting>23</ConsequentSetting>
-        <InterestMeasureSetting>
-            <InterestMeasureThreshold id="9">
-                <InterestMeasure>Support</InterestMeasure>
-                <Threshold>0</Threshold>
-                <CompareType>Greater than or equal</CompareType>
-            </InterestMeasureThreshold>
-        </InterestMeasureSetting>
-    </ARQuery>
+    <AssociationRules>
+        <BBA id="1">
+            <Text>duration</Text>
+            <FieldRef>duration</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="2">
+            <Text>district</Text>
+            <FieldRef>district</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="3">
+            <Text>duration</Text>
+            <FieldRef>duration</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="4">
+            <Text>district</Text>
+            <FieldRef>district</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="5">
+            <Text>duration</Text>
+            <FieldRef>duration</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="6">
+            <Text>district</Text>
+            <FieldRef>district</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="7">
+            <Text>duration</Text>
+            <FieldRef>duration</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <BBA id="8">
+            <Text>district</Text>
+            <FieldRef>district</FieldRef>
+            <CatRef>cat1</CatRef>
+        </BBA>
+        <DBA connective="Conjunction" id="9">
+            <BARef>1</BARef>
+            <BARef>2</BARef>
+        </DBA>
+        <DBA connective="Conjunction" id="10">
+            <BARef>3</BARef>
+            <BARef>4</BARef>
+        </DBA>
+        <DBA connective="Conjunction" id="11">
+            <BARef>9</BARef>
+            <BARef>10</BARef>
+        </DBA>
+        <DBA connective="Conjunction" id="12">
+            <BARef>5</BARef>
+            <BARef>6</BARef>
+        </DBA>
+        <DBA connective="Conjunction" id="13">
+            <BARef>7</BARef>
+            <BARef>8</BARef>
+        </DBA>
+        <DBA connective="Conjunction" id="14">
+            <BARef>12</BARef>
+            <BARef>13</BARef>
+        </DBA>
+        <AssociationRule antecedent="11" consequent="14">
+            <IMValue name="Support">0</IMValue>
+        </AssociationRule>
+    </AssociationRules>
 </ar:ARBuilder>

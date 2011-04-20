@@ -2,6 +2,7 @@
 
 require_once('../../sources/models/serializeRules/AncestorSerializeRules.php');
 require_once('../../sources/models/serializeRules/SerializeRulesARQuery.php');
+require_once('../../sources/models/CompareXml.php');
 
 session_start();
 $_SESSION["ARBuilder_domDataDescr"] = "datadescription.xml";
@@ -17,7 +18,7 @@ $correctXML = true;
 $objDom = new DomDocument();
 
 $objDom->loadXML($xmlFileFinal);
-if (!$objDom->schemaValidate("../../XML/ARBuilder0_1.xsd")) {
+if (!$objDom->schemaValidate("../../XML/schemas/ARBuilder0_1.xsd")) {
     $allErrors = libxml_get_errors();
     print "<h2>XML file is not correct</h2>";
     print_r($allErrors);
@@ -26,4 +27,16 @@ if (!$objDom->schemaValidate("../../XML/ARBuilder0_1.xsd")) {
 }
 $ret = $xmlFileFinal;
 print("<textarea rows='10' cols='20'>$ret</textarea>");
+
+$filePath = "resultARQuery.xml";
+$file = fopen($filePath, "r");
+$expectedResult = fread($file, filesize($filePath));
+
+if(areXmlSame($xmlFileFinal, $expectedResult)){
+    print "<h2>XML file is as expected</h2>";
+}
+else{
+    print "<h2>XML file is NOT as expected</h2>";
+}
+
 ?>
