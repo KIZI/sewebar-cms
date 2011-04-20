@@ -169,7 +169,7 @@ class JFilterInput extends JObject
 			case 'USERNAME' :
 				$result = (string) preg_replace( '/[\x00-\x1F\x7F<>"\'%&]/', '', $source );
 				break;
-				
+
 			case 'MENUTYPE':
 				$result = str_replace('-', ' ', $source);
 				$lang = &JFactory::getLanguage();
@@ -259,7 +259,6 @@ class JFilterInput extends JObject
 	 */
 	function _cleanTags($source)
 	{
-		return $source;
 		/*
 		 * In the beginning we don't really have a tag, so everything is
 		 * postTag
@@ -274,6 +273,22 @@ class JFilterInput extends JObject
 
 		while ($tagOpen_start !== false)
 		{
+			/* zachovani komentaru */
+			if (strpos($postTag,'<!--')===0) {
+				$posCommentEnd = strpos($postTag,'-->') + 3;
+			if (!($posCommentEnd === false)) {
+				$preTag .= substr($postTag, 0, $posCommentEnd);
+				$postTag = substr($postTag, $posCommentEnd);
+				$tagOpen_start = strpos($postTag, '<');
+			} else {
+				$preTag .= $postTag.'-->';
+				$postTag = '';
+				$tagOpen_start = false;
+			}
+
+			continue;
+			/**/
+
 			// Get some information about the tag we are processing
 			$preTag			.= substr($postTag, 0, $tagOpen_start);
 			$postTag		= substr($postTag, $tagOpen_start);
@@ -508,6 +523,8 @@ class JFilterInput extends JObject
 		foreach($trans_tbl as $k => $v) {
 			$ttr[$v] = utf8_encode($k);
 		}
+		unset($ttr['&gt;']);
+		unset($ttr['&lt;']);
 		$source = strtr($source, $ttr);
 		// convert decimal
 		$source = preg_replace('/&#(\d+);/me', "utf8_encode(chr(\\1))", $source); // decimal notation
