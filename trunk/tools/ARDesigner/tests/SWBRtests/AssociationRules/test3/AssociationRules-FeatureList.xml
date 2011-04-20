@@ -10,18 +10,13 @@
         <!-- Antecedent may or may not be specified. There can be any number of (basic boolean) attributes.
         For each BBA, the user has to specify coefficient        -->
         <Antecedent minNumberOfBBAs="1" maxNumberOfBBAs="3"/>
-        <!-- Interest Measure must be specified. 
-            There can be any number of interest measures - provided that conditions in BuildingBlocks/InterestMeasures are met.
-            The user must specify the thresholds.
-        -->
-        <InterestMeasureConstraint minNumberOfInterestMeasures="0"/>
         <!-- Consequent may or may not be specified. There can be only one (basic boolean) attribute in negation.-->
         <Consequent minNumberOfBBAs="0" maxNumberOfBBAs="1"/>
         <!-- Condition must not be specified. 		
         -->
         <Condition minNumberOfBBAs="0" maxNumberOfBBAs="0"/>
         <!-- The whole rule (Ant+Cons+Cond) must contain at least 1 BBA and at most 10 BBAs  -->
-        <GeneralConstraint minNumberOfBBAs="1" maxNumberOfBBA="3"/>
+        <GeneralConstraint minNumberOfBBAs="1" maxNumberOfBBAs="3"/>
     </RulePattern>
 
     <!-- Details for each building block -->

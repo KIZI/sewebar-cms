@@ -10,11 +10,6 @@
         <!-- Antecedent may or may not be specified. There can be any number of (basic boolean) attributes.
         For each BBA, the user has to specify coefficient        -->
         <Antecedent minNumberOfBBAs="1"/>
-        <!-- Interest Measure must be specified. 
-            There can be any number of interest measures - provided that conditions in BuildingBlocks/InterestMeasures are met.
-            The user must specify the thresholds.
-        -->
-        <InterestMeasureConstraint minNumberOfInterestMeasures="0"/>
         <!-- Consequent may or may not be specified. There can be only one (basic boolean) attribute in negation.-->
         <Consequent minNumberOfBBAs="0" maxNumberOfBBAs="1"/>
         <!-- Condition must not be specified. 

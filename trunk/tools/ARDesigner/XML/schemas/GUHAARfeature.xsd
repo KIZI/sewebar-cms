@@ -124,7 +124,7 @@ Changes  0.1 to 0.2:
 
   <xs:complexType name="SupportedInterestMeasureCombinations">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" name="SupportedIMCombination" type="SupportedIMCombination"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SupportedIMCombination" type="SupportedIMCombination"/>
     </xs:sequence>
   </xs:complexType>
 
