@@ -182,8 +182,8 @@ class KbiControllerQuerydefinitions extends JController
 	function export()
 	{
 		global $option;
-		$output_xml_file = realpath(dirname(__FILE__).'/../../../../xml/queries.xml');
-		//var_dump($output_xml_file);
+		$output_xml_file = realpath(dirname(__FILE__).'/../../../../xml/');
+		$output_xml_file .= '/queries.xml';
 
 		$queries = new SimpleXMLElement('<?xml version="1.0"?><queries></queries>');
 
@@ -192,11 +192,10 @@ class KbiControllerQuerydefinitions extends JController
 
 			foreach ($ids as $id) {
 				$qd = $model->getQuery($id);
-				var_dump($qd);
 				$query = $queries->addChild('query');
 				$query->addAttribute('id', $qd->id);
 				$query->addChild('name', $qd->name);
-				$query->addChild('icon', '');
+				$query->addChild('icon', $qd->icon);
 				$query->addChild('source', '')
 					->addAttribute('id', $qd->source);
 				$query->addChild('xslt', '')
