@@ -52,7 +52,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$postdata = array(
 			'action' => $this->getAction(),
-			'variable' => $this->getVariable(),
+			'id' => $this->getVariable(),
 			'content' => $query,
 		);
 
@@ -67,7 +67,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$data = array(
 			'action' => 'getDocsNames',
-			'variable' => '',
+			'id' => '',
 			'content' => '',
 		);
 
@@ -98,8 +98,9 @@ class XQuery extends KBIntegratorSynchronable
 					$document = new stdClass;
 					//$document->id = $doc->__toString();
 					//http://bugs.php.net/bug.php?id=44484
-					$document->id = $doc;
+					$document->id = $doc['joomlaID'];
 					$document->name = $doc;
+					$document->timestamp = $doc['timestamp'];
 					$documents[] = $document;
 				}
 			}
@@ -116,11 +117,24 @@ class XQuery extends KBIntegratorSynchronable
 	{
 		$ch = curl_init();
 
-		$data = array(
-			'action' => 'addDocument',
-			'variable' => $id,
-			'content'=> $path ? file_get_contents($document) : $document,
-		);
+		if(is_object($document)) {
+			$data = array(
+				'action' => 'addDocument',
+				'id' => $id,
+				'docName' => $document->title,
+				'creationTime' => $document->modified,
+				'content'=> $document->text,
+				'reportUri' => $document->uri,
+			);
+		} else {
+			$data = array(
+				'action' => 'addDocument',
+				'id' => $id,
+				'docName' => '',
+				'creationTime' => '',
+				'content'=> $path ? file_get_contents($document) : $document,
+			);
+		}
 
 		curl_setopt($ch, CURLOPT_URL, $this->getUrl());
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
@@ -132,6 +146,7 @@ class XQuery extends KBIntegratorSynchronable
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
+		KBIDebug::log($data);
 		KBIDebug::log($info);
 		KBIDebug::log($response);
 
@@ -175,7 +190,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$data = array(
 			'action' => 'deleteDocument',
-			'variable' => $id,
+			'id' => $id,
 			'content'=> '',
 		);
 
