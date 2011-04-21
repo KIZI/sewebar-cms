@@ -1,0 +1,2 @@
+creates e.g. the following DM task
+duration(SS[1-1]) ^ ¬district(Praha) => statusAgregovane(SS[2-2]) /sex(SS[1-1])

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ar:GUHAFeatureList xmlns:ar="http://keg.vse.cz/ns/arfeatures_01"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+ mode="AssociationRules"
+ procedure="4ft">
+    <UserInterface>
+        <AllowMultipleRules>true</AllowMultipleRules>
+    </UserInterface>
+    <RulePattern>        
+        <Antecedent minNumberOfBBAs="1" maxNumberOfBBAs="10"/>
+        <Consequent minNumberOfBBAs="1" maxNumberOfBBAs="5"/>
+        <Condition minNumberOfBBAs="0" maxNumberOfBBAs="1"/>
+        <GeneralConstraint minNumberOfBBAs="0"/>
+    </RulePattern>
+
+    <!-- Details for each building block -->
+    <BuildingBlocks>
+        <!-- The user does not have to  specify the threshold, but he can -->
+        <InterestMeasures threshold="prohibited">
+            <!-- Possible values: optional/mandatory/prohibited-->
+            <Types>
+                <!-- The user needs to choose the type of the interest measure -->
+                <Type>
+                    <!-- master name used for serialization -->
+                    <Name>Average Difference</Name>
+                    <!-- display in GUI depending on locale -->
+                    <LocalizedName lang="en">Above Average Implication</LocalizedName>
+                    <LocalizedName lang="cs">Above Average Implication</LocalizedName>
+                    <!-- asi do tooltipu -->
+                    <Explanation lang="en">Použijte, pokud pravdivost předpokladu zvyšuje pravděpodobnost toho, že závěr bude pravdivý</Explanation>
+                    <Explanation lang="cs">Use when the truthfulness of the antecedent increases the odds that the consequent will be true</Explanation>                    
+                    
+                    <Field>
+                        <Name>Average Difference Threshold</Name>
+                        <LocalizedName lang="cs">minimální hodnota</LocalizedName>
+                        <Explanation lang="cs">Pravděpodobnost závěru je o zadaný počet procen vyší, než je průměrná pravděpodobnost závěru v datové matici</Explanation>
+                        <Validation>
+                            <Datatype>integer</Datatype>
+                        </Validation>
+                    </Field>
+                    
+                    <!-- For each interest measure, there are different fields displayed-->
+                    <!-- There is no field for this interest measure -->
+                    
+                </Type>
+                
+            </Types>
+            <SupportedInterestMeasureCombinations>
+                <!-- List of allowed combinations of interest measures -->
+                <SupportedIMCombination>
+                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                    <InterestMeasure>Support</InterestMeasure>
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                    <InterestMeasure>Confidence</InterestMeasure>
+                </SupportedIMCombination>                
+                
+            </SupportedInterestMeasureCombinations>
+        </InterestMeasures>
+        <!-- defines how BBAs are created -->
+        <!-- coefficient is required for bbas -->
+        <BasicBooleanAttribute coefficient="required">
+            <Coefficient>
+                <!-- allowed coefficient types -->
+                <Type>
+                    <!-- only one type allowed -->
+                    <Name>Multiple categories</Name>
+                    <LocalizedName lang="cs">Kategorie</LocalizedName>
+                    <LocalizedName lang="en">Category</LocalizedName>
+                    <LocalizedName lang="en">Category</LocalizedName>
+                    <Explanation lang="en">Puts one or multiple values into attribute coefficient</Explanation>
+                    <Explanation lang="cs">Vloží jednu nebo více hodnot do koeficientu pravidla</Explanation>                    
+                    <!-- the UI should display one field for this UI -->
+                    <Field>
+                        <Name>list of categories</Name>
+                        <LocalizedName lang="en">categories</LocalizedName>
+                        <LocalizedName lang="cs">kategorie</LocalizedName>
+                        <Explanation lang="cs">Vyberte jednu nebo více hodnot pro daný atribut. </Explanation>
+                        <Explanation lang="en">Select one or more values for this attribute. </Explanation>                        
+                        <Validation>
+                            <Required value="yes"/>                            
+<!-- !!! Should allow to select multiple values for the coefficient -->                            
+                            <Datatype>listOfFieldValues</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+            </Coefficient>
+        </BasicBooleanAttribute>
+        <DerivedBooleanAttribute>
+            <!-- does not allow (A v B) ^ C => D -->
+            <!-- antecedent can be complex-->
+            <NestingConstraints scope="antecedent">                
+                <MaxLevels>3</MaxLevels>           
+                <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="yes"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="no"/>
+                    </Connectives>                    
+                </NestingConstraint>
+                <NestingConstraint level="2">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="yes"/>
+                        <Any allowed="yes"/>
+                        <Negation allowed="no"/>
+                    </Connectives>                    
+                </NestingConstraint>
+	        <NestingConstraint level="3">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="yes"/>
+                        <Negation allowed="yes"/>
+                    </Connectives>                    
+	        </NestingConstraint>                
+            </NestingConstraints>
+            <!-- consequent is really simple -->
+            <NestingConstraints scope="consequent">                
+                <MaxLevels>2</MaxLevels>           
+                 <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="yes"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="no"/>
+                    </Connectives>                    
+                </NestingConstraint>
+                <NestingConstraint level="2">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="no"/>
+                    </Connectives>                    
+                </NestingConstraint>
+            </NestingConstraints>
+                        <NestingConstraints scope="condition">                
+                <MaxLevels>1</MaxLevels>           
+                <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="no"/>
+                    </Connectives>                    
+                </NestingConstraint>
+            </NestingConstraints>
+
+        </DerivedBooleanAttribute>
+    </BuildingBlocks>
+</ar:GUHAFeatureList>

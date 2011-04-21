@@ -1,0 +1,166 @@
+These tests are tests of AssociationRule class. Description of every test start
+with its number. Then is a name of the test shown in Firebug and
+
+Test1)
+Name: testInsertItem1
+Limitations:
+Any operators are allowed.
+Limit 8 operators.
+Limit 10 general elements.
+All operations on 6 levels are allowed.
+Rule:
+attr1 oper1 (oper1) oper2 oper3 oper4 oper5 oper6 oper7 oper8 (oper9) attr2 and (attr3)
+
+Test2)
+Name: testInsertItem2
+Limitations:
+One operCor(operator correct) is allowed.
+All operations on 6 levels are allowed.
+Rule:
+attr1 or attr2 and attr3 and lbrac attr4 (operCor) rbrac (rbrac) and attr5 (rbrac) (operWrong) operCor (operWrong2) attr6
+
+Test3)
+Name: testInsertItem3
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule:
+neg attr1 (rbrac) (attr2) (lbrac) and neg (rbrac) (lbrac) (oper) (and) (or) (neg) attr2 and (rbrac) (and) (or) (oper) oper1 attr3
+
+Test4)
+Name: testInsertItem4
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule: attr1 or neg attr2 or lbrac lbrac neg attr3 or (oper) (rbrac) (and) (or) lbrac (oper) (rbrac) (and) (or)
+
+Test5)
+Name: testInsertItem5
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule: attr1 oper neg attr2
+
+Test6)
+Name: testInsertItem6
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule: attr1 oper (rbrac) (and) (or) lbrac
+
+Test7)
+Name: testInsertItem7
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule: attr1 and attr2 and attr3 and attr4 and attr5 and attr6 and attr7 and attr8 and (attr9)
+
+Test8)
+Name: testInsertItem8
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule: attr1 oper attr2 and attr3 and attr4 and attr5 and attr6 and attr7 and attr8 and attr9 and (attr10)
+
+Test9)
+Name: testInsertItem9
+Limitations:
+Any opers allowed.
+All operations on 6 levels are allowed.
+Rule: lbrac attr1 rbrac or lbrac lbrac attr2 rbrac (lbrac) (attr) (oper) rbrac and neg attr3 (rbrac)
+
+Test10)
+Name: testInsertItem10
+Following combinatins of Operators are correct - three operators(operCor1
+operCor2 operCor3) or two operators that are part of these three
+All operations on 6 levels are allowed.
+Rule: (oper) (and) (or) (rbrac) lbrac attr rbrac operCor1 operWrong1 operCor2 operWrong2 operCor3
+
+Tests that are necessary to be sure that this class works as expected.
+SOLVED
+Any combinations of operators is supported.
+    X - Test two same operators.
+    Test two different operator.
+Only one is allowed
+    X - Test add one wrong operator.
+    Test add one correct operator.
+    X - test add second correct operator.
+Two are allowed and Three are allowed when two are part of three.
+    Test add first correct operator.
+    X - Test add second wrong operator.
+    Test add second correct operator.
+    X - Test add third incorrect operator.
+    Test add third correct operator
+
+Too many IM
+Too many general
+Too many ant
+Too many cons
+Element1 is attr
+OK    Test add or
+OK    Test add and
+OK    Test add rbrac when there is at least one lbrac left
+OK    X - Test add rbrac when there is left no lbrac
+OK    X - Test add rbrac when there is left no lbrac but there is one negation
+OK    Test add oper when there is left no lbrac
+OK    X - Test add oper when there is left lbrac
+OK    X - Test add lbrac
+OK    X - Test add attr
+Element1 is and
+OK    Test add lbrac
+OK    Test add attr
+OK    Test add neg
+OK    X - Test add rbrac
+OK    X - Test add and
+OK    X - Test add oper
+OK    X - Test add or
+Element1 is neg
+OK    X - Test add rbrac
+OK    X - Test add lbrac
+OK    X - Test add and
+OK    X - Test add or
+OK    X - Test add neg
+OK    X - Test add oper
+OK    Test add attr
+Element1 is lbrac
+OK    Test add neg
+OK    Test add attr
+OK    Test add lbrac
+OK    X - Test add oper
+OK    X - Test add rbrac
+OK    X - Test add and
+OK    X - Test add or
+Element1 is or
+OK    Test add lbrac
+OK    Test add attr
+OK    Test add neg
+OK    X - Test add rbrac
+OK    X - Test add and
+OK    X - Test add oper
+OK    X - Test add or
+Element1 is oper
+OK    Test add attr
+OK    Test add oper
+OK    Test add neg
+OK    Test add lbrac
+OK    X - Test add rbrac
+OK    X - Test add and
+OK    X - Test add or
+Element1 is rbrac
+OK    Test add or
+OK    Test add and
+OK    Test add rbrac when there is at least one lbrac left
+OK    X - Test add rbrac when there is left no lbrac
+OK    X - Test add rbrac when there is left no lbrac but there is one negation
+OK    Test add oper when there is left no lbrac
+OK    X - Test add oper when there is left lbrac
+OK    X - Test add lbrac
+OK    X - Test add attr
+At the beginning
+OK    Test add lbrac
+OK    Test add attr
+OK    Test add neg
+OK    X - Test add oper
+OK    X - Test add and
+OK    X - Test add or
+OK    X - Test add rbrac

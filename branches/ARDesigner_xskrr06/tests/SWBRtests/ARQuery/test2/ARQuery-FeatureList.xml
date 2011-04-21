@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ar:GUHAFeatureList xmlns:ar="http://keg.vse.cz/ns/arfeatures_01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+    mode="ARQuery" procedure="4ft">
+    <UserInterface>
+        <AllowMultipleRules>false</AllowMultipleRules>
+    </UserInterface>
+    <RulePattern>
+        <Antecedent minNumberOfBBAs="1" maxNumberOfBBAs="3"/>
+        <Consequent minNumberOfBBAs="1" maxNumberOfBBAs="3"/>
+        <Condition minNumberOfBBAs="0" maxNumberOfBBAs="1"/>
+        <GeneralConstraint minNumberOfBBAs="0"/>
+    </RulePattern>
+    <SerializationOverride>
+        <Antecedent forceLevels="2"></Antecedent>
+        <Consequent forceLevels="2"></Consequent>
+        <Condition forceLevels="2"></Condition>
+    </SerializationOverride>
+    <!-- Details for each building block -->
+    <BuildingBlocks>
+        <!-- The user does not have to  specify the threshold, but he can -->
+        <InterestMeasures threshold="optional">
+
+                <!-- The user needs to choose the type of the interest measure -->
+                <Types>
+                    
+                        <!-- The user needs to choose the type of the interest measure -->
+                        <Type>
+                            <!-- master name used for serialization -->
+                            <Name>Any Interest Measure</Name>
+                            <!-- display in GUI depending on locale -->
+                            <LocalizedName lang="en">Any Interest Measure</LocalizedName>
+                            <LocalizedName lang="cs">Jakákoliv míra zajímavosti</LocalizedName>                    
+                            <!-- For each interest measure, there are different fields displayed-->
+                            <!-- There is no field for this interest measure -->
+                        </Type>
+                        
+                    <!-- The user needs to choose the type of the interest measure -->
+                    <Type>
+                        <!-- master name used for serialization -->
+                        <Name>Support</Name>
+                        <!-- display in GUI depending on locale -->
+                        <LocalizedName lang="en">Support</LocalizedName>
+                        <LocalizedName lang="cs">Podpora</LocalizedName>
+                        <Explanation lang="cs">Omezení naminimální procento objektů v matici, které musí splňovat pravidlo</Explanation>
+                        
+                        <!-- For each interest measure, there are different fields displayed-->
+                        <Field>
+                            <!-- master name usedARQuery for serialization -->
+                            <Name>min value</Name>
+                            <!-- display in GUI depending on locale -->
+                            <LocalizedName lang="en">min value</LocalizedName>
+                            <LocalizedName lang="cs">min hodnota</LocalizedName>
+                            <Explanation lang="cs">Minimální procento objektů v matici, které budou splňovat pravidlo</Explanation>
+                            <!-- The input value must be a decimal in  (0;1) -->
+                            <Validation>
+                                <MinValue inclusive="no">0</MinValue>
+                                <MaxValue inclusive="no">1</MaxValue>
+                                <Datatype>double</Datatype>
+                            </Validation>
+                        </Field>
+                    </Type>
+                    <Type>
+                        <Name>Confidence</Name>
+                        <LocalizedName lang="en">Confidence</LocalizedName>
+                        <LocalizedName lang="cs">Spolehlivost</LocalizedName>
+                        <!-- For each interest measure, there are different fields displayed-->
+                        <Field>
+                            <!-- master name used for serialization -->
+                            <Name>min value</Name>
+                            <!-- display in GUI depending on locale -->
+                            <LocalizedName lang="en">min value</LocalizedName>
+                            <LocalizedName lang="cs">min hodnota</LocalizedName>
+                            <!-- The input value must be a decimal in  (0;1) -->
+                            <Validation>
+                                <MinValue inclusive="no">0</MinValue>
+                                <MaxValue inclusive="no">1</MaxValue>
+                                <Datatype>double</Datatype>
+                            </Validation>
+                        </Field>
+                        
+                    </Type>
+                    
+                    <Type>
+                        <Name>Above Average Implication</Name>
+                        <LocalizedName lang="en">Above Average Implication</LocalizedName>
+                        <LocalizedName lang="cs">Above Average Implication</LocalizedName>
+                        <Explanation lang="en">Použijte, pokud pravdivost předpokladu zvyšuje pravděpodobnost toho, že závěr bude pravdivý</Explanation>
+                        <Explanation lang="cs">Use when the truthfulness of the antecedent increases the odds that the consequent will be true</Explanation>                    
+                        
+                        <!-- For each interest measure, there are different fields displayed-->
+                        <Field>
+                            <!-- master name used for serialization -->
+                            <Name>min value</Name>
+                            <!-- display in GUI depending on locale -->
+                            <LocalizedName lang="en">min value</LocalizedName>
+                            <LocalizedName lang="cs">min hodnota</LocalizedName>
+                            <Explanation lang="cs">Pravděpodobnost závěru pravidla je o zadaný počet procent vyší, než je průměrná pravděpodobnost závěru v datové matici</Explanation>
+                            
+                            
+                            <!-- The input value must be a decimal in  (0;1) -->
+                            <Validation>
+                                <MinValue inclusive="no">0</MinValue>
+                                <Datatype>double</Datatype>
+                            </Validation>
+                        </Field>
+                    </Type>
+                </Types>
+            <SupportedInterestMeasureCombinations>
+                <!-- List of allowed combinations of interest measures -->
+                <SupportedIMCombination>
+                    <InterestMeasure>Any Interest Measure</InterestMeasure>
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Support</InterestMeasure>
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Confidence</InterestMeasure>
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Support</InterestMeasure>
+                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Support</InterestMeasure>
+                    <InterestMeasure>Confidence</InterestMeasure>
+                </SupportedIMCombination>                
+                
+            </SupportedInterestMeasureCombinations>
+        </InterestMeasures>
+        <!-- defines how BBAs are created -->
+        <!-- coefficient is required for bbas -->
+        <BasicBooleanAttribute coefficient="optional">
+            <Coefficient>
+                <!-- allowed coefficient types -->
+                <Type>
+                    <!-- only one type allowed -->
+                    <Name>One category</Name>
+                    <LocalizedName lang="cs">kategorie</LocalizedName>
+                    <LocalizedName lang="en">kategorie</LocalizedName>
+                    <!-- the UI should display one field for this UI -->
+                    <Field>
+                        <Name>category name</Name>
+                        <LocalizedName lang="en">category </LocalizedName>
+                        <LocalizedName lang="cs">kategorie</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <Datatype>listOfFieldValues</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+            </Coefficient>
+        </BasicBooleanAttribute>
+        <DerivedBooleanAttribute>
+            <!-- Allows one BBA in each rule part-->
+            <NestingConstraints scope="allruleparts">                
+                <MaxLevels>1</MaxLevels>              
+                <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="no"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="yes"/>
+                    </Connectives>                    
+                </NestingConstraint>
+                <NestingConstraint level="1">
+                    <Connectives>
+                        <Conjunction allowed="yes"/>
+                        <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="yes"/>
+                    </Connectives>                    
+                </NestingConstraint>
+            </NestingConstraints>
+        </DerivedBooleanAttribute>
+    </BuildingBlocks>
+</ar:GUHAFeatureList>

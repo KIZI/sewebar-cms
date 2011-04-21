@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+    xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
+    mode="AssociationRules" procedure="4ft"> 
+    <UserInterface>
+        <AllowMultipleRules>false</AllowMultipleRules>
+    </UserInterface>
+
+    <RulePattern>
+        <Antecedent minNumberOfBBAs="1" />
+        <Consequent minNumberOfBBAs="0" />
+        <Condition minNumberOfBBAs="0"/>
+        <GeneralConstraint minNumberOfBBAs="1"/>
+    </RulePattern>
+
+    <BuildingBlocks>
+        <InterestMeasures threshold="optional">
+            <Types>
+                <Type>
+                    <Name>Support</Name>
+                    <LocalizedName lang="en">Support</LocalizedName>
+                    <LocalizedName lang="cs">Podpora</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Confidence</Name>
+                    <LocalizedName lang="en">Confidence</LocalizedName>
+                    <LocalizedName lang="cs">Spolehlivost</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Above Average Implication</Name>
+                    <LocalizedName lang="en">Above Average Implication</LocalizedName>
+                    <LocalizedName lang="cs">Above Average Implication</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>BASE</Name>
+                    <LocalizedName lang="en">BASE</LocalizedName>
+                    <LocalizedName lang="cs">BASE</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Ceiling</Name>
+                    <LocalizedName lang="en">Ceiling</LocalizedName>
+                    <LocalizedName lang="cs">Ceiling</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>E-quantifier</Name>
+                    <LocalizedName lang="en">E-quantifier</LocalizedName>
+                    <LocalizedName lang="cs">E-kvantifikátor</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Average Difference</Name>
+                    <LocalizedName lang="en">Average Difference</LocalizedName>
+                    <LocalizedName lang="cs">Average Difference</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Below Average Implication</Name>
+                    <LocalizedName lang="en">Below Average Implication</LocalizedName>
+                    <LocalizedName lang="cs">Below Average Implication</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Double Founded Implication</Name>
+                    <LocalizedName lang="en">Double Founded Implication</LocalizedName>
+                    <LocalizedName lang="cs">Dvojitá fundovaná implikace</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Lower Critical Implication</Name>
+                    <LocalizedName lang="en">Lower Critical Implication</LocalizedName>
+                    <LocalizedName lang="cs">Lower Critical Implication</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Upper Critical Implication</Name>
+                    <LocalizedName lang="en">Upper Critical Implication</LocalizedName>
+                    <LocalizedName lang="cs">Upper Critical Implication</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Double Lower Critical Implication</Name>
+                    <LocalizedName lang="en">Double Lower Critical Implication</LocalizedName>
+                    <LocalizedName lang="cs">Double Lower Critical Implication</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Double Upper Critical Implication</Name>
+                    <LocalizedName lang="en">Double Upper Critical Implication</LocalizedName>
+                    <LocalizedName lang="cs">Double Upper Critical Implication</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Founded Equivalence</Name>
+                    <LocalizedName lang="en">Founded Equivalence</LocalizedName>
+                    <LocalizedName lang="cs">Fundovaná ekvilance</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Founded Implication</Name>
+                    <LocalizedName lang="en">Founded Implication</LocalizedName>
+                    <LocalizedName lang="cs">Fundovaná implikace</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Lower Critical Equivalence</Name>
+                    <LocalizedName lang="en">Lower Critical Equivalence</LocalizedName>
+                    <LocalizedName lang="cs">Lower Critical Equivalence</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Upper Critical Equivalence</Name>
+                    <LocalizedName lang="en">Upper Critical Equivalence</LocalizedName>
+                    <LocalizedName lang="cs">Upper Critical Equivalence</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Fisher</Name>
+                    <LocalizedName lang="en">Fisher</LocalizedName>
+                    <LocalizedName lang="cs">Fišer</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Chi-Square</Name>
+                    <LocalizedName lang="en">Chi-Square</LocalizedName>
+                    <LocalizedName lang="cs">Chí-kvadrát</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+                <Type>
+                    <Name>Simple Deviation</Name>
+                    <LocalizedName lang="en">Simple Deviation</LocalizedName>
+                    <LocalizedName lang="cs">Simple Deviation</LocalizedName>
+                    <Field>
+                        <Name>prahovaHodnota</Name>
+                        <LocalizedName lang="en">threshold value</LocalizedName>
+                        <LocalizedName lang="cs">prahová hodnota</LocalizedName>
+                        <Validation>
+                            <MinValue inclusive="no">0</MinValue>
+                            <MaxValue inclusive="no">1</MaxValue>
+                            <Datatype>double</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+            </Types>
+            <SupportedInterestMeasureCombinations/>
+        </InterestMeasures>
+
+        <BasicBooleanAttribute coefficient="optional">
+            <Coefficient>
+                <Type>
+                    <Name>One category</Name>
+                    <Field>
+                        <Name>category</Name>
+                        <LocalizedName lang="en">category</LocalizedName>
+                        <LocalizedName lang="cs">kategorie</LocalizedName>
+                        <Validation>
+                            <Required value="yes"/>
+                            <Datatype>string</Datatype>
+                        </Validation>
+                    </Field>
+                </Type>
+            </Coefficient>
+        </BasicBooleanAttribute>
+
+        <DerivedBooleanAttribute>
+            <NestingConstraints scope="allruleparts">
+                <MaxLevels>2</MaxLevels>
+                <NestingConstraint level="remaining">
+                    <Connectives>
+                        <Conjunction allowed="yes"/>
+                        <Disjunction allowed="yes"/>
+                        <Any allowed="no"/>
+                        <Negation allowed="no"/>
+                    </Connectives>
+                </NestingConstraint>
+            </NestingConstraints>
+        </DerivedBooleanAttribute>
+    </BuildingBlocks>
+</arf:GUHAFeatureList>
