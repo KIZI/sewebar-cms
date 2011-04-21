@@ -114,39 +114,39 @@ class KbiControllerDocuments extends JController
 	function uploadlocal()
 	{
 		global $option;
+
+		$application = JFactory::getApplication();
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		try
-		{
-			if ($model = &$this->getModel('sources'))
-			{
-				$id = JRequest::getVar('id', array(0), 'method', 'array');
-				$cid = JRequest::getVar('cid', array(0), 'method', 'array');
-				$success = 0;
+		if ($model = &$this->getModel('sources')) {
+			$id = JRequest::getVar('id', array(0), 'method', 'array');
+			$cid = JRequest::getVar('cid', array(0), 'method', 'array');
+			$success = 0;
 
-				require_once (JPATH_COMPONENT.DS.'models'.DS.'documents.php');
-				$documents_model = new DocumentsModel();
-				$sourceConfig = $model->getSource($id[0]);
-				$source = KBIntegrator::create(get_object_vars($sourceConfig));
+			require_once (JPATH_COMPONENT.DS.'models'.DS.'documents.php');
+			$documents_model = new DocumentsModel();
+			$sourceConfig = $model->getSource($id[0]);
+			$source = KBIntegrator::create(get_object_vars($sourceConfig));
 
-				foreach ($cid as $document_id)
-				{
+			foreach ($cid as $document_id) {
+				try	{
 					$document = $documents_model->getArticle($document_id, 'all', true);
-					if($document)
-					{
+					if($document) {
 						KBIDebug::log($document);
 						$source->addDocument($document->id, $document, FALSE);
 						$success ++;
+
+						$application->enqueueMessage(JText::_( 'Document uploaded' ) . "({$document->title})");
 					}
+				} catch(Exception $ex) {
+					$application->enqueueMessage(JText::_('ERROR ADDING FILE') . " - " . $ex->getMessage(), 'error');
 				}
 			}
 
-			$this->setMessage( JText::_( 'Documents uploaded' ) . "($success)" );
-		}
-		catch(Exception $ex)
-		{
-			$this->setError( JText::_( 'ERROR ADDING FILE' ) . "<br />" . $ex->getMessage());
+			$application->enqueueMessage(JText::_( 'Documents uploaded' ) . "($success)");
+		} else {
+			$application->enqueueMessage(JText::_('SOURCE NOT FOUND'), 'error');
 		}
 
 		$this->setRedirect("index.php?option={$option}&controller=documents&id[]={$id[0]}");
