@@ -162,7 +162,7 @@ class XQuery extends KBIntegratorSynchronable
 
 		$data = array(
 			'action' => 'getDocument',
-			'variable' => $id,
+			'id' => $id,
 			'content'=> '',
 		);
 
@@ -214,7 +214,7 @@ class XQuery extends KBIntegratorSynchronable
 	{
 		$postdata = array(
 			'action' => 'getDescription',
-			'variable' => '',
+			'id' => '',
 			'content'=> '',
 		);
 
