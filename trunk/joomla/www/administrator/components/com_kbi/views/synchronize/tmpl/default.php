@@ -30,7 +30,7 @@
 			<tr>
 				<th width="20"><?php echo JText::_( 'Num' ) ?></th>
 				<th width="20">
-					<input type="checkbox" name="toggle" value=""  onclick="checkAll(<?php echo count( $this->rows ); ?>);" />
+					<input type="checkbox" name="toggle" value=""  onclick="checkAll(<?php echo count($this->articles); ?>);" />
 				</th>
 				<th><a href="javascript:tableOrdering('1','<?php print $this->orderDir2 ?>','');"><?php print JText::_('TITLE') ?></a></th>
 				<th width="150"><a href="javascript:tableOrdering('2','<?php print $this->orderDir2 ?>', '');"><?php print JText::_('SECTION') ?></a></th>
