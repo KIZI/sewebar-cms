@@ -14,8 +14,8 @@
     //echo $toSolve;
 
     //$sr = new SerializeRulesBackgroundAssociationRules();
-    //$sr = new SerializeRulesTaskSetting();
+    $sr = new SerializeRulesTaskSetting();
     //$sr = new SerializeRulesARQuery();
-    $sr = new SerializeRulesQueryByAR();
+    //$sr = new SerializeRulesQueryByAR();
     echo $sr->serializeRules($toSolve);
 ?>
