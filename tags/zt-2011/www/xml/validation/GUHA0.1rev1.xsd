@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://keg.vse.cz/ns/GUHA0.1rev1"
-    xmlns="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
-    xmlns:pmml="http://www.dmg.org/PMML-4_0" elementFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns="http://keg.vse.cz/ns/GUHA0.1rev1"
+    xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns:pmml="http://www.dmg.org/PMML-4_0"
+    elementFormDefault="unqualified">
     <!-- http://www.xfront.com/HideVersusExpose.html -->
     <xs:annotation>
         <xs:documentation>The only root-level declarations in the schema are the models, their direct children and reference types.</xs:documentation>
@@ -33,7 +34,8 @@
                 <xs:element ref="pmml:LocalTransformations" minOccurs="0"/>
                 <xs:element name="AssociationRules" type="AssociationRules">
                     <xs:key name="keyBASetting_4ft">
-                        <xs:selector xpath="TaskSetting/BBASettings/BBASetting|TaskSetting/DBASettings/DBASetting"/>
+                        <xs:selector
+                            xpath="TaskSetting/BBASettings/BBASetting|TaskSetting/DBASettings/DBASetting"/>
                         <xs:field xpath="@id"/>
                     </xs:key>
                     <xs:key name="keyBA_4ft">
@@ -83,14 +85,16 @@
                 <xs:element ref="pmml:LocalTransformations" minOccurs="0"/>
                 <xs:element name="SD4ftRules" type="SD4ftRules">
                     <xs:key name="keyBASetting_SD4ft">
-                        <xs:selector xpath="TaskSetting/BBASettings/BBASetting|TaskSetting/DBASettings/DBASetting"/>
+                        <xs:selector
+                            xpath="TaskSetting/BBASettings/BBASetting|TaskSetting/DBASettings/DBASetting"/>
                         <xs:field xpath="@id"/>
                     </xs:key>
                     <xs:key name="keyBA_SD4ft">
                         <xs:selector xpath="BBA|DBA"/>
                         <xs:field xpath="@id"/>
                     </xs:key>
-                    <xs:keyref refer="keyBASetting_SD4ft" name="DBASettingreferencesExistingBASetting_SD4ft">
+                    <xs:keyref refer="keyBASetting_SD4ft"
+                        name="DBASettingreferencesExistingBASetting_SD4ft">
                         <xs:selector xpath="TaskSetting/DBASettings/DBASetting/BASettingRef"/>
                         <xs:field xpath="."/>
                     </xs:keyref>
@@ -118,7 +122,7 @@
                     <xs:keyref refer="keyBA_SD4ft" name="DBAreferencesExistingBA_SD4ft">
                         <xs:selector xpath="DBA/BARef"/>
                         <xs:field xpath="."/>
-                    </xs:keyref>                    
+                    </xs:keyref>
                 </xs:element>
             </xs:sequence>
             <xs:attribute name="modelName" type="xs:string"/>
@@ -134,11 +138,15 @@
         <xs:sequence>
             <xs:element name="BBA" type="BBA" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="DBA" type="DBA" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="AssociationRule" type="AssociationRule" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="AssociationRule" type="AssociationRule" minOccurs="0"
+                maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="AssociationRule">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Stores a single association rule</xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="Text" type="Text" minOccurs="0"/>
             <xs:element name="IMValue" type="IMValue" maxOccurs="unbounded"/>
@@ -160,7 +168,7 @@
 
     <xs:complexType name="SD4ftRule">
         <xs:sequence>
-            <xs:element name="Text" type= "Text" minOccurs="0"/>
+            <xs:element name="Text" type="Text" minOccurs="0"/>
             <xs:element name="IMValue" type="IMValue" maxOccurs="unbounded"/>
             <xs:element name="FirstSet" type="SD4ftSet" minOccurs="1" maxOccurs="1"/>
             <xs:element name="SecondSet" type="SD4ftSet" minOccurs="1" maxOccurs="1"/>
@@ -173,7 +181,7 @@
 
     <xs:complexType name="SD4ftSet">
         <xs:sequence>
-            <xs:element name="Text" type= "Text" minOccurs="0"/>
+            <xs:element name="Text" type="Text" minOccurs="0"/>
             <xs:element name="IMValue" type="IMValue" maxOccurs="unbounded"/>
             <xs:element name="FourFtTable" type="FourFtTable" minOccurs="0"/>
         </xs:sequence>
@@ -267,21 +275,22 @@
             <xs:enumeration value="Left cut"/>
             <xs:enumeration value="Right cut"/>
             <xs:enumeration value="One category"/>
+            <xs:enumeration value="Both boolean"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:complexType name="Coefficient">
-    <xs:sequence>
-        <xs:element name="Type" type="coefTypes" default="One category"/>
-        <xs:element name="MinimalLength" type="MinimalLength" minOccurs="0"/>
-        <xs:element name="MaximalLength" type="MaximalLength" minOccurs="0"/>
-        <xs:element name="Category" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
+        <xs:sequence>
+            <xs:element name="Type" type="coefTypes" default="One category"/>
+            <xs:element name="MinimalLength" type="MinimalLength" minOccurs="0"/>
+            <xs:element name="MaximalLength" type="MaximalLength" minOccurs="0"/>
+            <xs:element name="Category" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:simpleType name="CatRef">
         <xs:restriction base="xs:string">
-            <xs:minLength value="1"></xs:minLength>
+            <xs:minLength value="1"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -292,8 +301,7 @@
     </xs:simpleType>
 
     <xs:simpleType name="algoNameType">
-        <xs:restriction base="xs:string">
-        </xs:restriction>
+        <xs:restriction base="xs:string"> </xs:restriction>
     </xs:simpleType>
 
     <xs:complexType name="BBA">
@@ -341,7 +349,8 @@
             <xs:element name="Scope">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="Extension" type="Extension" minOccurs="0"
+                            maxOccurs="unbounded"/>
                         <xs:element name="RulePart" maxOccurs="unbounded">
                             <xs:simpleType>
                                 <xs:restriction base="xs:string">
@@ -366,7 +375,8 @@
             <xs:element name="MandatoryPresenceConstraint" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="Extension" type="Extension" minOccurs="0"
+                            maxOccurs="unbounded"/>
                         <xs:element name="MandatoryBA" type="BASettingRef" maxOccurs="unbounded"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -377,9 +387,9 @@
     <xs:complexType name="InterestMeasureSetting">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="InterestMeasureThreshold" type="InterestMeasureThreshold" maxOccurs="unbounded">
-                <!-- must have a unique id -->
-            </xs:element>
+            <xs:element name="InterestMeasureThreshold" type="InterestMeasureThreshold"
+                maxOccurs="unbounded">
+                <!-- must have a unique id --> </xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -410,7 +420,8 @@
             <xs:element name="AntecedentSetting" type="BASettingRef"/>
             <xs:element name="ConsequentSetting" type="BASettingRef"/>
             <xs:element name="ConditionSetting" type="BASettingRef" minOccurs="0"/>
-            <xs:element name="GeneralSetting" type ="GeneralSetting" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="GeneralSetting" type="GeneralSetting" minOccurs="0"
+                maxOccurs="unbounded">
                 <!-- BA References from GeneralSetting must refer to literal DBAs -->
                 <xs:keyref refer="keyBASetting_4ft" name="BAreferencefromGeneralSetting">
                     <xs:selector xpath="MandatoryPresenceConstraint/guha:MandatoryBA"/>
@@ -436,7 +447,8 @@
             <xs:element name="FirstSetSetting" type="BASettingRef"/>
             <xs:element name="SecondSetSetting" type="BASettingRef"/>
             <xs:element name="ConditionSetting" type="BASettingRef" minOccurs="0"/>
-            <xs:element name="GeneralSetting" type ="GeneralSetting" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="GeneralSetting" type="GeneralSetting" minOccurs="0"
+                maxOccurs="unbounded">
                 <!-- BA References from GeneralSetting must refer to literal DBAs -->
                 <xs:keyref refer="keyBASetting_SD4ft" name="BAreferencefromGeneralSetting_SD4ft">
                     <xs:selector xpath="MandatoryPresenceConstraint/guha:MandatoryBA"/>
@@ -449,14 +461,14 @@
 
     <xs:complexType name="BBASettings">
         <xs:sequence>
-            <xs:element name="BBASetting" type ="BBASetting" maxOccurs="unbounded"/>
+            <xs:element name="BBASetting" type="BBASetting" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="BBASetting">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="Text" type= "Text" minOccurs="0"/>
+            <xs:element name="Text" type="Text" minOccurs="0"/>
             <xs:element name="Name" type="xs:string" minOccurs="0"/>
             <xs:element name="FieldRef" type="FieldRef"/>
             <xs:element name="Coefficient" type="Coefficient"/>
@@ -473,7 +485,7 @@
     <xs:complexType name="DBASetting">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="Text" type= "Text" minOccurs="0"/>
+            <xs:element name="Text" type="Text" minOccurs="0"/>
             <xs:element name="Name" type="xs:string" minOccurs="0"/>
             <xs:element name="BASettingRef" type="BASettingRef" maxOccurs="unbounded"/>
             <!-- NON Literal DBA -->
@@ -496,7 +508,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="LiteralType" >
+    <xs:simpleType name="LiteralType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Basic"/>
             <xs:enumeration value="Remaining"/>
