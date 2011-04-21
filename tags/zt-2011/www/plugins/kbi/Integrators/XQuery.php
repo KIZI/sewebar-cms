@@ -154,6 +154,18 @@ class XQuery extends KBIntegratorSynchronable
 		{
 			throw new Exception('Error in communication');
 		}
+
+		$xml_response = simplexml_load_string($response);
+
+		if($xml_response === FALSE)
+		{
+			throw new Exception('Unexpected response');
+		}
+
+		if(isset($xml_response->error))
+		{
+			throw new Exception($xml_response->error);
+		}
 	}
 
 	public function getDocument($id)
@@ -214,7 +226,7 @@ class XQuery extends KBIntegratorSynchronable
 	{
 		$postdata = array(
 			'action' => 'getDescription',
-			'variable' => '',
+			'id' => '',
 			'content'=> '',
 		);
 

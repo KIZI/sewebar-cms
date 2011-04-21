@@ -41,7 +41,7 @@ class DocumentsModel extends JModel
 		}
 
 		//doplnime uri na clanek
-		$rows[0]->uri = JRoute::_(ContentHelperRoute::getArticleRoute($rows[0]->id), true, -1);
+		$rows[0]->uri = JRoute::_(JURI::root() . ContentHelperRoute::getArticleRoute($rows[0]->id), true, -1);
 
 		return $rows[0];
 	}
