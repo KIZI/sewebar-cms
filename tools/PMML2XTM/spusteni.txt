@@ -1,5 +1,0 @@
-Progam XTMJava sa spusta z prikazovej riadky z nasledujucimi parametrami:
-java -jar tmpjava.jar "vstupny pmml subor" "vstupna cista ontologia" "nazov vystupneho suporu"
-Priklad: "java -jar tmpjava.jar pravidla.pmml ontologia.xtm vystup.xtm"
-Program je mozne spustit aj bez parametrov nasledovne: "java -jar tmpjava.jar"
-Vtedy berie defaultne nastavene nazvy vstupnych suborov: "rules.pmml", "ontology.xtm" - tieto subory je potrebne ulozit do tej istej zlozky ako program a vystup sa ulozi do suboru "output.xtm";
