@@ -254,6 +254,7 @@ var Attribute = new Class({
      */
     recreateFields: function(){
         var newDiv = this.actualAttrField.display();
+        $('explanationAttr').set('html',this.actualAttrField.getLocalizedName());
         newDiv.replaces(this.fieldDiv);
         this.fieldDiv = newDiv;
     },
@@ -293,8 +294,13 @@ var Attribute = new Class({
         var attributeFields = this.attributeFields;
         // Create option if already selected before.
         if(this.actualAttrField != null){
+            var explanation = new Element('div',{
+                id: "explanationAttr",
+                html: this.actualAttrField.getLocalizedName()
+            });
             option = this.createOption(this.actualAttrField);
             option.inject(topSelect);
+            explanation.inject(topPart);
         }
         // Create all reamining options
         for(var actualAttributeChoice = 0; actualAttributeChoice < attributeFields.length; actualAttributeChoice++){
@@ -334,6 +340,47 @@ var Attribute = new Class({
             this.save();
         }.bind(this));
         button.inject(buttonPart);
+
+        if(AsociationRules.imThreshold != "required"){
+            var resetLang = "reset";
+            var button1 = new Element('input', {
+                type: "button",
+                id: "resetButton",
+                'class': "buttonSave",
+                value: resetLang
+            });
+            button1.addEvent('click', function(event){
+                if(this.actualAttrField != null){
+                    this.actualAttrField.empty();
+                }
+                this.askingWindowDiv.dispose();
+                this.podklad.dispose();
+                var textToDisplay;
+                if(this.actualAttrField != null){
+                    textToDisplay = this.nameLang+"<br>"+this.actualAttrField.getFieldNameValues();
+                }
+                else{
+                    textToDisplay = this.nameLang;
+                }
+                $(this.specificId).set('html',textToDisplay);
+            }.bind(this));
+            button1.inject(buttonPart);
+        }
+
+        if(AsociationRules.imThreshold != "required"){
+            var closeLang = "close";
+            var button2 = new Element('input', {
+                type: "button",
+                id: "closeButton",
+                'class': "buttonSave",
+                value: closeLang
+            });
+            button2.addEvent('click', function(event){
+                this.askingWindowDiv.dispose();
+                this.podklad.dispose();
+            }.bind(this));
+            button2.inject(buttonPart);
+        }
     },
 
     /**
@@ -416,6 +463,13 @@ var AttributeFields = new Class({
         }
     },
 
+    empty: function(){
+        for(var actualField = 0; actualField < this.fields.length; actualField++){
+            this.fields[actualField].setValue("");
+            this.fields[actualField].save();
+        }
+    },
+
     /**
      * Function: getName
      * This is a simple getter returning value of Name
@@ -439,8 +493,8 @@ var AttributeFields = new Class({
         var name = "";
         var value = "";
         for(var actualField = 0; actualField < this.fields.length; actualField++){
-            name = this.fields[actualField].getName();
-            value = this.fields[actualField].getValue();
+            name = this.fields[actualField].getLocalizedName();
+            value = this.fields[actualField].getActualValue();
             text += name+": "+value;
             if(actualField != this.fields.length-1){
                 text += "<br>"
@@ -501,6 +555,8 @@ var AttributeFields = new Class({
     save: function(){
         for(var actualField = 0; actualField < this.fields.length; actualField++){
             if(!this.fields[actualField].save()){
+                var language = new LanguageSupport();
+                new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
                 return false;
             }
         }
@@ -584,8 +640,8 @@ var InterestMeasure = new Class({
         var name = "";
         var value = "";
         for(var actualField = 0; actualField < this.fields.length; actualField++){
-            name = this.fields[actualField].getName();
-            value = this.fields[actualField].getValue();
+            name = this.fields[actualField].getLocalizedName();
+            value = this.fields[actualField].getActualValue();
             text += name+": "+value;
             if(actualField != this.fields.length-1){
                 text += "<br>"
@@ -680,7 +736,7 @@ var InterestMeasure = new Class({
         var explanationDiv = new Element('div',{
             id: "topDivExplanationAW",
             'class': "topDivAW",
-            html: this.explanation
+            html: this.nameLang
         });
         explanationDiv.inject(topPart);
     },
@@ -704,6 +760,49 @@ var InterestMeasure = new Class({
             this.save();
         }.bind(this));
         button.inject(buttonPart);
+
+        if(AsociationRules.imThreshold != "required"){
+            var resetLang = "reset";
+            var button1 = new Element('input', {
+                type: "button",
+                id: "resetButton",
+                'class': "buttonSave",
+                value: resetLang
+            });
+            button1.addEvent('click', function(event){
+                this.empty();
+                var textToDisplay = this.nameLang+"<br>"+this.getFieldNameValues();
+                $(this.specificId).set('html',textToDisplay);
+                this.askingWindowDiv.dispose();
+                this.podklad.dispose();
+            }.bind(this));
+            button1.inject(buttonPart);
+        }
+
+        if(AsociationRules.imThreshold != "required"){
+            var closeLang = "close";
+            var button2 = new Element('input', {
+                type: "button",
+                id: "closeButton",
+                'class': "buttonSave",
+                value: closeLang
+            });
+            button2.addEvent('click', function(event){
+                if(AsociationRules.imThreshold == "required"){
+                    return;
+                }
+                this.askingWindowDiv.dispose();
+                this.podklad.dispose();
+            }.bind(this));
+            button2.inject(buttonPart);
+        }
+    },
+
+    empty: function(){
+        for(var actualField = 0; actualField < this.fields.length; actualField++){
+            this.fields[actualField].setValue("");
+            this.fields[actualField].save();
+        }
     },
 
     /**

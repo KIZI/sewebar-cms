@@ -1,44 +1,55 @@
 <?php
-function xml2array($xml) {
-        $xmlary = array();
+function areXmlSame($xmlString1, $xmlString2){
+    $document1 = new DomDocument();
+    $document2 = new DomDocument();
+    $document1->loadXML($xmlString1);
+    $document2->loadXML($xmlString2);
+    $allNodes1 = $document1->getElementsByTagName("*");
+    $allNodes2 = $document2->getElementsByTagName("*");
+    $length1 = $allNodes1->length;
+    $length2 = $allNodes2->length;
 
-        $reels = '/<(\w+)\s*([^\/>]*)\s*(?:\/>|>(.*)<\/\s*\\1\s*>)/s';
-        $reattrs = '/(\w+)=(?:"|\')([^"\']*)(:?"|\')/';
-
-        preg_match_all($reels, $xml, $elements);
-
-        foreach ($elements[1] as $ie => $xx) {
-                $xmlary[$ie]["name"] = $elements[1][$ie];
-
-                if ($attributes = trim($elements[2][$ie])) {
-                        preg_match_all($reattrs, $attributes, $att);
-                        foreach ($att[1] as $ia => $xx)
-                                $xmlary[$ie]["attributes"][$att[1][$ia]] = $att[2][$ia];
-                }
-
-                $cdend = strpos($elements[3][$ie], "<");
-                if ($cdend > 0) {
-                        $xmlary[$ie]["text"] = substr($elements[3][$ie], 0, $cdend - 1);
-                }
-
-                if (preg_match($reels, $elements[3][$ie]))
-                        $xmlary[$ie]["elements"] = xml2array($elements[3][$ie]);
-                else if ($elements[3][$ie]) {
-                        $xmlary[$ie]["text"] = $elements[3][$ie];
-                }
+    if($length1 != $length2){
+        return false;
+    }
+    for($i = 0; $i < $length1; $i++){
+        $node1 = $allNodes1->item($i);
+        $node2 = $allNodes2->item($i);
+        if(!compareAttributes($node1, $node2)){
+            return false;
         }
-
-        return $xmlary;
+        if($node1->nodeName != $node2->nodeName){
+            return false;
+        }
+    }
+    return true;
 }
 
-function areXmlSame($xmlString1, $xmlString2){
-    $diferences = array_diff(xml2array($xmlString1),xml2array($xmlString2));
-    if(count($diferences) > 0){
-        return $diferences;
+function compareAttributes($node1, $node2){
+    $attrs1 = $node1->attributes;
+    $attrs2 = $node2->attributes;
+    $names1 = array();
+    $names2 = array();
+
+    foreach($attrs1 as $key => $value){
+        $names1[] = $value;
+        $names2[] = $value;
     }
-    else{
-        return null;
+
+    $length1 = count($names1);
+    $length2 = count($names2);
+
+    if($length1 != $length2){
+        return false;
     }
+
+    for($j = 0; $j < $length1; $j++){
+        if($names1[$j] != $names2[$j]){
+            return false;
+        }
+    }
+
+    return true;
 }
 
 ?>

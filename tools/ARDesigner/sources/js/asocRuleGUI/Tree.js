@@ -19,6 +19,7 @@ var Tree = new Class({
         this.id = 0;
     },
 
+    // Vyøešit nemožnost rùzných booleanù v jedné závorce.
     /**
      * Function: solveRule
      * This function takes one part of rule(either antecedent or consequent) and
@@ -29,13 +30,14 @@ var Tree = new Class({
      * elementsIn  {Array} Array of ARElements.
      *
      * Returns:
-     * {Void} Nothing
+     * {Array} Nothing
      */
     solveRule: function(elementsIn){
+        var result = new Array();
         var elements = elementsIn.slice(0);
         for(var i = 0; i < elements.length; i++){
             if(elements[i] == null){
-                return;
+                return null;
             }
         }
         var rBracketPos = -1;
@@ -54,11 +56,18 @@ var Tree = new Class({
         while(rBracketPos != -1){
             lBracketPos = this.getLBracket(elements,rBracketPos);
             plainDBA = this.solvePlainDBA(elements, lBracketPos, rBracketPos);
+            if(plainDBA == null){
+                return null;
+            }
             length = rBracketPos - lBracketPos + 1;
             elements.splice(lBracketPos, length, plainDBA);
             rBracketPos = this.getRBracket(elements);
         }
         this.root = this.solvePlainDBA(elements, -1, elements.length);
+        if(this.root == null){
+            return null;
+        }
+        return result;
     },
 
     /**
@@ -97,10 +106,11 @@ var Tree = new Class({
                     lastConnective = elements[actualElement].getType();
                 }
                 if(elements[actualElement].getType() != lastConnective){
-                    supDba = new DBA(this.id++);
+                    return null;
+                    /*supDba = new DBA(this.id++);
                     supDba.addChild(actualDba);
                     actualDba = supDba;
-                    lastConnective = elements[actualElement].getType();
+                    lastConnective = elements[actualElement].getType();*/
                 }
             }
         }

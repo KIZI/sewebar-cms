@@ -53,12 +53,21 @@ var DepthNesting = new Class({
             return "false";
         }
         if(type == this.DISJ_TYPE){
+            if(this.allowed[this.allowed.length - position - 1] == undefined){
+                return "false";
+            }
             return this.allowed[this.allowed.length - position - 1][this.DISJ];
         }
         else if(type == this.CONJ_TYPE){
+            if(this.allowed[this.allowed.length - position - 1] == undefined){
+                return "false";
+            }
             return this.allowed[this.allowed.length - position - 1][this.CONJ];
         }
         else if(type == this.NEG_TYPE){
+            if(this.allowed[this.allowed.length - position - 1] == undefined){
+                return "false";
+            }
             return this.allowed[this.allowed.length - position - 1][this.NEG];
         }
         else{

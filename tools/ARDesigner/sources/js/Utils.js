@@ -252,7 +252,7 @@ var HlaseniAbove = new Class({
     Implements: Events,
 
     PODKLAD: "podklad",
-    HLASENI: "hlaseni",
+    HLASENI: "hlaseniAbove",
     obsah: "",
 
     initialize: function(obsah){
@@ -278,9 +278,9 @@ var HlaseniAbove = new Class({
         prepravkaStyl.vloz("z-index","10");
         prepravkaStyl.vloz("border","solid 4px black");
         prepravkaAtribut.vloz("id",this.HLASENI);
-        prepravkaAtribut.vloz("html", "<table><tr><td style=\"font-size: 20px;\">"+this.obsah+"</td></tr><tr><td>&nbsp;</td></tr><tr><td style=\"text-align: center;\"><input id=\"btHlaseni\"  style=\"font-size: 30px;\" type='button' value='OK'></td></tr></table>");
+        prepravkaAtribut.vloz("html", "<table><tr><td style=\"font-size: 20px;\">"+this.obsah+"</td></tr><tr><td>&nbsp;</td></tr><tr><td style=\"text-align: center;\"><input id=\"btHlaseniAd\"  style=\"font-size: 30px;\" type='button' value='OK'></td></tr></table>");
         this.elementTv.vytvorDiv(prepravkaStyl, prepravkaAtribut, document.getElementsByTagName("body")[0]);
-        $('btHlaseni').addEvent("click",function(){
+        $('btHlaseniAd').addEvent("click",function(){
             this.uklidHlaseni();
             this.fireEvent("closehlaseni");
         }.bind(this));
