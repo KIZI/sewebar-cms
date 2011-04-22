@@ -47,8 +47,6 @@ var FieldBase = new Class({
     save: function(){
         if(this.proposedValue == ""){
             if(AsociationRules.attrCoef == "required"){
-                var language = new LanguageSupport();
-                new HlaseniAbove(language.getName(language.INCORRECT_FIELD_VALUE, LanguageSupport.actualLang));
                 return false;
             }
         }
@@ -87,6 +85,14 @@ var FieldBase = new Class({
      */
     getValue: function(){
         return this.proposedValue;
+    },
+
+    getActualValue: function(){
+        return this.actualValue;
+    },
+
+    getLocalizedName: function(){
+        return this.nameLang;
     }
 });
 
@@ -138,7 +144,7 @@ var FieldInput = new Class({
         });
         var fieldExpression = new Element('div',{
             name: "fieldExpression",
-            html: this.explanation,
+            html: this.nameLang,
             'class': "fieldExpression"
         });
         var fieldInput = new Element('input',{
@@ -209,7 +215,7 @@ var FieldSelect = new Class({
         });
         var fieldExpression = new Element('div',{
             name: "fieldExpression",
-            html: this.explanation,
+            html: this.nameLang,
             'class': "fieldExpression"
         });
         var fieldSelect = new Element('select',{
