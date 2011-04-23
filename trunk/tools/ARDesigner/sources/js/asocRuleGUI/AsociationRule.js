@@ -732,7 +732,13 @@ var AsociationRule = new Class({
 
     getDepth: function(position){
         var tree = new Tree();
-        var elementsToSolve = this.elements.slice(0,position);
+        var startingPosition = 0;
+        for(var i=0; i < position; i++){
+            if(this.elements[i].getType() == "oper"){
+                startingPosition = i;
+            }
+        }
+        var elementsToSolve = this.elements.slice(startingPosition,position);
         var missingBrackets = this.countBrackets();
         var rbrac = new BooleanCl(")","rbrac");
         var attr = new Attribute("attr1","",new Array());
