@@ -734,6 +734,9 @@ var AsociationRule = new Class({
         var tree = new Tree();
         var startingPosition = 0;
         for(var i=0; i < position; i++){
+            if(this.elements[i] == null){
+                continue;
+            }
             if(this.elements[i].getType() == "oper"){
                 startingPosition = i;
             }
