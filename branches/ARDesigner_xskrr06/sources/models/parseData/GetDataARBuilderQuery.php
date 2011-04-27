@@ -76,10 +76,10 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $threshold = "optional";
         $coefficient = "optional";
 
-        if($interestMeasure->getAttribute("threshold") != ""){
+        if($interestMeasure && $interestMeasure->getAttribute("threshold") != ""){
             $threshold = $interestMeasure->getAttribute("threshold");
         }
-        if($bba->getAttribute("coefficient") != ""){
+        if($bba && $bba->getAttribute("coefficient") != ""){
             $coefficient = $bba->getAttribute("coefficient");
         }
 
@@ -323,7 +323,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
      * and solve supported Interest Measures
      */
     private function solveInterestMeasures() {
-        // /InterestMeasures/Types/Type /Name -> jméno /Field/Name -> jméno políèka
+        // /InterestMeasures/Types/Type /Name -> jmï¿½no /Field/Name -> jmï¿½no polï¿½ï¿½ka
         $xPath = new DOMXPath($this->domFL);
         $anXPathExpr = "//InterestMeasures/Types/Type";
         $types = $xPath->query($anXPathExpr);
@@ -478,10 +478,10 @@ class GetDataARBuilderQuery extends AncestorGetData {
      * It gets existing rules from XML and based on the data creates JSON.
      */
     private function solveExistingRules() {
-        // Dostanu soubor ve formátu ARBuilder.
-        // Tento formát se následnì dìlí do tøí formátu: ARQuery, TaskSetting a AssociationRules
-        // Z toho ARQuery a TaskSetting se zpracovávají stejnì. Liší se pouze spodek.
-        // Každopádnì to pøevádíme do Elementù. ze kterých se vyrábí JSON
+        // Dostanu soubor ve formï¿½tu ARBuilder.
+        // Tento formï¿½t se nï¿½slednï¿½ dï¿½lï¿½ do tï¿½ï¿½ formï¿½tu: ARQuery, TaskSetting a AssociationRules
+        // Z toho ARQuery a TaskSetting se zpracovï¿½vajï¿½ stejnï¿½. Liï¿½ï¿½ se pouze spodek.
+        // Kaï¿½dopï¿½dnï¿½ to pï¿½evï¿½dï¿½me do Elementï¿½. ze kterï¿½ch se vyrï¿½bï¿½ JSON
         $asocRuleType = $this->domER->getElementsByTagName('AssociationRules');
         if ($asocRuleType->length > 0) {
             $this->solveAssociationRules();

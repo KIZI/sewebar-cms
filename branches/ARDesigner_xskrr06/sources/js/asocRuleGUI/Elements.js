@@ -403,6 +403,8 @@ var Attribute = new Class({
         }
         $(this.specificId).set('html',textToDisplay);
     //this.fireEvent("save");
+        
+        $('getHits').fireEvent('click');
     },
 
     /**
@@ -825,6 +827,8 @@ var InterestMeasure = new Class({
         var textToDisplay = this.nameLang+"<br>"+this.getFieldNameValues();
         $(this.specificId).set('html',textToDisplay);
     //this.fireEvent("save");
+        
+        $('getHits').fireEvent('click');
     },
 
     /**

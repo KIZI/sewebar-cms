@@ -17,9 +17,11 @@ var AsociationRules = new Class({
      * lang         {String} Language of the application
      * urlGet       {String} Url where the app gets Info
      * urlSet       {String} Url where the app serializes Info
+     * urlHits      {String} Url where the app gets hits
      */
-    initialize: function(lang, urlGet, urlSet){
+    initialize: function(lang, urlGet, urlSet, urlHits){
         this.urlSet = urlSet;
+        this.urlHits = urlHits;
         this.lang = lang;
 
         this.asociationRules = new Array();
@@ -93,6 +95,23 @@ var AsociationRules = new Class({
                         ele.dispose();
                     });
                     this.saveServer(jsonString);
+                }.bind(this));
+                
+                $("getHits").addEvent('click', function(event){
+                	var wholeJson = new JSONHelp();
+                    var rule = null;
+                    for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
+                        rule = this.asociationRules[actualRule].toJSON();
+                        if(rule == null){
+                            return;
+                        }
+                        wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
+                    }
+                    wholeJson.rules = actualRule;
+                    var jsonString = JSON.encode(wholeJson);
+                    
+                    // call server and get hits
+                    this.getHits(wholeJson);
                 }.bind(this));
 
                 this.maxSize = this.solveSize();
@@ -175,7 +194,52 @@ var AsociationRules = new Class({
         }).post({
             'data': which
         });
+    },
+    
+    /**
+     * Function: getHits
+     * This function is called to get hits for the active association rule
+     *
+     * Parameters:
+     * which  {String} Data that should be sent to the server.
+     */
+    getHits: function(which){
+        new Request.JSON({
+            url: this.urlHits,
+            onComplete: function(item){
+            	this.serverInfo.solveHits(item);
+            	this.updateHits();
+            }.bind(this)
+        }).get();
+    },
+    
+    /**
+     * Function: updateHits
+     * This function is called to repaint hits for the active association rule
+     */
+    updateHits: function(){
+    	this.clearHits();
+    	
+    	var hits = this.serverInfo.getHits();
+    	for(var actualRule = 0; actualRule < hits.length; actualRule++){
+    		hit = hits[actualRule];
+    		hit.setMaxSize(this.maxSize / 2);
+    		hit.addEvent("display", function(){
+                this.setDraggability();
+            }.bind(this));
+    	    var newRuleDiv = hit.display();
+    	    newRuleDiv.inject($('rightDivHits'));
+        }	
+    },
+    
+    /**
+     * Function: clearHits
+     * This function is called to clear hits
+     */
+    clearHits: function(){
+    	$('rightDivHits').empty();
     }
+    
 });
 
 /**
