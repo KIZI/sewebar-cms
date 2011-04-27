@@ -99,16 +99,7 @@ var Dragability = new Class({
      * element     {HTMLElement} The element that should be copied.
      */
     snapFunction: function(element){
-        if(element.shouldBeCreated){
-            var newElement = element.clone().inject($(element),'after');
-            newElement.correctPlace = false;
-            newElement.shouldBeCreated = true;
-            newElement.rulePosition = null;
-            
-            newElement.element = clone_obj(element.element);
-
-            element.shouldBeCreated = false;
-        }
+        
     },
 
     /**
@@ -133,8 +124,29 @@ var Dragability = new Class({
                     }.bind(this),
 
                     onSnap: function(element){
-                        this.snapFunction(element);
-                    }.bind(this)
+                        if(element.shouldBeCreated){
+                            var newElement = element.clone().inject($(element),'after');
+                            newElement.correctPlace = false;
+                            newElement.shouldBeCreated = true;
+                            newElement.rulePosition = null;
+            
+                            newElement.element = clone_obj(element.element);
+
+                            element.shouldBeCreated = false;
+                        }
+                        else{
+                            if(element.parentNode != null && element.parentNode.parentNode != null &&
+                                element.parentNode.parentNode.asociationRule != null){
+                                var elements = element.parentNode.parentNode.asociationRule.elements;
+                                for(var i = 0; i < elements.length; i++){
+                                    if(elements[i] == null){
+                                        this.stop();
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }));
 
         }.bind(this));
