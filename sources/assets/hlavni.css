@@ -20,7 +20,7 @@ body{
 }
 
 #right{
-    height: 200px;
+    height: 400px;
     position: relative;
     background-color: #dde2ff;
     padding: 5px;
@@ -44,6 +44,12 @@ body{
     position: relative;
     font-size: 14px;
     font-family: Georgia,'Times New Roman',times,serif;
+}
+
+#rightDivHits .boolean {
+	width: auto;
+	font-size: 10px;
+	font-family: Verdana;
 }
 
 .additionalInfo{
@@ -70,6 +76,12 @@ body{
     font-family: Georgia,'Times New Roman',times,serif;
 }
 
+#rightDivHits .operator {
+	width: auto;
+	font-size: 10px;
+	font-family: Verdana;
+}
+
 .attributes{
     height: 100%;
     margin: 4px;
@@ -90,6 +102,12 @@ body{
     font-family: Georgia,'Times New Roman',times,serif;
 }
 
+#rightDivHits .attribute {
+	width: auto;
+	font-size: 10px;
+	font-family: Verdana;
+}
+
 .ARElement{
     width: 140px;
     height: 25px;
@@ -99,6 +117,11 @@ body{
     margin-right: 2px;
     text-align: center;
     background-color: white;
+}
+
+#rightDivHits .ARElement {
+	width: auto;
+	min-width: 50px;
 }
 
 .beginningNumber{
@@ -179,6 +202,10 @@ body{
     
 }
 
+#getHits{
+	display: none;
+}
+
 .fieldExpression{
     font-style: italic;
 }
@@ -227,7 +254,7 @@ body{
 
 #rightDivPlace{
     width: 90%;
-    height: 100%;
+    height: 50%;
     overflow: auto;
     position: relative;
     float: left;
@@ -243,6 +270,13 @@ body{
 
 .saveWhole{
     
+}
+
+#rightDivHits{
+    width: 70%;
+    height: 50%;
+    background-color: #EEEEEE;
+    float: left;
 }
 
 #tableAsking{

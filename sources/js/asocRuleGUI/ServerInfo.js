@@ -12,6 +12,7 @@ var ServerInfo = new Class({
         this.depthLevels = new DepthNesting();
 
         this.attributes = new Array();
+        this.attributes2 = new Array();
         this.attributesFields = new Array(); //categories
 
         this.interestMeasures = new Array(); // obsahuje Interest Measures(Operator)
@@ -40,6 +41,8 @@ var ServerInfo = new Class({
 
         this.existingRules = new Array();
         this.solveRules(item);
+        
+        this.hits = new Array();
     },
 
     /**
@@ -48,6 +51,14 @@ var ServerInfo = new Class({
      */
     getExistingRules: function(){
         return this.existingRules;
+    },
+    
+    /**
+     * Function: getHits
+     * Just a simple getter, returning array of hits.
+     */
+    getHits: function(){
+        return this.hits;
     },
 
     /**
@@ -235,6 +246,7 @@ var ServerInfo = new Class({
             }
 
             this.attributes.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields)));
+            this.attributes2.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields)));
         }
     },
 
@@ -416,12 +428,14 @@ var ServerInfo = new Class({
                 this.solveRule(item["rule0"]);
             }
             else{
-                this.solveRule(new Array());
+            	var asociationRule = this.solveRule(new Array(), this.attributes); 
+            	this.existingRules.push(asociationRule);
             }
         }
         else{
             for(var actualRule = 0; actualRule < amountOfRules; actualRule++){
-                this.solveRule(item["rule"+actualRule]);
+            	var asociationRule = this.solveRule(item["rule"+actualRule], this.attributes);
+            	this.existingRules.push(asociationRule);
             }
         }
     },
@@ -432,8 +446,11 @@ var ServerInfo = new Class({
      *
      * Parameters:
      * rule     {Array} array of ARElements
+     * 
+     * Returns:
+     * {AssocitaionRule} asociationRule 
      */
-    solveRule: function(rule){
+    solveRule: function(rule, attributes){
         var ruleElement, actualField, type, name, category, fields, oldElement, fieldName, fieldValue;
         var positionInRule = 0;
         var asociationRule = new AsociationRule(this);
@@ -446,7 +463,7 @@ var ServerInfo = new Class({
             }
             else if(type == "attr"){
                 // Podle category vybrat attributeField
-                oldElement = clone_obj(this.getElement(name, this.attributes));
+                oldElement = clone_obj(this.getElement(name, attributes));
                 if(oldElement == null){
                     // TOdo asi fatalni chyba
                     continue;
@@ -476,7 +493,30 @@ var ServerInfo = new Class({
             asociationRule.insertItemWithoutDisplay(oldElement, positionInRule);
             positionInRule++;
         }
-        this.existingRules.push(asociationRule);
+        
+        return asociationRule;
+    },
+    
+    /**
+     * Function: initHits
+     * Just a simple initialization of hits
+     */
+    initHits: function() {
+    	this.hits = new Array();	
+    },
+    
+    /**
+     * Function: solveHits
+     * It solves hits received from the server which are then shown.
+     */
+    solveHits: function(item) {
+    	this.initHits();
+    	
+    	var amountOfRules = item.rules;
+    	for (var actualRule = 0; actualRule < amountOfRules; actualRule++) {
+    		var asociationRule = this.solveRule(item["rule" + actualRule], this.attributes2);
+    		this.hits.push(asociationRule);
+    	}
     },
 
     /**
@@ -493,7 +533,7 @@ var ServerInfo = new Class({
     getElement: function(name, elements){
         for(var actualElement = 0; actualElement < elements.length; actualElement++){
             if(elements[actualElement].getName() == name){
-                return clone_obj(elements[actualElement], null);
+                return clone_obj(elements[actualElement]);
             }
         }
         return null;

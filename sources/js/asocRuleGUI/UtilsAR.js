@@ -14,7 +14,7 @@ function clone_obj(obj) {
     }
 
     var c = obj instanceof Array ? [] : {};
-
+    
     for (var i in obj) {
         var prop = obj[i];
 

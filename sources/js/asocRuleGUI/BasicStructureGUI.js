@@ -55,6 +55,7 @@ var BasicStructureGUI = new Class({
         var rightDiv = utils.createDiv("right");
         var rightDivCreate = utils.createDiv("rightDivPlace");
         var rightDivButton = utils.createDiv("rightDivButton");
+        var rightDivHits = utils.createDiv("rightDivHits");
         var booleansDiv = utils.createDivClas("booleans", "booleans");
 
         // places for booleans, operators and attributes
@@ -79,6 +80,9 @@ var BasicStructureGUI = new Class({
         var save = utils.createDivClas("saveWhole");
         var saveInnerDiv = utils.createHtmlIdClick("saveRule", this.language.getName(this.language.SAVE, this.lang), "")
 
+        // get hits
+        var hitsButton = utils.createHtmlIdClick("getHits", this.language.getName(this.language.SAVE, this.lang), "")
+        
         mainDiv.inject($(idMainDiv));
         rightDiv.inject(mainDiv);
         leftDiv.inject(mainDiv);
@@ -93,6 +97,8 @@ var BasicStructureGUI = new Class({
 
         rightDivCreate.inject(rightDiv);
         rightDivButton.inject(rightDiv);
+        
+        rightDivHits.inject(rightDiv);
 
         buttonPlaceDown.inject(rightDivButton);
 
@@ -103,7 +109,7 @@ var BasicStructureGUI = new Class({
 
         save.inject(buttonPlaceDown);
         saveInnerDiv.inject(save);
-
+        hitsButton.inject(save);
 
         var elementSpecificCol;
         for(var i = 0; i < this.COLS_INTEREST_MEASURES; i++){
