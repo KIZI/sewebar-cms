@@ -135,16 +135,16 @@ class GetDataARBuilderQuery extends AncestorGetData {
         if ($this->hasAttributes($antecedent, "minNumberOfBBAs")) {
             $antecedentMin = $utils->getAttribute($antecedent, "minNumberOfBBAs");
         }
-        if ($this->hasAttributes($antecedent, "maxNumberOfBBA")) {
-            $antecedentMax = $utils->getAttribute($antecedent, "maxNumberOfBBA");
+        if ($this->hasAttributes($antecedent, "maxNumberOfBBAs")) {
+            $antecedentMax = $utils->getAttribute($antecedent, "maxNumberOfBBAs");
         }
 
         $consequent = $this->domFL->getElementsByTagName("Consequent")->item(0);
         if ($this->hasAttributes($consequent, "minNumberOfBBAs")) {
             $consequentMin = $utils->getAttribute($consequent, "minNumberOfBBAs");
         }
-        if ($this->hasAttributes($consequent, "maxNumberOfBBA")) {
-            $consequentMax = $utils->getAttribute($consequent, "maxNumberOfBBA");
+        if ($this->hasAttributes($consequent, "maxNumberOfBBAs")) {
+            $consequentMax = $utils->getAttribute($consequent, "maxNumberOfBBAs");
         }
 
         $IM = $this->domFL->getElementsByTagName("InterestMeasureConstraint")->item(0);
@@ -159,8 +159,8 @@ class GetDataARBuilderQuery extends AncestorGetData {
         if ($this->hasAttributes($general, "minNumberOfBBAs")) {
             $generalMin = $utils->getAttribute($general, "minNumberOfBBAs");
         }
-        if ($this->hasAttributes($general, "maxNumberOfBBA")) {
-            $generalMax = $utils->getAttribute($general, "maxNumberOfBBA");
+        if ($this->hasAttributes($general, "maxNumberOfBBAs")) {
+            $generalMax = $utils->getAttribute($general, "maxNumberOfBBAs");
         }
 
 

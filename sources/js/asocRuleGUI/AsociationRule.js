@@ -68,7 +68,7 @@ var AsociationRule = new Class({
         var conAttrs = this.countAttrsCon();
         var IMAttrs = this.countOpers();
         var arraySup = ["cons", "ant", "IM", "general"];
-        var array2Sup = [conAttrs, antAttrs, IMAttrs, antAttrs+conAttrs+IMAttrs];
+        var array2Sup = [conAttrs, antAttrs, IMAttrs, antAttrs+conAttrs];
         // This one solves max values
         for(var i = 0; i < arraySup.length; i++){
             if(this.serverInfo.getMaxValues(arraySup[i]) < array2Sup[i]){
@@ -151,6 +151,56 @@ var AsociationRule = new Class({
                 }
             }
             if(ok == existingOperators.length){
+                if(this.countAttrsBoolCon() != 0){
+                    if(ok == supIMCom[j].length){
+                        return true;
+                    }
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Function: solveSupportedInterestMeasures
+     * This function decides whether the combination of used interest measures is allowed
+     * based on the configuration file on the server.
+     *
+     * Returns:
+     * {Boolean} True if the combination is allowed.
+     */
+    solveSupportedInterestMeasuresFinal: function(){
+        var existingOperators = this.getExistingInterestMeasures();
+        var supIMCom = this.serverInfo.getSupportedIMCombinations();
+        var ok = 0;
+        for(var l = 0; l < existingOperators.length; l++){
+            for(var m = (l+1); m < existingOperators.length; m++){
+                if(existingOperators[l] == existingOperators[m]){
+                    return false;
+                }
+            }
+        }
+        if(supIMCom.length == 0){
+            return true;
+        }
+        else{
+            if(existingOperators.length == 0){
+                return false;
+            }
+        }
+        for(var j = 0; j < supIMCom.length; j++){
+            ok = 0;
+            for(var i = 0; i < existingOperators.length; i++){
+                for(var k = 0; k < supIMCom[j].length; k++){
+                    if(supIMCom[j][k] == existingOperators[i]){
+                        ok++;
+                    }
+                }
+            }
+            if(ok == supIMCom[j].length){
                 if(this.countAttrsBoolCon() != 0){
                     if(ok == supIMCom[j].length){
                         return true;
@@ -453,7 +503,7 @@ var AsociationRule = new Class({
      * {Boolean}
      */
     solveAttrRBrac: function(position){
-        if((this.getBracketDepth(position) - this.countNegation(position)) > 0){
+        if((this.getBracketDepth(position)) > 0){
             return true;
         }
         return false;
@@ -471,7 +521,7 @@ var AsociationRule = new Class({
      * {Boolean}
      */
     solveAttrOper: function(position){
-        if((this.getBracketDepth(position) - this.countNegation(position)) == 0 && this.countOpers(position) == 0){
+        if((this.getBracketDepth(position)) == 0 && this.countOpers(position) == 0){
             return true;
         }
         return false;
@@ -488,11 +538,20 @@ var AsociationRule = new Class({
     isRuleCorrect: function(){
         var element1, element2;
         if(this.elements.length == 1){
-            if(this.elements[0].getType() == "lbrac" || this.elements[0].getType() == "attr"|| this.elements[0].getType() == "neg"){
+            if(this.elements[0].getType() == "lbrac" || this.elements[0].getType() == "attr"){
                 return true
             }
             if(this.elements[0].getType() == "oper" && this.serverInfo.getMinValues("ant") < 1){
                 return true
+            }
+            if(this.elements[0].getType() == "neg"){
+                var depthstart = this.getBracketDepth(0);
+                if(this.serverInfo.getDepthLevels().isAllowed(this.elements[0].getType(), depthstart) == "false"){
+                    return false;
+                }
+                else{
+                    return true;
+                }
             }
             return false;
         }
@@ -596,6 +655,20 @@ var AsociationRule = new Class({
         return false;
     },
 
+    /**
+     * Function: countBrackets
+     * This function counts how deep the brackets are in themselves.
+     * Ex: Attr and ( Attr ot Attr ) means bracket depth 1
+     *     Attr or Attr              means bracket depth 0
+     *     Attr and ( ( Attr and Attr ) or ( Attr and Attr ) )
+     *                               means bracket depth 2
+     *
+     * Parameters:
+     * position  {int} position on which we are at the moment.
+     *
+     * Returns:
+     * {int} deep of brackets.
+     */
     countBrackets: function(position){
         var brackNumber = 0;
         for(var i = 0; i < this.elements.length; i++){
@@ -644,9 +717,9 @@ var AsociationRule = new Class({
             if(this.elements[i].getType() == "lbrac"){
                 brackNumber++;
             }
-            if(this.elements[i].getType() == "neg"){
+            /*if(this.elements[i].getType() == "neg"){
                 brackNumber++;
-            }
+            }*/
             if(this.elements[i].getType() == "rbrac"){
                 brackNumber--;
             }
@@ -659,20 +732,31 @@ var AsociationRule = new Class({
 
     getDepth: function(position){
         var tree = new Tree();
-        var elementsToSolve = this.elements.slice(0,position);
+        var startingPosition = 0;
+        for(var i=0; i < position; i++){
+            if(this.elements[i] == null){
+                continue;
+            }
+            if(this.elements[i].getType() == "oper"){
+                startingPosition = i;
+            }
+        }
+        var elementsToSolve = this.elements.slice(startingPosition,position);
         var missingBrackets = this.countBrackets();
         var rbrac = new BooleanCl(")","rbrac");
         var attr = new Attribute("attr1","",new Array());
-        for(var bracket = 0; bracket < missingBrackets; bracket++){
-            elementsToSolve.push(rbrac);
-        }
         if(elementsToSolve[elementsToSolve.length-1] != null){
             if(elementsToSolve[elementsToSolve.length-1].isElementBoolean()){
                 elementsToSolve.push(attr);
             }
         }
+        for(var bracket = 0; bracket < missingBrackets; bracket++){
+            elementsToSolve.push(rbrac);
+        }
         // I need to have correct rule. Therefore fill in attrs and brackets.
-        tree.solveRule(elementsToSolve);
+        if(tree.solveRule(elementsToSolve) == null){
+            return 9999999;
+        }
         return tree.getLevels();
     },
 
@@ -887,6 +971,10 @@ var AsociationRule = new Class({
         return this.ruleDiv;
     },
 
+    /**
+     * Function: showAsking
+     * This function is called when user clicks on element or dip it in the rule.
+     */
     showAsking: function(){
         this.lastElement.onClickMy();
     },
@@ -908,7 +996,7 @@ var AsociationRule = new Class({
             }.bind(this));
             actualElement.addEvent("save", function(event){
                 
-            }.bind(this))
+                }.bind(this))
             actualElement.correctPlace = false;
             actualElement.shouldBeCreated = false;
         }
@@ -952,6 +1040,9 @@ var AsociationRule = new Class({
             return null;
         }
         if(!this.isRuleCorrect()){
+            return null;
+        }
+        if(!this.solveSupportedInterestMeasuresFinal()){
             return null;
         }
         if(!this.solveAmountsMin()){
