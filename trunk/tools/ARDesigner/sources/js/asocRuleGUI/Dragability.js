@@ -137,7 +137,11 @@ var Dragability = new Class({
                         else{
                             if(element.parentNode != null && element.parentNode.parentNode != null &&
                                 element.parentNode.parentNode.asociationRule != null){
+                                var position = element.parentNode.get("name").replace("rule", "");
                                 var elements = element.parentNode.parentNode.asociationRule.elements;
+                                if(position == elements.length-1){
+                                    return;
+                                }
                                 for(var i = 0; i < elements.length; i++){
                                     if(elements[i] == null){
                                         this.stop();
