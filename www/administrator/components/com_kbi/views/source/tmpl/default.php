@@ -77,7 +77,7 @@
 					<td width="80%">
 						<script type="text/javascript">
 							function getDataDictionary() {
-								var url = '<?php echo JRoute::_("/index.php?option={$option}&task=dataDescription&format=raw&source={$this->row->id}") ?>';
+								var url = '<?php echo JRoute::_("/sewebar/index.php?option={$option}&task=dataDescription&format=raw&source={$this->row->id}") ?>';
 
 								var result = $('dictionaryquery');
 								var loader = $('dictionaryLink');
