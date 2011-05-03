@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LMWrapper.LMSwbExporter">
+    <Position X="1.5" Y="1.25" Width="1.5" />
+    <AssociationLine Name="Environment" Type="LMWrapper.Environment">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.725" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAICAEoBAAAABAAIBAAAAAgAAAoAIAAAAQAAAAA=</HashCode>
+      <FileName>LMSwbExporter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Environment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LMWrapper.Environment">
+    <Position X="5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Environment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
