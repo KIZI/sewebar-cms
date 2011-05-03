@@ -275,7 +275,7 @@ public class BDBXMLHandler {
                 if (useTransformation.equals("true")) {
                     File xsltFile = new File(xsltPath);
                     XSLTTransformer xslt = new XSLTTransformer();
-                    xml_doc = xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
+                    xml_doc += xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
                 } else {
                     xml_doc = document;
                 }
@@ -311,7 +311,7 @@ public class BDBXMLHandler {
      * @return zprava - ulozeno/chyba
      */
     public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) throws FileNotFoundException, IOException{
-        String xml_doc = "";
+        String xml_doc = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         String output = "";
         long act_time_long = System.currentTimeMillis();
 

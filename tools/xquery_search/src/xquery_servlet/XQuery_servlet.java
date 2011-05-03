@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.07 (21.3.2011)
+ * @version 1.10 (20.4.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
@@ -400,6 +400,7 @@ public class XQuery_servlet extends HttpServlet {
                         output += bh.query(id, dotaz, 1);*/
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
                         output += bh.queryShortened(qm.makeXPath(is));
+                        //output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error><![CDATA[Query nebyla zadana!]]></error>";

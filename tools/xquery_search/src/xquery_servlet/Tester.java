@@ -1,6 +1,7 @@
 package xquery_servlet;
 
 import com.sleepycat.dbxml.XmlManager;
+import java.io.IOException;
 
 /**
  * Trida provadi vypis nastaveni a otestovani funkci aplikace
@@ -48,7 +49,7 @@ public class Tester {
      * Metoda pro provedeni testu spravnosti nastaveni aplikace
      * @return vypis testu
      */
-    public String runTest(){
+    public String runTest() throws IOException{
         String output = "<testOutput>";
             output +=
                 "<settings>" +

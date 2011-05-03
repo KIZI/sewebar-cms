@@ -39,7 +39,7 @@ public class SchemaChecker {
         try {
             Schema schema = factory.newSchema(schemaLocation);
             Validator validator = schema.newValidator();
-            InputStream is = new ByteArrayInputStream(doc.getBytes());
+            InputStream is = new ByteArrayInputStream(doc.getBytes("UTF-8"));
             Source source = new StreamSource(is);
             validator.validate(source);
             output[0] = "1";
