@@ -144,7 +144,7 @@
     </form>
     <br />
     <br />
-    <i>verze 1.09 (31.3.2011)</i>
+    <i>verze 1.10 (20.4.2011)</i>
     <hr />    
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
