@@ -37,8 +37,8 @@ The only supported scope is EntireRule (via GeneralSetting). It is not possible 
             </assert>
         </rule>
         <rule context="BBASetting">
-            <assert test="Coefficient/Type='At least one from listed'">
-                The only supported coefficient type is 'One category'
+            <assert test="Coefficient/Type='At least one from listed' or Coefficient/Type='Any'">
+                The only supported coefficient type is 'At least one from listed' or 'Any'
             </assert>
         </rule>
         <rule context="DBASetting">

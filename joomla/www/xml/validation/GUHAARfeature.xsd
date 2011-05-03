@@ -265,6 +265,7 @@ Changes  0.1 to 0.2:
           <xs:enumeration value="Multiple categories"/>
            <xs:enumeration value="Listed exclusively"></xs:enumeration>
           <xs:enumeration value="Listed non-exclusively"></xs:enumeration>
+          <xs:enumeration value="Any"></xs:enumeration>
           <xs:enumeration value="At least one from listed"></xs:enumeration>
         </xs:restriction>
       </xs:simpleType>

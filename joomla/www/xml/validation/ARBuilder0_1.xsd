@@ -53,8 +53,21 @@
                 <xs:element type="ar:BBA" name="BBA"/>
                 <xs:element type="guha:DBA" name="DBA"/>
             </xs:choice>
-            <xs:element name="AssociationRule" type="guha:AssociationRule" maxOccurs="1"/>
+            <xs:element name="AssociationRule" type="ar:AssociationRule" maxOccurs="1"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AssociationRule">
+        <!-- redefine  guha:AssociationRule  so that consequent is not mandatory-->
+        <!-- redefine  guha:AssociationRule  so that IMValue is not mandatory-->
+        <!-- redefine  guha:AssociationRule  so that FourFtTable is not present-->
+        <xs:sequence>
+            <xs:element name="Text" type="guha:Text" minOccurs="0"/>
+            <xs:element name="IMValue" type="guha:IMValue" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="antecedent" type="guha:BARef"/>
+        <xs:attribute name="consequent" type="guha:BARef"/>
+        <xs:attribute name="condition" type="guha:BARef"/>
+        <xs:attribute name="id" type="xs:NMTOKEN"/>
     </xs:complexType>
     <xs:complexType name="BBA">
         <xs:sequence>
@@ -70,7 +83,6 @@
 
     <xs:complexType name="ARQuery">
         <xs:sequence>
-            <!-- redefine BBA so that coefficient is optional-->
             <xs:element name="BBASettings">
                 <xs:complexType>
                     <xs:sequence>
@@ -80,8 +92,7 @@
                                     <xs:element name="Text" type="guha:Text" minOccurs="0"/>
                                     <xs:element name="Name" type="xs:string" minOccurs="0"/>
                                     <xs:element name="FieldRef" type="guha:FieldRef"/>
-                                    <xs:element name="Coefficient" minOccurs="0"
-                                        maxOccurs="unbounded">
+                                    <xs:element name="Coefficient" minOccurs="1" maxOccurs="1">
                                         <xs:complexType>
                                             <xs:sequence>
                                                 <xs:element name="Type" minOccurs="0"
