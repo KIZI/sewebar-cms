@@ -24,7 +24,7 @@ function KbiPostArb(id, src_type, query_type, xslt)
  */
 function KbiQueryPost(query, source, params, xslt, result)
 {
-	var service_url = '/index.php?option=com_kbi&amp;task=query&amp;format=raw';
+	var service_url = '/sewebar/index.php?option=com_kbi&amp;task=query&amp;format=raw';
 
 	result
 		.empty()

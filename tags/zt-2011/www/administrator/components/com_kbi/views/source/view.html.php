@@ -52,9 +52,9 @@ class KbiViewSource extends JView
 		$this->assignRef('name', $user->name);
 		$this->assignRef('lists', $lists);
 
-		$style = "#dictionaryLink.ajax-loading {background: url('/components/com_kbi/assets/loader.gif') no-repeat center right; padding-right: 20px;}";
+		$style = "#dictionaryLink.ajax-loading {background: url('/sewebar/components/com_kbi/assets/loader.gif') no-repeat center right; padding-right: 20px;}";
 		$style.= ' ';
-		$style.= "#dictionaryLink.ajax-error {background: url('/components/com_kbi/assets/warning-icon.gif') no-repeat center right; padding-right: 20px;}";
+		$style.= "#dictionaryLink.ajax-error {background: url('/sewebar/components/com_kbi/assets/warning-icon.png') no-repeat center right; padding-right: 20px;}";
 		$document->addStyleDeclaration($style);
 
 		parent::display($tpl);

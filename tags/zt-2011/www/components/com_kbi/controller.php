@@ -56,7 +56,7 @@ class KbiControllerTransformator extends JController
 		$view->display();
 	}
 
-	function dataDescription()
+	function datadDescription()
 	{
 		$viewName = JRequest::getVar('view', 'results');
 		$viewType = 'raw';

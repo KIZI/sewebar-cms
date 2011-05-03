@@ -47,8 +47,9 @@
 			</td>
 			<td align="center">
 				<?php
+					//var_dump($row->name['joomlaID']);
 					$row->checked_out = false;
-					$row->livelink = $row->id != '' ? JRoute::_("/index.php?option=com_content&view=article&id={$row->id}") : NULL;
+					//$row->livelink = $row->reportUri === '' ? JRoute::_("/index.php?option=com_content&view=article&id={$row->id}") : $row->reportUri;
 					// TODO: XQuery delete by id not name
 					//$row->id = $row->id == '' ? $row->name : $row->id;
 					$row->id = $row->name;
@@ -69,8 +70,8 @@
 				<?php endif; ?>
 			</td>
 			<td align="center">
-				<?php if(!empty($row->livelink)) :?>
-				<a href="<?php echo $row->livelink; ?>" target="_blank">Live link</a>
+				<?php if(!empty($row->name['reportUri'])) :?>
+				<a href="<?php echo $row->name['reportUri'] ?>" target="_blank">Live link</a>
 				<?php else: ?>
 				-
 				<?php endif; ?>
