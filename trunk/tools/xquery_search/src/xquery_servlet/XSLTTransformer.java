@@ -23,7 +23,7 @@ public class XSLTTransformer {
      * @param reportUri url adresa reportu
      * @return prevedeny soubor ve forme Stringu
      */
-    public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime, String reportUri)
+    public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime, String reportUri) throws UnsupportedEncodingException
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -55,7 +55,7 @@ public class XSLTTransformer {
         catch (TransformerException ex) {
                 output += "<err>" + ex.toString() + "</err>";
         }
-        output += baos.toString();
+        output += baos.toString("UTF-8");
         return output;
    }
     
