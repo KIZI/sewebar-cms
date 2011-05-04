@@ -311,7 +311,7 @@ public class BDBXMLHandler {
      * @return zprava - ulozeno/chyba
      */
     public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) throws FileNotFoundException, IOException{
-        String xml_doc = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+        String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
 

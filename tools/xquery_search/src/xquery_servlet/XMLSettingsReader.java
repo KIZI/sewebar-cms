@@ -35,54 +35,84 @@ public class XMLSettingsReader {
                 Document doc = db.parse(xmlFile);
                 doc.getDocumentElement().normalize();
 
-                NodeList envDirList = doc.getElementsByTagName("envDir");
-                Element envDirElement = (Element)envDirList.item(0);
-                NodeList envDir = envDirElement.getChildNodes();
-                Node envDirNode = envDir.item(0);
-                if (envDirNode == null) { output[1] = ""; }
-                else { output[1] = (envDirNode.getNodeValue()); }
+                if (doc.getElementsByTagName("envDir") != null) {
+                    NodeList envDirList = doc.getElementsByTagName("envDir");
+                        if (envDirList.item(0) != null) {
+                        Element envDirElement = (Element)envDirList.item(0);
+                        NodeList envDir = envDirElement.getChildNodes();
+                        Node envDirNode = envDir.item(0);
+                        if (envDirNode == null) { output[1] = ""; }
+                        else { output[1] = (envDirNode.getNodeValue()); }
+                    } else { output[1] = ""; }
+                } else { output[1] = ""; }
+                
+                
+                if (doc.getElementsByTagName("queryDir") != null) {
+                    NodeList queryDirList = doc.getElementsByTagName("queryDir");
+                    if (queryDirList.item(0) != null) {
+                        Element queryDirElement = (Element)queryDirList.item(0);
+                        NodeList queryDir = queryDirElement.getChildNodes();
+                        Node queryDirNode = queryDir.item(0);
+                        if (queryDirNode == null) { output[2] = ""; }
+                        else { output[2] = (queryDirNode.getNodeValue()); }
+                    } else { output[2] = ""; }
+                } else { output[2] = ""; }
 
-                NodeList queryDirList = doc.getElementsByTagName("queryDir");
-                Element queryDirElement = (Element)queryDirList.item(0);
-                NodeList queryDir = queryDirElement.getChildNodes();
-                Node queryDirNode = queryDir.item(0);
-                if (queryDirNode == null) { output[2] = ""; }
-                else { output[2] = (queryDirNode.getNodeValue()); }
+                if (doc.getElementsByTagName("containerName") != null) {
+                    NodeList contNameList = doc.getElementsByTagName("containerName");
+                    if (contNameList.item(0) != null) {
+                        Element contNameElement = (Element)contNameList.item(0);
+                        NodeList contName = contNameElement.getChildNodes();
+                        Node containerNameNode = contName.item(0);
+                        if (containerNameNode == null) { output[3] = ""; }
+                        else { output[3] = (containerNameNode.getNodeValue()); }
+                    } else { output[3] = ""; }
+                } else { output[3] = ""; }
 
-                NodeList contNameList = doc.getElementsByTagName("containerName");
-                Element contNameElement = (Element)contNameList.item(0);
-                NodeList contName = contNameElement.getChildNodes();
-                Node containerNameNode = contName.item(0);
-                if (containerNameNode == null) { output[3] = ""; }
-                else { output[3] = (containerNameNode.getNodeValue()); }
+                if (doc.getElementsByTagName("useTransformation") != null) {
+                    NodeList useTransList = doc.getElementsByTagName("useTransformation");
+                    if (useTransList.item(0) != null) {
+                        Element useTransElement = (Element)useTransList.item(0);
+                        NodeList useTrans = useTransElement.getChildNodes();
+                        Node useTransNode = useTrans.item(0);
+                        if (useTransNode == null) { output[4] = ""; }
+                        else { output[4] = (useTransNode.getNodeValue()); }
+                    } else { output[4] = ""; }
+                } else { output[4] = ""; }
 
-                NodeList useTransList = doc.getElementsByTagName("useTransformation");
-                Element useTransElement = (Element)useTransList.item(0);
-                NodeList useTrans = useTransElement.getChildNodes();
-                Node useTransNode = useTrans.item(0);
-                if (useTransNode == null) { output[4] = ""; }
-                else { output[4] = (useTransNode.getNodeValue()); }
+                if (doc.getElementsByTagName("transformationPath") != null) {
+                    NodeList transPathList = doc.getElementsByTagName("transformationPath");
+                    if (transPathList.item(0) != null) {
+                        Element transPathElement = (Element)transPathList.item(0);
+                        NodeList transPath = transPathElement.getChildNodes();
+                        Node transPathNode = transPath.item(0);
+                        if (transPathNode == null) { output[5] = ""; }
+                        else { output[5] = (transPathNode.getNodeValue()); }
+                    } else { output[5] = ""; }
+                } else { output[5] = ""; }
 
-                NodeList transPathList = doc.getElementsByTagName("transformationPath");
-                Element transPathElement = (Element)transPathList.item(0);
-                NodeList transPath = transPathElement.getChildNodes();
-                Node transPathNode = transPath.item(0);
-                if (transPathNode == null) { output[5] = ""; }
-                else { output[5] = (transPathNode.getNodeValue()); }
+                if (doc.getElementsByTagName("tempDir") != null) {
+                    NodeList tempDirList = doc.getElementsByTagName("tempDir");
+                    if (tempDirList.item(0) != null) {
+                        Element tempDirElement = (Element)tempDirList.item(0);
+                        NodeList tempDir = tempDirElement.getChildNodes();
+                        Node tempDirNode = tempDir.item(0);
+                        if (tempDirNode == null) { output[6] = ""; }
+                        else { output[6] = (tempDirNode.getNodeValue()); }
+                    } else { output[6] = ""; }
+                } else { output[6] = ""; }
 
-                NodeList tempDirList = doc.getElementsByTagName("tempDir");
-                Element tempDirElement = (Element)tempDirList.item(0);
-                NodeList tempDir = tempDirElement.getChildNodes();
-                Node tempDirNode = tempDir.item(0);
-                if (tempDirNode == null) { output[6] = ""; }
-                else { output[6] = (tempDirNode.getNodeValue()); }
-
-                NodeList schemaPathList = doc.getElementsByTagName("schemaPath");
-                Element schemaPathElement = (Element)schemaPathList.item(0);
-                NodeList schemaPath = schemaPathElement.getChildNodes();
-                Node schemaPathNode = schemaPath.item(0);
-                if (schemaPathNode == null) { output[7] = ""; }
-                else { output[7] = (schemaPathNode.getNodeValue()); }
+                
+                if (doc.getElementsByTagName("schemaPath") != null) {
+                    NodeList schemaPathList = doc.getElementsByTagName("schemaPath");
+                    if (schemaPathList.item(0) != null) {
+                        Element schemaPathElement = (Element)schemaPathList.item(0);
+                        NodeList schemaPath = schemaPathElement.getChildNodes();
+                        Node schemaPathNode = schemaPath.item(0);
+                        if (schemaPathNode == null) { output[7] = ""; }
+                        else { output[7] = (schemaPathNode.getNodeValue()); }
+                    } else { output[7] = ""; }
+                } else { output[7] = ""; }
         } catch (ParserConfigurationException e) {
                 output[0] += ("ParserConfigurationException: " + e.toString() + "\n");
                 //e.printStackTrace();
