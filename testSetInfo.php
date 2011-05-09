@@ -8,14 +8,14 @@
     require_once('sources/models/Utils.php');
 
     session_start();
-
+    
     $toSolve = $_POST['data'];
     $toSolve = str_replace("\\\"", "\"", $toSolve);
     //echo $toSolve;
 
     //$sr = new SerializeRulesBackgroundAssociationRules();
-    $sr = new SerializeRulesTaskSetting();
     //$sr = new SerializeRulesARQuery();
     //$sr = new SerializeRulesQueryByAR();
+    $sr = new SerializeRulesTaskSetting();
     echo $sr->serializeRules($toSolve);
 ?>

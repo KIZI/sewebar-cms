@@ -27,16 +27,26 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $this->domDD = new DomDocument();
         $this->domFL = new DomDocument();
 
-        if (file_exists($domDD1)) {
-            $this->domDD->load($domDD1);
-        } else {
-            $this->domDD->loadXML($domDD1);
+        session_start();
+        
+        if ($domDD1 !== null) {
+          if (file_exists($domDD1)) {
+              $this->domDD->load($domDD1);
+          } else {
+              $this->domDD->loadXML($domDD1);
+          }
+          
+          $_SESSION["ARBuilder_domDataDescr"] = $domDD1;
         }
 
-        if (file_exists($domFL1)) {
-            $this->domFL->load($domFL1);
-        } else {
-            $this->domFL->loadXML($domFL1);
+        if ($domFL1 !== null) {
+          if (file_exists($domFL1)) {
+              $this->domFL->load($domFL1);
+          } else {
+              $this->domFL->loadXML($domFL1);
+          }
+          
+          $_SESSION["ARBuilder_domFeatureList"] = $domFL1;
         }
 
         $this->jsonObject = array();
@@ -48,9 +58,6 @@ class GetDataARBuilderQuery extends AncestorGetData {
             $this->domER = null;
         }
 
-        session_start();
-        $_SESSION["ARBuilder_domDataDescr"] = $domDD1;
-        $_SESSION["ARBuilder_domFeatureList"] = $domFL1;
         $_SESSION["ARBuilder_domExistingRules"] = $domER1;
     }
 
