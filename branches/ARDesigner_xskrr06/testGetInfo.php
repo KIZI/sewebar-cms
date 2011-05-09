@@ -10,6 +10,7 @@
     $DD = "XML/datadescription.xml";
     $FL = "XML/featurelistQueryByAr.xml";
     $ER = null;
+
     //$FL = "XML/featurelist1.xml";
     //$ER = "XML/taskSetting.xml";
     //$ER = "XML/associationRules.xml";
@@ -17,9 +18,11 @@
     //$ER = "testSelenium/test30Rules/associationRules.xml";
     //$ER = "testSelenium/test30ElementsRule/associationRules.xml";
     
-    //$DD = "testSelenium/testSpeed200attributes/datadescription.xml";
-    //$FL = "testSelenium/testSpeed200attributes/featurelist.xml";
-    //$ER = "testSelenium/testSpeed200attributes/associationRules.xml";
+    /*
+    $DD = "testSelenium/testSpeed200attributes/datadescription.xml";
+    $FL = "testSelenium/testSpeed200attributes/featurelist.xml";
+    $ER = "testSelenium/testSpeed200attributes/associationRules.xml";
+	*/
     
     $sr = new GetDataARBuilderQuery($DD,$FL,$ER,'en');
     echo $sr->getData();

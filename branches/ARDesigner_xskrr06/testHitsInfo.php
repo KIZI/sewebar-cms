@@ -7,8 +7,8 @@
     require_once('sources/models/parseData/TaskSettingParser.php');
     require_once('sources/models/Utils.php');
     
-    $DD = 'XML/datadescription_empty.xml';
-    $FL = 'XML/featurelistQueryByAr_empty.xml';
+    $DD = null;
+    $FL = null;
     $ER = "XML/hitslist.xml";
     
     $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');

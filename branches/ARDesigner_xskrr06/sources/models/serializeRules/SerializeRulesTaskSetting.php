@@ -1,656 +1,615 @@
 <?php
 
-/**
- * Description of SerializeRules. It serializes just one Rule, if there are more rules
- * it serializes first one.
- *
- * @author balda
- * @version 1.0
- */
 class SerializeRulesTaskSetting extends AncestorSerializeRules {
-
-    private $id = 0;
-    private $finalXMLDocument;
-    private $antecedent = -1;
-    private $consequent = -1;
-    private $rule = array();
-    private $rulePosition = -1;
-    private $Dictionary;
-    private $ARQuery;
-    private $BBASettings;
-    private $DBASettings;
-    private $InterestMeasureSetting;
-    private $ONE_CATEGORY = "One category";
-
-    /**
-     * It creates instance of this class.
-     */
-    function __construct() {
-        parent::__construct();
-    }
-
-    /**
-     * serializeRules, this one is main function and it gets JSON and returns
-     * correct XML reprezantation of the data.
-     */
-    public function serializeRules($json) {
-        // Create basic structure of Document.
-        $this->createBasicStructure();
-        // get Data from JSON
-        $json = str_replace("&lt;","<",$json);
-        $json = str_replace("&gt;",">",$json);
-        $jsonData = json_decode($json);
-        if ($jsonData->{'rules'} < 1) {
-            return $this->finalXMLDocument->saveXML();
-        }
-        // It is possible to have only one rule in this format.
-        $ruleData = $jsonData->{'rule0'}; // this is array
-        // Create BBAs and InterestMeasureSettings
-        $ruleDataLength = count($ruleData);
-        for ($ruleElement = 0; $ruleElement < $ruleDataLength; $ruleElement++) {
-            $actualRuleElement = $ruleData[$ruleElement];
-            if ($actualRuleElement->{'type'} == "attr") {
-                $text = $actualRuleElement->{'name'};
-                $name = $actualRuleElement->{'name'};
-
-                $fieldRef = $actualRuleElement->{'name'};
-                $fields = $actualRuleElement->{'fields'};
-                $fieldName = $fields[0]->{'name'};
-                $type = $actualRuleElement->{'category'};
-
-                $category = null;
-                $minLength = null;
-                $maxLength = null;
-                if ($type == $this->ONE_CATEGORY) {
-                    $category = $fields[0]->{'value'};
-                } else {
-                    $fieldLength = count($fields);
-                    if ($fieldLength < 1) {
-                        $minLength = 0;
-                    } else {
-                        $minLength = $fields[0]->{'value'};
-                        if ($minLength == "") {
-                            $minLength = 0;
-                        }
-                    }
-                    if ($fieldLength < 2) {
-                        $maxLength = 9999;
-                    } else {
-                        $maxLength = $fields[1]->{'value'};
-                        if ($maxLength == "") {
-                            $maxLength = 0;
-                        }
-                    }
-                }
-                $idBBA = $this->createBBASetting($text, $name, $fieldRef, $type, $minLength, $maxLength, $category);
-
-                $elements = array();
-                $elements[0] = $idBBA;
-                if ($ruleElement > 0 && $ruleData[$ruleElement - 1]->{'type'} != "neg" && ($ruleData[$ruleElement]->{'type'} != "lbrac" && $ruleData[$ruleElement]->{'type'} != "rbrac")) {
-                    $type = "Literal";
-                    $idDBA = $this->createDBASetting($type, $elements);
-                } else {
-                    $idDBA = $idBBA;
-                }
-                $position = $this->getNewRulePosition();
-                $this->rule[$position] = $idDBA;
-            }
-            if ($actualRuleElement->{'type'} == "oper") {
-                $name = $actualRuleElement->{'name'};
-                $fields = $actualRuleElement->{'fields'};
-                if (count($fields) > 0) {
-                    $value = $fields[0]->{'value'};
-                } else {
-                    $value = 0;
-                }
-                if ($value == "") {
-                    $value = 0;
-                }
-                $this->createInterestMeasureSetting($name, $value);
-                $this->rule[$this->getNewRulePosition()] = "oper";
-            }
-            if ($actualRuleElement->{'type'} == "rbrac" || $actualRuleElement->{'type'} == "lbrac" || $actualRuleElement->{'type'} == "and" || $actualRuleElement->{'type'} == "or" || $actualRuleElement->{'type'} == "neg") {
-                $this->rule[$this->getNewRulePosition()] = $actualRuleElement->{'name'};
-            }
-        }
-        // Create DBAs
-        $this->createDBAs();
-
-        // Create Antecedent
-        $this->createAntecedent($this->antecedent);
-
-        // Create Consequent
-        $this->createConsequent($this->consequent);
-
-        // Create Condition
-        $this->createCondition();
-
-        // Serialize XML
-        return $this->finalXMLDocument->saveXML();
-    }
-
-    /**
-     * Create Basic Structure of ARBuilder
-     * <ARBuilder>
-     *     <Dictionary></Dictionary>
-     *     <ARQuery>
-     *         <BBASettings></BBASettings>
-     *         <DBASettings></DBASettings>
-     *         <InterestMeasureSetting></InterestMeasureSetting>
-     *     </ARQuery>
-     * </ARBuilder>
-     */
-    private function createBasicStructure() {
-        $this->finalXMLDocument = new DomDocument("1.0", "UTF-8");
-
-        $ARBuilder = $this->finalXMLDocument->createElement("ar:ARBuilder");
-        $ARBuilder->setAttribute("xmlns:ar", "http://keg.vse.cz/ns/arbuilder0_1");
-        $ARBuilder->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        $ARBuilder->setAttribute("xmlns:dd", "http://keg.vse.cz/ns/datadescription0_1");
-        $ARBuilder->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd");
-        $ARBuilder->setAttribute("xmlns:guha", "http://keg.vse.cz/ns/GUHA0.1rev1");
-        $root = $this->finalXMLDocument->appendChild($ARBuilder);
-
-        $this->createDictionary($root);
-
-        $ARQuery = $this->finalXMLDocument->createElement("TaskSetting");
-        $this->ARQuery = $root->appendChild($ARQuery);
-
-        $BBASettings = $this->finalXMLDocument->createElement("BBASettings");
-        $this->BBASettings = $this->ARQuery->appendChild($BBASettings);
-        $DBASettings = $this->finalXMLDocument->createElement("DBASettings");
-        $this->DBASettings = $this->ARQuery->appendChild($DBASettings);
-        $antecedentSetting = $this->finalXMLDocument->createElement("AntecedentSetting");
-        $this->antecedentSetting = $this->ARQuery->appendChild($antecedentSetting);
-        $consequentSetting = $this->finalXMLDocument->createElement("ConsequentSetting");
-        $this->consequentSetting = $this->ARQuery->appendChild($consequentSetting);
-        $InterestMeasureSetting = $this->finalXMLDocument->createElement("InterestMeasureSetting");
-        $this->InterestMeasureSetting = $this->ARQuery->appendChild($InterestMeasureSetting);
-    }
-
-    /**
-     * Create Dictionary
-     * It means get dictionary from elsewhere and just inject it here.
-     */
-    private function createDictionary($root) {
-        $Dictionary = $this->finalXMLDocument->createElement("DataDescription");
-        $this->Dictionary = $root->appendChild($Dictionary);
-        // Get data from Session
-        $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
-        // load XML
-        $domDD = new DomDocument();
-        if (file_exists($domDD1)) {
-            $domDD->load($domDD1);
-        } else {
-            $domDD->loadXML($domDD1);
-        }
-        // get <Dictionary>
-        $xPath = new DOMXPath($domDD);
-        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
-        $anXPathExpr = "//dd:DataDescription";
-        $field = $xPath->query($anXPathExpr);
-        foreach ($field as $elField) {
-            $fields = $elField->childNodes;
-            foreach ($fields as $fieldSmall) {
-                $this->Dictionary->appendChild($this->finalXMLDocument->importNode($fieldSmall, true));
-            }
-        }
-        //return $this->finalXMLDocument->createElement("Dictionary");
-    }
-
-    /**
-     * It gets position of new rule. At the moment it just increments rulePosition
-     * and return the number.
-     *
-     * @return <int> position of new rule
-     */
-    private function getNewRulePosition() {
-        return++$this->rulePosition;
-    }
-
-    /**
-     * Create BBASetting
-     * <BBASettings>
-     * <BBASetting id="1">
-     *     <Text>duration</Text>
-     *     <Name>duration</Name>
-     *     <FieldRef>duration</FieldRef>
-     *     <Coefficient>
-     *         <Type>Interval</Type>
-     *         <MinimalLength>0</MinimalLength>
-     *         <MaximalLength>1</MaximalLength>
-     *         <Category></Category>
-     *     </Coefficient>
-     * </BBASetting>
-     * <BBASetting id="2">
-     *     <Text>duration</Text>
-     *     <Name>duration</Name>
-     *     <FieldRef>duration</FieldRef>
-     *     <Coefficient>
-     *         <Type>One Category</Type>
-     *         <MinimalLength></MinimalLength>
-     *         <MaximalLength></MaximalLength>
-     *         <Category>rok</Category>
-     *     </Coefficient>
-     * </BBASetting>
-     * </BBASettings>
-     *
-     * @param <String> $text Text of BBA
-     * @param <String> $name Name of BBA
-     * @param <String> $fieldRef FieldRef of BBA
-     * @param <Strnig> $type Type of Coefficient
-     * @param <int> $minLength Minimal length of Coefficient
-     * @param <int> $maxLength Maximal Length of Coefficient
-     * @param <String> $category Category of Coefficient
-     * @return <int> id id of this BBA
-     */
-    private function createBBASetting($text, $name, $fieldRef, $type, $minLength, $maxLength, $category) {
-        $BBASetting = $this->finalXMLDocument->createElement("BBASetting");
-        $id = $this->getNewID();
-        $BBASetting->setAttribute("id", $id);
-
-        $Text = $this->finalXMLDocument->createElement("Text");
-        $Text->appendChild($this->finalXMLDocument->createTextNode($text));
-
-        $Name = $this->finalXMLDocument->createElement("Name");
-        $Name->appendChild($this->finalXMLDocument->createTextNode($name));
-
-        $FieldRef = $this->finalXMLDocument->createElement("FieldRef");
-        $FieldRef->appendChild($this->finalXMLDocument->createTextNode($fieldRef));
-
-        $Coefficient = $this->createCoefficient($type, $minLength, $maxLength, $category);
-
-        $BBASetting->appendChild($Text);
-        $BBASetting->appendChild($Name);
-        $BBASetting->appendChild($FieldRef);
-        $BBASetting->appendChild($Coefficient);
-
-        $this->BBASettings->appendChild($BBASetting);
-        return $id;
-    }
-
-    /**
-     * At the moment it just increments id and return it back.
-     *
-     * @return <int> id
-     */
-    private function getNewID() {
-        return++$this->id;
-    }
-
-    /**
-     * Create Coefficient
-     * <Coefficient>
-     *         <Type>One Category</Type>
-     *         <MinimalLength></MinimalLength>
-     *         <MaximalLength></MaximalLength>
-     *         <Category>rok</Category>
-     * </Coefficient>
-     *
-     * @param <String> $type Type
-     * @param <int> $minLength MinimalLength
-     * @param <int> $maxLength MaximalLength
-     * @param <String> $category Category
-     * @return <DomNode> Node Coefficient
-     */
-    private function createCoefficient($type, $minLength, $maxLength, $category) {
-        $Coefficient = $this->finalXMLDocument->createElement("Coefficient");
-
-        $Type = $this->finalXMLDocument->createElement("Type");
-        $Type->appendChild($this->finalXMLDocument->createTextNode($type));
-
-        $Coefficient->appendChild($Type);
+  
+  private $dd;
+  private $ddXpath;
+  
+  private $id = 0;
+  private $finalXmlDocument;
+  private $dictionary;
+  private $dataDictionary;
+  private $arQuery;
+  private $bbaSettings;
+  private $dbaSettings;
+  private $antecedentSetting;
+  private $consequentSetting;
+  private $interestMeasureSetting;
+  
+  private $literals = array('lit');
+  private $literal;
+  // operators
+  private $operators = array('oper');
+  // attributes
+  private $attributes = array('attr');
+  // booleans
+  private $positiveBooleans = array('and', 'or');
+  private $negativeBooleans = array('neg');
+  private $booleans;
+  private $forceDepthBoolean;
+  private $negativeBoolean;
+  // brackets
+  private $openingBrackets = array('lbrac');
+  private $closingBrackets = array('rbrac');
+  private $brackets;
+  // connectives
+  private $connectives;
+  
+  private $types = array('neg' => 'Negation', 'and' => 'Conjunction', 'or' => 'Disjunction', 'lit' => 'Literal');
+  private $ONE_CATEGORY = "One category";
+  
+  /**
+   * It creates instance of this class.
+   */
+  function __construct() {
+      parent::__construct();
+      $this->literal = $this->literals[0];
+      $this->booleans = array_merge($this->positiveBooleans, $this->negativeBooleans);
+      $this->forceDepthBoolean = $this->booleans[0];
+      $this->negativeBoolean = $this->negativeBooleans[0];
+      $this->brackets = array_merge($this->openingBrackets, $this->closingBrackets);
+      $this->connectives = array_merge($this->brackets, $this->booleans);
+      
+      // load Data Description XML
+      $domDdPath = $_SESSION["ARBuilder_domDataDescr"];
+      $this->dd = new DomDocument();
+      if (file_exists($domDdPath)) {
+          $this->dd->load($domDdPath);
+      } else {
+          $this->dd->loadXML($domDdPath);
+      }
+      
+      // init XPath
+      $this->ddXpath = new DOMXPath($this->dd); 
+      $this->ddXpath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+  }
+    
+  public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5) {
+      
+    // Create basic structure of Document.
+    $this->createBasicStructure();
         
-        if ($category == null || $category == "") {
-            $MinimalLength = $this->finalXMLDocument->createElement("MinimalLength");
-            $MaximalLength = $this->finalXMLDocument->createElement("MaximalLength");
-            $MinimalLength->appendChild($this->finalXMLDocument->createTextNode($minLength));
-            $MaximalLength->appendChild($this->finalXMLDocument->createTextNode($maxLength));
-            $Coefficient->appendChild($MinimalLength);
-            $Coefficient->appendChild($MaximalLength);
-        } else {
-            $Category = $this->finalXMLDocument->createElement("Category");
-            $Category->appendChild($this->finalXMLDocument->createTextNode($category));
-            $Coefficient->appendChild($Category);
-        }
+    // get Data from JSON
+    $json = str_replace("&lt;","<",$json);
+    $json = str_replace("&gt;",">",$json);
+    $jsonData = json_decode($json);
+    if ($jsonData->{'rules'} < 1) {
+      return $this->finalXmlDocument->saveXML();
+    }
+    
+    // It is possible to have only one rule in this format.
+    $ruleData = $jsonData->{'rule0'}; // this is array
+    $ruleDataLength = count($ruleData);
+    
+    // replace negative booleans
+    $ruleData = $this->replaceNegativeBooleans($ruleData, $this->negativeBooleans);
+    
+    $intsToSolve = array(); // intervals to solve
+    $isPrevOper = false;
+    $intToSolveStart = PHP_INT_MAX;
+    foreach ($ruleData as $k => $rdata) {
+      if (!in_array($rdata->type, $this->operators) && $k < $intToSolveStart) {
+        $intToSolveStart = $k; // interval start
+      } else if (!$isPrevOper && in_array($rdata->type, $this->operators)) {
+        array_push($intsToSolve, array('start' => $intToSolveStart, 'end' => $k));
+        $intToSolveStart = PHP_INT_MAX;
+      }
+      
+      if (($k + 1) == $ruleDataLength && !in_array($rdata->type, $this->operators)) { // last loop
+        array_push($intsToSolve, array('start' => $intToSolveStart, 'end' => $k));
+        break;
+      }
 
-        return $Coefficient;
+      // crreateInterestMeasureSettings
+      if ($rdata->type == 'oper') {
+        $this->createInterestMeasureTreshold($rdata);
+        
+      }
+      
+      $isPrevOper = in_array($rdata->type, $this->operators);
+    }
+    
+    if (count($intsToSolve) == 2) {
+      $antecedentId = $this->parsePartialCedent($this->reduceArrayByIndices($ruleData, $intsToSolve[0]['start'], $intsToSolve[0]['end']), $depth = 1, $forcedDepth, $minBracketSize); 
+      $this->createAntecedent($antecedentId);
+      $consequentId = $this->parsePartialCedent($this->reduceArrayByIndices($ruleData, $intsToSolve[1]['start'], $intsToSolve[1]['end']), $depth = 1, $forcedDepth, $minBracketSize);
+      $this->createConsequent($consequentId);
+    } else if (count($intsToSolve) == 1) {
+      $antecedentId = $this->parsePartialCedent($this->reduceArrayByIndices($ruleData, $intsToSolve[0]['start'], $intsToSolve[0]['end']), $depth = 1, $forcedDepth, $minBracketSize); 
+      $this->createAntecedent($antecedentId);
+    }
+    
+    // Serialize XML
+    return $this->finalXmlDocument->saveXML();
+  }
+  
+  protected function parsePartialCedent($pcedent, $depth, $forcedDepth, $minBracketSize) {
+    $brToSolve = $this->findOutterBrackets($pcedent, $minBracketSize); // brackets to solve at this level
+    $bracketsInterval = $this->mergeIntervals($brToSolve);
+    $bToSolve = $this->findBooleans($pcedent, $bracketsInterval); // booleans to solve at this level
+    $aToSolve = $this->findAttributes($pcedent, $bracketsInterval); // attributes to solve at this level
+    
+    $dbaIds = array();
+    foreach ($brToSolve as $br) {
+      if (isset($pcedent[$br['start'] + 1]) && isset($pcedent[$br['end'] -1]) && (($br['start'] + 1) > ($br['start'] + -1))) {
+        $newPCedent = $this->reduceArrayByIndices($pcedent, ($br['start'] + 1), ($br['end'] - 1));
+        array_push($dbaIds, $this->parsePartialCedent($newPCedent, ($depth + 1), $forcedDepth, $minBracketSize));
+      }
+    }
+    
+    if (!empty($bToSolve)) {
+      $bType = array_pop($bToSolve)->type;
+    } else {
+      $bType = 'and';
+    }
+    
+    $cedentId = $this->createDbaSetting($bType, $aToSolve, $depth, $forcedDepth, $dbaIds);
+    
+    return $cedentId;
+  }
+  
+
+  private function createBasicStructure() {
+    $this->finalXmlDocument = new DomDocument("1.0", "UTF-8");
+    //$this->finalXmlDocument->formatOutput = true;
+
+    // add schematron validation
+    $pi = $this->finalXmlDocument->createProcessingInstruction('oxygen', 'SCHSchema="http://sewebar.vse.cz/schemas/GUHARestr0_1.sch"');
+    $this->finalXmlDocument->appendChild($pi);
+    
+    // create PMML
+    $pmml = $this->finalXmlDocument->createElement('PMML');
+    $pmml->setAttribute('version', '4.0');
+    $pmml->setAttribute('xmlns', 'http://www.dmg.org/PMML-4_0');
+    $pmml->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+    $pmml->setAttribute('xmlns:pmml', 'http://www.dmg.org/PMML-4_0');
+    $pmml->setAttribute('xsi:schemaLocation', 'http://www.dmg.org/PMML-4_0 http://sewebar.vse.cz/schemas/PMML4.0+GUHA0.1.xsd');
+    $root = $this->finalXmlDocument->appendChild($pmml);
+
+    // add Header
+    $header = $this->finalXmlDocument->createElement('Header');
+    $header->setAttribute('copyright', 'Copyright (c) KIZI UEP');
+    $ext = $this->finalXmlDocument->createElement('Extension');
+    $ext->setAttribute('name', 'dataset');
+    $ext->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary/@sourceName")->item(0)->value);
+    $header->appendChild($ext);
+    $ext = $this->finalXmlDocument->createElement('Extension');
+    $ext->setAttribute('name', 'author');
+    $ext->setAttribute('value', 'admin');
+    $header->appendChild($ext);
+    $ext = $this->finalXmlDocument->createElement('Extension');
+    $ext->setAttribute('name', 'subsystem');
+    $ext->setAttribute('value', '4ft-Miner');
+    $header->appendChild($ext);
+    $ext = $this->finalXmlDocument->createElement('Extension');
+    $ext->setAttribute('name', 'module');
+    $ext->setAttribute('value', '4ftResult.exe');
+    $header->appendChild($ext);
+    $ext = $this->finalXmlDocument->createElement('Extension');
+    $ext->setAttribute('name', 'format');
+    $ext->setAttribute('value', '4ftMiner.Task');
+    $header->appendChild($ext);
+    $app = $this->finalXmlDocument->createElement('Application');
+    $app->setAttribute('name', 'SEWEBAR-CMS');
+    $app->setAttribute('version', '0.00.01 '.date('d.m.Y'));
+    $header->appendChild($app);
+    $annot = $this->finalXmlDocument->createElement('Annotation');
+    $header->appendChild($annot);
+    $tst = $this->finalXmlDocument->createElement('Timestamp');
+    $tst->appendChild($this->finalXmlDocument->createTextNode(date('d.m.Y H:i:s')));
+    $header->appendChild($tst);
+    $root->appendChild($header);
+
+    //$this->createDataDescription($root);
+    
+    // create DataDictionary
+    $dd = $this->finalXmlDocument->createElement('DataDictionary');
+    $root->appendChild($dd);
+    $this->dataDictionary = $dd;
+
+    // create AssociationModel
+    $associationModel = $this->finalXmlDocument->createElement('guha:AssociationModel');
+    $associationModel->setAttribute('xmlns', '');
+    $associationModel->setAttribute('xsi:schemaLocation', 'http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd');
+    $associationModel->setAttribute('xmlns:guha', 'http://keg.vse.cz/ns/GUHA0.1rev1');
+    $associationModel->setAttribute('modelName', ' 5  Client(?)   =&gt; Loan(Bad) / Type(?) ');
+    $associationModel->setAttribute('functionName', 'associationRules');
+    $associationModel->setAttribute('algorithmName', '4ft');
+    
+    // create TaskSetting
+    $taskSetting = $this->finalXmlDocument->createElement("TaskSetting");
+    $this->arQuery = $associationModel->appendChild($taskSetting);
+    $bbaSettings = $this->finalXmlDocument->createElement("BBASettings");
+    $this->bbaSettings = $this->arQuery->appendChild($bbaSettings);
+    $dbaSettings = $this->finalXmlDocument->createElement("DBASettings");
+    $this->dbaSettings = $this->arQuery->appendChild($dbaSettings);
+    $antecedentSetting = $this->finalXmlDocument->createElement("AntecedentSetting");
+    $this->antecedentSetting = $this->arQuery->appendChild($antecedentSetting);
+    $consequentSetting = $this->finalXmlDocument->createElement("ConsequentSetting");
+    $this->consequentSetting = $this->arQuery->appendChild($consequentSetting);
+    $interestMeasureSetting = $this->finalXmlDocument->createElement("InterestMeasureSetting");
+    $this->interestMeasureSetting = $this->arQuery->appendChild($interestMeasureSetting);
+    
+    // create AssociationRules
+    $associationRules = $this->finalXmlDocument->createElement("AssociationRules");
+    $associationModel->appendChild($associationRules);
+    
+    $root->appendChild($associationModel);
+  }
+  
+  /**
+   * Create Data Description dictionary
+   * It means get dictionary from elsewhere and just inject it here.
+   */
+  private function createDataDescription($root) {
+    $dictionary = $this->finalXmlDocument->createElement("DataDescription");
+    $this->dictionary = $root->appendChild($dictionary);
+    // Get data from Session
+    $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
+
+    // load XML
+    $domDD = new DomDocument();
+    if (file_exists($domDD1)) {
+        $domDD->load($domDD1);
+    } else {
+        $domDD->loadXML($domDD1);
+    }
+    
+    // get <Dictionary>
+    $xPath = new DOMXPath($domDD);
+    $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+    $anXPathExpr = "//dd:DataDescription";
+    $field = $xPath->query($anXPathExpr);
+    foreach ($field as $elField) {
+      $fields = $elField->childNodes;
+      foreach ($fields as $fieldSmall) {
+        $this->dictionary->appendChild($this->finalXmlDocument->importNode($fieldSmall, true));
+      }
+    }
+  }
+  
+  /**
+   * Create InterestMeasureTreshold
+   * <InterestMeasureSetting>
+   *     <InterestMeasureTreshold id="ID">
+   *         <InterestMeasure>Any Interest Measure</InterestMeasure>
+   *     </InterestMeasureTreshold>
+   *     <InterestMeasureTreshold id="ID">
+   *         <InterestMeasure>Any Interest Measure2</InterestMeasure>
+   *     </InterestMeasureTreshold>
+   * </InterestMeasureSetting>
+   *
+   * @param <StdClass> $im Interest Measure StdClass object
+   */
+  private function createInterestMeasureTreshold($im) {
+    $name = $im->name;
+    $fields = $im->fields;
+    $value = 0;
+    if (count($fields) && strlen($fields[0]->value)) { $value = $fields[0]->value; }
+    
+    $interestMeasureTreshold = $this->finalXmlDocument->createElement("InterestMeasureThreshold");
+    $id = $this->getNewId();
+    $interestMeasureTreshold->setAttribute("id", $id);
+
+    $treshold = $this->finalXmlDocument->createElement("Threshold");
+    $treshold->appendChild($this->finalXmlDocument->createTextNode($value));
+    $compareType = $this->finalXmlDocument->createElement("CompareType");
+    $compareType->appendChild($this->finalXmlDocument->createTextNode("Greater than or equal"));
+
+    $interestMeasure = $this->finalXmlDocument->createElement("InterestMeasure");
+    $interestMeasure->appendChild($this->finalXmlDocument->createTextNode($name));
+
+    $interestMeasureTreshold->appendChild($interestMeasure);
+    $interestMeasureTreshold->appendChild($treshold);
+    $interestMeasureTreshold->appendChild($compareType);
+    $this->interestMeasureSetting->appendChild($interestMeasureTreshold);
+  }
+    
+  /**
+   * Create Antecedent
+   * <AntecedentSetting>ID</AntecedentSetting>
+   *
+   * @param <int> $antecedent content of BARef
+   */
+  private function createAntecedent($antecedent) {
+      $this->antecedentSetting->appendChild($this->finalXmlDocument->createTextNode($antecedent));
+  }
+
+  /**
+   * Create Consequent
+   * <ConsequentSetting>ID</ConsequentSetting>
+   *
+   * @param <String> $consequent Content of BARef
+   */
+  private function createConsequent($consequent) {
+      $this->consequentSetting->appendChild($this->finalXmlDocument->createTextNode($consequent));
+  }
+  
+  /**
+   * Create DBASetting
+   * <DBASetting type="TYPE" id="ID">
+   *     <BASettingRef>ID</BASettingRef>
+   *     <BASettingRef>ID</BASettingRef>
+   * </DBASetting>
+   *
+   * @param <String> $boolean Boolean type
+   * @param <Array> $attributes Array of attributes
+   * @return <Int> $id Id od DBA
+   */
+  private function createDbaSetting($btype, $attributes, $depth, $forcedDepth, $dbaIds = array()) {
+    $id = $this->getNewId();
+    $dbaSetting = $this->finalXmlDocument->createElement("DBASetting");
+    $dbaSetting->setAttribute("type", $this->types[$btype]);
+    $dbaSetting->setAttribute("id", $id);
+
+    if (!$this->isType($btype, $this->literals)) {
+      foreach ($attributes as $attribute) {
+        if (($this->isType($btype, $this->positiveBooleans)) && ($depth < $forcedDepth)) {         
+          $baSettingRefId = $this->createDbaSetting(($depth + 1) == $forcedDepth ? $this->literal : $this->forceDepthBoolean, array($attribute), ($depth + 1), $forcedDepth);
+          $baSettingRef = $this->finalXmlDocument->createElement("BASettingRef");
+          $baSettingRef->appendChild($this->finalXmlDocument->createTextNode($baSettingRefId));
+          $dbaSetting->appendChild($baSettingRef);
+        }
+      }
+      foreach ($dbaIds as $dbaId) {
+        $baSettingRef = $this->finalXmlDocument->createElement("BASettingRef");
+        $baSettingRef->appendChild($this->finalXmlDocument->createTextNode($dbaId));
+        $dbaSetting->appendChild($baSettingRef);  
+      }
+    } else if ($this->isType($btype, $this->literals)) {
+      $baSettingRefId = $this->createBbaSetting($attributes[0]);
+      
+      $baSettingRef = $this->finalXmlDocument->createElement("BASettingRef");
+      $baSettingRef->appendChild($this->finalXmlDocument->createTextNode($baSettingRefId));
+      $dbaSetting->appendChild($baSettingRef);
+      
+      $literalSignText = isset($attributes[0]->literalSign) && $attributes[0]->literalSign == "neg" ? "Negative" : "Positive";
+      $literalSign = $this->finalXmlDocument->createElement("LiteralSign");
+      $literalSign->appendChild($this->finalXmlDocument->createTextNode($literalSignText));
+      $dbaSetting->appendChild($literalSign);
     }
 
-    /**
-     * Create DBASetting
-     * <DBASetting type="conjunction" id="3">
-     *     <BASettingRef>2</BASettingRef>
-     *     <BASettingRef>3</BASettingRef>
-     * </DBASetting>
-     *
-     * @param <String> $type type of connective
-     * @param <Array> $elements elements BASettingRef
-     * @return <type>
-     */
-    private function createDBASetting($type, $elements) {
-        if ($type == "(" || $type == ")" || $type == null) {
-            return;
-        }
-        $types = array();
-        $types["NEG"] = "Negation";
-        $types["AND"] = "Conjunction";
-        $types["OR"] = "Disjunction";
-        $types["Literal"] = "Literal";
+    $this->dbaSettings->appendChild($dbaSetting);
 
-        $DBASetting = $this->finalXMLDocument->createElement("DBASetting");
-        $DBASetting->setAttribute("type", $types[$type]);
-        $id = $this->getNewID();
-        $DBASetting->setAttribute("id", $id);
+    return $id;
+  }
+  
+  private function createBbaSetting($attribute) {
+    $id = $this->getNewID();
+    $baSetting = $this->finalXmlDocument->createElement("BBASetting");
+    $baSetting->setAttribute("id", $id);
+    
+    $text = $this->finalXmlDocument->createElement("Text");
+    $text->appendChild($this->finalXmlDocument->createTextNode($attribute->name));
+    $baSetting->appendChild($text);
 
-        if ($elements != null) {
-            for ($i = 0; $i < count($elements); $i++) {
-                $BASettingRef = $this->finalXMLDocument->createElement("BASettingRef");
-                $BASettingRef->appendChild($this->finalXMLDocument->createTextNode($elements[$i]));
-                $DBASetting->appendChild($BASettingRef);
-            }
-        }
+    $name = $this->finalXmlDocument->createElement("Name");
+    $name->appendChild($this->finalXmlDocument->createTextNode($attribute->name));
+    $baSetting->appendChild($name);
 
-        if ($type == "NEG") {
-            $literalSign = $this->finalXMLDocument->createElement("LiteralSign");
-            $literalSign->appendChild($this->finalXMLDocument->createTextNode("Negative"));
-            $DBASetting->appendChild($literalSign);
-        } else if ($type == "Literal") {
-            $literalSign = $this->finalXMLDocument->createElement("LiteralSign");
-            $literalSign->appendChild($this->finalXMLDocument->createTextNode("Positive"));
-            $DBASetting->appendChild($literalSign);
-        }
-        $this->DBASettings->appendChild($DBASetting);
+    $fieldRef = $this->finalXmlDocument->createElement("FieldRef");
+    $fieldRef->appendChild($this->finalXmlDocument->createTextNode($attribute->name));
+    $baSetting->appendChild($fieldRef);
 
-        return $id;
+    $coefficient = $this->createCoefficient($attribute);
+    $baSetting->appendChild($coefficient);
+    
+    $this->bbaSettings->appendChild($baSetting);
+    
+    // update DataDictionary
+    $df = $this->finalXmlDocument->createElement('DataField');
+    $df->setAttribute('name', $attribute->name);
+    $df->setAttribute('optype', 'categorical');
+    $df->setAttribute('dataType', 'string');
+    $this->dataDictionary->appendChild($df);
+        
+    return $id;
+  }
+  
+  private function createCoefficient($attribute) {
+    $coefFields = $attribute->fields;
+    $coefficient = $this->finalXmlDocument->createElement("Coefficient");
+    
+    $type = $this->finalXmlDocument->createElement("Type");
+    $type->appendChild($this->finalXmlDocument->createTextNode($attribute->category));
+    $coefficient->appendChild($type);
+    
+    if ($attribute->category == $this->ONE_CATEGORY) {
+      $category = $this->finalXmlDocument->createElement("Category");
+      $category->appendChild($this->finalXmlDocument->createTextNode($attribute->fields[0]->value));
+      $coefficient->appendChild($category);
+    } else {
+      $fieldsLength = count($coefFields);
+      $minLength = null;
+      $maxLength = null;
+      if ($fieldsLength < 1) {
+        $minLength = 0;
+      } else {
+        $minLength = intval($attribute->fields[0]->value);
+      }
+      
+      if ($fieldsLength < 2) {
+        $maxLength = 9999;
+      } else {
+        $maxLength = intval($attribute->fields[1]->value);
+      }
+      
+      $minimalLength = $this->finalXmlDocument->createElement("MinimalLength");
+      $minimalLength->appendChild($this->finalXmlDocument->createTextNode($minLength));
+      $coefficient->appendChild($minimalLength);
+      
+      $maximalLength = $this->finalXmlDocument->createElement("MaximalLength");
+      $maximalLength->appendChild($this->finalXmlDocument->createTextNode($maxLength));
+      $coefficient->appendChild($maximalLength);
     }
 
-    /**
-     * Solve DBAs from the rule.
-     */
-    private function createDBAs() {
-        $workingRule = $this->rule;
-        // change negations into DBA and create corresponding DBAs
-        for ($i = 0; $i < count($workingRule); $i++) {
-            if ($workingRule[$i] == "NEG") {
+    return $coefficient;
+  }
+  
+  /**
+   * At the moment it just increments id and return it back.
+   *
+   * @return <int> id
+   */
+  private function getNewId() {
+      return ++$this->id;
+  }
 
-                // create XML element DBA and insert it into tree
-                $connective = $workingRule[$i];
-                unset($elements);
-                $elements = array();
-                $elements[0] = $workingRule[$i + 1];
-                $dbaID = $this->createDBASetting($connective, $elements);
-
-                // In the rule replace part with negation by new DBA(Derived Boolean Atrtibute)
-                $from = $i;
-                $to = $i + 1;
-                $workingRule = $this->replacePartWithDBA($workingRule, $dbaID, $from, $to);
-            }
+  /**
+   * Reduces array by indices.
+   *
+   * @param <Array> $array Input array
+   * @param <int> $start Start index
+   * @param <int> $end End index
+   * @return <Array> $rarray Output array
+   */
+  private function reduceArrayByIndices($array, $start, $end) {
+    $rarray = array();
+    for ($i = $start; $i <= $end; $i++) {
+      array_push($rarray, $array[$i]);
+    }
+    
+    return $rarray;
+  }
+  
+  /**
+   * Find if there are any brackets.
+   *
+   * @param <Array> $pcedent Array of StdClasses representing partial cedent
+   * @return <Boolean> Boolean value representing existence of brackets
+   */
+  private function hasBrackets($pcedent) {
+    return $this->countBrackets($pcedente) ? true : false;
+  }
+  
+  /**
+   * Find if there are any brackets.
+   *
+   * @param <Array> $pcedent Array of StdClasses representing partial cedent
+   * @return <int> $numBrackets Number of brackets
+   */
+  private function countBrackets($pcedent) {
+    $numBrackets = 0;
+    foreach ($pcedent as $obj) {
+      if (in_array($obj->type, $this->brackets)) { $numBrackets++; }
+    }
+    
+    return intval($numBrackets / 2);
+  }
+  
+  /**
+   * Find outter brackets to be solved as DBAs.
+   *
+   * @param <Array> $pcedent Array of StdClasses representing partial cedent
+   * @param <Int> $minBracketSize Min. size of a bracket to be considered as s bracket
+   * @return <Array> $oBrackets Array of intervals closed with outter brackets
+   */
+  private function findOutterBrackets($pcedent, $minBracketSize = 5) {
+    $oBrackets = array();
+    
+    $oBracketsStack = array();
+    $oBracketStart = 0;
+    foreach($pcedent as $k => $obj) {
+      if (in_array($obj->type, $this->openingBrackets)) {
+        if (empty($oBrackets)) {
+          $oBracketStart = $k;
         }
-        // while bracket exists
-        while ($this->existsBracket($workingRule)) {
-            // find deepest brackets
-            $rbrac = $this->getRbrac($workingRule);
-            $lbrac = $this->getLbrac($workingRule, $rbrac);
-            // change content of brackets into DBAs
-            $rulePartPos = 0;
-            unset($rulePart);
-            $rulePart = array();
-
-            for ($j = $lbrac + 1; $j < $rbrac; $j++) {
-                $rulePart[$rulePartPos] = $workingRule[$j];
-                $rulePartPos++;
-            }
-
-            $dbaPos = "";
-            if (count($rulePart) > 0) {
-                $dpaPos = $this->solvePlainDBA($rulePart);
-            }
-            $workingRule = $this->replacePartWithDBA($workingRule, $dpaPos, $lbrac, $rbrac);
+        array_push($oBracketsStack, $obj->type); 
+      } else if (in_array($obj->type, $this->closingBrackets)) {
+        array_pop($oBracketsStack);
+        if (empty($oBracketsStack) && (($k - $oBracketStart + 1) >= $minBracketSize)) { // we do have outter bracket end here
+          array_push($oBrackets, array('start' => $oBracketStart, 'end' => $k));
         }
-        $ruleAntecedent = array();
-        $ruleAntPos = 0;
-        $ruleConsequent = array();
-        $ruleConPos = 0;
-        $isConsequent = false;
-        for ($k = 0; $k < count($workingRule); $k++) {
-            if ($workingRule[$k] == "oper") {
-                $isConsequent = true;
-                continue;
-            }
-            if (!$isConsequent) {
-                $ruleAntecedent[$ruleAntPos] = $workingRule[$k];
-                $ruleAntPos++;
-            } else {
-                $ruleConsequent[$ruleConPos] = $workingRule[$k];
-                $ruleConPos++;
-            }
-        }
-        // change antecedent for one DBA
-        $this->antecedent = $this->solvePlainDBA($ruleAntecedent);
-
-        // change consequent for one DBA
-        if (count($ruleConsequent) > 0) {
-            $this->consequent = $this->solvePlainDBA($ruleConsequent);
-        } else {
-            $this->consequent = "";
-        }
+      }
     }
-
-    /**
-     * Whether there are any more brackets.
-     *
-     * @param <Array> $rule Rule
-     * @return <Boolean>
-     */
-    private function existsBracket($rule) {
-        if ($this->getRbrac($rule) != -1) {
-            return true;
-        }
-        return false;
+    
+    return $oBrackets;
+  }
+  
+  /**
+   * Find booleans to be solved as DBAs.
+   *
+   * @param <Array> $pcedent Array of StdClasses representing partial cedent
+   * @param <Array> $bracketsInterval Merged interval representing solved brackets as DBA
+   * @return <Array> $booleans Array of booleans
+   */
+  private function findBooleans($pCedent, $bracketsInterval) {
+    $booleans = array();
+    
+    foreach($pCedent as $k => $obj) {
+      if (in_array($k, $bracketsInterval)) { continue; }
+      if (in_array($obj->type, $this->booleans)) {
+        $booleans[$k] = $obj;
+      }
     }
-
-    /**
-     * It gets part of rule that is constructed only from attributes, AND, OR
-     * It returns one number representing the whole thing(id)
-     *
-     * @param <Array> $inputRulePart Array of rule elements
-     * @return <int>  id of this DBA
-     */
-    private function solvePlainDBA($inputRulePart) {
-        $rulePart = $inputRulePart;
-        // Until rulePart has only rule
-        while (count($rulePart) > 1) {
-            // Find from beginning part of inputRule which has same connective.
-            $sameConectiveRule = array();
-            $actualConnective = null;
-            // get only the correct(with same connective) part of rule
-            $beginReplacing = 0;
-            $endReplacing = count($rulePart);
-            $elementsToBeReplaced = array();
-            $elementsToBeReplacedPos = 0;
-            for ($positionInRule = 0; $positionInRule < count($rulePart); $positionInRule++) {
-                // If boolean
-                $ruleType = $rulePart[$positionInRule];
-                if ($ruleType == "AND" or $ruleType == "OR" or $ruleType == "NEG") {
-                    // if first found boolean set it as actual
-                    if ($actualConnective == null) {
-                        $actualConnective = $rulePart[$positionInRule];
-                        continue;
-                    }
-                    // check whether it is same as actual
-                    // if it is not
-                    if ($actualConnective != $rulePart[$positionInRule]) {
-                        $endReplacing = $positionInRule - 1;
-                        break;
-                        // break.
-                    }
-                }
-                // else
-                else {
-                    // Add actual element into elements to be replaced
-                    $elementsToBeReplaced[$elementsToBeReplacedPos++] = $rulePart[$positionInRule];
-                }
-            }
-            // Create correct DBA.
-            $type = $actualConnective;
-            $elements = $elementsToBeReplaced;
-            $replaceWith = $this->createDBASetting($type, $elements);
-            // Replace this part with one number.
-            $from = $beginReplacing;
-            $to = $endReplacing;
-            $rulePart = $this->replacePartWithDBA($rulePart, $replaceWith, $from, $to);
-        }
-        return $rulePart[0];
+  
+    return $booleans;
+  }
+  
+  /**
+   * Find attributes to be solved as DBAs.
+   *
+   * @param <Array> $pcedent Array of StdClasses representing partial cedent
+   * @param <Array> $bracketsInterval Merged interval representing solved brackets as DBA
+   * @return <Array> $attributes Array of attributes
+   */
+  private function findAttributes($pCedent, $bracketsInterval) {
+    $attributes = array();
+  
+    foreach($pCedent as $k => $obj) {
+      if (in_array($k, $bracketsInterval)) { continue; }
+      if (in_array($obj->type, $this->attributes)) {
+        $attributes[$k] = $obj;
+      }
     }
-
-    /**
-     * It takes rule and replace part of it with just one int representing either
-     * BBA or DBA
-     *
-     * @param <Array> $rule rule
-     * @param <int> $replaceWith with what it shoiuld be replaced(id of either DBA or BBA)
-     * @param <int> $from start of replacing
-     * @param <int> $to end of replacing
-     * @return <Array> rule
-     */
-    private function replacePartWithDBA($rule, $replaceWith, $from, $to) {
-        $rule[$from] = $replaceWith;
-        for ($i = $from + 1; $i <= $to; $i++) {
-            unset($rule[$i]);
-        }
-
-        $help = array_values($rule);
-        $rule = $help;
-
-        return $rule;
+    
+    return $attributes;
+  }
+  
+  /**
+   * Merge multiple intervals into single array.
+   *
+   * @param <Array> $intervals Array of intervals
+   * @return <Array> $interval Output array
+   */
+  private function mergeIntervals($intervals) {
+    $interval = array();
+    foreach ($intervals as $interval) {
+      for ($i = $interval['start']; $i <= $interval['end']; $i++) {
+        array_push($interval, $i);
+      }
     }
-
-    /**
-     * It gets position of RightBracket in the rule or -1 if there is no )
-     *
-     * @param <Array> $where rule
-     * @return int
-     */
-    private function getRbrac($where) {
-        for ($i = 0; $i < count($where); $i++) {
-            if ($where[$i] == ")") {
-                return $i;
-            }
-        }
-        return -1;
+    
+    return $interval;
+  }
+  
+  /**
+   * Replace negative boolean connectives.
+   *
+   * @param <Array> $ruleData Array of StdClass objects representing the rule
+   * @param <Array> $negativeBooleans Array of negative booleans to be replaced
+   * @return <Array> $ruleData Array of StdClass objects representing the rule
+   */
+  private function replaceNegativeBooleans($ruleData, $negativeBooleans) {
+    foreach ($ruleData as $k => $rData) {
+      if ($this->isType($rData->type, $negativeBooleans)) {
+        unset($ruleData[$k]);
+        $ruleData[$k + 1]->literalSign = $this->negativeBoolean;
+      }
     }
-
-    /**
-     * It gets position of first left Bracket in the rule before position of right
-     * bracket or -1 if there is no (
-     *
-     * @param <Array> $where rule
-     * @return int
-     */
-    private function getLbrac($where, $rBracPos) {
-        for ($i = $rBracPos; $i >= 0; $i--) {
-            if ($where[$i] == "(") {
-                return $i;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * It decides whether element is boolean.
-     *
-     * @param <String> $ruleType  type of Element
-     * @return <Boolean> Whetre type is boolean
-     */
-    private function isBoolean($ruleType) {
-        if ($ruleType == "AND" or $ruleType == "OR" or $ruleType == "NEG" or $ruleType == "(" or $ruleType == ")") {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Create Antecedent
-     * <AntecedentSetting>
-     *     <BARef>4</BARef>
-     * </AntecedentSetting>
-     *
-     * @param <int> $antecedent content of BARef
-     */
-    private function createAntecedent($antecedent) {
-        $AntecedentSetting = $this->antecedentSetting;
-
-        $AntecedentSetting->appendChild($this->finalXMLDocument->createTextNode($antecedent));
-    }
-
-    /**
-     * Create Consequent
-     * <ConsequentSetting>
-     *     <BARef>4</BARef>
-     * </ConsequentSetting>
-     *
-     * @param <String> $consequent Content of BARefk
-     */
-    private function createConsequent($consequent) {
-        $ConsequentSetting = $this->consequentSetting;
-
-        $ConsequentSetting->appendChild($this->finalXMLDocument->createTextNode($consequent));
-    }
-
-    /**
-     * Create Condition
-     * <ConditionSetting>
-     *     <BARef>4</BARef>
-     * </ConditionSetting>
-     */
-    private function createCondition() {
-
-    }
-
-    /**
-     * Create InterestMeasureTreshold
-     * <InterestMeasureSetting>
-     *     <InterestMeasureTreshold id="5">
-     *         <InterestMeasure>Any Interest Measure</InterestMeasure>
-     *     </InterestMeasureTreshold>
-     *     <InterestMeasureTreshold id="6">
-     *         <InterestMeasure>Any Interest Measure2</InterestMeasure>
-     *     </InterestMeasureTreshold>
-     * </InterestMeasureSetting>
-     *
-     * @param <type> $name Name of Interest Measure
-     */
-    private function createInterestMeasureSetting($name, $value) {
-        $InterestMeasureTreshold = $this->finalXMLDocument->createElement("InterestMeasureThreshold");
-        $id = $this->getNewID();
-        $InterestMeasureTreshold->setAttribute("id", $id);
-
-        $Treshold = $this->finalXMLDocument->createElement("Threshold");
-        $Treshold->appendChild($this->finalXMLDocument->createTextNode($value));
-        $CompareType = $this->finalXMLDocument->createElement("CompareType");
-        $CompareType->appendChild($this->finalXMLDocument->createTextNode("Greater than or equal"));
-
-        $InterestMeasure = $this->finalXMLDocument->createElement("InterestMeasure");
-        $InterestMeasure->appendChild($this->finalXMLDocument->createTextNode($name));
-
-        $InterestMeasureTreshold->appendChild($InterestMeasure);
-        $InterestMeasureTreshold->appendChild($Treshold);
-        $InterestMeasureTreshold->appendChild($CompareType);
-        $this->InterestMeasureSetting->appendChild($InterestMeasureTreshold);
-    }
-
-    /**
-     * It prepares data of one rule.
-     *
-     * @param <String> $elements JSON
-     */
-    function prepareData($elements) {
-        $obj = json_decode($elements);
-        $obj->{'rules'};
-        $ruleData = $obj->{'rule' . $i}; // this is array
-    }
-
+    
+    return $ruleData;
+  }
+  
+  /**
+   * Checks if the connective is at least one of the provided types.
+   *
+   * @param <String> $type Connective to check
+   * @param <Array> $types Array of types to check against
+   * @return <Bool> Is type?
+   */
+  private function isType($type, $types) {
+    return in_array($type, $types);
+  }
+  
 }
-
-?>

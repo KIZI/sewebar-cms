@@ -111,7 +111,7 @@ var AsociationRules = new Class({
                     var jsonString = JSON.encode(wholeJson);
                     
                     // call server and get hits
-                    this.getHits(wholeJson);
+                    this.getHits(jsonString);
                 }.bind(this));
 
                 this.maxSize = this.solveSize();
@@ -210,7 +210,7 @@ var AsociationRules = new Class({
             	this.serverInfo.solveHits(item);
             	this.updateHits();
             }.bind(this)
-        }).get();
+        }).post({'data': which});
     },
     
     /**

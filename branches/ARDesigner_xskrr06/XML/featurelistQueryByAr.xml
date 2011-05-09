@@ -345,7 +345,7 @@
                         <Conjunction allowed="yes"/>
                         <Disjunction allowed="yes"/>
                         <Any allowed="no"/>
-                        <Negation allowed="no"/>
+                        <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
             </NestingConstraints>
