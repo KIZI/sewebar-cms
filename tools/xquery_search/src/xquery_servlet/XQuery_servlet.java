@@ -399,8 +399,8 @@ public class XQuery_servlet extends HttpServlet {
                         /*String dotaz = content.toString();
                         output += bh.query(id, dotaz, 1);*/
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        output += bh.queryShortened(qm.makeXPath(is));
-                        //output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
+                        //output += bh.queryShortened(qm.makeXPath(is));
+                        output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error><![CDATA[Query nebyla zadana!]]></error>";

@@ -38,48 +38,32 @@ public class QueryMaker {
             Document doc = db.parse(xmlQuery);
             doc.getDocumentElement().normalize();
 
-            int i = 0;
             output += "collection(\""+containerName+"\")/PMML/AssociationRule[";
-            NodeList fieldList = doc.getElementsByTagName("Field");
-            for (int j = 0; j < fieldList.getLength() ; j++) {
-                Element fieldChildElement = (Element)fieldList.item(j);
-                if (fieldChildElement.getAttribute("dictionary").equals("DataDictionary")) {
-                    NodeList namesList = fieldChildElement.getElementsByTagName("Name");
-                    NodeList typesList = fieldChildElement.getElementsByTagName("Type");
-                    NodeList catsList = fieldChildElement.getElementsByTagName("Category");
-                    NodeList intsList = fieldChildElement.getElementsByTagName("Interval");
-                    if (i > 0) {
+            NodeList scope = doc.getElementsByTagName("Scope");
+            if (scope.getLength() == 0) {
+                 NodeList anteList = doc.getElementsByTagName("Antecedent");
+                 NodeList consList = doc.getElementsByTagName("Consequent");
+                 NodeList condList = doc.getElementsByTagName("Condition");
+                 
+                 if (anteList.getLength() > 0) { output += cedentPrepare(anteList); }
+                 if (anteList.getLength() > 0 && consList.getLength() > 0) { output += " and "; }
+                 if (consList.getLength() > 0) { output += cedentPrepare(consList); }
+                 if ((anteList.getLength() > 0 && condList.getLength() > 0) || (consList.getLength() > 0 && condList.getLength() > 0)) { output += " and "; }
+                 if (condList.getLength() > 0) { output += cedentPrepare(condList); }
+                     
+            } else {
+                int x = 0;
+                NodeList BBAList = doc.getElementsByTagName("BBA");
+                for (int i = 0; i < BBAList.getLength(); i++){
+                    Element BBAElement = (Element)BBAList.item(i);
+                    NodeList fieldList = BBAElement.getElementsByTagName("Field");
+                    if (x > 0) {
                         output += " and ";
                     }
                     output += "(";
-
-                    Element nameElement = (Element)namesList.item(0);
-                    NodeList names = nameElement.getChildNodes();
-                    Node name = names.item(0);
-                    Element typeElement = (Element)typesList.item(0);
-                    NodeList types = typeElement.getChildNodes();
-                    Node type = types.item(0);
-                    if (catsList.getLength() > 0 && intsList.getLength() == 0) {
-                        for (int k = 0; k < (catsList.getLength()); k++) {
-                            Element catElement = (Element)catsList.item(k);
-                            NodeList cats = catElement.getChildNodes();
-                            Node cat = cats.item(0);
-                            String connective = "";
-                            if(k > 0) {
-                                if (type.getNodeValue().equals("At least one from listed")){
-                                    connective = " or ";
-                                } else {
-                                    connective = " and ";
-                                }
-                            }
-                            output += connective+".//BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName=\""+cat.getNodeValue()+"\"";
-                        }
-                    } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
-                        Element intElement = (Element)intsList.item(0);
-                        output += ".//BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left <= "+intElement.getAttribute("right")+"  and Interval/@right >= "+intElement.getAttribute("left")+"]";
-                    }
+                    output += BBAMake(fieldList, "./");    
                     output += ")";
-                    i++;
+                    x++;
                 }
             }
             output += "]";
@@ -92,4 +76,84 @@ public class QueryMaker {
         }
         return output;
     }
+    
+    private String BBAMake(NodeList fieldList, String axis) {
+        String output = "";
+        for (int j = 0; j < fieldList.getLength() ; j++) {
+            Element fieldChildElement = (Element)fieldList.item(j);
+            if (fieldChildElement.getAttribute("dictionary").equals("DataDictionary")) {
+                NodeList namesList = fieldChildElement.getElementsByTagName("Name");
+                NodeList typesList = fieldChildElement.getElementsByTagName("Type");
+                NodeList catsList = fieldChildElement.getElementsByTagName("Category");
+                NodeList intsList = fieldChildElement.getElementsByTagName("Interval");
+
+                Element nameElement = (Element)namesList.item(0);
+                NodeList names = nameElement.getChildNodes();
+                Node name = names.item(0);
+                Element typeElement = (Element)typesList.item(0);
+                NodeList types = typeElement.getChildNodes();
+                Node type = types.item(0);
+                if (catsList.getLength() > 0 && intsList.getLength() == 0) {
+                    for (int k = 0; k < (catsList.getLength()); k++) {
+                        Element catElement = (Element)catsList.item(k);
+                        NodeList cats = catElement.getChildNodes();
+                        Node cat = cats.item(0);
+                        String connective = "";
+                        if(k > 0) {
+                            if (type.getNodeValue().equals("At least one from listed")){
+                                connective = " or ";
+                            } else {
+                                connective = " and ";
+                            }
+                        }
+                        output += connective+axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName=\""+cat.getNodeValue()+"\"";
+                    }
+                } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
+                    Element intElement = (Element)intsList.item(0);
+                    output += axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left <= "+intElement.getAttribute("right")+"  and Interval/@right >= "+intElement.getAttribute("left")+"]";
+                }
+            }
+        }
+        return output;
+    }
+    private String cedentPrepare(NodeList cedentList){
+        String output = "";
+        String axisCedent = "";
+        String axisDBA1 = "";
+        String axisDBA2 = "";
+        if (cedentList.getLength() > 0) {
+            axisCedent = "";
+            axisCedent += cedentList.item(0).getNodeName();
+            for (int j = 0; j < cedentList.getLength(); j++){
+                Element cedentElement = (Element)cedentList.item(j);
+                NodeList cedentDBA1 = cedentElement.getChildNodes();
+                for (int k = 0; k < cedentDBA1.getLength(); k++){
+                    Element cedentDBA1Element = (Element) cedentDBA1.item(k);
+                    axisDBA1 = "";
+                    if (cedentDBA1Element.getAttribute("connective").equals("AnyConnective")) {
+                        axisDBA1 += "/DBA";
+                    } else {
+                        axisDBA1 += "/DBA[@connective="+cedentDBA1Element.getAttribute("connective").toString() +"]";
+                    }
+                    NodeList cedentDBA2 = cedentDBA1Element.getChildNodes();
+                    for (int l = 0; l < cedentDBA2.getLength(); l++){
+                        Element cedentBBAElement = (Element)cedentDBA2.item(l);
+                        NodeList cedentBBA = cedentBBAElement.getChildNodes();
+                        for (int m = 0; m < cedentBBA.getLength(); m++){
+                            Element BBAElement = (Element)cedentBBA.item(m);
+                            axisDBA2 = "";
+                            if (cedentBBAElement.getAttribute("connective").equals("Both")) {
+                                axisDBA2 += "/DBA";
+                            } else {
+                                axisDBA2 += "/DBA[@connective="+cedentBBAElement.getAttribute("connective").toString() +"]";
+                            }
+                            NodeList fieldList = BBAElement.getElementsByTagName("Field");
+                            output += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2);
+                        }
+                    }
+                }
+            }
+         }
+        return output;
+    }    
 }
