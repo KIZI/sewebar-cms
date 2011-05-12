@@ -19,9 +19,9 @@
     </xsl:template>
     <xsl:template match="pmml:DerivedField/pmml:MapValues/pmml:InlineTable">        
         <Field name="{../@outputColumn}" dataType="string">
-            <xsl:for-each select="pmml:row">
-                <Category><xsl:value-of select="pmml:field"/></Category>
-            </xsl:for-each>
+            <xsl:for-each-group  select="pmml:row" group-by="pmml:field">
+                <Category><xsl:value-of select="current-grouping-key()"/></Category>
+            </xsl:for-each-group>
         </Field>
     </xsl:template>
     <xsl:template match="pmml:Discretize">
