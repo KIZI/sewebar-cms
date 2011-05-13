@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.10 (20.4.2011)
+ * @version 1.12 (13.5.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 

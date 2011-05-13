@@ -45,11 +45,11 @@ public class QueryMaker {
                  NodeList consList = doc.getElementsByTagName("Consequent");
                  NodeList condList = doc.getElementsByTagName("Condition");
                  
-                 if (anteList.getLength() > 0) { output += cedentPrepare(anteList); }
+                 if (anteList.getLength() > 0) { output += "(" + cedentPrepare(anteList) + ")"; }
                  if (anteList.getLength() > 0 && consList.getLength() > 0) { output += " and "; }
-                 if (consList.getLength() > 0) { output += cedentPrepare(consList); }
+                 if (consList.getLength() > 0) { output += "(" + cedentPrepare(consList) + ")"; }
                  if ((anteList.getLength() > 0 && condList.getLength() > 0) || (consList.getLength() > 0 && condList.getLength() > 0)) { output += " and "; }
-                 if (condList.getLength() > 0) { output += cedentPrepare(condList); }
+                 if (condList.getLength() > 0) { output += "(" + cedentPrepare(condList) + ")"; }
                      
             } else {
                 int x = 0;
@@ -133,7 +133,7 @@ public class QueryMaker {
                     if (cedentDBA1Element.getAttribute("connective").equals("AnyConnective")) {
                         axisDBA1 += "/DBA";
                     } else {
-                        axisDBA1 += "/DBA[@connective="+cedentDBA1Element.getAttribute("connective").toString() +"]";
+                        axisDBA1 += "/DBA[@connective=\""+cedentDBA1Element.getAttribute("connective").toString() +"\"]";
                     }
                     NodeList cedentDBA2 = cedentDBA1Element.getChildNodes();
                     for (int l = 0; l < cedentDBA2.getLength(); l++){
@@ -145,10 +145,12 @@ public class QueryMaker {
                             if (cedentBBAElement.getAttribute("connective").equals("Both")) {
                                 axisDBA2 += "/DBA";
                             } else {
-                                axisDBA2 += "/DBA[@connective="+cedentBBAElement.getAttribute("connective").toString() +"]";
+                                axisDBA2 += "/DBA[@connective=\""+cedentBBAElement.getAttribute("connective").toString() +"\"]";
                             }
                             NodeList fieldList = BBAElement.getElementsByTagName("Field");
-                            output += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2);
+                            if (l > 0) { output += " and "; }
+                            if (cedentDBA2.getLength() > 1) { output += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2) + ")"; }
+                            else { output += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2); }
                         }
                     }
                 }
