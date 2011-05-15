@@ -61,7 +61,7 @@ public class QueryMaker {
                         output += " and ";
                     }
                     output += "(";
-                    output += BBAMake(fieldList, "./");    
+                    output += BBAMake(fieldList, "./", false);    
                     output += ")";
                     x++;
                 }
@@ -77,7 +77,7 @@ public class QueryMaker {
         return output;
     }
     
-    private String BBAMake(NodeList fieldList, String axis) {
+    private String BBAMake(NodeList fieldList, String axis, boolean inference) {
         String output = "";
         for (int j = 0; j < fieldList.getLength() ; j++) {
             Element fieldChildElement = (Element)fieldList.item(j);
@@ -106,11 +106,13 @@ public class QueryMaker {
                                 connective = " and ";
                             }
                         }
-                        output += connective+axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName=\""+cat.getNodeValue()+"\"";
+                        String sign = "";
+                        if (!inference) { sign = "="; } else { sign = "!="; }
+                        output += connective+axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName"+ sign +"\""+cat.getNodeValue()+"\"";
                     }
                 } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
                     Element intElement = (Element)intsList.item(0);
-                    output += axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left <= "+intElement.getAttribute("right")+"  and Interval/@right >= "+intElement.getAttribute("left")+"]";
+                    output += axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left <= "+intElement.getAttribute("right")+" and Interval/@right >= "+intElement.getAttribute("left")+"]";
                 }
             }
         }
@@ -142,15 +144,30 @@ public class QueryMaker {
                         for (int m = 0; m < cedentBBA.getLength(); m++){
                             Element BBAElement = (Element)cedentBBA.item(m);
                             axisDBA2 = "";
-                            if (cedentBBAElement.getAttribute("connective").equals("Both")) {
+                            boolean inference = false;
+                            String connective = cedentBBAElement.getAttribute("connective").toString();
+                            if (cedentBBAElement.getAttribute("inference").toLowerCase().equals("true")) { inference = true; }
+                            if (connective.toLowerCase().equals("both")) {
                                 axisDBA2 += "/DBA";
                             } else {
-                                axisDBA2 += "/DBA[@connective=\""+cedentBBAElement.getAttribute("connective").toString() +"\"]";
+                                axisDBA2 += "/DBA[@connective=\""+ connective +"\"]";
                             }
                             NodeList fieldList = BBAElement.getElementsByTagName("Field");
                             if (l > 0) { output += " and "; }
-                            if (cedentDBA2.getLength() > 1) { output += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2) + ")"; }
-                            else { output += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2); }
+                            /*if (cedentDBA2.getLength() > 1) 
+                            {*/
+                                output += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
+                                if (inference) {
+                                    if (connective.equals("both")){
+                                        output += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA", true);
+                                    } else {
+                                        output += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA[@connective!=\"" + connective + "\"]", true);
+                                    }
+                                }
+                                output  += ")";
+                            /*} else {
+                                output += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
+                            }*/
                         }
                     }
                 }
