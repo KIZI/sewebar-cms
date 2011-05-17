@@ -2,8 +2,11 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace LMWrapper
+namespace LMWrapper.LISpMiner
 {
+	/// <summary>
+	/// Exports the metabase data (task, results...) into a text file (PMML, XML, HTML) using template.
+	/// </summary>
 	public class LMSwbExporter
 	{
 		/// <summary>
@@ -138,6 +141,13 @@ namespace LMWrapper
 			}
 		}
 
+		/// <summary>
+		/// Either the TaskID or task name have to be specifed for export the whole task. 
+		/// The TaskID has preference if both are specifed.
+		///
+		/// Either the MatrixID or matrix name have to be specified for export of the
+		/// DataDictionary. The MatrixID has preference if both are specifed.
+		/// </summary>
 		public void Export()
 		{
 			Console.WriteLine(this.Arguments);
