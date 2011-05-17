@@ -11,13 +11,13 @@ namespace SewebarWeb
 			{
 				Environment = Global.Environment,
 				Dsn = Session["metabaseDsn"].ToString(),
-				Input = String.Format(@"{0}\xml\barbora2_radek.pmml", AppDomain.CurrentDomain.BaseDirectory),
+				Input = String.Format(@"{0}\xml\barbora2_radek.pmml", AppDomain.CurrentDomain.GetData("DataDirectory")),
 				Quiet = true,
 			};
 
 			importer.Import();
 
-			Response.Write("Done.");
+			Response.Write(String.Format("Imported task {0} to {1}", importer.Input, importer.Dsn));
 		}
 	}
 }
