@@ -11,11 +11,13 @@ namespace SewebarWeb
 			{
 				Environment = Global.Environment,
 				Dsn = Session["metabaseDsn"].ToString(),
-				Input = String.Format(@"{0}\xml\DataDictionary.pmml", AppDomain.CurrentDomain.BaseDirectory),
+				Input = String.Format(@"{0}\xml\DataDictionary.pmml", AppDomain.CurrentDomain.GetData("DataDirectory")),
 				Quiet = true
 			};
 
 			importer.Import();
+
+			Response.Write(String.Format("Imported {0} to {1}", importer.Input, importer.Dsn));
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace SewebarWeb
 				{
 					_env = new LMWrapper.Environment
 					{
-						LMPath = String.Format(@"{0}\{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
+						LMPath = String.Format(@"{0}\Libs\{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 					};
 				}
 
@@ -35,15 +35,15 @@ namespace SewebarWeb
 				ODBCManagerRegistry.CreateDSN("Barbora",
 											  "",
 											  "Microsoft Access Driver (*.mdb)",
-											  String.Format(@"{0}\db\Barbora.mdb", System.AppDomain.CurrentDomain.BaseDirectory));
+											  String.Format(@"{0}\Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory")));
 			}
 		}
 
 		protected void Session_Start(object sender, EventArgs e)
 		{
 			var dsnName = String.Format("LM{0}", Session.SessionID);
-			var metabaseOriginal = String.Format(@"{0}\db\LM Barbora.mdb", System.AppDomain.CurrentDomain.BaseDirectory);
-			var metabase = String.Format(@"{0}\db\LM Barbora {1}.mdb", System.AppDomain.CurrentDomain.BaseDirectory,
+			var metabaseOriginal = String.Format(@"{0}\LM Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"));
+			var metabase = String.Format(@"{0}\LM Barbora {1}.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"),
 			                             Session.SessionID);
 
 			if (!ODBCManagerRegistry.DSNExists(dsnName) && !File.Exists(metabase))
@@ -76,7 +76,7 @@ namespace SewebarWeb
 		protected void Session_End(object sender, EventArgs e)
 		{
 			var dsnName = String.Format("LM Barbora-{0}", Session.SessionID);
-			var metabase = String.Format(@"{0}\db\LM Barbora {1}.mdb", System.AppDomain.CurrentDomain.BaseDirectory,
+			var metabase = String.Format(@"{0}\LM Barbora {1}.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"),
 										 Session.SessionID);
 
 			if (ODBCManagerRegistry.DSNExists(dsnName))
