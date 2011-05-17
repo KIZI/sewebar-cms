@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMWrapper", "LMWrapper\LMWr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Debugger\Debugger.csproj", "{08C7693C-198D-4F60-9462-2D64A5273020}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewebarWeb", "SewebarWeb\SewebarWeb.csproj", "{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{08C7693C-198D-4F60-9462-2D64A5273020}.Release|Mixed Platforms.Build.0 = Release|x86
 		{08C7693C-198D-4F60-9462-2D64A5273020}.Release|x86.ActiveCfg = Release|x86
 		{08C7693C-198D-4F60-9462-2D64A5273020}.Release|x86.Build.0 = Release|x86
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

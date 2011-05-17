@@ -37,11 +37,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment.cs" />
-    <Compile Include="LMSwbExporter.cs" />
+    <Compile Include="LISpMiner\LMSwbExporter.cs" />
+    <Compile Include="LISpMiner\LMSwbImporter.cs" />
+    <Compile Include="ODBC\ODBCManagerRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
