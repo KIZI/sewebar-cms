@@ -24,7 +24,7 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public bool Quiet { get; set; }
 
-		public Environment Environment { get; set; }
+		public string LMPath { get; set; }
 
 		protected string Arguments
 		{
@@ -58,12 +58,14 @@ namespace LMWrapper.LISpMiner
 			// TODO: log4net
 			Console.WriteLine(this.Arguments);
 			
-			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbImporter.exe", this.Environment.LMPath))
+			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbImporter.exe", this.LMPath))
 			{
 				Arguments = this.Arguments
 			};
 
-			Process.Start(psi);
+			var p = new Process { StartInfo = psi };
+			p.Start();
+			p.WaitForExit();
 		}
 	}
 }

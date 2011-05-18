@@ -26,7 +26,7 @@ namespace Debugger
 
 			var exporter = new LMSwbExporter
 			{
-				Environment = env,
+				LMPath = env.LMPath,
 				Dsn = "LMEmpty2",
 				//MatrixName = "Loans",
 				Output = String.Format("{0}/results.xml", AppDomain.CurrentDomain.BaseDirectory),
@@ -42,7 +42,7 @@ namespace Debugger
 
 			var importer = new LMSwbImporter
 			               	{
-			               		Environment = env,
+			               		LMPath = env.LMPath,
 			               		Dsn = "LMEmpty2",
 								//Input = String.Format("{0}/main-task.pmml", AppDomain.CurrentDomain.BaseDirectory),
 								Input = String.Format("{0}/barbora2_radek.pmml", AppDomain.CurrentDomain.BaseDirectory),

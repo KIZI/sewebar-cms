@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Web;
-using System.Web.Security;
-using System.Web.SessionState;
+using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
 
 namespace SewebarWeb
@@ -20,6 +17,8 @@ namespace SewebarWeb
 				{
 					_env = new LMWrapper.Environment
 					{
+						DataPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString(),
+						LMPoolPath = String.Format(@"{0}\Libs\", System.AppDomain.CurrentDomain.BaseDirectory),
 						LMPath = String.Format(@"{0}\Libs\{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 					};
 				}
@@ -41,21 +40,8 @@ namespace SewebarWeb
 
 		protected void Session_Start(object sender, EventArgs e)
 		{
-			var dsnName = String.Format("LM{0}", Session.SessionID);
-			var metabaseOriginal = String.Format(@"{0}\LM Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"));
-			var metabase = String.Format(@"{0}\LM Barbora {1}.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"),
-			                             Session.SessionID);
-
-			if (!ODBCManagerRegistry.DSNExists(dsnName) && !File.Exists(metabase))
-			{
-				ODBCManagerRegistry.CreateDSN(dsnName,
-				                              "",
-				                              "Microsoft Access Driver (*.mdb)",
-				                              metabase);
-
-				File.Copy(metabaseOriginal, metabase, true);
-				Session["metabaseDsn"] = dsnName;
-			}
+			if(Session["LM"] == null)
+				Session["LM"] = new LISpMiner(Environment, Session.SessionID);
 		}
 
 		protected void Application_BeginRequest(object sender, EventArgs e)
@@ -75,21 +61,17 @@ namespace SewebarWeb
 
 		protected void Session_End(object sender, EventArgs e)
 		{
-			var dsnName = String.Format("LM Barbora-{0}", Session.SessionID);
-			var metabase = String.Format(@"{0}\LM Barbora {1}.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"),
-										 Session.SessionID);
-
-			if (ODBCManagerRegistry.DSNExists(dsnName))
+			var LM = Session["LM"] as IDisposable;
+			
+			if(LM != null)
 			{
-				ODBCManagerRegistry.RemoveDSN(dsnName);
+				LM.Dispose();
 			}
-
-			File.Delete(metabase);
 		}
 
 		protected void Application_End(object sender, EventArgs e)
 		{
-
+			
 		}
 	}
 }
