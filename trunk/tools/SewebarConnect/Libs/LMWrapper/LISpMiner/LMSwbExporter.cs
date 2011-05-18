@@ -64,9 +64,9 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public bool NoProgress { get; set; }
 
-		public Environment Environment { get; set; }
+		public string LMPath { get; set; }
 
-		protected string Arguments
+		public string Arguments
 		{
 			get
 			{
@@ -152,19 +152,15 @@ namespace LMWrapper.LISpMiner
 		{
 			Console.WriteLine(this.Arguments);
 
-			if(Environment.IsMono)
-			{
-				Process.Start(String.Format("wine {0}/LMSwbExporter.exe {1}", this.Environment.LMPath, this.Arguments));
-			}
-			else
-			{
-				var psi = new ProcessStartInfo(String.Format("{0}/LMSwbExporter.exe", this.Environment.LMPath))
-				          	{
-				          		Arguments = this.Arguments
-				          	};
+			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbExporter.exe", this.LMPath))
+			          	{
+			          		Arguments = this.Arguments,
+							
+			          	};
 
-				Process.Start(psi);
-			}
+			var p = new Process {StartInfo = psi};
+			p.Start();
+			p.WaitForExit();
 		}
 	}
 }
