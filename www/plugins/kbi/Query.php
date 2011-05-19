@@ -127,7 +127,5 @@ class KBIQuery
 	{
 		return str_replace('<!--[CDATA[<?oxygen SCHSchema="http://sewebar.vse.cz/schemas/QueryByAssociationRule0_1.sch"?>', '',
 			str_replace(']]-->', '', $p));
-		/*return str_replace('&gt;', '>',
-			str_replace('&lt;', '<', $p));*/
 	}
 }
