@@ -37,7 +37,7 @@
       Pokud pocet pravidel prekroci hodnotu parametru je vypsano varovani.
   Hodnoty jsou serazeny podle frekvenci, vypisi se tedy pouze ty nejcastejsi
   -->
-  <xsl:param name="maxRulesToList" select="50"/>
+  <xsl:param name="maxRulesToList" select="500"/>
   <!-- maximal number of items to show in graph -->
   <xsl:param name="maxCategoriesToListInGraphs" select="7"/>
   <!-- Parametr contentOnly slouzi k potlaceni generovani hlavicky HTML a elementu html, head a body.
