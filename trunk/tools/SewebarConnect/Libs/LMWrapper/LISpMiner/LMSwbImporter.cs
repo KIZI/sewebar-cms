@@ -26,7 +26,7 @@ namespace LMWrapper.LISpMiner
 
 		public string LMPath { get; set; }
 
-		protected string Arguments
+		public string Arguments
 		{
 			get
 			{

@@ -39,7 +39,7 @@ namespace SewebarWeb
 			response.SetAttribute("id", context.Session.SessionID);
 			document.AppendChild(response);
 
-			document.Save(context.Response.OutputStream);
+			//document.Save(context.Response.OutputStream);
 		}
 
 		public bool IsReusable
