@@ -45,14 +45,35 @@
   <ItemGroup>
     <Content Include="App_Data\Barbora.mdb" />
     <Content Include="App_Data\LM Barbora.mdb" />
-    <Content Include="App_Data\xml\ARDTaskSettingSample.MSi.110507.xml" />
-    <Content Include="App_Data\xml\barbora2_radek_.xml" />
-    <Content Include="App_Data\xml\export.xml" />
-    <Content Include="App_Data\xml\export2.xml" />
-    <Content Include="App_Data\xml\results.xml" />
-    <Content Include="App_Data\xml\task.xml" />
+    <Content Include="App_Data\xml\placeholder.xml" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Libs\LISp Miner\4ftGen.exe" />
+    <Content Include="Libs\LISp Miner\4ftGridGen.exe" />
+    <Content Include="Libs\LISp Miner\4ftResult.exe" />
+    <Content Include="Libs\LISp Miner\4ftTask.exe" />
+    <Content Include="Libs\LISp Miner\LMAdmin.exe" />
+    <Content Include="Libs\LISp Miner\LMDataSource.exe" />
+    <Content Include="Libs\LISp Miner\LMSwbExporter.exe" />
+    <Content Include="Libs\LISp Miner\LMSwbImporter.exe" />
+    <Content Include="Libs\LISp Miner\Readme.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\design.css" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.HypoInGroup.HTML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.HypoInGroup.PMML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.HypoInGroup.XML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.Task.HTML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.Task.PMML.ARBuilder.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.Task.PMML.Compact.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.Task.PMML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\4ftMiner.Task.XML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\Ac4ftMiner.Task.PMML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\ARDExport.LM.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\LM.PMML.Alias.ARD.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\LM.PMML.Alias.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\LMDataSource.Matrix.PMML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\SD4ftMiner.HypoInGroup.PMML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\SD4ftMiner.Task.PMML.Template.txt" />
+    <Content Include="Libs\LISp Miner\Sewebar\Template\_Info.Syntax.txt" />
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
@@ -103,10 +124,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\xml\barbora2_radek.pmml" />
-    <None Include="App_Data\xml\barboraForLMImport.pmml" />
-    <None Include="App_Data\xml\DataDictionary.pmml" />
-    <None Include="App_Data\xml\main-task.pmml" />
     <Content Include="Master.Master" />
     <Content Include="Import.ashx" />
     <Content Include="Task.ashx" />
