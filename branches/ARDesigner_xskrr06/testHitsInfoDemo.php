@@ -66,7 +66,7 @@ curl_close($ch);
 $DD = null;
 $FL = null;
 $ER = $response;
-
-$sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
-echo $sr->getData();
+var_dump ($response);
+//$sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
+//echo $sr->getData();
 ?>
