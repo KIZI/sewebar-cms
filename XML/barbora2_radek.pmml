@@ -20,7 +20,7 @@
     <guha:AssociationModel xmlns=""
         xsi:schemaLocation="http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"
         xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
-        modelName="District(Praha) AND Salary(?) =&amp;gt;  Quality(good)"
+        modelName="District(Praha) AND Salary(?) =&amp;gt;  Quality(good) Support"
         functionName="associationRules" algorithmName="4ft">
         <TaskSetting>
             <BBASettings>
