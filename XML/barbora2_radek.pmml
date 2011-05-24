@@ -92,7 +92,7 @@
             <ConsequentSetting>10</ConsequentSetting>
             <InterestMeasureSetting>
                 <InterestMeasureThreshold id="1">
-                    <InterestMeasure>BASE</InterestMeasure>
+                    <InterestMeasure>Support</InterestMeasure>
                     <Threshold>0.01</Threshold>
                     <CompareType>Greater than or equal</CompareType>
                 </InterestMeasureThreshold>
