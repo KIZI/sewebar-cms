@@ -38,7 +38,7 @@ namespace Debugger
 				TaskName = "TaskM"
 			};
 
-			exporter.Export();
+			exporter.Launch();
 
 			var importer = new LMSwbImporter
 			               	{
@@ -49,7 +49,7 @@ namespace Debugger
 			               		//Quiet = true,
 			               	};
 
-			//importer.Import();
+			//importer.Run();
 
 			Console.WriteLine("Done.");
 
