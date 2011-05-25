@@ -37,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment.cs" />
+    <Compile Include="LISpMinerException.cs" />
+    <Compile Include="LISpMiner\Launcher.cs" />
     <Compile Include="LISpMiner\4ftGen.cs" />
     <Compile Include="LISpMiner\LISpMiner.cs" />
     <Compile Include="LISpMiner\LMSwbExporter.cs" />

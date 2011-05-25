@@ -1,25 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="LMWrapper.LMSwbExporter">
-    <Position X="1.5" Y="1.25" Width="1.5" />
-    <AssociationLine Name="Environment" Type="LMWrapper.Environment">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.725" Y="0.06" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAAAAAICAEoBAAAABAAIBAAAAAgAAAoAIAAAAQAAAAA=</HashCode>
-      <FileName>LMSwbExporter.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Environment" />
-    </ShowAsAssociation>
-  </Class>
   <Class Name="LMWrapper.Environment">
     <Position X="5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ABAAACAAAAAQAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Environment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.Task4ftGen">
+    <Position X="5.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIABAAAAAAAAAgAAAIAIAAAAAAAAAI=</HashCode>
+      <FileName>LISpMiner\4ftGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.LISpMiner" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YBACAAAAACAAAAEAAAAAAAACSAAAQAIQAAAAAAAAQAA=</HashCode>
+      <FileName>LISpMiner\LISpMiner.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.LMSwbExporter">
+    <Position X="2.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAEIBAAAABAAIAAAAAAgAAAoAIAAAAAAAAAI=</HashCode>
+      <FileName>LISpMiner\LMSwbExporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.LMSwbImporter">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAIAIAAAAAAAAAI=</HashCode>
+      <FileName>LISpMiner\LMSwbImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.Launcher">
+    <Position X="1.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QBAAAAAAQAgAAAAAAAAAAAAAAAAAAAIAIAAAAQAAQAI=</HashCode>
+      <FileName>LISpMiner\Launcher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMWrapper.LISpMinerException">
+    <Position X="6.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LISpMinerException.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Tahoma" Size="8.25" />

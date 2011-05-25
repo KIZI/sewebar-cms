@@ -1,25 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.SessionState;
-using System.Xml;
+using System.Xml.Linq;
 using LMWrapper.LISpMiner;
 
 namespace SewebarWeb
 {
-	/// <summary>
-	/// Summary description for Import1
-	/// </summary>
-	public class Import1 : IHttpHandler, IRequiresSessionState 
+	public class Import : IHttpHandler, IRequiresSessionState 
 	{
-
 		public void ProcessRequest(HttpContext context)
 		{
 			context.Response.ContentType = "text/xml";
-			var document = new XmlDocument();
-			var response = document.CreateElement("response");
-
+			var response = new XElement("response");
+			
 			if (context.Session["LM"] != null && context.Session["LM"] is LISpMiner)
 			{
 				var lm = ((LISpMiner) context.Session["LM"]);
@@ -31,15 +25,17 @@ namespace SewebarWeb
 
 				var importer = lm.Importer;
 				importer.Input = input;
-				importer.Import();
+				importer.Launch();
 
-				response.InnerText = String.Format("Imported {0} to {1}", importer.Input, importer.Dsn);
+				response.Value = String.Format("Imported {0} to {1}", importer.Input, importer.Dsn);
 			}
-			
-			response.SetAttribute("id", context.Session.SessionID);
-			document.AppendChild(response);
 
-			//document.Save(context.Response.OutputStream);
+			response.SetAttributeValue("id", context.Session.SessionID);
+
+			new XDocument(
+				new XDeclaration("1.0", "utf-8", "yes"),
+				response
+			).Save(context.Response.OutputStream);
 		}
 
 		public bool IsReusable

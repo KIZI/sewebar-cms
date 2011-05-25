@@ -7,12 +7,12 @@ namespace LMWrapper.LISpMiner
 	/// <summary>
 	/// Exports the metabase data (task, results...) into a text file (PMML, XML, HTML) using template.
 	/// </summary>
-	public class LMSwbExporter
+	public class LMSwbExporter : Launcher
 	{
 		/// <summary>
 		/// /DSN:[data-source-name]  ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
 		/// </summary>
-		public string Dsn { get; set; }
+		public override string Dsn { get; set; }
 
 		/// <summary>
 		/// /MatrixID:[MatrixID]  ... MatrixID of the selected matrix
@@ -53,20 +53,8 @@ namespace LMWrapper.LISpMiner
 		/// /DistinctValuesMax:[nnn] ... maximal number of exported distinct values of DB columns (default: 1000)
 		/// </summary>
 		public string DistinctValuesMax { get; set; }
-		
-		/// <summary>
-		/// /Quiet    ... errors reported to _AppLog.dat instead on screen
-		/// </summary>
-		public bool Quiet { get; set; }
 
-		/// <summary>
-		/// /NoProgress   ... no progress dialog is displayed
-		/// </summary>
-		public bool NoProgress { get; set; }
-
-		public string LMPath { get; set; }
-
-		public string Arguments
+		public override string Arguments
 		{
 			get
 			{
@@ -148,14 +136,12 @@ namespace LMWrapper.LISpMiner
 		/// Either the MatrixID or matrix name have to be specified for export of the
 		/// DataDictionary. The MatrixID has preference if both are specifed.
 		/// </summary>
-		public void Export()
+		protected override void Run()
 		{
-			Console.WriteLine(this.Arguments);
-
 			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbExporter.exe", this.LMPath))
 			          	{
 			          		Arguments = this.Arguments,
-							
+
 			          	};
 
 			var p = new Process {StartInfo = psi};

@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Text;
 
 namespace LMWrapper.LISpMiner
 {
 	/// <summary>
-	/// Imports PMML file into the metabase (transformation dictionary, tasks) 
+	/// Generation of hypotheses as a batch process.
 	/// </summary>
-	public class LMSwbImporter : Launcher
+	public class Task4ftGen : Launcher
 	{
 		/// <summary>
 		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
@@ -15,19 +15,19 @@ namespace LMWrapper.LISpMiner
 		public override string Dsn { get; set; }
 
 		/// <summary>
-		/// /Alias:[alias_file]  ... aliases for text strings (for PMML mainly)
+		/// /TaskID [TaskID]		... TaskID of selected task
 		/// </summary>
-		public string Alias { get; set; }
+		public string TaskId { get; set; }
 
 		/// <summary>
-		/// /Input:[pmml_file] ... input PMML file with definitions
+		/// /TaskName:[TaskName]		... Task.Name of the selected task
 		/// </summary>
-		public string Input { get; set; }
+		public string TaskName { get; set; }
 
 		/// <summary>
-		/// skip test of unique values in the database table primary key
+		/// /TimeOut [sec]			... optional: time-out in seconds (approx.) after generation (excluding initialisation) is automatically interrupted
 		/// </summary>
-		public bool NoCheckPrimaryKeyUnique { get; set; }
+		public int? TimeOut { get; set; }
 
 		public override string Arguments
 		{
@@ -37,25 +37,25 @@ namespace LMWrapper.LISpMiner
 
 				if (!String.IsNullOrEmpty(this.Dsn))
 				{
-					arguments.AppendFormat("\"/DSN:{0}\" ", this.Dsn);
+					arguments.AppendFormat("/DSN {0} ", this.Dsn);
 				}
 
-				// /Input:<pmml_file>
-				if (!String.IsNullOrEmpty(this.Input))
+				// /TaskID <TaskID>
+				if (!String.IsNullOrEmpty(this.TaskId))
 				{
-					arguments.AppendFormat("\"/Input:{0}\" ", this.Input);
+					arguments.AppendFormat("/TaskID {0} ", this.TaskId);
 				}
 
-				// /Alias:<alias_file>
-				if (!String.IsNullOrEmpty(this.Alias))
+				// /TaskName <TaskName>
+				if (!String.IsNullOrEmpty(this.TaskName))
 				{
-					arguments.AppendFormat("\"/Alias:{0}\" ", this.Alias);
+					arguments.AppendFormat("\"/TaskName:{0}\" ", this.TaskName);
 				}
 
-				// /NoCheckPrimaryKeyUnique
-				if (this.NoCheckPrimaryKeyUnique)
+				// /TimeOut <sec>
+				if (this.TimeOut != null)
 				{
-					arguments.Append("/NoCheckPrimaryKeyUnique ");
+					arguments.AppendFormat("/TimeOut {0} ", this.TimeOut);
 				}
 
 				// /Quiet
@@ -76,10 +76,10 @@ namespace LMWrapper.LISpMiner
 
 		protected override void Run()
 		{
-			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbImporter.exe", this.LMPath))
-			{
-				Arguments = this.Arguments
-			};
+			var psi = new ProcessStartInfo(String.Format("{0}/4ftGen.exe", this.LMPath))
+			          	{
+			          		Arguments = this.Arguments
+			          	};
 
 			var p = new Process { StartInfo = psi };
 			p.Start();
