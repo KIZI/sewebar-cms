@@ -1,17 +1,40 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Master.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="SewebarWeb._Default" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-</asp:Content>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="SewebarWeb._Default" %>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>SEWEBAR Connect</title>
+</head>
+<body>
+    <form id="form1" runat="server">
     <div>
 	<h1>SEWEBAR Connect</h1>
     <ol>
-		<li>Create copy of empty Metabase</li>
-		<li>Import DataDictionary</li>
-		<li>Import task</li>
-		<li>Run task</li>
-		<li>Get results</li>
+		<li>
+			New user session
+			<ul>
+				<li>Create copy of empty Metabase</li>
+			</ul>
+		</li>
+		<li><a href="Import.ashx">Import DataDictionary</a></li>
+		<li>
+			<a href="Task.ashx">Run task</a>
+			<ul>
+				<li>Import task</li>
+				<li>Generate results</li>
+				<li>Response results</li>
+			</ul>
+		</li>
 	</ol>
-	<%=System.AppDomain.CurrentDomain.BaseDirectory %>
+	<hr />
+	<dl>
+		<dt>BaseDirectory</dt>
+		<dd><%=System.AppDomain.CurrentDomain.BaseDirectory %></dd>
+		<dt>Session ID</dt>
+		<dd><%=Session.SessionID %></dd>
+	</dl>
     </div>
-</asp:Content>
+	</form>
+</body>
+</html>

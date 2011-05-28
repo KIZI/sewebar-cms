@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 
 namespace LMWrapper.LISpMiner
@@ -7,7 +6,7 @@ namespace LMWrapper.LISpMiner
 	/// <summary>
 	/// Exports the metabase data (task, results...) into a text file (PMML, XML, HTML) using template.
 	/// </summary>
-	public class LMSwbExporter : Launcher
+	public class LMSwbExporter : Executable
 	{
 		/// <summary>
 		/// /DSN:[data-source-name]  ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
@@ -129,6 +128,11 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
+		public LMSwbExporter():base()
+		{
+			this.ApplicationName = "LMSwbExporter.exe";
+		}
+
 		/// <summary>
 		/// Either the TaskID or task name have to be specifed for export the whole task. 
 		/// The TaskID has preference if both are specifed.
@@ -138,15 +142,7 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		protected override void Run()
 		{
-			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbExporter.exe", this.LMPath))
-			          	{
-			          		Arguments = this.Arguments,
-
-			          	};
-
-			var p = new Process {StartInfo = psi};
-			p.Start();
-			p.WaitForExit();
+			base.Run();
 		}
 	}
 }

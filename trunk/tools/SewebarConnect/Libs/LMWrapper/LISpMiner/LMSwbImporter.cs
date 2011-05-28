@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Text;
 
 namespace LMWrapper.LISpMiner
@@ -7,7 +6,7 @@ namespace LMWrapper.LISpMiner
 	/// <summary>
 	/// Imports PMML file into the metabase (transformation dictionary, tasks) 
 	/// </summary>
-	public class LMSwbImporter : Launcher
+	public class LMSwbImporter : Executable
 	{
 		/// <summary>
 		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
@@ -74,16 +73,10 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		protected override void Run()
+		public LMSwbImporter()
+			: base()
 		{
-			var psi = new ProcessStartInfo(String.Format("{0}/LMSwbImporter.exe", this.LMPath))
-			{
-				Arguments = this.Arguments
-			};
-
-			var p = new Process { StartInfo = psi };
-			p.Start();
-			p.WaitForExit();
+			this.ApplicationName = "LMSwbImporter.exe";
 		}
 	}
 }

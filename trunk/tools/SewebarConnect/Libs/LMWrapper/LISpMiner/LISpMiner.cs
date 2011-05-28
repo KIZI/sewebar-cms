@@ -11,10 +11,27 @@ namespace LMWrapper.LISpMiner
 		private Task4ftGen _task4FtGen;
 
 		public string Id { get; protected set; }
+
 		public string Dsn { get; protected set; }
+
 		public string MetabaseDsn { get; protected set; }
+
 		protected string MetabasePath { get; set; }
+
 		public string LMPath { get; set; }
+
+		public ExecutableStatus Status
+		{
+			get
+			{
+				if (this.Importer.Status == ExecutableStatus.Ready
+					&& this.Exporter.Status == ExecutableStatus.Ready
+					&& this.Task4FtGen.Status == ExecutableStatus.Ready)
+					return ExecutableStatus.Ready;
+
+				return ExecutableStatus.Running;
+			}
+		}
 
 		public LMSwbImporter Importer
 		{
@@ -26,7 +43,7 @@ namespace LMWrapper.LISpMiner
 					{
 						LMPath = this.LMPath,
 						Dsn = this.MetabaseDsn,
-						Quiet = true
+						LISpMiner = this
 					};
 				}
 				return this._importer;
@@ -45,8 +62,7 @@ namespace LMWrapper.LISpMiner
 					{
 						LMPath = this.LMPath,
 						Dsn = this.MetabaseDsn,
-						NoProgress = true,
-						Quiet = true
+						LISpMiner = this
 					};
 				}
 
@@ -66,8 +82,7 @@ namespace LMWrapper.LISpMiner
 					{
 						LMPath = this.LMPath,
 						Dsn = this.MetabaseDsn,
-						Quiet = true,
-						NoProgress = true
+						LISpMiner = this
 					};
 				}
 
@@ -87,6 +102,9 @@ namespace LMWrapper.LISpMiner
 			foreach (string folder in Directory.GetDirectories(sourceFolder))
 			{
 				string name = Path.GetFileName(folder);
+
+				if (name == null) continue;
+
 				string dest = Path.Combine(destFolder, name);
 				CopyFolder(folder, dest);
 			}
@@ -94,8 +112,11 @@ namespace LMWrapper.LISpMiner
 			foreach (string file in Directory.GetFiles(sourceFolder))
 			{
 				string name = Path.GetFileName(file);
+
+				if (name == null) continue;
+
 				string dest = Path.Combine(destFolder, name);
-				File.Copy(file, dest);
+				File.Copy(file, dest, true);
 			}
 		}
 

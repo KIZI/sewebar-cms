@@ -1,14 +1,42 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using log4net;
 
 namespace LMWrapper.LISpMiner
 {
 	/// <summary>
 	/// Generation of hypotheses as a batch process.
 	/// </summary>
-	public class Task4ftGen : Launcher
+	public class Task4ftGen : Executable
 	{
+		private static readonly ILog Log = LogManager.GetLogger(typeof(Task4ftGen));
+
+		private Process _process;
+
+		protected Process Process
+		{
+			get
+			{
+				if (this._process == null)
+				{
+					this._process = new Process
+					                	{
+											EnableRaisingEvents = true,
+					                		StartInfo = new ProcessStartInfo
+					                		            	{
+					                		            		FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
+					                		            		Arguments = this.Arguments
+					                		            	},
+					                	};
+
+					this._process.Exited += new EventHandler(ProcessExited);
+				}
+
+				return this._process;
+			}
+		}
+
 		/// <summary>
 		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
 		/// </summary>
@@ -43,7 +71,7 @@ namespace LMWrapper.LISpMiner
 				// /TaskID <TaskID>
 				if (!String.IsNullOrEmpty(this.TaskId))
 				{
-					arguments.AppendFormat("/TaskID {0} ", this.TaskId);
+					arguments.AppendFormat("/TaskID:{0} ", this.TaskId);
 				}
 
 				// /TaskName <TaskName>
@@ -74,16 +102,45 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
+		public Task4ftGen()
+			: base()
+		{
+			this.ApplicationName = "4ftGen.exe";
+			//this.TimeOut = 10;
+		}
+
 		protected override void Run()
 		{
-			var psi = new ProcessStartInfo(String.Format("{0}/4ftGen.exe", this.LMPath))
-			          	{
-			          		Arguments = this.Arguments
-			          	};
+			this.Status = ExecutableStatus.Running;
 
-			var p = new Process { StartInfo = psi };
-			p.Start();
-			p.WaitForExit();
+			Log.Debug(String.Format("Launching: {0} {1}", this.ApplicationName, this.Arguments));
+
+			this.Process.Start();
+			// wait a little
+			this.Process.WaitForExit(5 * 1000);
+		}
+
+		private void ProcessExited(object sender, EventArgs e)
+		{
+			Log.Debug(String.Format("Result generation finished: {0} {1}", this.ApplicationName, this.Arguments));
+
+			this.Status = ExecutableStatus.Ready;
+
+			this.Process.Close();
+			this._process = null;
+		}
+
+		public void Stop()
+		{
+			if (!this.Process.HasExited)
+			{
+				Log.Debug("stopping / killing");
+
+				if(!this.Process.CloseMainWindow())
+				{
+					this.Stop();
+				}
+			}
 		}
 	}
 }
