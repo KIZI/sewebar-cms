@@ -51,9 +51,13 @@ class GetDataARBuilderQuery extends AncestorGetData {
 
         $this->jsonObject = array();
 
-        if ($domER1 != null) {
-            $this->domER = new DomDocument();
+        if ($domER1 !== null) {
+          $this->domER = new DomDocument();
+          if (file_exists($domER1)) {
             $this->domER->load($domER1);
+          } else {
+            $this->domER->loadXML($domER1);
+          }
         } else {
             $this->domER = null;
         }

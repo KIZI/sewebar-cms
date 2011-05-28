@@ -9,6 +9,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   private $finalXmlDocument;
   private $dictionary;
   private $dataDictionary;
+  private $modelName;
   private $arQuery;
   private $bbaSettings;
   private $dbaSettings;
@@ -83,6 +84,9 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     
     // replace negative booleans
     $ruleData = $this->replaceNegativeBooleans($ruleData, $this->negativeBooleans);
+    
+    // update modelName
+    $this->updateModelName($ruleData);
     
     $intsToSolve = array(); // intervals to solve
     $isPrevOper = false;
@@ -212,7 +216,8 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $associationModel->setAttribute('xmlns', '');
     $associationModel->setAttribute('xsi:schemaLocation', 'http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd');
     $associationModel->setAttribute('xmlns:guha', 'http://keg.vse.cz/ns/GUHA0.1rev1');
-    $associationModel->setAttribute('modelName', ' 5  Client(?)   =&gt; Loan(Bad) / Type(?) ');
+    $this->modelName = $this->finalXmlDocument->createAttribute('modelName');
+    $associationModel->setAttributeNode($this->modelName);
     $associationModel->setAttribute('functionName', 'associationRules');
     $associationModel->setAttribute('algorithmName', '4ft');
     
@@ -235,6 +240,44 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $associationModel->appendChild($associationRules);
     
     $root->appendChild($associationModel);
+  }
+  
+  /**
+   * Update Model name
+   * 
+   * @param <Array> $ruleData Array of StdClass objects representing the rule
+   */
+  private function updateModelName($ruleData) {
+    $modelName = $this->getModelName($ruleData);
+    $this->modelName->appendChild($this->finalXmlDocument->createTextNode($modelName));
+  }
+  
+  /**
+   * Get Model name for partial cedent
+   * 
+   * @param <Array> $ruleData Array of StdClass objects representing the rule
+   * @return <String> $modelName String representation of the rule
+   */
+  private function getModelName($ruleData) {
+    $modelName = '';
+    $implInserted = false;
+    foreach ($ruleData as $k => $rData) {
+      $modelName .= '';
+      if ($this->isType($rData->type, $this->attributes)) {
+        $modelName .= (isset($rData->literalSign) && $this->isType($rData->literalSign, $this->negativeBooleans) ? strtoupper($this->negativeBoolean).' ' : '').$rData->name.($rData->category == $this->ONE_CATEGORY ? '('.$rData->fields[0]->value.')' : '(?)');
+      } else if ($this->isType($rData->type, $this->booleans)) {
+        $modelName .= strtoupper($rData->type);
+      } else if ($this->isType($rData->type, $this->operators) && !$implInserted) { 
+        $modelName .= '=&gt;';
+        $implInserted = true;
+      }
+      if (($k + 1) < count($ruleData)) { $modelName .= ' '; }
+    }
+    
+    // TODO - delete generated hash
+    $modelName .= ' '.md5(time());
+    
+    return $modelName;
   }
   
   /**
@@ -356,6 +399,12 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
         $baSettingRef->appendChild($this->finalXmlDocument->createTextNode($dbaId));
         $dbaSetting->appendChild($baSettingRef);  
       }
+      
+      // create MinimalLength
+      $minimalLength = $this->finalXmlDocument->createElement("MinimalLength");
+      $minimalLength->appendChild($this->finalXmlDocument->createTextNode("1"));
+      $dbaSetting->appendChild($minimalLength);
+      
     } else if ($this->isType($btype, $this->literals)) {
       $baSettingRefId = $this->createBbaSetting($attributes[0]);
       
@@ -401,12 +450,26 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $df->setAttribute('name', $attribute->name);
     $df->setAttribute('optype', 'categorical');
     $df->setAttribute('dataType', 'string');
-    $this->dataDictionary->appendChild($df);
+    // TODO - uncomment
+    //$this->dataDictionary->appendChild($df);
         
     return $id;
   }
   
   private function createCoefficient($attribute) {
+    /*
+    $attribute = new stdClass();
+    $attribute->name = 'sex [abbrev]';
+    $attribute->type = 'attr';
+    $attribute->category = 'Interval';
+    $field1 = new stdClass();
+    $field1->name = 'category';
+    $field1->value = '13';
+    $field2->name = 'category';
+    $field2->value = '17';
+    $attribute->fields = array($field1, $field2);
+    */
+    
     $coefFields = $attribute->fields;
     $coefficient = $this->finalXmlDocument->createElement("Coefficient");
     
@@ -414,7 +477,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $type->appendChild($this->finalXmlDocument->createTextNode($attribute->category));
     $coefficient->appendChild($type);
     
-    if ($attribute->category == $this->ONE_CATEGORY) {
+    if ($attribute->category == $this->ONE_CATEGORY) {      
       $category = $this->finalXmlDocument->createElement("Category");
       $category->appendChild($this->finalXmlDocument->createTextNode($attribute->fields[0]->value));
       $coefficient->appendChild($category);
@@ -609,7 +672,13 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
    * @return <Bool> Is type?
    */
   private function isType($type, $types) {
-    return in_array($type, $types);
+    if (is_array($types)) {
+      return in_array($type, $types);
+    } else if (strlen($types)) {
+      return $type == $types;
+    }
+    
+    return false;
   }
   
 }

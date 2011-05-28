@@ -9,7 +9,8 @@
 
     session_start();
     
-    $toSolve = $_POST['data'];
+    $toSolve = isset($_POST['data']) ? $_POST['data'] : $_GET['data'];
+    //$toSolve = $_GET['data'];
     $toSolve = str_replace("\\\"", "\"", $toSolve);
     //echo $toSolve;
 

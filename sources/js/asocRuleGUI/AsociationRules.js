@@ -219,7 +219,6 @@ var AsociationRules = new Class({
      */
     updateHits: function(){
     	this.clearHits();
-    	
     	var hits = this.serverInfo.getHits();
     	for(var actualRule = 0; actualRule < hits.length; actualRule++){
     		hit = hits[actualRule];
