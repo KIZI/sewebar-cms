@@ -112,7 +112,7 @@ namespace SewebarWeb
 				var status = this.GetStatus(exporter.Output);
 
 				// run task - generate results
-				if (status != "Finished")
+				if (status == "Not generated")
 				{
 					if (miner.Task4FtGen.Status == ExecutableStatus.Ready)
 					{
@@ -131,7 +131,7 @@ namespace SewebarWeb
 				}
 				else
 				{
-					Log.Debug("taskState is Finished - not regenerating");
+					Log.DebugFormat("taskState is {0} - not regenerating", status);
 				}
 
 				// write results to response
