@@ -15,7 +15,8 @@ var ServerInfo = new Class({
         this.attributes2 = new Array();
         this.attributesFields = new Array(); //categories
 
-        this.interestMeasures = new Array(); // obsahuje Interest Measures(Operator)
+        this.interestMeasures = new Array(); // obsahuje Interest Measures (Operator)
+        this.interestMeasures2 = new Array();
         
         this.booleans = new Array();
         this.initializeBooleans();
@@ -130,6 +131,7 @@ var ServerInfo = new Class({
             fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "", fieldMin, fieldMax);
             
             this.interestMeasures.push(new InterestMeasure(name, nameLang, explanation, fields));
+            this.interestMeasures2.push(new InterestMeasure(name, nameLang, explanation, fields));
         }
     },
 
@@ -425,16 +427,16 @@ var ServerInfo = new Class({
         var amountOfRules = item.rules;
         if(this.moreRules == "false"){
             if(amountOfRules > 0){
-                this.solveRule(item["rule0"]);
+                this.solveRule(item["rule0"], this.attributes, this.interestMeasures);
             }
             else{
-            	var asociationRule = this.solveRule(new Array(), this.attributes); 
+            	var asociationRule = this.solveRule(new Array(), this.attributes, this.interestMeasures); 
             	this.existingRules.push(asociationRule);
             }
         }
         else{
             for(var actualRule = 0; actualRule < amountOfRules; actualRule++){
-            	var asociationRule = this.solveRule(item["rule"+actualRule], this.attributes);
+            	var asociationRule = this.solveRule(item["rule"+actualRule], this.attributes, this.interestMeasures);
             	this.existingRules.push(asociationRule);
             }
         }
@@ -450,7 +452,7 @@ var ServerInfo = new Class({
      * Returns:
      * {AssocitaionRule} asociationRule 
      */
-    solveRule: function(rule, attributes){
+    solveRule: function(rule, attributes, interestMeasures){
         var ruleElement, actualField, type, name, category, fields, oldElement, fieldName, fieldValue;
         var positionInRule = 0;
         var asociationRule = new AsociationRule(this);
@@ -478,7 +480,7 @@ var ServerInfo = new Class({
             }
             else if(type == "oper"){
                 fields.actualValue = ""
-                oldElement = clone_obj(this.getElement(name, this.interestMeasures));
+                oldElement = clone_obj(this.getElement(name, interestMeasures));
                 if(oldElement == null){
                     continue;
                 }
@@ -514,7 +516,7 @@ var ServerInfo = new Class({
     	
     	var amountOfRules = item.rules;
     	for (var actualRule = 0; actualRule < amountOfRules; actualRule++) {
-    		var asociationRule = this.solveRule(item["rule" + actualRule], this.attributes2);
+    		var asociationRule = this.solveRule(item["rule" + actualRule], this.attributes2, this.interestMeasures2);
     		this.hits.push(asociationRule);
     	}
     },

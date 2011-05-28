@@ -24,6 +24,6 @@
     $ER = "testSelenium/testSpeed200attributes/associationRules.xml";
 	*/
     
-    $sr = new GetDataARBuilderQuery($DD,$FL,$ER,'en');
+    $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
     echo $sr->getData();
 ?>
