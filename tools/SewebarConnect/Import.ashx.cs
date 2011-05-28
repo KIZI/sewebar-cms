@@ -9,23 +9,38 @@ namespace SewebarWeb
 {
 	public class Import : IHttpHandler, IRequiresSessionState 
 	{
+		public bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public void ProcessRequest(HttpContext context)
 		{
-			context.Response.ContentType = "text/xml";
 			var response = new XElement("response");
-			
-			if (context.Session["LM"] != null && context.Session["LM"] is LISpMiner)
+			var miner = (context.Session["LM"] as LISpMiner);
+			var content = context.Request["content"];
+			var dataFolder = String.Format("{1}/xml/{0}", miner != null ? miner.Id : String.Empty, AppDomain.CurrentDomain.GetData("DataDirectory"));
+
+			context.Response.ContentType = "text/xml";
+
+			if (miner != null && content != null)
 			{
-				var lm = ((LISpMiner) context.Session["LM"]);
-				var input = String.Format(@"{0}\xml\DataDictionary{1:yyyyMMdd-Hmmss}.pmml", AppDomain.CurrentDomain.GetData("DataDirectory"), DateTime.Now);
+				if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);
 
-				var file = File.CreateText(input);
-				file.Write(context.Request["content"]);
-				file.Close();
+				var input = String.Format(@"{0}/DataDictionary_{1:yyyyMMdd-Hmmss}.xml", dataFolder, DateTime.Now);
 
-				var importer = lm.Importer;
+				using (var file = File.CreateText(input))
+				{
+					file.Write(content);
+					file.Close();
+				}
+
+				var importer = miner.Importer;
 				importer.Input = input;
-				importer.Launch();
+				importer.Execute();
 
 				response.Value = String.Format("Imported {0} to {1}", importer.Input, importer.Dsn);
 			}
@@ -36,14 +51,6 @@ namespace SewebarWeb
 				new XDeclaration("1.0", "utf-8", "yes"),
 				response
 			).Save(context.Response.OutputStream);
-		}
-
-		public bool IsReusable
-		{
-			get
-			{
-				return false;
-			}
 		}
 	}
 }

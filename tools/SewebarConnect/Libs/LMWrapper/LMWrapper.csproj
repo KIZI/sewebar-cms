@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -38,8 +41,9 @@
   <ItemGroup>
     <Compile Include="Environment.cs" />
     <Compile Include="LISpMinerException.cs" />
-    <Compile Include="LISpMiner\Launcher.cs" />
+    <Compile Include="LISpMiner\Executable.cs" />
     <Compile Include="LISpMiner\4ftGen.cs" />
+    <Compile Include="LISpMiner\ExecutableStatus.cs" />
     <Compile Include="LISpMiner\LISpMiner.cs" />
     <Compile Include="LISpMiner\LMSwbExporter.cs" />
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
@@ -48,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -38,7 +38,7 @@ namespace Debugger
 				TaskName = "TaskM"
 			};
 
-			exporter.Launch();
+			exporter.Execute();
 
 			var importer = new LMSwbImporter
 			               	{

@@ -1,12 +1,14 @@
 ﻿using System;
-using System.IO;
 using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
+using log4net;
 
 namespace SewebarWeb
 {
 	public class Global : System.Web.HttpApplication
 	{
+		private static readonly ILog Log = LogManager.GetLogger(typeof(Global));
+
 		private static LMWrapper.Environment _env;
 
 		public static LMWrapper.Environment Environment
@@ -18,7 +20,7 @@ namespace SewebarWeb
 					_env = new LMWrapper.Environment
 					{
 						DataPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString(),
-						LMPoolPath = String.Format(@"{0}\Libs\", System.AppDomain.CurrentDomain.BaseDirectory),
+						LMPoolPath = String.Format(@"{0}\Libs", System.AppDomain.CurrentDomain.BaseDirectory),
 						LMPath = String.Format(@"{0}\Libs\{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 					};
 				}
@@ -29,6 +31,9 @@ namespace SewebarWeb
 
 		protected void Application_Start(object sender, EventArgs e)
 		{
+			// Load logging info
+			log4net.Config.XmlConfigurator.Configure();
+
 			if (!ODBCManagerRegistry.DSNExists("Barbora"))
 			{
 				ODBCManagerRegistry.CreateDSN("Barbora",
@@ -56,16 +61,16 @@ namespace SewebarWeb
 
 		protected void Application_Error(object sender, EventArgs e)
 		{
-
+			Log.Error(Server.GetLastError());
 		}
 
 		protected void Session_End(object sender, EventArgs e)
 		{
-			var LM = Session["LM"] as IDisposable;
+			var miner = Session["LM"] as IDisposable;
 			
-			if(LM != null)
+			if(miner != null)
 			{
-				LM.Dispose();
+				miner.Dispose();
 			}
 		}
 
