@@ -456,10 +456,11 @@ var AttributeFields = new Class({
      * fieldName         {String} name of the field
      * value             {String} value of the field
      */
-    setValue: function(fieldName, value){
+    setValue: function(fieldName, value){   	
         for(var actualField = 0; actualField < this.fields.length; actualField++){
             if(fieldName == this.fields[actualField].getName()){
                 this.fields[actualField].setValue(value);
+                this.fields[actualField].save();
                 return;
             }
         }
@@ -861,6 +862,7 @@ var InterestMeasure = new Class({
         for(var actualField = 0; actualField < this.fields.length; actualField++){
             if(this.fields[actualField].getName() == fieldName){
                 this.fields[actualField].setValue(value);
+                this.fields[actualField].save();
             }
         }
     }

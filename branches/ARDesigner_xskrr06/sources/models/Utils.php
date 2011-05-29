@@ -39,6 +39,13 @@ class Utils{
         $element['fields'] = array();
         return $element;
     }
+    
+    public static function getIm($node, $name) {
+      $im = array('name' => $node->getAttribute($name), 'value' => $node->nodeValue);
+      
+      return $im;
+    }
+    
 }
 
 ?>

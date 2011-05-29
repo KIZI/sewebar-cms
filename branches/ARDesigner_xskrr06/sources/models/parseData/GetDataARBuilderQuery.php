@@ -514,7 +514,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $ruleAr = array();
         $rules = $this->domER->getElementsByTagName('AssociationRule');
         foreach ($rules as $rule) {
-            $ruleAr[] = new AsociationRule($rule, $this->domER);
+          $ruleAr[] = new AsociationRule($rule, $this->domER);
         }
         for ($actualRule = 0; $actualRule < count($ruleAr); $actualRule++) {
             $this->jsonObject["rule" . $actualRule] = $ruleAr[$actualRule]->toJSON();

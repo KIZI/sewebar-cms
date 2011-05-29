@@ -8,6 +8,7 @@
     require_once('sources/models/Utils.php');
     
     $DD = "XML/datadescription.xml";
+    //$FL = "XML/featurelistQueryByAr_loose.xml";
     $FL = "XML/featurelistQueryByAr.xml";
     $ER = null;
 
