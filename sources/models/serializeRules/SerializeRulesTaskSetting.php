@@ -65,10 +65,10 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
       $this->ddXpath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
   }
     
-  public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5) {
+  public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5, $hypothesesCountMax = 5) {
       
     // Create basic structure of Document.
-    $this->createBasicStructure();
+    $this->createBasicStructure($hypothesesCountMax);
         
     // get Data from JSON
     $json = str_replace("&lt;","<",$json);
@@ -153,7 +153,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   }
   
 
-  private function createBasicStructure() {
+  private function createBasicStructure($hypothesesCountMax) {
     $this->finalXmlDocument = new DomDocument("1.0", "UTF-8");
     //$this->finalXmlDocument->formatOutput = true;
 
@@ -224,8 +224,15 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     // create TaskSetting
     $taskSetting = $this->finalXmlDocument->createElement("TaskSetting");
     $this->arQuery = $associationModel->appendChild($taskSetting);
+    
+    $extension = $this->finalXmlDocument->createElement('Extension');
+    $extension->setAttribute('name', 'LISp-Miner');
+    $hypotheses = $this->finalXmlDocument->createElement('HypothesesCountMax');
+    $hypotheses->appendChild($this->finalXmlDocument->createTextNode($hypothesesCountMax));
+    $extension->appendChild($hypotheses);
+    $this->arQuery->appendChild($extension);
     $bbaSettings = $this->finalXmlDocument->createElement("BBASettings");
-    $this->bbaSettings = $this->arQuery->appendChild($bbaSettings);
+    $this->bbaSettings = $this->arQuery->appendChild($bbaSettings); 
     $dbaSettings = $this->finalXmlDocument->createElement("DBASettings");
     $this->dbaSettings = $this->arQuery->appendChild($dbaSettings);
     $antecedentSetting = $this->finalXmlDocument->createElement("AntecedentSetting");

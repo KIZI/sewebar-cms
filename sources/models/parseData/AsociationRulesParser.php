@@ -122,7 +122,7 @@ class BBA{
         $element = array();
         $element['name'] = $this->fieldRef;
         $element['type'] = "attr";
-        $element['category'] = "one category";
+        $element['category'] = "One category";
 
         $fields = array();
         for($actualField = 0; $actualField < sizeof($this->catRef); $actualField++){
@@ -158,9 +158,10 @@ class AsociationRule{
         $elements = $asociationRuleNode->childNodes;
         foreach ($elements as $element){
             if($element->nodeName == "IMValue"){
-                $this->interestMeasures[] = Utils::getAttribute($element, "name");
+              $this->interestMeasures[] = Utils::getIm($element, "name");
             }
-        }        
+        }    
+        
         $this->elements = array();
         $elements = $domER->getElementsByTagName('BBA');
         foreach ($elements as $element){
@@ -185,16 +186,17 @@ class AsociationRule{
         foreach ($antJson as $element){
             $arrayOfElements[] = $element;
         }
-        for($actualIm = 0; $actualIm < count($this->interestMeasures); $actualIm++){
-            $im = array();
-            $name = $this->interestMeasures[$actualIm];
-            $type = "oper";
-            $im["name"] = $name;
-            $im["type"] = $type;
-            $im["category"] = "";
-            $im["fields"] = array();
-            $arrayOfElements[] = $im;
+        
+        foreach($this->interestMeasures as $interestMeasure) {
+          $im = array();
+          $im['name'] = $interestMeasure['name'];
+          $im['type'] = 'oper';
+          $im['category'] = '';
+          $im['fields'] = array();
+          $im['fields'] = array(array('name' => 'prahovaHodnota', 'value' => $interestMeasure['value']));
+          $arrayOfElements[] = $im;
         }
+        
         $consJson = $this->elements[$this->consequent]->toJSON();
         foreach ($consJson as $element){
             $arrayOfElements[] = $element;

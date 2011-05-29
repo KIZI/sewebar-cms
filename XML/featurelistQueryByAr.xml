@@ -19,7 +19,7 @@
         <InterestMeasures threshold="required">
             <Types>
                 <Type>
-                    <Name>BASE</Name>
+                    <Name>Support</Name>
                     <LocalizedName lang="en">Support</LocalizedName>
                     <LocalizedName lang="cs">Podpora</LocalizedName>
                     <Field>
@@ -28,13 +28,13 @@
                         <LocalizedName lang="cs">prahová hodnota</LocalizedName>
                         <Validation>
                             <MinValue inclusive="no">0</MinValue>
-                            <MaxValue inclusive="no">1</MaxValue>
+                            <MaxValue inclusive="yes">1</MaxValue>
                             <Datatype>double</Datatype>
                         </Validation>
                     </Field>
                 </Type>
                 <Type>
-                    <Name>Founded Implication</Name>
+                    <Name>Confidence</Name>
                     <LocalizedName lang="en">Confidence</LocalizedName>
                     <LocalizedName lang="cs">Spolehlivost</LocalizedName>
                     <Field>
@@ -67,12 +67,12 @@
             </Types>                       
             <SupportedInterestMeasureCombinations>
                 <SupportedIMCombination>
-                    <InterestMeasure>Founded Implication</InterestMeasure>
-                    <InterestMeasure>BASE</InterestMeasure>
+                    <InterestMeasure>Confidence</InterestMeasure>
+                    <InterestMeasure>Support</InterestMeasure>
                 </SupportedIMCombination>                
                 <SupportedIMCombination>
                     <InterestMeasure>Above Average Implication</InterestMeasure>
-                    <InterestMeasure>BASE</InterestMeasure>
+                    <InterestMeasure>Support</InterestMeasure>
                 </SupportedIMCombination> 
             </SupportedInterestMeasureCombinations>
             

@@ -224,7 +224,7 @@ var AsociationRules = new Class({
     		hit = hits[actualRule];
     		hit.setMaxSize(this.maxSize / 2);
     		hit.addEvent("display", function(){
-                this.setDraggability();
+                //this.setDraggability();
             }.bind(this));
     	    var newRuleDiv = hit.display();
     	    newRuleDiv.inject($('rightDivHits'));

@@ -277,6 +277,8 @@ body{
     height: 50%;
     background-color: #EEEEEE;
     float: left;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 #tableAsking{

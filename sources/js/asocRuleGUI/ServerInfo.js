@@ -7,13 +7,14 @@ var ServerInfo = new Class({
      * Function: initialize
      * Creates instance of class ServerInfo
      */
-    initialize: function(item){
+    initialize: function(item) {
         this.depthNesting = 1;
         this.depthLevels = new DepthNesting();
 
         this.attributes = new Array();
         this.attributes2 = new Array();
         this.attributesFields = new Array(); //categories
+        this.attributesFields2 = new Array();
 
         this.interestMeasures = new Array(); // obsahuje Interest Measures (Operator)
         this.interestMeasures2 = new Array();
@@ -129,9 +130,10 @@ var ServerInfo = new Class({
             }
             
             fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "", fieldMin, fieldMax);
+            fields2 = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "", fieldMin, fieldMax);
             
             this.interestMeasures.push(new InterestMeasure(name, nameLang, explanation, fields));
-            this.interestMeasures2.push(new InterestMeasure(name, nameLang, explanation, fields));
+            this.interestMeasures2.push(new InterestMeasure(name, nameLang, explanation, fields2));
         }
     },
 
@@ -248,7 +250,7 @@ var ServerInfo = new Class({
             }
 
             this.attributes.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields)));
-            this.attributes2.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields)));
+            this.attributes2.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields2)));
         }
     },
 
@@ -307,9 +309,11 @@ var ServerInfo = new Class({
                 fieldMax = new Array();
             }
 
-            fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, category, fieldMin, fieldMax)
-
+            fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, category, fieldMin, fieldMax);
+            fields2 = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, category, fieldMin, fieldMax);
+            
             this.attributesFields.push(new AttributeFields(category, localizedCategory, fields));
+            this.attributesFields2.push(new AttributeFields(category, localizedCategory, fields2));
         }
     },
 
@@ -479,12 +483,13 @@ var ServerInfo = new Class({
                 }
             }
             else if(type == "oper"){
-                fields.actualValue = ""
+                fields.actualValue = "";
                 oldElement = clone_obj(this.getElement(name, interestMeasures));
                 if(oldElement == null){
                     continue;
                 }
                 fields = ruleElement.fields;
+                
                 // Z operatoru vybrat podle name odpovídající field a nastavit mu hodnotu.
                 for(actualField=0; actualField < fields.length; actualField++){
                     fieldName = fields[actualField].name
@@ -513,7 +518,6 @@ var ServerInfo = new Class({
      */
     solveHits: function(item) {
     	this.initHits();
-    	
     	var amountOfRules = item.rules;
     	for (var actualRule = 0; actualRule < amountOfRules; actualRule++) {
     		var asociationRule = this.solveRule(item["rule" + actualRule], this.attributes2, this.interestMeasures2);
