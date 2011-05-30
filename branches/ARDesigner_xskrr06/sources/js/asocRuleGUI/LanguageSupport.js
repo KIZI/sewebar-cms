@@ -12,6 +12,12 @@ var LanguageSupport = new Class({
     EVERYTHING_OK: "EverythingOK",
     INCORRECT_RULE: "IncorrectRule",
     INCORRECT_FIELD_VALUE: "IncorrectField",
+    MINING_SETTING_CREATE: "MiningSettingCreate",
+    RULE_STATE_INCOMPLETE: "RuleStateIncomplete",
+    RULE_STATE_COMPLETE: "RuleStateComplete",
+    HITS_LABEL: "HitsLabel",
+    HITS_LABEL_FOUND: "HitsLabelFound",
+    HITS_LABEL_LOADING: "HitsLabelLoading",
     actualLang: "cs",
 
     /**
@@ -39,6 +45,12 @@ var LanguageSupport = new Class({
         specificLangCs[this.EVERYTHING_OK] = "Vše bylo v poøádku uloženo.";
         specificLangCs[this.INCORRECT_RULE] = "Nìkteré z pravidel není v poøádku.";
         specificLangCs[this.INCORRECT_FIELD_VALUE] = "Hodnota zadaná v poli nesplòuje parametry.";
+        specificLangCs[this.MINING_SETTING_CREATE] = "Do následujícího pole zadejte zadání pro minování:";
+        specificLangCs[this.RULE_STATE_INCOMPLETE] = "Pravidlo není kompletní, pokraèujte v upøesnìní zadání pro minování.";
+        specificLangCs[this.RULE_STATE_COMPLETE] = "Pravidlo je kompletní, mùžete ho dále upravovat.";
+        specificLangCs[this.HITS_LABEL] = "Nalezená pravidla se zobrazí zde:";
+        specificLangCs[this.HITS_LABEL_FOUND] = "Poèet nalezených pravidel: ";
+        specificLangCs[this.HITS_LABEL_LOADING] = '<img src="./sources/assets/loading.gif" /> (Probíhá minování pravidel)';
         this.langDatas["cs"] = specificLangCs;
 
         var specificLangEn = new Array();
@@ -51,6 +63,12 @@ var LanguageSupport = new Class({
         specificLangEn[this.EVERYTHING_OK] = "Everything was saved succesfully.";
         specificLangEn[this.INCORRECT_RULE] = "Some of the rules was not correct.";
         specificLangEn[this.INCORRECT_FIELD_VALUE] = "Field value is incorrect.";
+        specificLangEn[this.MINING_SETTING_CREATE] = "Drag & Drop the mining setting into the placeholder below:";
+        specificLangEn[this.RULE_STATE_INCOMPLETE] = "The rule is not valid. Please continue to create valid task setting.";
+        specificLangEn[this.RULE_STATE_COMPLETE] = "The rule is valid.";
+        specificLangEn[this.HITS_LABEL] = "The results will be shown here:";
+        specificLangEn[this.HITS_LABEL_FOUND] = "Number of results found: ";
+        specificLangEn[this.HITS_LABEL_LOADING] = '<img src="./sources/assets/loading.gif" /> (Mining of the results is in progress)';
         this.langDatas["en"] = specificLangEn;
     },
 

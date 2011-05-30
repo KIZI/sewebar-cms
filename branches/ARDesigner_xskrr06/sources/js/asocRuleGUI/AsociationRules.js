@@ -103,17 +103,20 @@ var AsociationRules = new Class({
                     for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
                         rule = this.asociationRules[actualRule].toJSON();
                         if(rule == null){
-                            return;
+                        	$('ruleLabel').innerHTML = this.language.getName(this.language.RULE_STATE_INCOMPLETE, this.lang);
+                        	return;
                         }
                         wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
                     }
                     wholeJson.rules = actualRule;
                     var jsonString = JSON.encode(wholeJson);
                     
+                    $('ruleLabel').innerHTML = this.language.getName(this.language.RULE_STATE_COMPLETE, this.lang);
+                	
                     // call server and get hits
                     this.getHits(jsonString);
                 }.bind(this));
-
+                
                 this.maxSize = this.solveSize();
                 var allRules = this.serverInfo.getExistingRules();
                 for(var actualRule = 0; actualRule < allRules.length; actualRule++){
@@ -125,7 +128,7 @@ var AsociationRules = new Class({
                     newRuleDiv1.inject($('rightDivPlace'));
                 }
                 this.asociationRules = this.asociationRules.concat(allRules);
-
+                
                 if(!moreRules && this.asociationRules.length < 1){
                     var newAsociationRule = new AsociationRule(this.serverInfo);
                     newAsociationRule.addEvent("display", function(){
@@ -136,7 +139,6 @@ var AsociationRules = new Class({
                     // This should be injected into the left part.
                     newRuleDiv.inject($('rightDivPlace'));
                 }
-
 
                 this.drag = new Dragability(".ARElement",".prvek");
                 this.setDraggability();
@@ -204,6 +206,7 @@ var AsociationRules = new Class({
      * which  {String} Data that should be sent to the server.
      */
     getHits: function(which){
+    	$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
         new Request.JSON({
             url: this.urlHits,
             onComplete: function(item){
@@ -229,6 +232,7 @@ var AsociationRules = new Class({
     	    var newRuleDiv = hit.display();
     	    newRuleDiv.inject($('rightDivHits'));
         }	
+    	$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+hits.length;
     },
     
     /**
