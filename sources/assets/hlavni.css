@@ -321,6 +321,8 @@ body{
         display: block;
 }
 
+div.hitsLabel img { width: 15px; } 
+
 /* Joomla styly */
 .rt-container
 {

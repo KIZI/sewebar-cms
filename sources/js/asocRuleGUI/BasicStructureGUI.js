@@ -33,6 +33,7 @@ var BasicStructureGUI = new Class({
         // Create basic divs
         this.createMainDivs(idMainDiv);
 
+        // Create booleans
         this.createElements(this.COLS_BOOL, booleans, this.ID_BOOLEANS_DIV);
         // Create attributes
         this.createElements(this.COLS_ATTRIBUTES, attributes, this.ID_ATTRIBUTES_DIV);
@@ -67,7 +68,9 @@ var BasicStructureGUI = new Class({
         var booleansHeader = utils.createDivHtmlClas(this.language.getName(this.language.CONNECTIVES, this.lang), "headersLeft");
         var operatorsHeader = utils.createDivHtmlClas(this.language.getName(this.language.INTEREST_MEASURES, this.lang), "headersLeft");
         var attributesHeader = utils.createDivHtmlClas(this.language.getName(this.language.FIELDS, this.lang), "headersLeft");
-
+        var ruleHeader = utils.createDivIdHtmlClas("ruleLabel", this.language.getName(this.language.MINING_SETTING_CREATE, this.lang), "ruleLabel");
+        var hitsHeader = utils.createDivIdHtmlClas("hitsLabel", this.language.getName(this.language.HITS_LABEL, this.lang), "hitsLabel"); 
+        
         // Adding another rule
         if(this.moreRules){
             var nextRule = utils.createDivIdClas("newRule","newRule");
@@ -94,9 +97,11 @@ var BasicStructureGUI = new Class({
         operatorsHeader.inject(operators);
         attributes.inject(leftDiv);
         attributesHeader.inject(attributes);
+        ruleHeader.inject(rightDiv);
 
         rightDivCreate.inject(rightDiv);
         rightDivButton.inject(rightDiv);
+        hitsHeader.inject(rightDiv);
         
         rightDivHits.inject(rightDiv);
 

@@ -7,6 +7,8 @@
     require_once('sources/models/parseData/TaskSettingParser.php');
     require_once('sources/models/Utils.php');
     
+    sleep(2);
+    
     $DD = null;
     $FL = null;
     $ER = "XML/hitslist.xml";

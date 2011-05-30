@@ -112,6 +112,14 @@ var UtilsAR = new Class({
             html: html
         });
     },
+    
+    createDivIdHtmlClas: function(id, html, clas){
+        return new Element('div',{
+            'class': clas,
+            id: id,
+            html: html
+        });
+    },
 
     /**
      * Function: createHtmlIdClick
