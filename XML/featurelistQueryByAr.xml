@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
-    xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
-    mode="AssociationRules"
-    procedure="4ft"> 
+ xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+ xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
+ mode="AssociationRules"
+ procedure="4ft"> 
     <UserInterface>
         <AllowMultipleRules>false</AllowMultipleRules>
     </UserInterface>
-    
+
     <RulePattern>
         <Antecedent minNumberOfBBAs="1" />
         <Consequent minNumberOfBBAs="1" />
         <Condition minNumberOfBBAs="0" maxNumberOfBBAs="0"/>
-        <GeneralConstraint minNumberOfBBAs="2" />
+        <GeneralConstraint minNumberOfBBAs="2"/>
     </RulePattern>
-    
+
     <BuildingBlocks>
         <InterestMeasures threshold="required">
-            <Types>
+                   <Types>
                 <Type>
                     <Name>Support</Name>
                     <LocalizedName lang="en">Support</LocalizedName>
@@ -49,9 +49,9 @@
                     </Field>
                 </Type>
                 <Type>
-                    <Name>Above Average Implication</Name>
-                    <LocalizedName lang="en">Above Average Implication</LocalizedName>
-                    <LocalizedName lang="cs">Above Average Implication</LocalizedName>
+                    <Name>Above Average Dependence</Name>
+                    <LocalizedName lang="en">Above Average Dependence</LocalizedName>
+                    <LocalizedName lang="cs">Above Average Dependence</LocalizedName>
                     <Field>
                         <Name>prahovaHodnota</Name>
                         <LocalizedName lang="en">threshold value</LocalizedName>
@@ -71,7 +71,7 @@
                     <InterestMeasure>Support</InterestMeasure>
                 </SupportedIMCombination>                
                 <SupportedIMCombination>
-                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                    <InterestMeasure>Above Average Dependence</InterestMeasure>
                     <InterestMeasure>Support</InterestMeasure>
                 </SupportedIMCombination>
                 <SupportedIMCombination>
@@ -81,12 +81,12 @@
                     <InterestMeasure>Confidence</InterestMeasure>
                 </SupportedIMCombination>                                
                 <SupportedIMCombination>
-                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                    <InterestMeasure>Above Average Dependence</InterestMeasure>
                 </SupportedIMCombination>                      
             </SupportedInterestMeasureCombinations>
-            
+                                                
         </InterestMeasures>
-        
+
         <BasicBooleanAttribute coefficient="required">
             <Coefficient>
                 <Type>
@@ -110,10 +110,11 @@
                         <Validation>
                             <Required value="yes"/>
                             <MinValue>1</MinValue>
+                            <MaxValue>1</MaxValue>
                             <Datatype>integer</Datatype>
                         </Validation>
                     </Field>
-                    
+
                     <Field>
                         <Name>maxLength</Name>
                         <LocalizedName lang="en">maximum length</LocalizedName>
@@ -121,6 +122,7 @@
                         <Validation>
                             <Required value="yes"/>
                             <MinValue>1</MinValue>
+                            <MaxValue>1</MaxValue>
                             <Datatype>integer</Datatype>
                             <Previous>isSmallerOrEqual</Previous>
                         </Validation>
@@ -128,7 +130,7 @@
                 </Type>
             </Coefficient>
         </BasicBooleanAttribute>
-        
+
         <DerivedBooleanAttribute>
             <NestingConstraints scope="allruleparts">
                 <MaxLevels>2</MaxLevels>
