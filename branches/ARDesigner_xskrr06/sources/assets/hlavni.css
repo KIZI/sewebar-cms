@@ -47,7 +47,7 @@ body{
 }
 
 #rightDivHits .boolean {
-	width: auto;
+	width: 45px;
 	font-size: 10px;
 	font-family: Verdana;
 }
@@ -77,7 +77,7 @@ body{
 }
 
 #rightDivHits .operator {
-	width: auto;
+	width: 170px;
 	font-size: 10px;
 	font-family: Verdana;
 }
@@ -103,7 +103,7 @@ body{
 }
 
 #rightDivHits .attribute {
-	width: auto;
+	width: 130px;
 	font-size: 10px;
 	font-family: Verdana;
 }
@@ -176,6 +176,7 @@ body{
     width: 100px;
     height: 20px;
     text-align: center;
+    display: none;
 }
 
 .buttons{
@@ -321,7 +322,11 @@ body{
         display: block;
 }
 
-div.hitsLabel img { width: 15px; } 
+div.hitsLabel img { width: 15px; }
+
+.rule { clear: left;  position: relative; top: 10px}
+
+ARElement { height: 50px !important; }
 
 /* Joomla styly */
 .rt-container

@@ -73,7 +73,16 @@
                 <SupportedIMCombination>
                     <InterestMeasure>Above Average Implication</InterestMeasure>
                     <InterestMeasure>Support</InterestMeasure>
-                </SupportedIMCombination> 
+                </SupportedIMCombination>
+                <SupportedIMCombination>
+                    <InterestMeasure>Support</InterestMeasure>
+                </SupportedIMCombination>                
+                <SupportedIMCombination>
+                    <InterestMeasure>Confidence</InterestMeasure>
+                </SupportedIMCombination>                                
+                <SupportedIMCombination>
+                    <InterestMeasure>Above Average Implication</InterestMeasure>
+                </SupportedIMCombination>                      
             </SupportedInterestMeasureCombinations>
             
         </InterestMeasures>
