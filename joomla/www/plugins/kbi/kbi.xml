@@ -12,6 +12,7 @@
 		The Knowledge Base Include (KBI) library, which consists of communication procedures and CMS interfaces. This allows to use one implementation in various CMSs.
 	</description>
 	<files>
+		<folder plugin="kbi">FirePHPCore</folder>
 		<folder plugin="kbi">Integrators</folder>
 		<filename plugin="kbi">Debug.php</filename>
 		<filename plugin="kbi">IKBIntegrator.php</filename>

@@ -7,9 +7,6 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-require_once dirname(__FILE__) . '/../KBIntegratorSynchronable.php';
-//require_once dirname(__FILE__).'/../../administrator/components/com_jucene/controllers/controller.php';
-
 /**
  * IKBIntegrator implementation for jucene (Joomla + Lucene).
  *
@@ -27,9 +24,14 @@ class Jucene extends KBIntegratorSynchronable
 		parent::__construct($config);
 	}
 
+	/**
+	 * Method called when querying with POST data. Service should return XML with query results.
+	 *
+	 * @return string  XML with query results
+	 */
 	public function queryPost($query)
 	{
-		$server = 'http://'.$_SERVER['SERVER_NAME'];
+		$server = $this->getUrl();
 		//$server = 'http://joomla.drupaler.cz';
 		//$url = 'http://joomla.drupaler.cz/component/jucene/DistrictR-Praha/?sorting=SORT_STRING&ordering=';
 		$url = "$server/index.php?option=com_jucene&task=arsearch&format=raw";
@@ -49,8 +51,7 @@ class Jucene extends KBIntegratorSynchronable
 
 	/**
 	 *
-	 * @todo Implement
-	 * @see ISynchronable::getDocuments()
+	 * @return string  XML with indexed documents
 	 */
 	public function getDocuments()
 	{
@@ -59,21 +60,22 @@ class Jucene extends KBIntegratorSynchronable
 		return $documents;
 	}
 
-	/*
+	/**
+	 *
+	 * Sends PMML document to be indexed to service
 	 *
 	 * @see http://dtbaker.com.au/random-bits/uploading-a-file-using-curl-in-php.html
 	 */
 	public function addDocument($id, $document, $path = true)
 	{
-		$jucene = new JuceneController();
+		$jucene = new JuceneControllerApiKbi();
 
-		$jucene->kbiInsertToIndex($path ? file_get_contents($document) : $document);
+		var_dump($jucene->insertToIndexKbi($document));
 	}
 
 	/**
 	 *
-	 * @todo Implement
-	 * @see ISynchronable::getDocument()
+	 * @return string  indexed PMML document
 	 */
 	public function getDocument($id)
 	{
@@ -81,16 +83,15 @@ class Jucene extends KBIntegratorSynchronable
 
 	/**
 	 *
-	 * @todo Implement
-	 * @see ISynchronable::deleteDocument()
+	 * Trigers document to be deleted from service.
 	 */
 	public function deleteDocument($id)
 	{
 	}
 
 	/**
-	 * @todo Implement
-	 * @see ISynchronable::getDataDescription()
+	 *
+	 * @return string  data description from PMML documents if possible
 	 */
 	public function getDataDescription()
 	{

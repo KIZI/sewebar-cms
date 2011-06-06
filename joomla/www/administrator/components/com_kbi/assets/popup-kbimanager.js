@@ -21,9 +21,9 @@ var KbiManager = {
 
 		if(dynamic)	{
 			// TODO: semidynamic - dynamicka data, ale staticky dotaz (zdroj v JSON...)
-			var url = '/administrator/index.php?option=com_kbi&controller=selector&task=serialize&format=raw';
+			var url = 'administrator/index.php?option=com_kbi&controller=selector&task=serialize&format=raw';
 		} else {
-			var url = '/index.php?option=com_kbi&task=query&format=raw';
+			var url = 'index.php?option=com_kbi&task=query&format=raw';
 		}
 
 		var myAjax = new Ajax(url,

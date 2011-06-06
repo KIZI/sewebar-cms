@@ -1,5 +1,5 @@
 function getRules(data) {
-	var url = '/administrator/index.php?option=com_kbi&controller=selector&task=params&format=raw';
+	var url = 'administrator/index.php?option=com_kbi&controller=selector&task=params&format=raw';
 	var params = data;
 	var form = document.forms['adminForm'];
 
