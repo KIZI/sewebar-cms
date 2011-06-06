@@ -19,6 +19,8 @@ class KbiViewSelector extends JView
 {
 	function display($tpl = NULL)
 	{
+		$config =& JFactory::getConfig();
+
 		JHTML::_('script', 'popup-kbimanager.js', 'administrator/components/com_kbi/assets/');
 
 		$lists = array();
@@ -39,7 +41,7 @@ class KbiViewSelector extends JView
 		$arbuilder = JComponentHelper::getComponent('com_ardesigner', true);
 		// TODO: and if existuje DD a FL
 		if($arbuilder->enabled) {
-			$url = '/index.php?option=com_ardesigner&tmpl=component';
+			$url = "{$config->getValue('live_site')}/index.php?option=com_ardesigner&tmpl=component";
 			$attrs = array(
 				'target' => '_blank',
 				'onclick' => "window.open(this.href + '&id_query=' + $$('#query').getValue() + '&id_source=' + $$('#sources').getValue() ,'ardesigner','width=1050,height=600,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');return false;",

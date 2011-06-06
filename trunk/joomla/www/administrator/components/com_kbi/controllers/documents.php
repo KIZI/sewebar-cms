@@ -140,6 +140,7 @@ class KbiControllerDocuments extends JController
 						$application->enqueueMessage(JText::_( 'Document uploaded' ) . "({$document->title})");
 					}
 				} catch(Exception $ex) {
+					//TODO: add document title to error message
 					$application->enqueueMessage(JText::_('ERROR ADDING FILE') . " - " . $ex->getMessage(), 'error');
 				}
 			}
