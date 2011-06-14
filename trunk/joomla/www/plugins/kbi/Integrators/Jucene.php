@@ -68,9 +68,9 @@ class Jucene extends KBIntegratorSynchronable
 	 */
 	public function addDocument($id, $document, $path = true)
 	{
-		$jucene = new JuceneControllerApiKbi();
+		/*$jucene = new JuceneControllerApiKbi();
 
-		var_dump($jucene->insertToIndexKbi($document));
+		var_dump($jucene->insertToIndexKbi($document));*/
 	}
 
 	/**
