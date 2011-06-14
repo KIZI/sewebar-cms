@@ -34,7 +34,7 @@ class Jucene extends KBIntegratorSynchronable
 		$server = $this->getUrl();
 		//$server = 'http://joomla.drupaler.cz';
 		//$url = 'http://joomla.drupaler.cz/component/jucene/DistrictR-Praha/?sorting=SORT_STRING&ordering=';
-		$url = "$server/index.php?option=com_jucene&task=arsearch&format=raw";
+		$url = "$server/index.php?option=com_jucene&controller=ApiKbi&format=raw";
 
 		//$post['sorting']	= JRequest::getWord('sorting', 'SORT_STRING', 'post');
 		//$post['ordering']	= JRequest::getWord('ordering', null, 'post');

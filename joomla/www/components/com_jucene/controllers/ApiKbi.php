@@ -82,20 +82,21 @@ class JuceneControllerApiKbi extends JController {
 	 * 
 	 * @param $joomla_doc
 	 */
-	function insertToIndexKbi($joomla_xml_doc, $additional, $specific_index = NULL) {
-		$dom = new DOMDocument ();
+	function insertToIndexKbi($joomla_xml_doc, $additional, $specific_index = NULL, $path = false) {
 		
-		//$xml_field = (substr ( $record ['fulltext'], 0, 5 ) != '<?xml') ? $record ['introtext'] : $record ['fulltext'];
+		$xml_doc = $path ? file_get_contents($joomla_xml_doc) : (substr ( $joomla_xml_doc ['fulltext'], 0, 5 ) != '<?xml') ? $joomla_xml_doc ['introtext'] : $joomla_xml_doc ['fulltext'];
 		
-
+		//prepare new Dom
+		$dom = new DOMDocument ();		
+		
+		//Make ready for the transformation
 		$xslt = new DOMDocument ();
 		
 		$error = false;
 		//load xslt stylesheet
 		if (! @$xslt->load ( JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_jucene' . DS . 'xslt/jucene.xsl' )) {
 			$error = true;
-			$this->raiseMessage ( "XSLTLOADERROR", 'error' );
-		
+			$this->raiseMessage ( "XSLTLOADERROR", 'error' );		
 		}
 		
 		$proc = new XSLTProcessor ();
@@ -104,7 +105,7 @@ class JuceneControllerApiKbi extends JController {
 			$this->raiseMessage ( "XSLTIMPORTERROR", 'error' );
 		}
 		
-		if ($dom->loadXML ( $joomla_xml_doc ) && ! $error) {
+		if ($dom->loadXML ( $xml_doc ) && ! $error) {
 			
 			//simplify the document - prepare it for the indexation process
 			$xslOutput = $proc->transformToXml ( $dom );
