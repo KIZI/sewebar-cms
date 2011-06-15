@@ -7,6 +7,8 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
+require_once dirname(__FILE__) . '/../KBIntegratorSynchronable.php';
+
 /**
  * IKBIntegrator implementation for jucene (Joomla + Lucene).
  *
