@@ -15,8 +15,8 @@
 	<description>Lucene indexer for Joomla! PMML files... with search engine included.</description>
 	<!-- Custom Install Script to execute -->
 	
-	<installfile></installfile>
-	<uninstallfile></uninstallfile>
+	<installfile>sql/01.install.sql</installfile>
+	<uninstallfile>sql/01.uninstall.sql</uninstallfile>
 	<install>
 		<sql>			
 		</sql>
