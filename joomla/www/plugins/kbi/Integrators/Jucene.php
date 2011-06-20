@@ -61,7 +61,7 @@ class Jucene extends KBIntegratorSynchronable
 		$documents = array();
 
 		$data = array(
-			'action' => 'getDocsNames',
+			'action' => 'getDDDDocuments',
 			'id' => '',
 			'content' => '',
 		);
@@ -81,7 +81,7 @@ class Jucene extends KBIntegratorSynchronable
 
 		if($info['http_code'] != '200')
 		{
-			throw new Exception('Error in communication');
+			throw new Exception('Error in communication'.$response);
 		}
 		else
 		{
