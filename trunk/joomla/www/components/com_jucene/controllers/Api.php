@@ -17,6 +17,7 @@ DEFINE('API_VERSION', 1.0);
 DEFINE('CLASS_NAME', 'JuceneController');
 
 jimport ( 'joomla.application.component.controller' );
+jimport( 'joomla.error.log' );
 
 require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers/jucene.php');
 
@@ -106,6 +107,7 @@ class JuceneControllerApi extends JController {
 	}
 	
 	function log($type, $message, $code = null){
-		
+		$log = &JLog::getInstance('com_jucene.log.php');
+		$log->addEntry(array('LEVEL' => $type,'COMMENT' => $message));
 	}
 }
