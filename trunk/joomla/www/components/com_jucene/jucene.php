@@ -16,10 +16,22 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 // Require the com_content helper library
-require_once (JPATH_COMPONENT.DS.'controller.php');
+require_once (JPATH_COMPONENT.DS.'controllers'.DS.'controller.php');
 
+// Require specific controller if requested
+if($controller = JRequest::getWord('controller')) {
+    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
+    if (file_exists($path)) {
+        require_once $path;
+    } else {
+        $controller = '';
+    }
+}
+ 
 // Create the controller
-$controller = new JuceneController( );
+$classname    = 'JuceneController'.$controller;
+
+$controller   = new $classname( );
 
 // Perform the Request task
 $controller->execute(JRequest::getCmd('task'));
