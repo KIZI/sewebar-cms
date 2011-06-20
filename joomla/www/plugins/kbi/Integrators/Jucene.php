@@ -57,7 +57,50 @@ class Jucene extends KBIntegratorSynchronable
 	 */
 	public function getDocuments()
 	{
+		$ch = curl_init();
 		$documents = array();
+
+		$data = array(
+			'action' => 'getDocsNames',
+			'id' => '',
+			'content' => '',
+		);
+
+		
+		curl_setopt($ch, CURLOPT_URL, $this->getUrl());
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
+		curl_setopt($ch, CURLOPT_VERBOSE, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+
+		$response = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+		
+		KBIDebug::log(array($response, $info));
+
+		if($info['http_code'] != '200')
+		{
+			throw new Exception('Error in communication');
+		}
+		else
+		{
+			$xml = simplexml_load_string($response);
+			$docs = $xml->children();
+			if(!empty($docs))
+			{
+				foreach($docs[0] as $doc)
+				{
+					$document = new stdClass;
+					//$document->id = $doc->__toString();
+					//http://bugs.php.net/bug.php?id=44484
+					$document->id = $doc['joomlaID'];
+					$document->name = $doc;
+					$document->timestamp = $doc['timestamp'];
+					$documents[] = $document;
+				}
+			}
+		}
 
 		return $documents;
 	}
@@ -70,9 +113,57 @@ class Jucene extends KBIntegratorSynchronable
 	 */
 	public function addDocument($id, $document, $path = true)
 	{
-		/*$jucene = new JuceneControllerApiKbi();
+		$ch = curl_init();
 
-		var_dump($jucene->insertToIndexKbi($document));*/
+		if(is_object($document)) {
+			$data = array(
+				'action' => 'addDocument',
+				'id' => $id,
+				'docName' => $document->title,
+				'creationTime' => $document->modified,
+				'content'=> $document->text,
+				'reportUri' => $document->uri,
+			);
+		} else {
+			$data = array(
+				'action' => 'addDocument',
+				'id' => $id,
+				'docName' => '',
+				'creationTime' => '',
+				'content'=> $path ? file_get_contents($document) : $document,
+			);
+		}
+
+		curl_setopt($ch, CURLOPT_URL, $this->getUrl());
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
+		curl_setopt($ch, CURLOPT_VERBOSE, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+
+		$response = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+
+		KBIDebug::log($data);
+		KBIDebug::log($info);
+		KBIDebug::log($response);
+
+		if($info['http_code'] != '200')
+		{
+			throw new Exception('Error in communication');
+		}
+
+		$xml_response = simplexml_load_string($response);
+
+		if($xml_response === FALSE)
+		{
+			throw new Exception('Unexpected response');
+		}
+
+		if(isset($xml_response->error))
+		{
+			throw new Exception($xml_response->error);
+		}
 	}
 
 	/**
