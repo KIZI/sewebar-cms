@@ -76,4 +76,6 @@ $ER = $response;
 
 $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
 echo $sr->getData();
+
+
 ?>
