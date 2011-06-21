@@ -85,9 +85,6 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     // replace negative booleans
     $ruleData = $this->replaceNegativeBooleans($ruleData, $this->negativeBooleans);
     
-    // update modelName
-    $this->updateModelName($ruleData);
-    
     $intsToSolve = array(); // intervals to solve
     $isPrevOper = false;
     $intToSolveStart = PHP_INT_MAX;
@@ -122,6 +119,9 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
       $antecedentId = $this->parsePartialCedent($this->reduceArrayByIndices($ruleData, $intsToSolve[0]['start'], $intsToSolve[0]['end']), $depth = 1, $forcedDepth, $minBracketSize); 
       $this->createAntecedent($antecedentId);
     }
+    
+    // update modelName
+    $this->updateModelName($ruleData);
     
     // Serialize XML
     return $this->finalXmlDocument->saveXML();
@@ -225,12 +225,20 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $taskSetting = $this->finalXmlDocument->createElement("TaskSetting");
     $this->arQuery = $associationModel->appendChild($taskSetting);
     
+    // extension LISp-Miner
     $extension = $this->finalXmlDocument->createElement('Extension');
     $extension->setAttribute('name', 'LISp-Miner');
     $hypotheses = $this->finalXmlDocument->createElement('HypothesesCountMax');
     $hypotheses->appendChild($this->finalXmlDocument->createTextNode($hypothesesCountMax));
     $extension->appendChild($hypotheses);
     $this->arQuery->appendChild($extension);
+    
+    // extension metabase
+    $extension = $this->finalXmlDocument->createElement('Extension');
+    $extension->setAttribute('name', 'metabase');
+    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/@metabase")->item(0)->value);
+    $this->arQuery->appendChild($extension);
+    
     $bbaSettings = $this->finalXmlDocument->createElement("BBASettings");
     $this->bbaSettings = $this->arQuery->appendChild($bbaSettings); 
     $dbaSettings = $this->finalXmlDocument->createElement("DBASettings");
@@ -281,8 +289,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
       if (($k + 1) < count($ruleData)) { $modelName .= ' '; }
     }
     
-    // TODO - delete generated hash
-    $modelName .= ' '.md5(time());
+    $modelName .= ' | '.sha1($this->finalXmlDocument->saveXML($this->arQuery));
     
     return $modelName;
   }
