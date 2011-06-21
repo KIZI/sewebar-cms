@@ -10,7 +10,8 @@
     $DD = null;
     $FL = null;
     $ER = "XML/hitslist.xml";
-    
+        
     $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
     echo $sr->getData();
 ?>
+
