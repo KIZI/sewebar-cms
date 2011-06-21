@@ -61,7 +61,7 @@ class Jucene extends KBIntegratorSynchronable
 		$documents = array();
 
 		$data = array(
-			'action' => 'getDDDDocuments',
+			'action' => 'getDocuments',
 			'id' => '',
 			'content' => '',
 		);
