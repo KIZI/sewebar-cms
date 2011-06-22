@@ -27,15 +27,16 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $this->domDD = new DomDocument();
         $this->domFL = new DomDocument();
 
-        session_start();
-        
+        if(session_id() === '')
+          session_start();
+
         if ($domDD1 !== null) {
           if (file_exists($domDD1)) {
               $this->domDD->load($domDD1);
           } else {
               $this->domDD->loadXML($domDD1);
           }
-          
+
           $_SESSION["ARBuilder_domDataDescr"] = $domDD1;
         }
 
@@ -45,7 +46,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
           } else {
               $this->domFL->loadXML($domFL1);
           }
-          
+
           $_SESSION["ARBuilder_domFeatureList"] = $domFL1;
         }
 
@@ -351,7 +352,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $interestMeasure['localizedName'] = $type->nodeValue;
                 }
                 if ($type->nodeName == "Field") {
-                    
+
                 }
                 if ($type->nodeName == "Explanation" && ($type->getAttribute("lang") == $this->lang)) {
                     $interestMeasure['explanation'] = $type->nodeValue;
@@ -476,7 +477,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
                     $poesCoef['explanation'] = $type->nodeValue;
                 }
                 if ($type->nodeName == "Field") {
-                    
+
                 }
             }
             $poesCoef['fields'] = $this->solveIMFields($typeS, $name);
