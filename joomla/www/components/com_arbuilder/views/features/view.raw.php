@@ -13,9 +13,9 @@ jimport( 'joomla.application.component.view' );
 /**
  * Renders JSON from FeaturesList and DataDescription that initializes ARDesigner.
  *
- * @package		com_ardesigner
+ * @package		com_arbuilder
  */
-class ARDesignerViewFeatures extends JView
+class ARBuilderViewFeatures extends JView
 {
 	function display($tpl = NULL)
 	{
