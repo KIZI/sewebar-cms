@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
     xmlns:arf="http://keg.vse.cz/ns/arfeatures_01"
-    schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
      mode="TaskSetting" procedure="4ft"> 
     <UserInterface>
-        <AllowMultipleRules>true</AllowMultipleRules>
+        <AllowMultipleRules>false</AllowMultipleRules>
     </UserInterface>
     <RulePattern>
-        <!-- Antecedent may or may not be specified. There can be any number of (basic boolean) attributes.
-        For each BBA, the user has to specify coefficient        -->
-        <Antecedent minNumberOfBBAs="1" maxNumberOfBBA="6"/>
-        <!-- Interest Measure must be specified. 
-            There can be any number of interest measures - provided that conditions in BuildingBlocks/InterestMeasures are met.
-            The user must specify the thresholds.
-        -->
-        <InterestMeasureConstraint minNumberOfInterestMeasures="0" maxNumberOfInterestMeasures="3"/>
-        <!-- Consequent may or may not be specified. There can be only one (basic boolean) attribute in negation.-->
-        <Consequent minNumberOfBBAs="0" maxNumberOfBBA="6" />
-        <!-- Condition must not be specified. 
-        -->
-        <Condition minNumberOfBBAs="0" maxNumberOfBBA="0"/>
-        <!-- The whole rule (Ant+Cons+Cond) must contain at least 1 BBA and at most 10 BBAs  -->
-        <GeneralConstraint minNumberOfBBAs="1" maxNumberOfBBA="10"/>
+        <Antecedent minNumberOfBBAs="1"/>
+        <Consequent minNumberOfBBAs="0"/>
+        <Condition minNumberOfBBAs="0"/>
+        <GeneralConstraint minNumberOfBBAs="1"/>
     </RulePattern>
 
     <!-- Details for each building block -->
@@ -171,30 +159,7 @@
                         </Validation>
                     </Field>
                 </Type>
-                <Type>
-                    <Name>Cut</Name>
-                    <Field>
-                        <Name>minLength</Name>
-                        <LocalizedName lang="en">minimum length</LocalizedName>
-                        <LocalizedName lang="cs">minimální délka</LocalizedName>
-                        <Validation>
-                            <Required value="yes"/>
-                            <MinValue>1</MinValue>
-                            <Datatype>integer</Datatype>
-                        </Validation>
-                    </Field>
-                    <Field>
-                        <Name>maxLength</Name>
-                        <LocalizedName lang="en">maximum length</LocalizedName>
-                        <LocalizedName lang="cs">maximální délka</LocalizedName>
-                        <Validation>
-                            <Required value="yes"/>
-                            <MinValue>1</MinValue>
-                            <Datatype>integer</Datatype>
-                            <Previous>isSmallerOrEqual</Previous>
-                        </Validation>
-                    </Field>
-                </Type>
+
                 <Type>
                     <Name>One category</Name>
                     <Field>
@@ -213,52 +178,31 @@
         <!-- Derived Boolean Attribute is a group of BBAs grouped by brackets -->
         <DerivedBooleanAttribute> 
             <NestingConstraints scope="allruleparts">
-                <!-- MaxLevel = 0: means there are no derived boolean attributes allowed -->
-                <!-- MaxLevel = 1: means there is one derived boolean attributes allowed i.e. A ^ B ^ C-->
-                <!-- MaxLevel = 2: i.e. (A v B) ^ C => D or (A v B) => D -->
-                <!-- for example if level 1 allows only conjunction and level 2 conjunction and disjunction,
-                    the following is valid -->
-                <!-- MaxLevel = 2: example 2:  (A v B) => D  -->
-                <!-- MaxLevel = 3: i.e. (A v neg(B)) ^ C => D or (A v (B ^ C)) => D -->
-                <!-- if level 3 allows only negation 
-                    (A v neg(B)) ^ C => D 
-                -->                
                 <MaxLevels>3</MaxLevels>
-<!-- On level 1, there is only conjunction allowed -->                
                 <NestingConstraint level="1">
                     <Connectives>
                         <Conjunction allowed="yes"/>
                         <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
                         <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
-<!-- On level 2, there is conjunction or disjunction allowed -->
                 <NestingConstraint level="2"> 
                     <Connectives>
                         <Conjunction allowed="yes"/>
                         <Disjunction allowed="yes"/>
+                        <Any allowed="no"/>
                         <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
-<!-- On level 3, there is only negation allowed-->
-<!-- I.e. literal level -->                
                 <NestingConstraint level="3">
                     <Connectives>
                         <Conjunction allowed="no"/>
                         <Disjunction allowed="no"/>
+                        <Any allowed="no"/>
                         <Negation allowed="yes"/>
                     </Connectives>
                 </NestingConstraint>
-<!-- Ferda allows any number of arbitrary levels, for Ferda,it would look as follows
-    <NestingConstraint level="remaining">
-    <Connectives>
-    <Conjunction allowed="yes"/>
-    <Disjunction allowed="yes"/>
-    <Negation allowed="yes"/>
-    </Connectives>
-    </NestingConstraint>
-
--->                
             </NestingConstraints>
         </DerivedBooleanAttribute>
     </BuildingBlocks>

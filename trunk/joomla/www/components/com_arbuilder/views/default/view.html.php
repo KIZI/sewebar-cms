@@ -15,13 +15,13 @@ jimport( 'joomla.application.component.view' );
  *
  * @package com_ardesigner
  */
-class ARDesignerViewARDesigner extends JView
+class ARBuilderViewDefault extends JView
 {
 	function display($tpl = NULL)
 	{
-		$component = JRequest::getVar('option', 'com_ardesigner');
+		$component = JRequest::getVar('option', 'com_arbuilder');
 		$root = 'components'. DS . $component . DS;
-		$ardesigner = $root . 'ardesigner' . DS;
+		$ardesigner = $root . 'arbuilder' . DS;
 		$app = JFactory::getApplication();
 		$document =& JFactory::getDocument();
 
