@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?> 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns:pmml="http://www.dmg.org/PMML-4_0" elementFormDefault="unqualified">
     <!-- http://www.xfront.com/HideVersusExpose.html -->
     <xs:annotation>

@@ -1,4 +1,4 @@
-<?php
+<?php                                  
 require_once('../../sources/models/serializeRules/AncestorSerializeRules.php');
 require_once('../../sources/models/serializeRules/SerializeRulesTaskSetting.php');
 require_once('../../sources/models/CompareXml.php');

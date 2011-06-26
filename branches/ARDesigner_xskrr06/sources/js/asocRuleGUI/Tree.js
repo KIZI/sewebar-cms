@@ -1,4 +1,4 @@
-/**
+/**                                                                       
  * Class: Tree
  * It is tree structure used to count depth of rule. It works similarly to the
  * algorithm used in serialization.
@@ -19,7 +19,7 @@ var Tree = new Class({
         this.id = 0;
     },
 
-    // Vyøešit nemonost rùznıch booleanù v jedné závorce.
+    // VyÅ™eÅ¡it nemoÅ¾nost rÅ¯znÃ½ch booleanÅ¯ v jednÃ© zÃ¡vorce.
     /**
      * Function: solveRule
      * This function takes one part of rule(either antecedent or consequent) and

@@ -1,5 +1,5 @@
 It shows performance of application when there are approximately 200 attributes
-and the same amount of Interest measures.
+and the same amount of Interest measures.                
 
 Running:
 {Root of application}/AsocRuleGUI/Domready.js

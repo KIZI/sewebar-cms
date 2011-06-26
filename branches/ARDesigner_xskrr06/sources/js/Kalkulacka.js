@@ -1,4 +1,4 @@
-var Kalkulacka = new Class({
+var Kalkulacka = new Class({  
     Implements: Events,
 
     HODNOTA_KALK: "hodnota",

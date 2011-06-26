@@ -1,6 +1,6 @@
 These tests are tests of AssociationRule class. Description of every test start
 with its number. Then is a name of the test shown in Firebug and
-
+                              
 Test1)
 Name: testInsertItem1
 Limitations:

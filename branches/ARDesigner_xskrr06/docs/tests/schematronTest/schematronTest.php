@@ -3,7 +3,7 @@
 </head>
 <?php
 include("../../lib/Schematron.php");
-
+                 
 print("<h1>Schematron Test</h1>");
 
 $s = new Schematron();

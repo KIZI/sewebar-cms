@@ -1,4 +1,4 @@
-<?php
+<?php                                                                     
 
 /**
  * Description of SerializeRules. It serializes just one Rule, if there are more rules

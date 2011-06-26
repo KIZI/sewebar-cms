@@ -1,4 +1,4 @@
-/**
+/**                                                
  * Class: BasicStructureGUI
  * This class is responsible for creating nbasic HTML structure of the application
  * based on language, position where it should be created and three arrays representing

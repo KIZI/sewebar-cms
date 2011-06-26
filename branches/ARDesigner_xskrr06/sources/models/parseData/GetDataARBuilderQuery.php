@@ -1,4 +1,4 @@
-<?php
+<?php                                                         
 
 /**
  * It is descendant of AncestorGetData. This specific implementation gets data
@@ -81,6 +81,8 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $this->solveNumberBBA();
         $this->solveDepthNesting();
         $this->solveMoreRules();
+        
+        $this->solveTaskState();
 
         $interestMeasure = $this->domFL->getElementsByTagName("InterestMeasures")->item(0);
         $bba = $this->domFL->getElementsByTagName("BasicBooleanAttribute")->item(0);
@@ -547,6 +549,10 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $ruleAR = new TaskSettingRule($rule, $this->domER);
         $this->jsonObject["rule0"] = $ruleAR->toJSON();
         $this->jsonObject["rules"] = 1;
+    }
+    
+    private function solveTaskState() {
+      $this->jsonObject["taskState"] = 'Finished';
     }
 
 }

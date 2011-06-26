@@ -1,4 +1,4 @@
-There are two rulse formulated:
+There are two rulse formulated: 
  duration(Nad 2 roky vcetne) OR NEG(district(Praha))  => statusAgregovane(dobry)
 sex(female) AND (duration(Nad 2 roky vcetne) OR NEG(district(Praha))) => statusAgregovane(dobry)
 

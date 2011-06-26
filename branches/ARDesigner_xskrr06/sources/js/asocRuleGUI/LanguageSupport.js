@@ -1,4 +1,4 @@
-/**
+/**                                                        
  * Class: LanguageSupport
  * It adds support for more languages to the aplications.
  */
@@ -37,20 +37,20 @@ var LanguageSupport = new Class({
     initLang: function(){
         var specificLangCs = new Array();
         specificLangCs[this.CONNECTIVES] = "Spojky";
-        specificLangCs[this.INTEREST_MEASURES] = "MÌry zajÌmavosti(Kvantifik·tory)";
+        specificLangCs[this.INTEREST_MEASURES] = "M√≠ry zaj√≠mavosti(Kvantifik√°tory)";
         specificLangCs[this.FIELDS] = "Pole(Attributy)";
-        specificLangCs[this.NEW_RULE] = "NovÈ pravidlo1";
-        specificLangCs[this.SAVE] = "Uloû";
-        specificLangCs[this.NEED_MORE_ELEMENTS] = "Je pot¯eba vÏtöÌ mnoûstvÌ prvk˘ buÔ celkovÏ nebo v antecedentu nebo v consequentu nebo vÌce mÏr zajÌmavosti.";
-        specificLangCs[this.EVERYTHING_OK] = "Vöe bylo v po¯·dku uloûeno.";
-        specificLangCs[this.INCORRECT_RULE] = "NÏkterÈ z pravidel nenÌ v po¯·dku.";
-        specificLangCs[this.INCORRECT_FIELD_VALUE] = "Hodnota zadan· v poli nesplÚuje parametry.";
-        specificLangCs[this.MINING_SETTING_CREATE] = "Do n·sledujÌcÌho pole zadejte zad·nÌ pro minov·nÌ:";
-        specificLangCs[this.RULE_STATE_INCOMPLETE] = "Pravidlo nenÌ kompletnÌ, pokraËujte v up¯esnÏnÌ zad·nÌ pro minov·nÌ.";
-        specificLangCs[this.RULE_STATE_COMPLETE] = "Pravidlo je kompletnÌ, m˘ûete ho d·le upravovat.";
-        specificLangCs[this.HITS_LABEL] = "Nalezen· pravidla se zobrazÌ zde:";
-        specificLangCs[this.HITS_LABEL_FOUND] = "PoËet nalezen˝ch pravidel: ";
-        specificLangCs[this.HITS_LABEL_LOADING] = '<img src="./sources/assets/loading.gif" /> (ProbÌh· minov·nÌ pravidel)';
+        specificLangCs[this.NEW_RULE] = "Nov√© pravidlo1";
+        specificLangCs[this.SAVE] = "Ulo≈æ";
+        specificLangCs[this.NEED_MORE_ELEMENTS] = "Je pot≈ôeba vƒõt≈°√≠ mno≈æstv√≠ prvk≈Ø buƒè celkovƒõ nebo v antecedentu nebo v consequentu nebo v√≠ce mƒõr zaj√≠mavosti.";
+        specificLangCs[this.EVERYTHING_OK] = "V≈°e bylo v po≈ô√°dku ulo≈æeno.";
+        specificLangCs[this.INCORRECT_RULE] = "Nƒõkter√© z pravidel nen√≠ v po≈ô√°dku.";
+        specificLangCs[this.INCORRECT_FIELD_VALUE] = "Hodnota zadan√° v poli nespl≈àuje parametry.";
+        specificLangCs[this.MINING_SETTING_CREATE] = "Do n√°sleduj√≠c√≠ho pole zadejte zad√°n√≠ pro minov√°n√≠:";
+        specificLangCs[this.RULE_STATE_INCOMPLETE] = "Pravidlo nen√≠ kompletn√≠, pokraƒçujte v up≈ôesnƒõn√≠ zad√°n√≠ pro minov√°n√≠.";
+        specificLangCs[this.RULE_STATE_COMPLETE] = "Pravidlo je kompletn√≠, m≈Ø≈æete ho d√°le upravovat.";
+        specificLangCs[this.HITS_LABEL] = "Nalezen√° pravidla se zobraz√≠ zde:";
+        specificLangCs[this.HITS_LABEL_FOUND] = "Poƒçet nalezen√Ωch pravidel: ";
+        specificLangCs[this.HITS_LABEL_LOADING] = '<img src="./sources/assets/loading.gif" /> (Prob√≠h√° minov√°n√≠ pravidel)';
         this.langDatas["cs"] = specificLangCs;
 
         var specificLangEn = new Array();

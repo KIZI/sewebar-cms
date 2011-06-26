@@ -1,4 +1,4 @@
-similar to test2 but without negation
+similar to test2 but without negation    
 
 There are two rulse formulated:
  duration(Nad 2 roky vcetne) OR district(Praha)  => statusAgregovane(dobry)

@@ -1,6 +1,6 @@
 These are tests testing intensively the PHP part of the application and therefore
 the parsing XML into JSON and then serializing JSON to XML.
-
+                       
 Every directory contains sample file, schematron validation, ARFeature that is
 used, data description and test.php
 

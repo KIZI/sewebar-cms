@@ -1,4 +1,4 @@
-<?php
+<?php             
 function areXmlSame($xmlString1, $xmlString2){
     $document1 = new DomDocument();
     $document2 = new DomDocument();

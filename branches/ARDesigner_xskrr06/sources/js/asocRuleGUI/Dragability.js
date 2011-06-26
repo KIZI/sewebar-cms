@@ -1,4 +1,4 @@
-/**
+/**                                                                  
  * Class: Dragability
  * This class ensures Dragability on choosen elements.
  */
@@ -35,7 +35,7 @@ var Dragability = new Class({
         // u rule divu budu mit atribut asociationRule
         var asociationRule = dropedOn.parentNode.asociationRule;
         var canAdd = false
-        // Tohle nenÌ dobrÈ odliöenÌ
+        // Tohle nen√≠ dobr√© odli≈°en√≠
         var position = dropedOn.get("name").replace("rule", "");
         if(element.element.isInRule != undefined){
             if(element.element.isInRule){

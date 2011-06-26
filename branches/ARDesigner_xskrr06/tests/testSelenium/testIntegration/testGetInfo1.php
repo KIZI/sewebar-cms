@@ -1,4 +1,4 @@
-<?php
+<?php                                
     require_once('parseData/AncestorGetData.php');
     require_once('parseData/GetDataARBuilderQuery.php');
     require_once('parseData/AsociationRulesParser.php');

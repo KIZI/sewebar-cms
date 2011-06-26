@@ -1,4 +1,4 @@
-/**
+/**                                                    
  * Class: Control
  * This class shuold contains all controls of whether value is supported. At the
  * moment(August 2010) it contains control of integer whether it is between min
@@ -36,10 +36,10 @@ var Control = new Class({
             if(Math.ceil(elementValue) != Math.floor(elementValue)){
                 return false;
             }
-            if(!inclusiveMin && elementValue == minValue){
+            if(!inclusiveMin && elementValue == minValue){
                 return false;
             }
-            if(!inclusiveMax && elementValue == maxValue){
+            if(!inclusiveMax && elementValue == maxValue){
                 return false;
             }
             if(elementValue < minValue || elementValue > maxValue){
@@ -50,10 +50,10 @@ var Control = new Class({
             if(isNaN(elementValue.toFloat())){
                 return false;
             }
-            if(!inclusiveMin && elementValue == minValue){
+            if(!inclusiveMin && elementValue == minValue){
                 return false;
             }
-            if(!inclusiveMax && elementValue == maxValue){
+            if(!inclusiveMax && elementValue == maxValue){
                 return false;
             }
             if(elementValue < minValue || elementValue > maxValue){
@@ -64,10 +64,10 @@ var Control = new Class({
             if(isNaN(elementValue.toFloat())){
                 return false;
             }
-            if(!inclusiveMin && elementValue == minValue){
+            if(!inclusiveMin && elementValue == minValue){
                 return false;
             }
-            if(!inclusiveMax && elementValue == maxValue){
+            if(!inclusiveMax && elementValue == maxValue){
                 return false;
             }
             if(elementValue < minValue || elementValue > maxValue){

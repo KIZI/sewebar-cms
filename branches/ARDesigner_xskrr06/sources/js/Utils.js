@@ -1,4 +1,4 @@
-var Oznaceni = new Class({
+var Oznaceni = new Class({     
     getSelText: function(){
         var txt = '';
         if (window.getSelection)
