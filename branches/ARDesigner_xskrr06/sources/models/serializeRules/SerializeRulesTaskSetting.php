@@ -11,6 +11,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   private $dataDictionary;
   private $modelName;
   private $arQuery;
+  private $hypotheses;  
   private $bbaSettings;
   private $dbaSettings;
   private $antecedentSetting;
@@ -68,7 +69,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5, $hypothesesCountMax = 5) {
       
     // Create basic structure of Document.
-    $this->createBasicStructure($hypothesesCountMax);
+    $this->createBasicStructure();
         
     // get Data from JSON
     $json = str_replace("&lt;","<",$json);
@@ -123,6 +124,9 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     // update modelName
     $this->updateModelName($ruleData);
     
+    // update TaskSetting
+    $this->updateTaskSetting($hypothesesCountMax);
+    
     // Serialize XML
     return $this->finalXmlDocument->saveXML();
   }
@@ -153,7 +157,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   }
   
 
-  private function createBasicStructure($hypothesesCountMax) {
+  private function createBasicStructure() {
     $this->finalXmlDocument = new DomDocument("1.0", "UTF-8");
     //$this->finalXmlDocument->formatOutput = true;
 
@@ -229,9 +233,9 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $extension = $this->finalXmlDocument->createElement('Extension');
     $extension->setAttribute('name', 'LISp-Miner');
     $hypotheses = $this->finalXmlDocument->createElement('HypothesesCountMax');
-    $hypotheses->appendChild($this->finalXmlDocument->createTextNode($hypothesesCountMax));
     $extension->appendChild($hypotheses);
     $this->arQuery->appendChild($extension);
+    $this->hypotheses = $hypotheses;
     
     // extension metabase
     $extension = $this->finalXmlDocument->createElement('Extension');
@@ -265,6 +269,15 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   private function updateModelName($ruleData) {
     $modelName = $this->getModelName($ruleData);
     $this->modelName->appendChild($this->finalXmlDocument->createTextNode($modelName));
+  }
+  
+  /**
+   * Update TaskSetting with LM extension
+   * 
+   * @param <Array> $ruleData Array of StdClass objects representing the rule
+   */
+  private function updateTaskSetting($hypothesesCountMax) {
+    $this->hypotheses->appendChild($this->finalXmlDocument->createTextNode($hypothesesCountMax));
   }
   
   /**
