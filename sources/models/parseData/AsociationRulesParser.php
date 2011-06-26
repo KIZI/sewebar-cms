@@ -1,4 +1,4 @@
-<?php
+<?php                                                      
 /**
  * This class represents one DBA
  *

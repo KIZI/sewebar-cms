@@ -1,5 +1,5 @@
 It shows performance of application when there are 30 rules. Each with
-approximately 8 elements.
+approximately 8 elements.        
 
 Running:
 {Root of application}/AsocRuleGUI/Domready.js

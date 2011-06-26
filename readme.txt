@@ -1,4 +1,4 @@
-Name   : ARBuilder
+Name   : ARBuilder   
 Version: Release 1.0
 Author : Jakub Balhar
 Contact: balhar.jakub@gmail.com

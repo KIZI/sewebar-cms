@@ -1,4 +1,4 @@
-<?php
+<?php    
     require_once('sources/models/JSON.php');
     require_once('sources/models/parseData/AncestorGetData.php');
     require_once('sources/models/parseData/GetDataARBuilderQuery.php');

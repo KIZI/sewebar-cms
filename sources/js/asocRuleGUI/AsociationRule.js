@@ -1,4 +1,4 @@
-/**
+/**                                            
  * Class: AsociationRule
  * This class represents one Asociation Rule used in AsocRule GUI Application.
  * The rule is created by user during his work with the application. This class

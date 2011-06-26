@@ -1,4 +1,4 @@
-<?php
+<?php                                  
 /**
  * This class is only ancestor of specific implementation of serializing rules classes
  * Every class which wants to be treated as set Data must implement this class.

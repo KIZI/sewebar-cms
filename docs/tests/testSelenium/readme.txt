@@ -1,7 +1,7 @@
 Requirements:
 Selenium IDE
 Firefox
-
+   
 Running:
 In every subdirectory there is readme.txt which explains which file is the file
 containing TestSuite.

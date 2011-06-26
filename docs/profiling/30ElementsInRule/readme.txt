@@ -1,5 +1,5 @@
 It shows how fast is application when there there is rule with 30 elements.
-
+                        
 Running:
 {Root of application}/AsocRuleGUI/Domready.js
 Change line:

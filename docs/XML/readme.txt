@@ -1,4 +1,4 @@
-Samples of formats used in the application. 
+Samples of formats used in the application.    
 
 ARBuilder.json is documentation of JSON format used in the application.
 ARFeature.odt is documentation of XML format describing limitations in the rule.

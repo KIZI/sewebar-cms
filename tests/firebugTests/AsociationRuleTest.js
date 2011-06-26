@@ -1,4 +1,4 @@
-var AsociationRuleTest = new Class({
+var AsociationRuleTest = new Class({   
     initialize: function(){
         this.rule1 = new AsociationRule(new TestServerInfo());
     },

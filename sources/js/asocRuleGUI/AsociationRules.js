@@ -1,4 +1,4 @@
-/**
+/**                              
  * Class: AsociationRules
  * This is the main class of the Application AsociationRulesGUI. This class creates the
  * structure and manage communication between the other parts.
@@ -48,7 +48,7 @@ var AsociationRules = new Class({
             url: url,
             onComplete: function(item){
                 this.lang = item.lang;
-                // optional - nynìjší stav, prohibited - nezobrazí se displayAskingWindow, required - "" není funkèní øešení."
+                // optional - nynÄ›jÅ¡Ã­ stav, prohibited - nezobrazÃ­ se displayAskingWindow, required - "" nenÃ­ funkÄnÃ­ Å™eÅ¡enÃ­."
                 AsociationRules.imThreshold = item.imThreshold;
                 AsociationRules.attrCoef = item.attrCoef;
                 LanguageSupport.actualLang = this.lang;

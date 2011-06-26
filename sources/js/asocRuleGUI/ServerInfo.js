@@ -1,4 +1,4 @@
-/**
+/**                                                   
  * Class: ServerInfo
  * It parses JSON from server and based on it it creates appropriate DataTypes.
  */
@@ -193,7 +193,7 @@ var ServerInfo = new Class({
                 fExplanation = fieldExplanations[actualField]
             }
 
-            if(fieldMinInc.length < actualField){
+            if(fieldMinInc.length <Â actualField){
                 fieldMin = true;
             }
             else{
@@ -205,7 +205,7 @@ var ServerInfo = new Class({
                 }
             }
 
-            if(fieldMaxInc.length < actualField){
+            if(fieldMaxInc.length <Â actualField){
                 fieldMax = true;
             }
             else{
@@ -490,7 +490,7 @@ var ServerInfo = new Class({
                 }
                 fields = ruleElement.fields;
                 
-                // Z operatoru vybrat podle name odpovídající field a nastavit mu hodnotu.
+                // Z operatoru vybrat podle name odpovÃ­dajÃ­cÃ­ field a nastavit mu hodnotu.
                 for(actualField=0; actualField < fields.length; actualField++){
                     fieldName = fields[actualField].name
                     fieldValue = fields[actualField].value

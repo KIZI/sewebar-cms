@@ -1,4 +1,4 @@
-/**
+/**                  
  * Třída sloužící pro přepravování spojených hodnot. Konkrétně jde o variantu
  * klíč-hodnota a práci s nimi.
  */

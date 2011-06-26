@@ -1,4 +1,4 @@
-<?php
+<?php                             
 
 require_once('../../serializeRules/AncestorSerializeRules.php');
 require_once('../../serializeRules/SerializeRulesARQuery.php');

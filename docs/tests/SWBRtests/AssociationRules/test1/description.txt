@@ -1,4 +1,4 @@
-There are separate nesting restrictions on individual rule parts
+There are separate nesting restrictions on individual rule parts 
 antecedent - three levels
 consequent - two levels (conjunction of BBAs without negation)
 condition - single nonnegated BBA

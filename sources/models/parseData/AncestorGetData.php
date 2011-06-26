@@ -1,4 +1,4 @@
-<?php
+<?php                                                                          
 /**
  * This class is only ancestor of specific implementation of getting Data classes
  * Every class which wants to be treated as get Data must implement this data.
