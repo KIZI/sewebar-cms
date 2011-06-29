@@ -113,7 +113,7 @@ class JuceneControllerApi extends JController {
 	
 	}
 	
-	function indexDocument() {
+	function addDocument($doc, $additional, $specific_index = NULL, $path = false) {
 	
 	}
 	
