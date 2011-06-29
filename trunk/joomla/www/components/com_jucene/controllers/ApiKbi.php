@@ -46,8 +46,8 @@ class JuceneControllerApiKbi extends JuceneControllerApi {
 	 * 
 	 * @param $joomla_doc
 	 */
-	function insertToIndexKbi($joomla_xml_doc, $additional, $specific_index = NULL, $path = false) {
-		
+	function addDocument($joomla_xml_doc, $additional, $specific_index = NULL, $path = false) {
+		print "works";
 		$xml_doc = $path ? file_get_contents ( $joomla_xml_doc ) : (substr ( $joomla_xml_doc ['fulltext'], 0, 5 ) != '<?xml') ? $joomla_xml_doc ['introtext'] : $joomla_xml_doc ['fulltext'];
 		
 		//prepare new Dom
@@ -104,7 +104,7 @@ class JuceneControllerApiKbi extends JuceneControllerApi {
 					$rule_doc_position ++;
 				}
 			}
-			return true;
+			return "<response><good></good></response>";
 		} else {
 			return false;
 		}

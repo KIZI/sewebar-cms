@@ -78,10 +78,12 @@ class Jucene extends KBIntegratorSynchronable
 		curl_close($ch);
 		
 		KBIDebug::log(array($response, $info));
-
+		
 		if($info['http_code'] != '200')
 		{
+			
 			throw new Exception('Error in communication'.$response);
+			
 		}
 		else
 		{
@@ -114,7 +116,7 @@ class Jucene extends KBIntegratorSynchronable
 	public function addDocument($id, $document, $path = true)
 	{
 		$ch = curl_init();
-
+		
 		if(is_object($document)) {
 			$data = array(
 				'action' => 'addDocument',
