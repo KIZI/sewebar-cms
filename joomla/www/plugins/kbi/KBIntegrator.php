@@ -38,6 +38,10 @@ class KBIntegrator implements IKBIntegrator
 				require_once 'Integrators/Jucene.php';
 				return new Jucene($config);
 				break;
+			case 'LISPMINER':
+				require_once 'Integrators/LispMiner.php';
+				return new LispMiner($config);
+				break;
 			case 'GENERIC':
 			default:
 				return new KBIntegrator($config);

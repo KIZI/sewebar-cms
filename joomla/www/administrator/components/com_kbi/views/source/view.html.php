@@ -65,6 +65,7 @@ class KbiViewSource extends JView
 		return array(
 			array('id' => 'GENERIC', 'name' => 'Generic XML+XSLT'),
 			array('id' => 'ONTOPIA', 'name' => 'Ontopia'),
+			array('id' => 'LISPMINER', 'name' => 'LISp-Miner'),
 			array('id' => 'SPARQL', 'name' => 'Semsol SPARQL endpoint'),
 			array('id' => 'XQUERY', 'name' => 'XQuery'),
 			array('id' => 'JUCENE', 'name' => 'Jucene'),

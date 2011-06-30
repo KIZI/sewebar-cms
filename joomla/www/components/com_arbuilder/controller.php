@@ -14,7 +14,9 @@ jimport('joomla.application.component.controller');
 JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
 
 require_once(dirname(__FILE__).'/arbuilder/models/serializeRules/AncestorSerializeRules.php');
+require_once(dirname(__FILE__).'/arbuilder/models/serializeRules/SerializeRulesARQuery.php');
 require_once(dirname(__FILE__).'/arbuilder/models/serializeRules/SerializeRulesQueryByAR.php');
+require_once(dirname(__FILE__).'/arbuilder/models/serializeRules/SerializeRulesTaskSetting.php');
 
 require_once(dirname(__FILE__).'/arbuilder/models/JSON.php');
 require_once(dirname(__FILE__).'/arbuilder/models/parseData/AncestorGetData.php');
@@ -34,6 +36,21 @@ class ARBuilderController extends JController
 	protected static $com_kbi_admin;
 	protected $featurelist;
 	protected $datadescription;
+
+	static function createSerializeRules($source)
+	{
+		$sourceType = get_class($source);
+
+		KBIDebug::log($sourceType);
+		switch($sourceType) {
+			case 'XQuery':
+				return new SerializeRulesQueryByAR();
+				break;
+			case 'LispMiner':
+			default:
+				return new SerializeRulesTaskSetting();
+		}
+	}
 
 	function __construct($config = array())
 	{
@@ -127,80 +144,41 @@ class ARBuilderController extends JController
 		$viewType = $document->getType();
 		$view =& $this->getView($viewName, $viewType);
 
-		// JRequest::getVar('data', '', 'post', 'string', JREQUEST_ALLOWRAW);
-		//$data = JRequest::getVar('data', NULL);
-		$data = array(1);
+		$data = JRequest::getVar('data', '', 'post', 'string', JREQUEST_ALLOWRAW);
 
 		if($viewType == 'raw' && $data != NULL) {
-			if(session_id() === '') {
-				session_start();
-			}
-
-			// ulozeni session id pro komunikace s LISpMiner-em
-			$ckfile = dirname(__FILE__) . "/tmp/cookie_".session_id();
-
-			// Pokus session s LISpMiner-em jeste nezacla tak posleme data pro inicializaci
-			if(!file_exists($ckfile)) {
-				$data = array(
-					'content' => file_get_contents(dirname(__FILE__) . '/assets/barboraForLMImport.pmml'),
-				);
-
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, "http://192.168.230.128/SewebarConnect/Import.ashx");
-				//curl_setopt($ch, CURLOPT_URL, "http://146.102.66.141/SewebarConnect/Import.ashx");
-				curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
-				curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encodeData($data));
-				curl_setopt($ch, CURLOPT_VERBOSE, false);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_POST, true);
-
-				$response = curl_exec($ch);
-				$info = curl_getinfo($ch);
-				curl_close($ch);
-
-				//echo "Import executed<br>";
-				//var_dump($response);
-			}
-
-			// dotaz/task pro LISpMiner
-			$data = array(
-				'content' => file_get_contents(dirname(__FILE__) . '/assets/simple.xml'),
+			$config = array(
+				'source' => JRequest::getVar('id_source', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+				'query' => NULL,
+				'xslt' => NULL,
+				'parameters' => NULL
 			);
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "http://192.168.230.128/SewebarConnect/Task.ashx");
-			//curl_setopt($ch, CURLOPT_URL, "http://146.102.66.141/SewebarConnect/Task.ashx");
-			curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
-			curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encodeData($data));
-			curl_setopt($ch, CURLOPT_VERBOSE, false);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POST, true);
+			try {
+				$com_kbi = JComponentHelper::getComponent('com_kbi', true);
 
-			// ziskani vysledku tasku z LISpMiner-a
-			$response = curl_exec($ch);
-			$info = curl_getinfo($ch);
-			curl_close($ch);
+				if(!$com_kbi->enabled)
+					throw new Exception('KBI component not intalled or enabled');
 
-			KBIDebug::log($response);
+				JLoader::import('transformator', JPATH_COMPONENT . DS . '..' . DS . $com_kbi->option . DS . 'models');
 
-			$DD = null;
-			$FL = null;
-			$ER = $response;
+				$model = new KbiModelTransformator($config);
 
-			$sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
-			$view->assignRef('value', $sr->getData());
+				$sr = self::createSerializeRules($model->getSource());
+				$model->setQuery($sr->serializeRules($data));
+
+				$dd = null;
+				$fl = null;
+				$er = $model->transform();
+
+				$sr = new GetDataARBuilderQuery($dd, $fl, $er, 'en');
+				$view->assignRef('value', $sr->getData());
+			} catch (Exception $e) {
+				$view->assign('value', "<p class=\"kbierror\">Chyba dotazu: {$e->getMessage()}</p>");
+			}
 		}
 
 		$view->display();
-	}
-
-	function _encodeData($array)
-	{
-		$data = "";
-		foreach ($array as $key=>$value) $data .= "{$key}=".urlencode($value).'&';
-		return $data;
 	}
 
 	/**
