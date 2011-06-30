@@ -11,10 +11,12 @@ import com.sleepycat.dbxml.XmlResults;
 import com.sleepycat.dbxml.XmlTransaction;
 import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -132,10 +134,14 @@ public class BDBXMLHandler {
     public String query_10(String search) {
         String output = "";
         String output_temp = "";
+        QueryMaker qm = new QueryMaker(containerName);
+        InputStream is = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
+        String xpath = qm.makeXPath(is);
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = query("", search, 0);
+            output_temp = queryShortened(xpath);
+            //output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
                 output += output_temp;
@@ -606,7 +612,7 @@ public class BDBXMLHandler {
                 + "xsi:noNamespaceSchemaLocation=\"http://sewebar.vse.cz./schemas/SearchResult0_1.xsd\">"
                 + "<Metadata>"
                     + "<SearchTimestamp>" + getDateTime() + "</SearchTimestamp>"
-                    + "<LastIndexUpdate>2002-05-30T09:00:00</LastIndexUpdate>"
+                    + "<LastIndexUpdate>2011-05-30T09:00:00</LastIndexUpdate>"
                     + "<SearchAlgorithm>xquery</SearchAlgorithm>"
                     + "<SearchAlgorithmVersion>xquery 3/4/2011</SearchAlgorithmVersion>"
                 + "</Metadata>"

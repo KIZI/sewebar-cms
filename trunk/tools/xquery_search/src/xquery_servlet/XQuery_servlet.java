@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.12 (13.5.2011)
+ * @version 1.13 (30.6.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
@@ -379,7 +379,7 @@ public class XQuery_servlet extends HttpServlet {
     	int mappedAction = mapAction(action);
         String output = "";
         // Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content 
-        int except[] = {2,7,8,10,13,14,16,17,18,19,20};
+        int except[] = {2,3,7,8,10,13,14,16,17,18,19,20};
 
         Boolean except_bool = false;
         for (int i = 0; i < except.length; i++){
@@ -399,8 +399,8 @@ public class XQuery_servlet extends HttpServlet {
                         /*String dotaz = content.toString();
                         output += bh.query(id, dotaz, 1);*/
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        //output += bh.queryShortened(qm.makeXPath(is));
-                        output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
+                        output += bh.queryShortened(qm.makeXPath(is));
+                        //output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error><![CDATA[Query nebyla zadana!]]></error>";

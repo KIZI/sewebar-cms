@@ -85,7 +85,7 @@
     <select name="action" onChange="zobrazPole(this.value)">
       <option value="useQuery">Použít query</option>
       <option value="directQuery">Přímé zadání query</option>
-      <%--<option value="directQuery10">Přímé zadání query 10x</option>--%>
+      <option value="directQuery10">Přímé zadání query 10x</option>
       <option value="addQuery">Přidat query</option>
       <option value="getQuery">Zobrazit query</option>
       <option value="deleteQuery">Smazat query</option>
@@ -144,7 +144,7 @@
     </form>
     <br />
     <br />
-    <i>verze 1.12 (13.5.2011)</i>
+    <i>verze 1.13 (30.6.2011)</i>
     <hr />    
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
