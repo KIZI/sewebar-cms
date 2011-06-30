@@ -81,7 +81,7 @@ public class QueryMaker {
         String output = "";
         for (int j = 0; j < fieldList.getLength() ; j++) {
             Element fieldChildElement = (Element)fieldList.item(j);
-            if (fieldChildElement.getAttribute("dictionary").equals("DataDictionary")) {
+            if (fieldChildElement.getAttribute("dictionary").equals("TransformationDictionary")) {
                 NodeList namesList = fieldChildElement.getElementsByTagName("Name");
                 NodeList typesList = fieldChildElement.getElementsByTagName("Type");
                 NodeList catsList = fieldChildElement.getElementsByTagName("Category");
@@ -108,11 +108,11 @@ public class QueryMaker {
                         }
                         String sign = "";
                         if (!inference) { sign = "="; } else { sign = "!="; }
-                        output += connective+axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName"+ sign +"\""+cat.getNodeValue()+"\"";
+                        output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName"+ sign +"\""+cat.getNodeValue()+"\"";
                     }
                 } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
                     Element intElement = (Element)intsList.item(0);
-                    output += axis+"/BBA/DataDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left <= "+intElement.getAttribute("right")+" and Interval/@right >= "+intElement.getAttribute("left")+"]";
+                    output += axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\" and Interval/@left <= "+intElement.getAttribute("right")+" and Interval/@right >= "+intElement.getAttribute("left")+"]";
                 }
             }
         }
@@ -146,6 +146,7 @@ public class QueryMaker {
                             axisDBA2 = "";
                             boolean inference = false;
                             String connective = cedentBBAElement.getAttribute("connective").toString();
+                            if (connective.toLowerCase().equals("positive")) { connective = "Conjunction"; }
                             if (cedentBBAElement.getAttribute("inference").toLowerCase().equals("true")) { inference = true; }
                             if (connective.toLowerCase().equals("both")) {
                                 axisDBA2 += "/DBA";
