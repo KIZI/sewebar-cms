@@ -406,8 +406,6 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $nestingConstraint = $this->domFL->getElementsByTagName("NestingConstraint");
         $level = 0;
         foreach ($nestingConstraint as $constraint) {
-          print_r($constraint);
-          var_dump($constraint);
           
             if ($constraint->getAttribute("level") != $LEVEL_REMAINING) {
                 $level = $constraint->getAttribute("level");
