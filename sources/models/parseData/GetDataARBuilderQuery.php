@@ -82,7 +82,9 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $this->solveDepthNesting();
         $this->solveMoreRules();
         
-        $this->solveTaskState();
+        if ($this->domER !== null) {
+          $this->solveTaskState();
+        }
 
         $interestMeasure = $this->domFL->getElementsByTagName("InterestMeasures")->item(0);
         $bba = $this->domFL->getElementsByTagName("BasicBooleanAttribute")->item(0);
@@ -396,11 +398,17 @@ class GetDataARBuilderQuery extends AncestorGetData {
      */
     private function solveDepthNesting() {
         $LEVEL_REMAINING = "remaining";
+        
+        // solve depthNesting
         $maxLevel = $this->domFL->getElementsByTagName("MaxLevels")->item(0);
-        $this->jsonObject['depthNesting'] = $maxLevel->nodeValue;
+        $this->jsonObject['depthNesting'] = $maxLevel !== null ? $maxLevel->nodeValue : null;
+
         $nestingConstraint = $this->domFL->getElementsByTagName("NestingConstraint");
         $level = 0;
         foreach ($nestingConstraint as $constraint) {
+          print_r($constraint);
+          var_dump($constraint);
+          
             if ($constraint->getAttribute("level") != $LEVEL_REMAINING) {
                 $level = $constraint->getAttribute("level");
             }
@@ -452,8 +460,9 @@ class GetDataARBuilderQuery extends AncestorGetData {
      * It solves whether it is possible to create more than one rule.
      */
     private function solveMoreRules() {
-        $moreRules = $this->domFL->getElementsByTagName("AllowMultipleRules")->item(0);
-        $this->jsonObject["moreRules"] = $moreRules->nodeValue;
+      // solve moreRules
+      $moreRules = $this->domFL->getElementsByTagName("AllowMultipleRules")->item(0);
+      $this->jsonObject["moreRules"] = $moreRules !== null ? $moreRules->nodeValue : null;
     }
 
     /**
@@ -552,7 +561,11 @@ class GetDataARBuilderQuery extends AncestorGetData {
     }
     
     private function solveTaskState() {
-      $this->jsonObject["taskState"] = 'Finished';
+      $xPath = new DOMXPath($this->domER);
+      $xPath->registerNamespace('arb', "http://keg.vse.cz/ns/arbuilder0_1");
+      $anXPathExpr = "//arb:ARBuilder/@taskState";
+      $taskState = $xPath->query($anXPathExpr)->item(0)->value;
+      $this->jsonObject["taskState"] = $taskState;
     }
 
 }
