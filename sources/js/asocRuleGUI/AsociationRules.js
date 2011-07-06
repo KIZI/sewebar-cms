@@ -211,6 +211,7 @@ var AsociationRules = new Class({
             url: this.urlHits,
             onComplete: function(item){
             	this.serverInfo.solveHits(item);
+            	this.serverInfo.solveTaskState(item);
             	this.updateHits();
             }.bind(this)
         }).post({'data': which});
@@ -227,12 +228,17 @@ var AsociationRules = new Class({
     		hit = hits[actualRule];
     		hit.setMaxSize(this.maxSize / 2);
     		hit.addEvent("display", function(){
+    			// TODO resolve draggability
                 //this.setDraggability();
             }.bind(this));
     	    var newRuleDiv = hit.display();
     	    newRuleDiv.inject($('rightDivHits'));
         }	
     	$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+hits.length;
+    	
+    	var taskState = this.serverInfo.getTaskState();
+    	// TODO display task state
+    	console.log(taskState);
     },
     
     /**

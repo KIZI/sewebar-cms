@@ -45,6 +45,7 @@ var ServerInfo = new Class({
         this.solveRules(item);
         
         this.hits = new Array();
+        this.taskState = '';
     },
 
     /**
@@ -523,6 +524,19 @@ var ServerInfo = new Class({
     		var asociationRule = this.solveRule(item["rule" + actualRule], this.attributes2, this.interestMeasures2);
     		this.hits.push(asociationRule);
     	}
+    },
+    
+    getTaskState: function(){
+        return this.taskState;
+    },
+    
+    initTaskState: function() {
+    	this.taskState = '';	
+    },
+    
+    solveTaskState: function(item) {
+    	this.initTaskState();
+    	this.taskState = item.taskState;
     },
 
     /**

@@ -324,6 +324,8 @@ body{
 
 div.hitsLabel img { width: 15px; }
 
+div.hitsLabel span { width: 15px; display: block; float: left; background-image: url('loading.gif'); background-repeat: no-repeat; padding-right: 5px; }
+
 .rule { clear: left;  position: relative; top: 10px}
 
 ARElement { height: 50px !important; }
