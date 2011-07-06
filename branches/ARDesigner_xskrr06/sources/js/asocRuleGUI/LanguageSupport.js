@@ -50,7 +50,7 @@ var LanguageSupport = new Class({
         specificLangCs[this.RULE_STATE_COMPLETE] = "Pravidlo je kompletní, můžete ho dále upravovat.";
         specificLangCs[this.HITS_LABEL] = "Nalezená pravidla se zobrazí zde:";
         specificLangCs[this.HITS_LABEL_FOUND] = "Počet nalezených pravidel: ";
-        specificLangCs[this.HITS_LABEL_LOADING] = '<img src="./sources/assets/loading.gif" /> (Probíhá minování pravidel)';
+        specificLangCs[this.HITS_LABEL_LOADING] = '<span class="loading">&nbsp;</span> (Probíhá minování pravidel)';
         this.langDatas["cs"] = specificLangCs;
 
         var specificLangEn = new Array();
@@ -68,7 +68,7 @@ var LanguageSupport = new Class({
         specificLangEn[this.RULE_STATE_COMPLETE] = "The rule is valid.";
         specificLangEn[this.HITS_LABEL] = "The results will be shown here:";
         specificLangEn[this.HITS_LABEL_FOUND] = "Number of results found: ";
-        specificLangEn[this.HITS_LABEL_LOADING] = '<img src="./sources/assets/loading.gif" /> (Mining of the results is in progress)';
+        specificLangEn[this.HITS_LABEL_LOADING] = '<span class="loading">&nbsp;</span> (Mining of the results is in progress)';
         this.langDatas["en"] = specificLangEn;
     },
 
