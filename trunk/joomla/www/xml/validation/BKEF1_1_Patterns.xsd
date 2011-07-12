@@ -77,12 +77,13 @@
                 </sch:assert>                
               </sch:rule>
             </sch:pattern>
-            <sch:pattern name="Check FieldRef">
+            <sch:pattern name="Patterns reference derived metafields">
               <sch:rule context="BBA/FieldRef">
-                <sch:assert test="@fieldID=../../../../../DataDescription/Dictionary[@id=current()/@dictID]/Field/@id"> 
-                  Referenced field does not exist (id)
+                <sch:assert test="//DataDescription/Dictionary[@id=current()/@dictID]/@sourceDictType='DiscretizationHint'"> 
+                  BKEF Patterns can reference only derived metafields
                 </sch:assert>                
               </sch:rule>            
+              </sch:pattern>
             <sch:pattern name="Check FieldRefName">
               <sch:rule context="BBA/FieldRef[text()]">
                 <sch:assert test="text()=../../../../../DataDescription/Dictionary[@id=current()/@dictID]/Field[@id=current()/@fieldID]/Name/text()"> 
