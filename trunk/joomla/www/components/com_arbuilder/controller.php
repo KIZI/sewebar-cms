@@ -44,7 +44,7 @@ class ARBuilderController extends JController
 		KBIDebug::log($sourceType);
 		switch($sourceType) {
 			case 'XQuery':
-				return new SerializeRulesQueryByAR();
+				return new SerializeRulesARQuery();
 				break;
 			case 'LispMiner':
 			default:
@@ -172,7 +172,9 @@ class ARBuilderController extends JController
 				$er = $model->transform();
 
 				$sr = new GetDataARBuilderQuery($dd, $fl, $er, 'en');
-				$view->assignRef('value', $sr->getData());
+				$data = $sr->getData();
+				$view->assignRef('value', $data);
+				KBIDebug::log($er);
 			} catch (Exception $e) {
 				$view->assign('value', "<p class=\"kbierror\">Chyba dotazu: {$e->getMessage()}</p>");
 			}
