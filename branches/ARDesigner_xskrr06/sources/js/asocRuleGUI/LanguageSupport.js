@@ -22,6 +22,7 @@ var LanguageSupport = new Class({
     HITS_LIMIT: "HitsLimit",
     HITS_LIMIT_REACHED: "HitsLimitReached",
     HITS_SEARCH_AGAIN: "HitsSearchAgain",
+    HITS_SOURCE: "HitsSource",
     actualLang: "cs",
 
     /**
@@ -56,9 +57,10 @@ var LanguageSupport = new Class({
         specificLangCs[this.HITS_LABEL_FOUND] = "Počet nalezených pravidel: ";
         specificLangCs[this.HITS_LABEL_LOADING] = '(Probíhá minování pravidel)';
         specificLangCs[this.HITS_LABEL_LOADING_IMG] = '<span class="loading">&nbsp;</span>';
-        specificLangCs[this.HITS_LIMIT] = 'Maximální počet výsledků:';
+        specificLangCs[this.HITS_LIMIT] = 'Maximální počet výsledků na zdroj:';
         specificLangCs[this.HITS_LIMIT_REACHED] = '(Dosažen maximální počet výsledků)';
         specificLangCs[this.HITS_SEARCH_AGAIN] = 'Znovu vyhledat';
+        specificLangCs[this.HITS_SOURCE] = 'Zdroj';
         this.langDatas["cs"] = specificLangCs;
 
         var specificLangEn = new Array();
@@ -78,9 +80,10 @@ var LanguageSupport = new Class({
         specificLangEn[this.HITS_LABEL_FOUND] = "Number of results found: ";
         specificLangEn[this.HITS_LABEL_LOADING] = '(Mining of the results is in progress)';
         specificLangEn[this.HITS_LABEL_LOADING_IMG] = '<span class="loading">&nbsp;</span>';
-        specificLangEn[this.HITS_LIMIT] = 'Maximum number of results:';
+        specificLangEn[this.HITS_LIMIT] = 'Maximum number of results per source:';
         specificLangEn[this.HITS_LIMIT_REACHED] = '(Limit has been reached)';
         specificLangEn[this.HITS_SEARCH_AGAIN] = 'Search again';
+        specificLangEn[this.HITS_SOURCE] = 'Source';
         this.langDatas["en"] = specificLangEn;
     },
 
