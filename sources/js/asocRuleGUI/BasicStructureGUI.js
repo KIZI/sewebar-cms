@@ -23,15 +23,16 @@ var BasicStructureGUI = new Class({
      * booleans     {Array} Array of booleans to be created
      * attributes     {Array} Array of attributes to be created
      * interestMeasures     {Array} Array of interestMeasures to be created
-     * lang         {String}  Language in which should the application be created.
+     * lang         {String} Language in which should the application be created.
+     * limitHits    {String} Max. number of hits to be retreived
      */
-    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, moreRules){
+    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, moreRules, limitHits){
         this.lang = lang;
         this.language = new LanguageSupport();
         this.moreRules = moreRules;
 
         // Create basic divs
-        this.createMainDivs(idMainDiv);
+        this.createMainDivs(idMainDiv, limitHits);
 
         // Create booleans
         this.createElements(this.COLS_BOOL, booleans, this.ID_BOOLEANS_DIV);
@@ -47,8 +48,9 @@ var BasicStructureGUI = new Class({
      *
      * Parameters:
      * idMainDiv     {String} Id of div in which should the application be created
+     * limitHits     {String} Max. number of hits to be retreived
      */
-    createMainDivs: function(idMainDiv){
+    createMainDivs: function(idMainDiv, limitHits){
         var utils = new UtilsAR();
         // real main and necessary structure
         var mainDiv = utils.createDiv("main");
@@ -57,6 +59,7 @@ var BasicStructureGUI = new Class({
         var rightDivCreate = utils.createDiv("rightDivPlace");
         var rightDivButton = utils.createDiv("rightDivButton");
         var rightDivHits = utils.createDiv("rightDivHits");
+        var hitsHeader = utils.createDiv("hitsHeader");
         var booleansDiv = utils.createDivClas("booleans", "booleans");
 
         // places for booleans, operators and attributes
@@ -69,7 +72,23 @@ var BasicStructureGUI = new Class({
         var operatorsHeader = utils.createDivHtmlClas(this.language.getName(this.language.INTEREST_MEASURES, this.lang), "headersLeft");
         var attributesHeader = utils.createDivHtmlClas(this.language.getName(this.language.FIELDS, this.lang), "headersLeft");
         var ruleHeader = utils.createDivIdHtmlClas("ruleLabel", this.language.getName(this.language.MINING_SETTING_CREATE, this.lang), "ruleLabel");
-        var hitsHeader = utils.createDivIdHtmlClas("hitsLabel", this.language.getName(this.language.HITS_LABEL, this.lang), "hitsLabel"); 
+       
+        // hits
+        var limitHitsDiv = utils.createDiv("limitHits");
+        var limitHitsLabel = utils.createLabel(this.language.getName(this.language.HITS_LIMIT, this.lang)); 
+        limitHitsLabel.inject(limitHitsDiv);
+        var limitHitsInput = utils.createInputText("limitHitsInput", limitHits);
+        limitHitsInput.inject(limitHitsDiv);
+        var limitHitsSubmit = utils.createInputSubmit("limitHitsSubmit", this.language.getName(this.language.HITS_SEARCH_AGAIN, this.lang));
+        limitHitsSubmit.addEvent('click', function(event) {
+        	limitHitsSubmit.hide();
+        	$("getHits").fireEvent('click');
+        }.bind(this));
+        limitHitsSubmit.hide();
+        limitHitsSubmit.inject(limitHitsDiv);
+        var hitsLabel = utils.createDivIdHtml("hitsLabel", this.language.getName(this.language.HITS_LABEL, this.lang), "hitsLabel"); 
+        hitsLabel.inject(hitsHeader);
+        limitHitsDiv.inject(hitsHeader);
         
         // Adding another rule
         if(this.moreRules){
@@ -101,6 +120,7 @@ var BasicStructureGUI = new Class({
 
         rightDivCreate.inject(rightDiv);
         rightDivButton.inject(rightDiv);
+        
         hitsHeader.inject(rightDiv);
         
         rightDivHits.inject(rightDiv);

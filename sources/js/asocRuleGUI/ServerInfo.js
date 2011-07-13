@@ -44,7 +44,8 @@ var ServerInfo = new Class({
         this.existingRules = new Array();
         this.solveRules(item);
         
-        this.hits = new Array();
+        // init hits
+        this.initHits(null);
         this.taskState = '';
     },
 
@@ -59,9 +60,34 @@ var ServerInfo = new Class({
     /**
      * Function: getHits
      * Just a simple getter, returning array of hits.
+     * 
+     * TODO params doc
      */
-    getHits: function(){
-        return this.hits;
+    getHits: function(id_source) {
+    	if (id_source != null) {
+    		return this.hits[id_source];
+    	} else {
+    		return this.hits;
+    	}
+    },
+    
+    /** 
+     * TODO func doc
+     * 
+     * TODO params doc
+     */
+    countHits: function(id_source) {
+    	if (id_source != null) {
+    		return this.getHits(id_source).length;
+    	} else {
+    		var hits = this.getHits(null);
+    		var numHits = 0;
+    		for (i = 0; i < hits.length; i++) {
+    			numHits = numHits + hits[i].length;
+    		}
+    		
+    		return numHits;
+    	}
     },
 
     /**
@@ -508,21 +534,29 @@ var ServerInfo = new Class({
     /**
      * Function: initHits
      * Just a simple initialization of hits
+     * 
+     * TODO params doc
      */
-    initHits: function() {
-    	this.hits = new Array();	
+    initHits: function(id_source) {
+    	if (id_source != null) {
+    		this.hits[id_source] = [];
+    	} else {
+    		this.hits = [];
+    	}
     },
     
     /**
      * Function: solveHits
      * It solves hits received from the server which are then shown.
+     * 
+     * TODO params doc
      */
-    solveHits: function(item) {
-    	this.initHits();
+    solveHits: function(id_source, item) {
+    	this.initHits(id_source);
     	var amountOfRules = item.rules;
     	for (var actualRule = 0; actualRule < amountOfRules; actualRule++) {
     		var asociationRule = this.solveRule(item["rule" + actualRule], this.attributes2, this.interestMeasures2);
-    		this.hits.push(asociationRule);
+    		this.hits[id_source].push(asociationRule);
     	}
     },
     

@@ -273,14 +273,34 @@ body{
     
 }
 
+
+#hitsHeader { }
+
+#hitsHeader #hitsLabel { position: relative; top: 20px; }
+
+#hitsHeader #hitsLabel img { width: 15px; }
+
+#hitsHeader #hitsLabel span { width: 15px; display: block; float: left; background-image: url('loading.gif'); background-repeat: no-repeat; padding-right: 5px; }
+
+#hitsHeader #limitHits { float: left; position: relative; left: 500px; }
+
+#hitsHeader #limitHits label {}
+
+#hitsHeader #limitHits input[type="text"] { width: 50px; }
+
+#hitsHeader #limitHits input[type="submit"] {}
+
 #rightDivHits{
-    width: 70%;
+    width: 850px;
     height: 50%;
     background-color: #EEEEEE;
+    clear: left;
     float: left;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+
 
 #tableAsking{
     width: 95%;
@@ -321,10 +341,6 @@ body{
 	z-index: 8;
         display: block;
 }
-
-div.hitsLabel img { width: 15px; }
-
-div.hitsLabel span { width: 15px; display: block; float: left; background-image: url('loading.gif'); background-repeat: no-repeat; padding-right: 5px; }
 
 .rule { clear: left;  position: relative; top: 10px}
 
