@@ -91,8 +91,7 @@ var AsociationRules = new Class({
     		}
     	}
     	
-    	this.urlHits = url;
-        //this.urlHits = url.slice(0, url.indexOf('?'));
+    	this.urlHits = url.slice(0, url.indexOf("id_source") + 10);
     },
     
     getUrlVar: function(url, name) {
@@ -297,7 +296,7 @@ var AsociationRules = new Class({
      * which  {String} Data that should be sent to the server.
      */
     getHits: function(id_source, which, numAlreadyFound){
-    	url = this.urlHits + "?id_source=" + id_source;
+    	url = this.urlHits + id_source;
     	
     	if (this.numHitsDisplayed != 0 && this.getSourcesInProgress(null)) {
     		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsFound+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
