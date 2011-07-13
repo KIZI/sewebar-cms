@@ -91,7 +91,8 @@ var AsociationRules = new Class({
     		}
     	}
     	
-        this.urlHits = url.slice(0, url.indexOf('?'));
+    	this.urlHits = url;
+        //this.urlHits = url.slice(0, url.indexOf('?'));
     },
     
     getUrlVar: function(url, name) {
