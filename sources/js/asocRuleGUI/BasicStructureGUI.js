@@ -26,13 +26,13 @@ var BasicStructureGUI = new Class({
      * lang         {String} Language in which should the application be created.
      * limitHits    {String} Max. number of hits to be retreived
      */
-    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, moreRules, limitHits){
+    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, moreRules, limitHits, sources){
         this.lang = lang;
         this.language = new LanguageSupport();
         this.moreRules = moreRules;
 
         // Create basic divs
-        this.createMainDivs(idMainDiv, limitHits);
+        this.createMainDivs(idMainDiv, limitHits, sources);
 
         // Create booleans
         this.createElements(this.COLS_BOOL, booleans, this.ID_BOOLEANS_DIV);
@@ -50,7 +50,7 @@ var BasicStructureGUI = new Class({
      * idMainDiv     {String} Id of div in which should the application be created
      * limitHits     {String} Max. number of hits to be retreived
      */
-    createMainDivs: function(idMainDiv, limitHits){
+    createMainDivs: function(idMainDiv, limitHits, sources){
         var utils = new UtilsAR();
         // real main and necessary structure
         var mainDiv = utils.createDiv("main");
@@ -89,6 +89,15 @@ var BasicStructureGUI = new Class({
         var hitsLabel = utils.createDivIdHtml("hitsLabel", this.language.getName(this.language.HITS_LABEL, this.lang), "hitsLabel"); 
         hitsLabel.inject(hitsHeader);
         limitHitsDiv.inject(hitsHeader);
+        
+        // sources
+        for (i = 0; i < sources.length; i++) {
+        	var sourceLabel = utils.createIdLabel('sourceLabel' + sources[i]["id"], this.language.getName(this.language.HITS_SOURCE, this.lang) + ': ' + sources[i]["id"]);
+        	sourceLabel.hide();
+        	sourceLabel.inject(rightDivHits);
+        	var sourceDiv = utils.createDivIdClas('sourceHits' + sources[i]["id"], 'sourceHits');
+			sourceDiv.inject(rightDivHits);
+		}
         
         // Adding another rule
         if(this.moreRules){

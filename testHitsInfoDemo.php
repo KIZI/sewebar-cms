@@ -16,7 +16,7 @@
     $states = array_merge($finishedStates, $inProgressStates);
     
     // select random hitlist
-    sleep(3);
+    //sleep(3);
     $randNum = rand(0, count($states) - 1);
     $ER = "XML/hitlist_".strtolower(strtr($states[$randNum], " ", "_")).".xml";
     

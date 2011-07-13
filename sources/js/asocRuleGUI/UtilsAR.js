@@ -134,6 +134,13 @@ var UtilsAR = new Class({
     	});
     },
     
+    createIdLabel: function(id, text){
+    	return new Element('label', {
+    		id: id,
+    		html: text
+    	});
+    },
+    
     createInputText: function(id, value){
     	return new Element('input', {
     		type: 'text',

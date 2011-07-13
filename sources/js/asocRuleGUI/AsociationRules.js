@@ -81,6 +81,7 @@ var AsociationRules = new Class({
     		if (idSource.indexOf(',') != -1) {
     			var ids = idSource.split(',');
     			for (i = 0; i < ids.length; i++) {
+    				this.sources[i] = [];
     				this.sources[i]["id"] = ids[i].toInt();
         			this.sources[i]["inProgress"] = false;
     			}
@@ -142,7 +143,7 @@ var AsociationRules = new Class({
                 else{
                     moreRules = true;
                 }
-                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, moreRules, this.maxNumHits);
+                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, moreRules, this.maxNumHits, this.sources);
 
                 if(moreRules){
                     $("newRule").addEvent('click', function(event){
@@ -341,9 +342,16 @@ var AsociationRules = new Class({
      * Function: updateHits
      * This function is called to repaint hits for the active association rule
      */
-    updateHits: function(id_source, limitReached){
-    	this.clearHits();
+    updateHits: function(id_source, limitReached) {
+    	this.clearHits(id_source);
     	var hits = this.serverInfo.getHits(id_source);
+    	
+    	if (hits.length != 0) {
+    		$('sourceLabel'+id_source).show('inline');
+    	} else {
+    		$('sourceLabel'+id_source).hide();
+    	}
+    	
     	for(var actualRule = 0; actualRule < hits.length; actualRule++){
     		hit = hits[actualRule];
     		hit.setMaxSize(this.maxSize / 2);
@@ -352,7 +360,7 @@ var AsociationRules = new Class({
                 //this.setDraggability();
             }.bind(this));
     	    var newRuleDiv = hit.display();
-    	    newRuleDiv.inject($('rightDivHits'));
+    	    newRuleDiv.inject($('sourceHits'+id_source));
         }	
     	
     	$('limitHitsSubmit').show('inline');
@@ -367,9 +375,11 @@ var AsociationRules = new Class({
     /**
      * Function: clearHits
      * This function is called to clear hits
+     * 
+     * TODO params doc
      */
-    clearHits: function(){
-    	$('rightDivHits').empty();
+    clearHits: function(id_source){
+    	$('sourceHits' + id_source).empty();
     }
     
 });
