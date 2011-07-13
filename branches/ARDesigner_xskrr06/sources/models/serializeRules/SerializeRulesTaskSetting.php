@@ -66,7 +66,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
       $this->ddXpath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
   }
     
-  public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5, $hypothesesCountMax = 5) {
+  public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5) {
       
     // Create basic structure of Document.
     $this->createBasicStructure();
@@ -125,6 +125,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     $this->updateModelName($ruleData);
     
     // update TaskSetting
+    $hypothesesCountMax = $jsonData->{'limitHits'};
     $this->updateTaskSetting($hypothesesCountMax);
     
     // Serialize XML

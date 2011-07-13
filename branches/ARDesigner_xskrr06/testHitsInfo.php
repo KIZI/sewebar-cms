@@ -7,6 +7,7 @@ require_once('sources/models/parseData/ARQueryParser.php');
 require_once('sources/models/parseData/TaskSettingParser.php');
 require_once('sources/models/serializeRules/AncestorSerializeRules.php');
 require_once('sources/models/serializeRules/SerializeRulesTaskSetting.php');
+require_once('sources/models/serializeRules/SerializeRulesARQuery.php');
 require_once('sources/models/Utils.php');
 
 function encodeData($array)
@@ -76,6 +77,5 @@ $ER = $response;
 
 $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
 echo $sr->getData();
-
 
 ?>

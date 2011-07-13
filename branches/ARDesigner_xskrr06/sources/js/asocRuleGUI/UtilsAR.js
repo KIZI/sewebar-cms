@@ -120,6 +120,37 @@ var UtilsAR = new Class({
             html: html
         });
     },
+    
+    createDivIdHtml: function(id, html){
+        return new Element('div',{
+            id: id,
+            html: html
+        });
+    },
+    
+    createLabel: function(text){
+    	return new Element('label', {
+    		html: text
+    	});
+    },
+    
+    createInputText: function(id, value){
+    	return new Element('input', {
+    		type: 'text',
+    		id: id,
+    		value: value
+    	});
+    	
+    },
+    
+    createInputSubmit: function(id, value){
+    	return new Element('input', {
+    		type: 'submit',
+    		id: id,
+    		value: value
+    	});
+    	
+    },
 
     /**
      * Function: createHtmlIdClick

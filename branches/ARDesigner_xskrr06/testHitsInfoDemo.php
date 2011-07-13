@@ -9,8 +9,17 @@
     
     $DD = null;
     $FL = null;
-    $ER = "XML/hitslist.xml";
-        
+    
+    // init states
+    $finishedStates = Array('Solved', 'Interrupted');
+    $inProgressStates = Array('Waiting', 'Running', 'Not Generated', 'Interrupted');
+    $states = array_merge($finishedStates, $inProgressStates);
+    
+    // select random hitlist
+    sleep(3);
+    $randNum = rand(0, count($states) - 1);
+    $ER = "XML/hitlist_".strtolower(strtr($states[$randNum], " ", "_")).".xml";
+    
     $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
     echo $sr->getData();
 ?>

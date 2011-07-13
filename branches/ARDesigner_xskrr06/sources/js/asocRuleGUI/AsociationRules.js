@@ -20,8 +20,14 @@ var AsociationRules = new Class({
      * urlHits      {String} Url where the app gets hits
      */
     initialize: function(lang, urlGet, urlSet, urlHits){
-        this.urlSet = urlSet;
-        this.urlHits = urlHits;
+    	// sources
+    	this.sources = [];
+    	
+    	// urls
+    	this.urlSet = urlSet;
+        this.parseUrlHits(urlHits);
+        
+        // lang
         this.lang = lang;
 
         this.asociationRules = new Array();
@@ -31,10 +37,85 @@ var AsociationRules = new Class({
         this.availableInterestMeasures = new Array()
 
         this.language = new LanguageSupport();
+        
+        // init TaskStates
+        this.interruptedStates = ['Interrupted'];
+        this.finishedStates = ['Solved'].combine(this.interruptedStates);
+    	this.inProgressStates = ['Waiting', 'Running', 'Not Generated'].combine(this.interruptedStates);
 
+    	// init hits display
+    	this.maxNumHits = 2;
+    	this.numHitsDisplayed = 0;
+    	
         this.getInfo(urlGet);
     },
+    
+    getSourceById: function(id_source) {
+    	for (i = 0; i< this.sources.length; i++) {
+    		if (this.sources[i]["id"] == id_source) {
+    			this.sources[i];
+    		}
+    	}
+    	
+    	return null;
+    },
+    
+    getSourcesInProgress: function(id_source) {
+    	if (id_source != null) {
+    		var source = this.getSourceById(id_source);
+    		return source["inProgress"];
+    	}
+    	
+    	for (i = 0; i< this.sources.length; i++) {
+    		if (this.sources[i]["inProgress"] == true) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    },
 
+    parseUrlHits: function(url) {
+    	var idSource = this.getUrlVar(url, "id_source");
+    	if (idSource != null) {
+    		if (idSource.indexOf(',') != -1) {
+    			var ids = idSource.split(',');
+    			for (i = 0; i < ids.length; i++) {
+    				this.sources[i]["id"] = ids[i].toInt();
+        			this.sources[i]["inProgress"] = false;
+    			}
+    		} else {
+    			this.sources[0] = [];
+    			this.sources[0]["id"] = idSource.toInt();
+    			this.sources[0]["inProgress"] = false;
+    		}
+    	}
+    	
+        this.urlHits = url.slice(0, url.indexOf('?'));
+    },
+    
+    getUrlVar: function(url, name) {
+    	var vars = this.getUrlVars(url);
+    	if (vars.indexOf(name) != -1) {
+    		return vars[name];
+    	}
+    	
+    	return null;
+    },
+    
+    getUrlVars: function(url) {
+    	var vars = [], hash;
+    	var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    	
+    	for(var i = 0; i < hashes.length; i++) {
+    		hash = hashes[i].split('=');
+    		vars.push(hash[0]);
+    		vars[hash[0]] = hash[1];
+    	}
+
+    	return vars;
+    },
+    
     /**
      * Function: getInfo
      * This function gets Data and Configuration from server and solve the JSON
@@ -61,7 +142,7 @@ var AsociationRules = new Class({
                 else{
                     moreRules = true;
                 }
-                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, moreRules);
+                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, moreRules, this.maxNumHits);
 
                 if(moreRules){
                     $("newRule").addEvent('click', function(event){
@@ -99,6 +180,8 @@ var AsociationRules = new Class({
                 
                 $("getHits").addEvent('click', function(event){
                 	var wholeJson = new JSONHelp();
+                	this.maxNumHits = $('limitHitsInput').value;
+                	wholeJson.limitHits = this.maxNumHits;
                     var rule = null;
                     for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
                         rule = this.asociationRules[actualRule].toJSON();
@@ -114,7 +197,13 @@ var AsociationRules = new Class({
                     $('ruleLabel').innerHTML = this.language.getName(this.language.RULE_STATE_COMPLETE, this.lang);
                 	
                     // call server and get hits
-                    this.getHits(jsonString);
+                    this.numHitsDisplayed = 0;
+                    
+                    // get hits for each source
+                    for (i = 0; i < this.sources.length; i++) {
+                    	this.sources[i]["inProgress"] = true;
+                    	this.getHits(this.sources[i]["id"], jsonString, 0);                    	
+                    }
                 }.bind(this));
                 
                 this.maxSize = this.solveSize();
@@ -203,16 +292,47 @@ var AsociationRules = new Class({
      * This function is called to get hits for the active association rule
      *
      * Parameters:
+     * url    {String} URL to be called.
      * which  {String} Data that should be sent to the server.
      */
-    getHits: function(which){
-    	$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
+    getHits: function(id_source, which, numAlreadyFound){
+    	url = this.urlHits + "?id_source=" + id_source;
+    	
+    	if (this.numHitsDisplayed != 0 && this.getSourcesInProgress(null)) {
+    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsFound+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
+    	} else {
+    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
+    	}
+    	
         new Request.JSON({
-            url: this.urlHits,
+            url: url,
             onComplete: function(item){
-            	this.serverInfo.solveHits(item);
+            	this.serverInfo.solveHits(id_source, item);
+            	this.numHitsDisplayed = this.numHitsDisplayed + this.serverInfo.countHits(id_source) - numAlreadyFound;
             	this.serverInfo.solveTaskState(item);
-            	this.updateHits();
+            	
+            	var taskState = this.serverInfo.getTaskState();
+            	console.log('TaskState: ' + taskState);
+
+            	if (this.interruptedStates.indexOf(taskState) != -1 && this.numHitsDisplayed == this.maxNumHits) {
+            		// mining is finished, it has reached the specified limit
+            		this.updateHits(id_source, true);
+            		this.hitsInProgress = false;
+            	} else if (this.finishedStates.indexOf(taskState) != -1) {
+            		// mining is finished
+            		this.updateHits(id_source, false);
+            		this.hitsInProgress = false;
+            	} else if (this.inProgressStates.indexOf(taskState) != -1) {
+            		// mining is in progress
+            		this.updateHits(id_source, false);
+            		this.hitsInProgress = true;
+            		this.getHits(id_source, which, this.serverInfo.countHits(id_source));
+            	} else {
+            		// TODO new state?
+            		this.hitsInProgress = false;
+            	}
+            	
+            	
             }.bind(this)
         }).post({'data': which});
     },
@@ -221,9 +341,9 @@ var AsociationRules = new Class({
      * Function: updateHits
      * This function is called to repaint hits for the active association rule
      */
-    updateHits: function(){
+    updateHits: function(id_source, limitReached){
     	this.clearHits();
-    	var hits = this.serverInfo.getHits();
+    	var hits = this.serverInfo.getHits(id_source);
     	for(var actualRule = 0; actualRule < hits.length; actualRule++){
     		hit = hits[actualRule];
     		hit.setMaxSize(this.maxSize / 2);
@@ -234,11 +354,14 @@ var AsociationRules = new Class({
     	    var newRuleDiv = hit.display();
     	    newRuleDiv.inject($('rightDivHits'));
         }	
-    	$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+hits.length;
     	
-    	var taskState = this.serverInfo.getTaskState();
-    	// TODO display task state
-    	console.log(taskState);
+    	$('limitHitsSubmit').show('inline');
+    	
+    	if (limitReached) {
+    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed + ' ' + this.language.getName(this.language.HITS_LIMIT_REACHED, this.lang);
+    	} else {
+    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed;	
+    	}
     },
     
     /**

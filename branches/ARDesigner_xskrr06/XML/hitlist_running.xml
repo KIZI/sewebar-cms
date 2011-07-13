@@ -1,0 +1,73 @@
+<?xml version="1.0"?>                     
+<arb:ARBuilder mode="AssociationRules" xmlns:arb="http://keg.vse.cz/ns/arbuilder0_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      
+    xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd" taskState="Running">
+		<AssociationRules>
+		    <BBA id="BBA_FTLiteralI_276" literal="false">
+			<Text>District(Praha)</Text>
+			<FieldRef>District</FieldRef>
+			<CatRef>Praha</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_277" literal="false">
+			<Text>Salary(high)</Text>
+			<FieldRef>Salary</FieldRef>
+			<CatRef>high</CatRef>
+		    </BBA>
+		    <BBA id="BBA_FTLiteralI_278" literal="false">
+			<Text>Quality(good)</Text>
+			<FieldRef>Quality</FieldRef>
+			<CatRef>good</CatRef>
+		    </BBA>
+
+		   <DBA id="DBA_FTLiteralI_Sign_276" connective="Conjunction" literal="true">
+			<Text>District(Praha)</Text>
+			<BARef>BBA_FTLiteralI_276</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_277" connective="Conjunction" literal="true">
+			<Text>Salary(high)</Text>
+			<BARef>BBA_FTLiteralI_277</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTLiteralI_Sign_278" connective="Conjunction" literal="true">
+			<Text>Quality(good)</Text>
+			<BARef>BBA_FTLiteralI_278</BARef>
+		   </DBA>
+
+		   <DBA id="DBA_FTCedentI_171" connective="Conjunction">
+			<Text>District(Praha)</Text>
+			<BARef>DBA_FTLiteralI_Sign_276</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_172" connective="Conjunction">
+			<Text>Salary(high)</Text>
+			<BARef>DBA_FTLiteralI_Sign_277</BARef>
+		   </DBA>
+		   <DBA id="DBA_FTCedentI_173" connective="Conjunction">
+			<Text>Quality(good)</Text>
+			<BARef>DBA_FTLiteralI_Sign_278</BARef>
+		   </DBA>
+
+		   <DBA id="DBA_Antecedent_75" connective="Conjunction">
+			<Text>District(Praha) &amp; Salary(high)</Text>
+			<BARef>DBA_FTCedentI_171</BARef>
+			<BARef>DBA_FTCedentI_172</BARef>
+		   </DBA>
+		   <DBA id="DBA_Succedent_75" connective="Conjunction">
+			<Text>Quality(good)</Text>
+			<BARef>DBA_FTCedentI_173</BARef>
+		   </DBA>
+
+	<!-- Hypothesis -->
+
+		   <AssociationRule 
+			id="75"
+			antecedent="DBA_Antecedent_75"
+			consequent="DBA_Succedent_75"
+		   >
+			<Text>District(Praha) &amp; Salary(high) ::: Quality(good)</Text>
+	
+			<IMValue imSettingRef="44" name="Support">0.10629348</IMValue>
+			<IMValue imSettingRef="45" name="Confidence">0.9240506329</IMValue>
+
+			<FourFtTable a="657" b="54" c="4797" d="673"/>
+		   </AssociationRule>
+		</AssociationRules>
+</arb:ARBuilder>
+

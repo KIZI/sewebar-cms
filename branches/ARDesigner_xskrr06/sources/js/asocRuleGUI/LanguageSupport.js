@@ -18,6 +18,10 @@ var LanguageSupport = new Class({
     HITS_LABEL: "HitsLabel",
     HITS_LABEL_FOUND: "HitsLabelFound",
     HITS_LABEL_LOADING: "HitsLabelLoading",
+    HITS_LABEL_LOADING_IMG: "HitsLabelLoadingImg",
+    HITS_LIMIT: "HitsLimit",
+    HITS_LIMIT_REACHED: "HitsLimitReached",
+    HITS_SEARCH_AGAIN: "HitsSearchAgain",
     actualLang: "cs",
 
     /**
@@ -50,7 +54,11 @@ var LanguageSupport = new Class({
         specificLangCs[this.RULE_STATE_COMPLETE] = "Pravidlo je kompletní, můžete ho dále upravovat.";
         specificLangCs[this.HITS_LABEL] = "Nalezená pravidla se zobrazí zde:";
         specificLangCs[this.HITS_LABEL_FOUND] = "Počet nalezených pravidel: ";
-        specificLangCs[this.HITS_LABEL_LOADING] = '<span class="loading">&nbsp;</span> (Probíhá minování pravidel)';
+        specificLangCs[this.HITS_LABEL_LOADING] = '(Probíhá minování pravidel)';
+        specificLangCs[this.HITS_LABEL_LOADING_IMG] = '<span class="loading">&nbsp;</span>';
+        specificLangCs[this.HITS_LIMIT] = 'Maximální počet výsledků:';
+        specificLangCs[this.HITS_LIMIT_REACHED] = '(Dosažen maximální počet výsledků)';
+        specificLangCs[this.HITS_SEARCH_AGAIN] = 'Znovu vyhledat';
         this.langDatas["cs"] = specificLangCs;
 
         var specificLangEn = new Array();
@@ -68,7 +76,11 @@ var LanguageSupport = new Class({
         specificLangEn[this.RULE_STATE_COMPLETE] = "The rule is valid.";
         specificLangEn[this.HITS_LABEL] = "The results will be shown here:";
         specificLangEn[this.HITS_LABEL_FOUND] = "Number of results found: ";
-        specificLangEn[this.HITS_LABEL_LOADING] = '<span class="loading">&nbsp;</span> (Mining of the results is in progress)';
+        specificLangEn[this.HITS_LABEL_LOADING] = '(Mining of the results is in progress)';
+        specificLangEn[this.HITS_LABEL_LOADING_IMG] = '<span class="loading">&nbsp;</span>';
+        specificLangEn[this.HITS_LIMIT] = 'Maximum number of results:';
+        specificLangEn[this.HITS_LIMIT_REACHED] = '(Limit has been reached)';
+        specificLangEn[this.HITS_SEARCH_AGAIN] = 'Search again';
         this.langDatas["en"] = specificLangEn;
     },
 
