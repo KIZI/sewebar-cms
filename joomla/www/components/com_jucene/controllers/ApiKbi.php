@@ -40,6 +40,9 @@ class JuceneControllerApiKbi extends JuceneControllerApi {
 		parent::__construct ( $conf );
 	}
 	
+	function display($tpl = null) {
+		parent::display ();
+	}
 	/**
 	 * PMML document and joomla document additional fields form jos_content
 	 * (e.g. title id (known as pk [primary key], keywords, path alias).. etc.)
@@ -47,7 +50,8 @@ class JuceneControllerApiKbi extends JuceneControllerApi {
 	 * @param $joomla_doc
 	 */
 	function addDocument($joomla_xml_doc, $additional, $specific_index = NULL, $path = false) {
-		print "works";
+		
+		return '<response>'.json_encode($_POST).'</response>';
 		$xml_doc = $path ? file_get_contents ( $joomla_xml_doc ) : (substr ( $joomla_xml_doc ['fulltext'], 0, 5 ) != '<?xml') ? $joomla_xml_doc ['introtext'] : $joomla_xml_doc ['fulltext'];
 		
 		//prepare new Dom
@@ -85,6 +89,12 @@ class JuceneControllerApiKbi extends JuceneControllerApi {
 			
 			//index every assoc rule as document with same credentials
 			if (! $error) {
+				$db = & JFactory::getDBO ();
+				
+				$query = "INSERT * 
+    			  INTO " . $db->nameQuote ( '#__jucene_documents' ) . " (id,title,doc_id) VALUES (1,test,1);";
+				
+				$db->setQuery ( $query );
 				
 				$rules = $transXml->getElementsByTagName ( "AssociationRule" );
 				$rulesCount = $rules->length;
@@ -212,7 +222,6 @@ class JuceneControllerApiKbi extends JuceneControllerApi {
 	}
 	
 	function getDocuments() {
-		return parent::getDocuments();
-		
+		return parent::getDocuments ();
 	}
 }
