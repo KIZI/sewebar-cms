@@ -78,20 +78,19 @@ class Jucene extends KBIntegratorSynchronable
 		curl_close($ch);
 		
 		KBIDebug::log(array($response, $info));
-		
 		if($info['http_code'] != '200')
 		{
 			
-			throw new Exception('Error in communication'.$response);
+			throw new Exception('Error in communication with code:'.$info['http_code']);
 			
 		}
 		else
 		{
-			$xml = simplexml_load_string($response);
-			$docs = $xml->children();
+			$json = json_decode($response);
+			$docs = $json[0];
 			if(!empty($docs))
 			{
-				foreach($docs[0] as $doc)
+				foreach($docs as $doc)
 				{
 					$document = new stdClass;
 					//$document->id = $doc->__toString();
@@ -149,23 +148,16 @@ class Jucene extends KBIntegratorSynchronable
 		KBIDebug::log($data);
 		KBIDebug::log($info);
 		KBIDebug::log($response);
-
+		
+		var_dump($data);
+		var_dump($info);
+		var_dump($response);
 		if($info['http_code'] != '200')
 		{
 			throw new Exception('Error in communication');
 		}
 
-		$xml_response = simplexml_load_string($response);
-
-		if($xml_response === FALSE)
-		{
-			throw new Exception('Unexpected response');
-		}
-
-		if(isset($xml_response->error))
-		{
-			throw new Exception($xml_response->error);
-		}
+		
 	}
 
 	/**

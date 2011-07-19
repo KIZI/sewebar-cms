@@ -29,19 +29,20 @@ require_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers/jucene.php');
 
 class JuceneControllerApi extends JController {
 	
-	var $task;
+	var $action;
 	
 	/**
 	 * 
 	 */
 	function __construct($config = array()) {
-		$action = JRequest::getVar ( 'action', 'getDocuments' );
+		$action = JRequest::getVar ( 'action', 'getDocuments' ); 
 		$this->setAction ( $action );
 		try {
 			if(!method_exists($this, $action)){
 				throw new Exception(JText::sprintf('Method "%s" does not exist.',$action));
 			}
 		} catch (Exception $e) {
+			//print $e->getMessage();
 		}
 		parent::__construct($config);
 		//$this->validateAccess();
@@ -60,8 +61,10 @@ class JuceneControllerApi extends JController {
 		
 		try {
 			$view->assignRef ( 'value', $this->$action() );
+			//throw new Exception(JText::sprintf('Method "%s" does not exist.',$action));
 		} catch (Exception $e) {
-			throw new Exception(JText::sprintf('Method "%s" does not exist.',$action));
+			print $e->getMessage();
+			$this->log("error",$e->getMessage());
 		}
 		
 		$view->display ();
@@ -114,7 +117,7 @@ class JuceneControllerApi extends JController {
 	}
 	
 	function addDocument($doc, $additional, $specific_index = NULL, $path = false) {
-	
+		return "<response></response>";
 	}
 	
 	function deleteDocument() {
@@ -126,12 +129,15 @@ class JuceneControllerApi extends JController {
 
 </result>";*/
 		$db = & JFactory::getDBO ();
+		
 		$query = "SELECT * 
-    FROM " . $db->nameQuote ( '#__jucene_documents' ).";";
+    			  FROM " . $db->nameQuote ( '#__jucene_documents' ).";";
+		
 		$db->setQuery($query);
-		$row = $db->loadRowList();
+		$row = $db->loadObjectList();
 		$result = json_encode($row);
-		return "<result>$result</result>";
+		
+		return $result;
 	}
 	
 	function log($type, $message, $code = null){
