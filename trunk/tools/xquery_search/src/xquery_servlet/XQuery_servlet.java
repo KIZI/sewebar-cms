@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.13 (30.6.2011)
+ * @version 1.14 (20.7.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
@@ -107,6 +107,7 @@ public class XQuery_servlet extends HttpServlet {
                                 String docName = "";
                                 String creationTime = "";
                                 String reportUri = "";
+                                boolean restructure = false;
                                 if (request.getParameter("docName") != null) {
                                     docName = request.getParameter("docName").toString();
                                 }
@@ -116,7 +117,12 @@ public class XQuery_servlet extends HttpServlet {
                                 if (request.getParameter("reportUri") != null) {
                                     reportUri = request.getParameter("reportUri").toString();
                                 }
-                                output += processRequest(action, id, docName, creationTime, reportUri, content, mgr, qh, bh, qm, tester);
+                                if (request.getParameter("restructure") != null) {
+                                    if (request.getParameter("restructure").toString().toLowerCase().equals("true")){
+                                        restructure = true;
+                                    }
+                                }
+                                output += processRequest(action, id, docName, creationTime, reportUri, restructure, content, mgr, qh, bh, qm, tester);
 
 
                                 // Ukonceni spojeni s BDB XML a vycisteni
@@ -367,6 +373,8 @@ public class XQuery_servlet extends HttpServlet {
      * @param id vetsinou ID (dokumentu/XQuery)
      * @param docName nazev dokumentu pro ulozeni v XMLDB
      * @param creationTime cas a datum vytvoreni dokumentu
+     * @param reportUri URI adresa daneho dokumentu
+     * @param restructure boolean hodnota urcujici, zda se ma provest restrukturalizace vysledku query
      * @param content vetsinou telo (dokumentu, XQuery, index)
      * @param mgr XmlManager instance XMLManager
      * @param qh instance tridy QueryHandler
@@ -374,7 +382,7 @@ public class XQuery_servlet extends HttpServlet {
      * @param tester instance tridy Tester
      * @return predpripraveny vystup
      */
-    private String processRequest(String action, String id, String docName, String creationTime, String reportUri, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
+    private String processRequest(String action, String id, String docName, String creationTime, String reportUri, boolean restructure, String content, XmlManager mgr, QueryHandler qh, BDBXMLHandler bh, QueryMaker qm, Tester tester) throws IOException{
     	// Namapovani akce na cisla 
     	int mappedAction = mapAction(action);
         String output = "";
@@ -399,8 +407,9 @@ public class XQuery_servlet extends HttpServlet {
                         /*String dotaz = content.toString();
                         output += bh.query(id, dotaz, 1);*/
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        output += bh.queryShortened(qm.makeXPath(is));
+                        output += bh.queryShortened(qm.makeXPath(is), restructure);
                         //output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
+                        //output += qh.queryPrepare(content).toString();
                     } break;
             case 2: if (content.equals("")) {
                         output += "<error><![CDATA[Query nebyla zadana!]]></error>";

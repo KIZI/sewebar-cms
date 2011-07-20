@@ -122,11 +122,12 @@
     <b>Report URI: </b><input type="text" name="reportUri" id="reportUri" size="150">
     <br /><i>Nápověda: Pole slouží pro zadání URI adresy reportu</i>
     </div>
+    <div id="restructure">Změnit strukturu výsledku query (PMML like) <input type="checkbox" name="restructure" value="true"></div>
     <div id="content">
     <b>Doc content/Query content:</b>
     <br />
     <textarea name="content" rows="20%" cols="120%" id="content"></textarea>
-    <br /><i>Nápověda: Pole slouží pro zadání těla query, těla dokuentu nebo indexu</i>
+    <br /><i>Nápověda: Pole slouží pro zadání těla query, těla dokumentu nebo indexu</i>
     </div>
     <br />
     <%--
@@ -144,7 +145,7 @@
     </form>
     <br />
     <br />
-    <i>verze 1.13 (30.6.2011)</i>
+    <i>verze 1.14 (20.7.2011)</i>
     <hr />    
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
