@@ -128,6 +128,8 @@ public class QueryMaker {
             axisCedent += cedentList.item(0).getNodeName();
             for (int j = 0; j < cedentList.getLength(); j++){
                 Element cedentElement = (Element)cedentList.item(j);
+                boolean exception = false;
+                if (cedentElement.getAttribute("exception") != null) {if (cedentElement.getAttribute("exception").toString().toLowerCase().equals("true")) {exception = true;} }
                 NodeList cedentDBA1 = cedentElement.getChildNodes();
                 for (int k = 0; k < cedentDBA1.getLength(); k++){
                     Element cedentDBA1Element = (Element) cedentDBA1.item(k);
@@ -153,8 +155,10 @@ public class QueryMaker {
                             } else {
                                 axisDBA2 += "/DBA[@connective=\""+ connective +"\"]";
                             }
+                            String BBAConnection = "and";
+                            if (exception) {BBAConnection = "or";}
                             NodeList fieldList = BBAElement.getElementsByTagName("Field");
-                            if (l > 0) { output += " and "; }
+                            if (l > 0) { output += " "+ BBAConnection +" "; }
                             /*if (cedentDBA2.getLength() > 1) 
                             {*/
                                 output += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);

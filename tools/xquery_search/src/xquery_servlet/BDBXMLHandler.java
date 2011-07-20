@@ -12,15 +12,25 @@ import com.sleepycat.dbxml.XmlTransaction;
 import com.sleepycat.dbxml.XmlValue;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.regex.Pattern;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.stream.StreamResult;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.query.DynamicQueryContext;
+import net.sf.saxon.query.StaticQueryContext;
+import net.sf.saxon.query.XQueryExpression;
+import net.sf.saxon.trans.XPathException;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
@@ -140,7 +150,7 @@ public class BDBXMLHandler {
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = queryShortened(xpath);
+            output_temp = queryShortened(xpath, false);
             //output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
@@ -598,7 +608,7 @@ public class BDBXMLHandler {
      * @param XPathRequest XPath dotaz
      * @return vysledky hledani v SearchResult formatu
      */
-    public String queryShortened(String XPathRequest){
+    public String queryShortened(String XPathRequest, boolean restructure){
         long startTime = System.currentTimeMillis();
         String output = "";
         String query = "for $ar in " + XPathRequest
@@ -622,11 +632,80 @@ public class BDBXMLHandler {
                     + "<RulesSearched></RulesSearched>"
                 + "</Statistics>"
                 + "<Hits>";
-        output += queryResult;
+        if (restructure) {
+            output += restructureOutput("<Hits>"+queryResult+"</Hits>");
+        } else {
+            output += queryResult;
+        }
         output += "</Hits></SearchResult>";
         return output;
     }
-
+    
+    /**
+     * Metoda pro zmenu struktury vystupu query
+     * @param queryOutput puvodni vystup query
+     * @return restrukturovana hodnota
+     */
+    private String restructureOutput (String queryOutput) {
+        String output = "";
+        String restructureQuery = 
+                "declare function local:restructure($queryOutput) {"
+                + "\nlet $BBAs := $queryOutput//BBA "
+                + "\nlet $ARs := let $positions := $queryOutput/Hit/position()"
+                    + "\nfor $position in $positions return for $hit in $queryOutput/Hit[$position]"
+                    + "\nlet $ARAntePointer := if(count($hit/Detail/Antecedent)>0) then concat(\"ante_00\", $position) else ()"
+                    + "\nlet $ARConsPointer := if(count($hit/Detail/Consequent)>0) then concat(\"cons_00\", $position) else ()"
+                    + "\nlet $ARCondPointer := if(count($hit/Detail/Condition)>0) then concat(\"cond_00\", $position) else ()"
+                    + "\nreturn <AssociationRule antecedent=\"{$ARAntePointer}\" consequent=\"{$ARConsPointer}\" condition=\"{$ARCondPointer}\">{$hit/Detail/IMValue}</AssociationRule>"
+                + "\nlet $DBAs := let $positions := $queryOutput/Hit/position() for $position in $positions return for $hit in $queryOutput/Hit[$position]"
+                    + "\nlet $ante := local:getDBAs(concat('ante_00', $position), $hit/Detail/Antecedent)"
+                    + "\nlet $cons := local:getDBAs(concat('cons_00', $position), $hit/Detail/Consequent)"
+                    + "\nlet $cond := local:getDBAs(concat('cond_00', $position), $hit/Detail/Condition)"
+                    + "\nreturn $ante union $cons union $cond"
+                + "\nreturn $BBAs union $DBAs union $ARs};"
+                + "\ndeclare function local:getDBAs($ID, $DBAs){"
+                    + "\nlet $dba1Positions := $DBAs/position() for $dba1Position in $dba1Positions return for $dba1 in $DBAs[$dba1Position]"
+                    + "\nlet $dba1ID := $ID"
+                    + "\nlet $childsDBA1 := let $dba2Positions := $dba1/DBA/position() for $dba2Position in $dba2Positions return for $dba2 in $dba1/DBA[$dba2Position] return concat($dba1ID, '_00', $dba2Position)"
+                    + "\nlet $dba1Output := <DBA id=\"{$dba1ID}\" connective=\"{if(count($dba1/@connective)>0) then $dba1/@connective else 'Conjunction'}\">"
+                        + "\n{for $child in $childsDBA1 return <BARef>{$child}</BARef>} </DBA>"
+                    + "\nlet $dba2Output := let $dba2Positions := $dba1/DBA/position() for $dba2Position in $dba2Positions return for $dba2 in $dba1/DBA[$dba2Position]"
+                        + "\nlet $dba2Name := concat($dba1ID, '_00', $dba2Position) return local:getDBAs2($dba2Name, $dba2) "
+                    + "\nreturn $dba1Output union $dba2Output};"
+                + "\ndeclare function local:getDBAs2 ($ID, $DBAs) { let $dba2Positions := $DBAs/position() for $dba2Position in $dba2Positions return for $dba2 in $DBAs[$dba2Position]"
+                    + "\nlet $dba2ID := $ID let $childsDBA2 := "
+                    + "\nlet $dba3Positions := $dba2/DBA/position() for $dba3Position in $dba3Positions return for $dba3 in $dba2/DBA[$dba3Position] return concat($dba2ID, '_00', $dba3Position)"
+                    + "\nlet $dba2Output := <DBA id=\"{$dba2ID}\" connective=\"{if(count($dba2/@connective)>0) then $dba2/@connective else 'Conjunction'}\">"
+                        + "\n{for $child in $childsDBA2 return <BARef>{$child}</BARef>} </DBA>"
+                    + "\nlet $dba3Output := let $dba3Positions := $dba2/DBA/position() for $dba3Position in $dba3Positions return for $dba3 in $dba2/DBA[$dba3Position]"
+                        + "\nlet $dba3Name :=  concat($dba2ID, '_00', $dba3Position) return local:getBBAs($dba3Name, $dba3)"
+                    + "\nreturn $dba2Output union $dba3Output};"
+                + "\ndeclare function local:getBBAs ($ID, $DBAs) { let $dba3Positions := $DBAs/position() for $dba3Position in $dba3Positions return for $dba3 in $DBAs[$dba3Position]"
+                    + "\nlet $dba3ID := $ID"
+                    + "\nlet $childsDBA3 := let $bbaPositions := $dba3/BBA/position() for $bbaPosition in $bbaPositions return for $bba in $dba3/BBA[$bbaPosition] return $bba/@id/string()"
+                    + "\nlet $dba3Output := <DBA id=\"{$dba3ID}\" connective=\"{if(count($dba3/@connective)>0) then $dba3/@connective else 'Conjunction'}\">"
+                        + "\n{for $child in $childsDBA3 return <BARef>{$child}</BARef>} </DBA>"
+                    + "\nreturn $dba3Output};"
+                + "\nlet $queryOutput := " + queryOutput + "\n"
+                + "\nreturn local:restructure($queryOutput)";
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            Configuration config = new Configuration();
+            StaticQueryContext sqc = config.newStaticQueryContext();
+            XQueryExpression xqe = sqc.compileQuery(restructureQuery);
+            DynamicQueryContext dqc = new DynamicQueryContext(config);
+            Properties props = new Properties();
+            props.setProperty(OutputKeys.METHOD, "html");
+            props.setProperty(OutputKeys.INDENT, "no");
+            xqe.run(dqc, new StreamResult(baos), props);
+            output += baos.toString("UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            
+        } catch (XPathException ex) {
+            //output += "<error>" + ex.toString() + "</error>";
+        }
+        return output;
+    }
     /**
      * Metoda zajistujici uzavreni pouzivaneho kontejneru
      * @param cont instance XmlContainer
