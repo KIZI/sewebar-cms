@@ -121,7 +121,6 @@
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="Libs\LMWrapper\LMWrapper.csproj">
       <Project>{98E96392-DCB6-4200-B18D-1891AE9FE604}</Project>

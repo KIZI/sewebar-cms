@@ -124,6 +124,12 @@ namespace LMWrapper.LISpMiner
 					arguments.Append("/NoProgress ");
 				}
 
+				// /AppLog
+				if (!String.IsNullOrEmpty(this.AppLog))
+				{
+					arguments.AppendFormat("\"/AppLog:{0}\"", this.AppLog);
+				}
+
 				return arguments.ToString().Trim();
 			}
 		}
@@ -131,6 +137,7 @@ namespace LMWrapper.LISpMiner
 		public LMSwbExporter():base()
 		{
 			this.ApplicationName = "LMSwbExporter.exe";
+			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_exporter", Guid.NewGuid());
 		}
 
 		/// <summary>

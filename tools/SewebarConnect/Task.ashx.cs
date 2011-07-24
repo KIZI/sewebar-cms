@@ -72,15 +72,13 @@ namespace SewebarWeb
 				var taskName = this.GetTaskName(content) ?? "task";
 				var taskFileName = Regex.Replace(taskName, InvalidChars, "_");
 				var taskXmlPath = String.Format("{0}/task_{1}_{2:yyyyMMdd-Hmmss}.xml", dataFolder, taskFileName, DateTime.Now);
+				var status = "Not generated";
 
 				// save importing task XML
 				using (var file = new StreamWriter(taskXmlPath))
 				{
 					file.Write(content);
 				}
-
-				// TODO: parallel runnig - because of _AppLog.dat
-				//if (miner.Status != ExecutableStatus.Ready) throw new LISpMinerException("Parallel runnig not supported");
 
 				// try to export results
 				var exporter = miner.Exporter;
@@ -89,11 +87,11 @@ namespace SewebarWeb
 				//exporter.Template = String.Format(@"{0}\Sewebar\Template\4ftMiner.Task.PMML.Template.txt", exporter.LMPath);
 				exporter.Alias = String.Format(@"{0}\Sewebar\Template\LM.PMML.Alias.ARD.txt", exporter.LMPath);
 				exporter.TaskName = taskName;
-				//exporter.TaskId = "13";
 
 				try
 				{
 					exporter.Execute();
+					status = this.GetStatus(exporter.Output);
 				}
 				catch (LISpMinerException ex)
 				{
@@ -104,40 +102,48 @@ namespace SewebarWeb
 					importer.Input = taskXmlPath;
 					importer.Alias = String.Format(@"{0}\Sewebar\Template\LM.PMML.Alias.ARD.txt", importer.LMPath);
 					importer.Execute();
-
-					// run export once again to get results from newly imported task
-					exporter.Execute();
 				}
 
-				var status = this.GetStatus(exporter.Output);
-
-				// run task - generate results
-				if (status == "Not generated")
+				switch (status)
 				{
-					if (miner.Task4FtGen.Status == ExecutableStatus.Ready)
-					{
-						var task4FtGen = miner.Task4FtGen;
-						task4FtGen.TaskName = taskName;
-						//task4FtGen.TaskId = "13";
-						task4FtGen.Execute();
+					// * Not Generated (po zadání úlohy nebo změně v zadání)
+					case "Not generated":
+					// * Interrupted (přerušena -- buď kvůli time-outu nebo max počtu hypotéz)
+					case "Interrupted":
+						// run task - generate results
+						if (miner.Task4FtGen.Status == ExecutableStatus.Ready)
+						{
+							var task4FtGen = miner.Task4FtGen;
+							task4FtGen.TaskName = taskName;
+							task4FtGen.Execute();
 
-						// run export once again to refresh results and status
-						exporter.Execute();
-					}
-					else
-					{
-						Log.Debug("Waiting for result generation");
-					}
+							// run export once again to refresh results and status
+							if (status != "Interrupted")
+								exporter.Execute();
+						}
+						else
+						{
+							Log.Debug("Waiting for result generation");
+						}
+						break;
+					// * Running (běží generování)
+					case "Running":
+					// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
+					case "Waiting":
+						miner.Task4FtGen.KeepAlive = 10;
+						break;
+					// * Solved (úspěšně dokončena)
+					case "Solved":
+					case "Finnished":
+					default:
+						break;
 				}
-				else
-				{
-					Log.DebugFormat("taskState is {0} - not regenerating", status);
-				}
-
+				
 				// write results to response
 				if (File.Exists(exporter.Output))
 				{
 					context.Response.WriteFile(exporter.Output);
+					//context.Response.Write(String.Format("{0}", status));
 				}
 				else
 				{

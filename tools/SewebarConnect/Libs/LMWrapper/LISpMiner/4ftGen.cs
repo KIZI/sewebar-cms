@@ -14,6 +14,8 @@ namespace LMWrapper.LISpMiner
 
 		private Process _process;
 
+		private readonly Stopwatch _stopwatch;
+
 		protected Process Process
 		{
 			get
@@ -57,6 +59,8 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public int? TimeOut { get; set; }
 
+		public int KeepAlive { get; set; }
+
 		public override string Arguments
 		{
 			get
@@ -98,6 +102,12 @@ namespace LMWrapper.LISpMiner
 					arguments.Append("/NoProgress ");
 				}
 
+				// /AppLog
+				if(!String.IsNullOrEmpty(this.AppLog))
+				{
+					arguments.AppendFormat("\"/AppLog:{0}\"", this.AppLog);
+				}
+
 				return arguments.ToString().Trim();
 			}
 		}
@@ -106,14 +116,20 @@ namespace LMWrapper.LISpMiner
 			: base()
 		{
 			this.ApplicationName = "4ftGen.exe";
+			this._stopwatch = new Stopwatch();
+			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_4ftGen", Guid.NewGuid());
 			//this.TimeOut = 10;
 		}
 
 		protected override void Run()
 		{
+			if (this.Status != ExecutableStatus.Ready) return;
+			
 			this.Status = ExecutableStatus.Running;
 
 			Log.Debug(String.Format("Launching: {0} {1}", this.ApplicationName, this.Arguments));
+
+			this._stopwatch.Start();
 
 			this.Process.Start();
 			// wait a little
@@ -122,9 +138,10 @@ namespace LMWrapper.LISpMiner
 
 		private void ProcessExited(object sender, EventArgs e)
 		{
-			Log.Debug(String.Format("Result generation finished: {0} {1}", this.ApplicationName, this.Arguments));
-
+			this._stopwatch.Stop();
 			this.Status = ExecutableStatus.Ready;
+
+			Log.InfoFormat("Result generation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments, this._stopwatch.Elapsed);
 
 			this.Process.Close();
 			this._process = null;
