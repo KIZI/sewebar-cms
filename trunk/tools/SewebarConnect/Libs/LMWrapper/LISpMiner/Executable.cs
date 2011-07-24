@@ -9,6 +9,8 @@ namespace LMWrapper.LISpMiner
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Executable));
 
+		private readonly Stopwatch _stopwatch;
+
 		public LISpMiner LISpMiner { get; set; }
 
 		public string ApplicationName { get; protected set; }
@@ -17,7 +19,7 @@ namespace LMWrapper.LISpMiner
 
 		public virtual string Dsn { get; set; }
 
-		public virtual string LMPath { get; set; }
+		public string LMPath { get; set; }
 
 		/// <summary>
 		/// /Quiet    ... errors reported to _AppLog.dat instead on screen
@@ -29,6 +31,11 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public bool NoProgress { get; set; }
 
+		/// <summary>
+		/// /AppLog:[log_file]		... (O) alternative path and file name for logging
+		/// </summary>
+		public string AppLog { get; set; }
+
 		public abstract string Arguments { get; }
 
 		protected Executable()
@@ -36,11 +43,12 @@ namespace LMWrapper.LISpMiner
 			this.Quiet = true;
 			this.NoProgress = true;
 			this.Status = ExecutableStatus.Ready;
+			this._stopwatch = new Stopwatch();
 		}
 
 		public void Execute()
 		{
-			var errorFilePath = String.Format("{0}/_AppLog.dat", this.LMPath);
+			var errorFilePath = String.IsNullOrEmpty(this.AppLog) ? String.Format("{0}/_AppLog.dat", this.LMPath) : String.Format("{0}/{1}", this.LMPath, this.AppLog);
 
 			this.Run();
 
@@ -67,10 +75,16 @@ namespace LMWrapper.LISpMiner
 			
 			Log.DebugFormat("Launching: {0} {1}", this.ApplicationName, this.Arguments);
 
+			this._stopwatch.Start();
+
 			p.Start();
 			p.WaitForExit();
 			
 			this.Status = ExecutableStatus.Ready;
+
+			this._stopwatch.Stop();
+			Log.InfoFormat("Finished: {0} ms. ({1} {2})", this._stopwatch.Elapsed, this.ApplicationName, this.Arguments);
+			this._stopwatch.Reset();
 		}
 	}
 }
