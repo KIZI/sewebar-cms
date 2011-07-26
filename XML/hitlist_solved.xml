@@ -70,7 +70,33 @@
 		   </AssociationRule>
 		   
 		   <AssociationRule 
-			id="75"
+			id="76"
+			antecedent="DBA_Antecedent_75"
+			consequent="DBA_Succedent_75"
+		   >
+			<Text>District(Praha) &amp; Salary(high) ::: Quality(good)</Text>
+	
+			<IMValue imSettingRef="44" name="Support">0.10629348</IMValue>
+			<IMValue imSettingRef="45" name="Confidence">0.9240506329</IMValue>
+
+			<FourFtTable a="657" b="54" c="4797" d="673"/>
+		   </AssociationRule>
+		   
+		   <AssociationRule 
+			id="77"
+			antecedent="DBA_Antecedent_75"
+			consequent="DBA_Succedent_75"
+		   >
+			<Text>District(Praha) &amp; Salary(high) ::: Quality(good)</Text>
+	
+			<IMValue imSettingRef="44" name="Support">0.10629348</IMValue>
+			<IMValue imSettingRef="45" name="Confidence">0.9240506329</IMValue>
+
+			<FourFtTable a="657" b="54" c="4797" d="673"/>
+		   </AssociationRule>
+		   
+		   <AssociationRule 
+			id="78"
 			antecedent="DBA_Antecedent_75"
 			consequent="DBA_Succedent_75"
 		   >
