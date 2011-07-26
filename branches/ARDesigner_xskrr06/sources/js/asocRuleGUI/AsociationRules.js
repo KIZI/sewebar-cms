@@ -47,6 +47,9 @@ var AsociationRules = new Class({
     	this.maxNumHits = 2;
     	this.numHitsDisplayed = 0;
     	
+    	// init hit Request array
+    	this.hitRequests = [];
+    	
         this.getInfo(urlGet);
     },
     
@@ -200,8 +203,11 @@ var AsociationRules = new Class({
                     // call server and get hits
                     this.numHitsDisplayed = 0;
                     
+                    // clear hits
+                    
                     // get hits for each source
                     for (i = 0; i < this.sources.length; i++) {
+                    	this.clearHits(this.sources[i]["id"]);
                     	this.sources[i]["inProgress"] = true;
                     	this.getHits(this.sources[i]["id"], jsonString, 0);                    	
                     }
@@ -305,54 +311,69 @@ var AsociationRules = new Class({
     		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
     	}
     	
-        new Request.JSON({
+        var req = new Request.JSON({
             url: url,
-            onComplete: function(item){
-            	this.serverInfo.solveHits(id_source, item);
-            	this.numHitsDisplayed = this.numHitsDisplayed + this.serverInfo.countHits(id_source) - numAlreadyFound;
-            	this.serverInfo.solveTaskState(item);
-            	
-            	var taskState = this.serverInfo.getTaskState();
-            	console.log('TaskState: ' + taskState);
+            onComplete: function(item) {
+            	if (this.numHitsDisplayed <= this.maxNumHits) {
+	            	this.serverInfo.solveHits(id_source, item);
+	            	this.serverInfo.solveTaskState(item);
+	            	console.log('TaskState: ' + this.serverInfo.getTaskState());
 
-            	if (this.interruptedStates.indexOf(taskState) != -1 && this.numHitsDisplayed == this.maxNumHits) {
-            		// mining is finished, it has reached the specified limit
-            		this.updateHits(id_source, true);
-            		this.hitsInProgress = false;
-            	} else if (this.finishedStates.indexOf(taskState) != -1) {
-            		// mining is finished
-            		this.updateHits(id_source, false);
-            		this.hitsInProgress = false;
-            	} else if (this.inProgressStates.indexOf(taskState) != -1) {
-            		// mining is in progress
-            		this.updateHits(id_source, false);
-            		this.hitsInProgress = true;
-            		this.getHits(id_source, which, this.serverInfo.countHits(id_source));
-            	} else {
-            		// TODO new state?
-            		this.hitsInProgress = false;
+	            	var limitExceeded = false;
+	            	if ((this.numHitsDisplayed - numAlreadyFound + this.serverInfo.countHits(id_source)) > this.maxNumHits) {
+	            		limitExceeded = true;
+	            		
+	            		this.stopHitRequests();
+	            	} else {
+	            		searchLimit = this.maxNumHits - this.numHitsDisplayed - numAlreadyFound;
+	            	}
+	            	
+	            	if (this.interruptedStates.indexOf(this.serverInfo.getTaskState()) != -1 && this.serverInfo.countHits(id_source) == this.maxNumHits) {
+	            		// mining is finished, it has reached the specified limit
+	            		this.updateHits(id_source, true, numAlreadyFound);
+	            		this.hitsInProgress = false;
+	            	} else if (this.finishedStates.indexOf(this.serverInfo.getTaskState()) != -1) {
+	            		// mining is finished
+	            		this.updateHits(id_source, limitExceeded, numAlreadyFound);
+	            		this.hitsInProgress = false;
+	            	} else if (this.inProgressStates.indexOf(this.serverInfo.getTaskState()) != -1) {
+	            		// mining is in progress
+	            		this.updateHits(id_source, limitExceeded, numAlreadyFound);
+	            		if (limitExceeded) {
+	            			this.hitsInProgress = false;
+	            		} else {
+	            			which.limitHits = searchLimit;
+	            			this.hitsInProgress = true;
+	            			this.getHits(id_source, which, this.serverInfo.countHits(id_source));
+	            		}
+	            	} else {
+	            		// TODO new state?
+	            		this.hitsInProgress = false;
+	            	}
             	}
-            	
             	
             }.bind(this)
         }).post({'data': which});
+        
+        //this.addHitRequest(req);
     },
     
     /**
      * Function: updateHits
      * This function is called to repaint hits for the active association rule
      */
-    updateHits: function(id_source, limitReached) {
+    updateHits: function(id_source, limitExceeded, numAlreadyFound) {
     	this.clearHits(id_source);
     	var hits = this.serverInfo.getHits(id_source);
     	
-    	if (hits.length != 0) {
+    	if (this.serverInfo.countHits(id_source) != 0) {
     		$('sourceLabel'+id_source).show('inline');
-    	} else {
-    		$('sourceLabel'+id_source).hide();
     	}
     	
-    	for(var actualRule = 0; actualRule < hits.length; actualRule++){
+    	for(var actualRule = 0; actualRule < hits.length; actualRule++) {
+    		// do not display more rules than set limit
+    		if ((this.numHitsDisplayed - numAlreadyFound + actualRule) == this.maxNumHits) { break; }
+    		
     		hit = hits[actualRule];
     		hit.setMaxSize(this.maxSize / 2);
     		hit.addEvent("display", function(){
@@ -365,7 +386,9 @@ var AsociationRules = new Class({
     	
     	$('limitHitsSubmit').show('inline');
     	
-    	if (limitReached) {
+    	this.numHitsDisplayed = Math.min(this.maxNumHits, this.numHitsDisplayed + this.serverInfo.countHits(id_source) - numAlreadyFound);
+    	
+    	if (limitExceeded) {
     		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed + ' ' + this.language.getName(this.language.HITS_LIMIT_REACHED, this.lang);
     	} else {
     		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed;	
@@ -380,7 +403,35 @@ var AsociationRules = new Class({
      */
     clearHits: function(id_source){
     	$('sourceHits' + id_source).empty();
+    	$('sourceLabel' + id_source).hide();
+    },
+    
+    /**
+     * Function: addHitRequest
+     * TODO function spec
+     * 
+     * TODO params doc
+     */
+    addHitRequest: function(req){
+    	//this.hitRequests[] = req;
+    },
+    
+    /**
+     * Function: cancelHitRequests
+     * TODO function spec
+     * 
+     * TODO params doc
+     */
+    cancelHitRequests: function() {
+    //	for (i = 0; i < this.hit)
+    //	this.hitRequests[] = req;
+        
+        
+    	//myRequest.cancel();
+    	//myRequest.isRunning()
     }
+
+    
     
 });
 
