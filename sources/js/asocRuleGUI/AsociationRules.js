@@ -355,7 +355,7 @@ var AsociationRules = new Class({
             }.bind(this)
         }).post({'data': which});
         
-        //this.addHitRequest(req);
+        this.addHitRequest(req);
     },
     
     /**
@@ -413,22 +413,21 @@ var AsociationRules = new Class({
      * TODO params doc
      */
     addHitRequest: function(req){
-    	//this.hitRequests[] = req;
+    	this.hitRequests.push(req);
     },
     
     /**
-     * Function: cancelHitRequests
+     * Function: stopHitRequests
      * TODO function spec
      * 
      * TODO params doc
      */
-    cancelHitRequests: function() {
-    //	for (i = 0; i < this.hit)
-    //	this.hitRequests[] = req;
-        
-        
-    	//myRequest.cancel();
-    	//myRequest.isRunning()
+    stopHitRequests: function() {
+    	for (i = 0; i < this.hitRequests.length; i++) {
+    		if (this.hitRequests[i].running) {
+    			this.hitRequests[i].cancel();
+    		}
+    	}
     }
 
     
