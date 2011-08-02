@@ -63,7 +63,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
       
       // init XPath
       $this->ddXpath = new DOMXPath($this->dd); 
-      $this->ddXpath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+      $this->ddXpath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
   }
     
   public function serializeRules($json, $forcedDepth = 3, $minBracketSize = 5) {
@@ -241,7 +241,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     // extension metabase
     $extension = $this->finalXmlDocument->createElement('Extension');
     $extension->setAttribute('name', 'metabase');
-    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/@metabase")->item(0)->value);
+    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[Name='Metabase']/Value")->item(0)->value);
     $this->arQuery->appendChild($extension);
     
     $bbaSettings = $this->finalXmlDocument->createElement("BBASettings");
@@ -315,22 +315,10 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   private function createDataDescription($root) {
     $dictionary = $this->finalXmlDocument->createElement("DataDescription");
     $this->dictionary = $root->appendChild($dictionary);
-    // Get data from Session
-    $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
-
-    // load XML
-    $domDD = new DomDocument();
-    if (file_exists($domDD1)) {
-        $domDD->load($domDD1);
-    } else {
-        $domDD->loadXML($domDD1);
-    }
     
     // get <Dictionary>
-    $xPath = new DOMXPath($domDD);
-    $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
     $anXPathExpr = "//dd:DataDescription";
-    $field = $xPath->query($anXPathExpr);
+    $field = $this->ddXpath->query($anXPathExpr);
     foreach ($field as $elField) {
       $fields = $elField->childNodes;
       foreach ($fields as $fieldSmall) {

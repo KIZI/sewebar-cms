@@ -54,7 +54,11 @@ class TaskSettingDBA {
     public function toJSON() {
         // Pro vsechny refs
         $elements = array();
-        $elements[] = Utils::getBoolean("(", "lbrac");
+        
+        if (count($this->refs) > 1) {
+          $elements[] = Utils::getBoolean("(", "lbrac");
+        }
+        
         for ($actualEl = 0; $actualEl < count($this->refs); $actualEl++) {
             if ($this->connective == "NEG") {
                 $elements[] = Utils::getBoolean($this->connective, strtolower($this->connective));
@@ -70,7 +74,10 @@ class TaskSettingDBA {
                 $elements[] = Utils::getBoolean($this->connective, strtolower($this->connective));
             }
         }
-        $elements[] = Utils::getBoolean(")", "rbrac");
+        if (count($this->refs) > 1) {
+          $elements[] = Utils::getBoolean(")", "rbrac");
+        }
+        
         return $elements;
     }
 

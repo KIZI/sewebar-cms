@@ -54,7 +54,11 @@ class DBA{
     public function toJSON(){
         // Pro vsechny refs
         $elements = array();
-        $elements[] = Utils::getBoolean("(", "lbrac");
+        
+        if (count($this->refs) > 1) {
+          $elements[] = Utils::getBoolean("(", "lbrac");
+        }
+        
         for($actualEl = 0; $actualEl < count($this->refs);$actualEl++){
             if($this->connective == "NEG"){
                 $elements[] = Utils::getBoolean($this->connective, strtolower($this->connective));
@@ -70,7 +74,11 @@ class DBA{
                 $elements[] = Utils::getBoolean($this->connective, strtolower($this->connective));
             }
         }
-        $elements[] = Utils::getBoolean(")", "rbrac");
+        
+        if (count($this->refs) > 1) {
+          $elements[] = Utils::getBoolean(")", "rbrac");
+        }
+        
         return $elements;
     }
 }
@@ -142,7 +150,8 @@ class BBA{
  * This class represents one rule
  *
  * @author Jakub Balhar
- * @version 1.0
+ * @author Bc. Radek Skrabal <radek@skrabal.me>
+ * @version 2.0
  */
 class AsociationRule{
     /**
@@ -163,11 +172,15 @@ class AsociationRule{
         }    
         
         $this->elements = array();
+        
+        // init BBAs
         $elements = $domER->getElementsByTagName('BBA');
         foreach ($elements as $element){
-            $bba = new BBA($element, $this->elements);
+            $bba = new BBA($element);
             $this->elements[$bba->getId()] = $bba;
         }
+        
+        // init DBAs
         $elements = $domER->getElementsByTagName('DBA');
         foreach ($elements as $element){
             $dba = new DBA($element, $this->elements);
