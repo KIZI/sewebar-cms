@@ -1,7 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> 
-<data:DataDescription xmlns:data="http://keg.vse.cz/ns/datadescription0_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmml="http://www.dmg.org/PMML-4_0" xsi:schemaLocation="http://keg.vse.cz/ns/datadescription0_1 http://sewebar.vse.cz/schemas/DataDescription0_1.xsd">
-    <Dictionary sourceSubType="TransformationDictionary" sourceType="PMML" sourceName="Loans" default="true" metabase="LM LMBarbora.mdb MB">
-        <Field name="Age_in_years" dataType="string">
+<?xml-model href="http://sewebar.vse.cz/schemas/DataDescription0_2.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<data:DataDescription xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://keg.vse.cz/ns/datadescription0_2 http://sewebar.vse.cz/schemas/DataDescription0_2.xsd"
+    xmlns:data="http://keg.vse.cz/ns/datadescription0_2">
+    <Dictionary sourceDictType="TransformationDictionary" sourceFormat="PMML" default="true"
+        completeness="All" id="bkef">
+        <Identifier>
+            <Name>Metabase</Name>
+            <Value>LM LMBarbora.mdb MB</Value>
+        </Identifier>
+        <Field dataType="string">
+            <Name>Age_in_years</Name>
             <Category>21</Category>
             <Category>22</Category>
             <Category>23</Category>
@@ -50,7 +58,8 @@
             <Category>66</Category>
             <Category>67</Category>
         </Field>
-        <Field name="District" dataType="string">
+        <Field dataType="string">
+            <Name>District</Name>
             <Category>Benesov</Category>
             <Category>Beroun</Category>
             <Category>Blansko</Category>
@@ -129,11 +138,13 @@
             <Category>Zlin</Category>
             <Category>Znojmo</Category>
         </Field>
-        <Field name="Quality" dataType="string">
+        <Field dataType="string">
+            <Name>Quality</Name>
             <Category>good</Category>
             <Category>bad</Category>
         </Field>
-        <Field name="Salary">
+        <Field>
+            <Name>Salary</Name>
             <Category>low</Category>
             <Category>avg</Category>
             <Category>high</Category>

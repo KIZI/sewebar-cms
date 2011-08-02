@@ -198,16 +198,20 @@ class GetDataARBuilderQuery extends AncestorGetData {
         $OPEN = "open";
         //$CLOSED = "closed";
         $xPath = new DOMXPath($this->domDD);
-        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
         $anXPathExpr = "//dd:DataDescription/Dictionary[@default='true']/Field";
         $field = $xPath->query($anXPathExpr);
         $attributeArray = array();
         foreach ($field as $elField) {
             $attribute = array();
-            $attribute['name'] = $elField->getAttribute("name");
             $fieldChildren = $elField->childNodes;
             $choices = array();
             foreach ($fieldChildren as $elFieldChildren) {
+                // init field name
+                if ($elFieldChildren->nodeName == "Name") {
+                  $attribute['name'] = $elFieldChildren->nodeValue;  
+                }
+              
                 if ($elFieldChildren->nodeName == "Category") {
                     $choices[] = $elFieldChildren->nodeValue;
                 }
@@ -521,15 +525,13 @@ class GetDataARBuilderQuery extends AncestorGetData {
      * It solves the rules if the data format is AssociationRules
      */
     private function solveAssociationRules() {
-        $ruleAr = array();
         $rules = $this->domER->getElementsByTagName('AssociationRule');
-        foreach ($rules as $rule) {
-          $ruleAr[] = new AsociationRule($rule, $this->domER);
+        foreach ($rules as $k => $rule) {
+          $ar = new AsociationRule($rule, $this->domER);
+          $this->jsonObject["rule".$k] = $ar->toJSON();
         }
-        for ($actualRule = 0; $actualRule < count($ruleAr); $actualRule++) {
-            $this->jsonObject["rule" . $actualRule] = $ruleAr[$actualRule]->toJSON();
-        }
-        $this->jsonObject["rules"] = count($ruleAr);
+        
+        $this->jsonObject["rules"] = count($rules);
     }
 
     /**

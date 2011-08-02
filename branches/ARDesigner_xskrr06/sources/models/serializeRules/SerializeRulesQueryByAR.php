@@ -47,6 +47,10 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
         // Serialize XML
 
         $this->createXML();
+        
+        // refactor output to different XML Schema version
+        $this->finalXMLDocument = Utils::refactorXml($this->finalXMLDocument, 'http://keg.vse.cz/ns/arbuilder0_2', 'http://keg.vse.cz/ns/arbuilder0_1');
+        
         return $this->finalXMLDocument->saveXML();
     }
 
@@ -188,7 +192,7 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
         }
         // get <Dictionary>
         $xPath = new DOMXPath($domDD);
-        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
         $anXPathExpr = "//dd:DataDescription";
         $field = $xPath->query($anXPathExpr);
         foreach ($field as $elField) {
