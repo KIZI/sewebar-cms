@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.14 (20.7.2011)
+ * @version 1.15 (2.8.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
@@ -73,9 +73,10 @@ public class XQuery_servlet extends HttpServlet {
                 String queryDir = settings[2];
                 String containerName = settings[3];
                 String useTransformation = settings[4];
-                String xsltPath = settings[5];
-                String tempDir = settings[6];
-                String schemaPath = settings[7];
+                String xsltPathPMML = settings[5];
+                String xsltPathBKEF = settings[6];
+                String tempDir = settings[7];
+                String schemaPath = settings[8];
 
                 if (settingsError != null) {
                         output += "<error><![CDATA[Trida: XQuery_servlet | Metoda: processRequest | Chyba: " + settingsError + "]]></error>";
@@ -98,9 +99,9 @@ public class XQuery_servlet extends HttpServlet {
                                 // Vytvoreni instanci trid QueryHandler, BDBXMLHandler a Tester
                                 QueryHandler qh = new QueryHandler(queryDir);
                                 SchemaChecker sc = new SchemaChecker(schemaPath);
-                                BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, sc, containerName, useTransformation, xsltPath);
+                                BDBXMLHandler bh = new BDBXMLHandler(mgr, qh, sc, containerName, useTransformation, xsltPathPMML, xsltPathBKEF);
                                 QueryMaker qm = new QueryMaker(containerName);
-                                Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPath, tempDir, settingsError);
+                                Tester tester = new Tester(qh, bh, mgr, envDir, queryDir, containerName, useTransformation, xsltPathPMML, xsltPathBKEF, tempDir, settingsError);
 
                                 String id = request.getParameter("id").toString();
                                 String content = request.getParameter("content").toString();
@@ -244,9 +245,10 @@ public class XQuery_servlet extends HttpServlet {
                         "\n<option value=\"true\""+TR+">True</option>" +
                         "\n<option value=\"false\""+FL+">False</option>" +
                     "\n</select></td></tr>" +
-                    "\n<tr><td>XSLT path:</td><td><input type=\"text\" name=\"xsltPath\" value=\""+ settings[5] +"\" size=\"100\"></td></tr>" +
-                    "\n<tr><td>Temporary directory:</td><td><input type=\"text\" name=\"tempDir\" value=\""+ settings[6] +"\" size=\"100\"></td></tr>" +
-                    "\n<tr><td>Schema Path:</td><td><input type=\"text\" name=\"schemaPath\" value=\""+ settings[7] +"\" size=\"100\"></td></tr>" +
+                    "\n<tr><td>XSLT path for PMML:</td><td><input type=\"text\" name=\"xsltPathPMML\" value=\""+ settings[5] +"\" size=\"100\"></td></tr>" +
+                "\n<tr><td>XSLT path for BKEF:</td><td><input type=\"text\" name=\"xsltPathBKEF\" value=\""+ settings[6] +"\" size=\"100\"></td></tr>" +
+                    "\n<tr><td>Temporary directory:</td><td><input type=\"text\" name=\"tempDir\" value=\""+ settings[7] +"\" size=\"100\"></td></tr>" +
+                    "\n<tr><td>Schema Path:</td><td><input type=\"text\" name=\"schemaPath\" value=\""+ settings[8] +"\" size=\"100\"></td></tr>" +
                     "\n<tr><td></td><td><input type=\"submit\" value=\"Upravit nastaveni\"></td></tr>" +
                     "\n</form>" +
                     "\n</table>" +
@@ -261,14 +263,15 @@ public class XQuery_servlet extends HttpServlet {
      * @param request prijaty http request
      */
     private void changeSettings(XMLSettingsReader sr, File settingsFile, HttpServletRequest request){
-        String[] settings = new String[7];
+        String[] settings = new String[8];
         settings[0] = request.getParameter("envDir").toString();
         settings[1] = request.getParameter("queryDir").toString();
         settings[2] = request.getParameter("containerName").toString();
         settings[3] = request.getParameter("useTransformation").toString();
-        settings[4] = request.getParameter("xsltPath").toString();
-        settings[5] = request.getParameter("tempDir").toString();
-        settings[6] = request.getParameter("schemaPath").toString();
+        settings[4] = request.getParameter("xsltPathPMML").toString();
+        settings[5] = request.getParameter("xsltPathBKEF").toString();
+        settings[6] = request.getParameter("tempDir").toString();
+        settings[7] = request.getParameter("schemaPath").toString();
         sr.writeSettings(settingsFile, settings);
     }
     
@@ -289,7 +292,8 @@ public class XQuery_servlet extends HttpServlet {
                                         + "\n\t<queryDir></queryDir>"
                                         + "\n\t<containerName></containerName>"
                                         + "\n\t<useTransformation></useTransformation> <!-- true / false -->"
-                                        + "\n\t<transformationPath></transformationPath>"
+                                        + "\n\t<transformationPathPMML></transformationPathPMML>"
+                                        + "\n\t<transformationPathBKEF></transformationPathBKEF>"
                                         + "\n\t<tempDir></tempDir>"
                                         + "\n\t<schemaPath></schemaPath>"
                                     + "\n</settings>";

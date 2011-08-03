@@ -28,7 +28,7 @@ public class XMLSettingsReader {
      * @return Jednotlive polozky nastaveni ulozene v poli stringu
      */
     public String[] readSettings(File xmlFile){
-            String[] output = new String[8];
+            String[] output = new String[9];
             try {
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
@@ -80,8 +80,8 @@ public class XMLSettingsReader {
                     } else { output[4] = ""; }
                 } else { output[4] = ""; }
 
-                if (doc.getElementsByTagName("transformationPath") != null) {
-                    NodeList transPathList = doc.getElementsByTagName("transformationPath");
+                if (doc.getElementsByTagName("transformationPathPMML") != null) {
+                    NodeList transPathList = doc.getElementsByTagName("transformationPathPMML");
                     if (transPathList.item(0) != null) {
                         Element transPathElement = (Element)transPathList.item(0);
                         NodeList transPath = transPathElement.getChildNodes();
@@ -90,6 +90,17 @@ public class XMLSettingsReader {
                         else { output[5] = (transPathNode.getNodeValue()); }
                     } else { output[5] = ""; }
                 } else { output[5] = ""; }
+                
+                if (doc.getElementsByTagName("transformationPathBKEF") != null) {
+                    NodeList transPathList = doc.getElementsByTagName("transformationPathBKEF");
+                    if (transPathList.item(0) != null) {
+                        Element transPathElement = (Element)transPathList.item(0);
+                        NodeList transPath = transPathElement.getChildNodes();
+                        Node transPathNode = transPath.item(0);
+                        if (transPathNode == null) { output[6] = ""; }
+                        else { output[6] = (transPathNode.getNodeValue()); }
+                    } else { output[6] = ""; }
+                } else { output[6] = ""; }
 
                 if (doc.getElementsByTagName("tempDir") != null) {
                     NodeList tempDirList = doc.getElementsByTagName("tempDir");
@@ -97,10 +108,10 @@ public class XMLSettingsReader {
                         Element tempDirElement = (Element)tempDirList.item(0);
                         NodeList tempDir = tempDirElement.getChildNodes();
                         Node tempDirNode = tempDir.item(0);
-                        if (tempDirNode == null) { output[6] = ""; }
-                        else { output[6] = (tempDirNode.getNodeValue()); }
-                    } else { output[6] = ""; }
-                } else { output[6] = ""; }
+                        if (tempDirNode == null) { output[7] = ""; }
+                        else { output[7] = (tempDirNode.getNodeValue()); }
+                    } else { output[7] = ""; }
+                } else { output[7] = ""; }
 
                 
                 if (doc.getElementsByTagName("schemaPath") != null) {
@@ -109,10 +120,10 @@ public class XMLSettingsReader {
                         Element schemaPathElement = (Element)schemaPathList.item(0);
                         NodeList schemaPath = schemaPathElement.getChildNodes();
                         Node schemaPathNode = schemaPath.item(0);
-                        if (schemaPathNode == null) { output[7] = ""; }
-                        else { output[7] = (schemaPathNode.getNodeValue()); }
-                    } else { output[7] = ""; }
-                } else { output[7] = ""; }
+                        if (schemaPathNode == null) { output[8] = ""; }
+                        else { output[8] = (schemaPathNode.getNodeValue()); }
+                    } else { output[8] = ""; }
+                } else { output[8] = ""; }
         } catch (ParserConfigurationException e) {
                 output[0] += ("ParserConfigurationException: " + e.toString() + "\n");
                 //e.printStackTrace();
@@ -138,9 +149,10 @@ public class XMLSettingsReader {
                     + "\n\t<queryDir>" + settings[1] + "</queryDir>"
                     + "\n\t<containerName>" + settings[2] + "</containerName>"
                     + "\n\t<useTransformation>" + settings[3] + "</useTransformation> <!-- true / false -->"
-                    + "\n\t<transformationPath>" + settings[4] + "</transformationPath>"
-                    + "\n\t<tempDir>" + settings[5] + "</tempDir>"
-                    + "\n\t<schemaPath>" + settings[6] + "</schemaPath>"
+                    + "\n\t<transformationPathPMML>" + settings[4] + "</transformationPathPMML>"
+                    + "\n\t<transformationPathBKEF>" + settings[5] + "</transformationPathBKEF>"
+                    + "\n\t<tempDir>" + settings[6] + "</tempDir>"
+                    + "\n\t<schemaPath>" + settings[7] + "</schemaPath>"
                 + "\n</settings>";
         try {
             FileOutputStream fos = new FileOutputStream(xmlFile);
