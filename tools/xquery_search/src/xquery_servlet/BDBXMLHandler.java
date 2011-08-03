@@ -42,7 +42,8 @@ public class BDBXMLHandler {
     SchemaChecker sc;
     String containerName;
     String useTransformation;
-    String xsltPath;
+    String xsltPathPMML;
+    String xsltPathBKEF;
     Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\',?ˇ´<>¨;¤×÷§]");
     String replaceBy = "_";
     
@@ -54,13 +55,14 @@ public class BDBXMLHandler {
      * @param useTransformation pouzit transformaci - true/false
      * @param xsltPath cesta k souboru s xslt transformaci
      */
-    public BDBXMLHandler(XmlManager mgr, QueryHandler qh, SchemaChecker sc, String containerName, String useTransformation, String xsltPath) {
+    public BDBXMLHandler(XmlManager mgr, QueryHandler qh, SchemaChecker sc, String containerName, String useTransformation, String xsltPathPMML, String xsltPathBKEF) {
         this.mgr = mgr;
         this.qh = qh;
         this.sc = sc;
         this.containerName = containerName;
         this.useTransformation = useTransformation;
-        this.xsltPath = xsltPath;
+        this.xsltPathPMML = xsltPathPMML;
+        this.xsltPathBKEF = xsltPathBKEF;
     }
 
     /**
@@ -285,17 +287,22 @@ public class BDBXMLHandler {
     public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) throws IOException{
         String output = "";
         String xml_doc = "";
-        String validation[] = sc.validate(document);
-        if(validation[0].equals("1")){
+        String validation[] = null;
+        File xsltFile;
             try {
                 if (useTransformation.equals("true")) {
-                    File xsltFile = new File(xsltPath);
+                    if (document.contains("sourceType=\"BKEF\"")) {
+                        xsltFile = new File(xsltPathBKEF);
+                    } else {
+                        validation = sc.validate(document);
+                        xsltFile = new File(xsltPathPMML);
+                    }
                     XSLTTransformer xslt = new XSLTTransformer();
                     xml_doc += xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
                 } else {
                     xml_doc = document;
                 }
-
+            if(validation == null || (validation != null && validation[0].equals("1"))){        
                 XmlContainer cont = mgr.openContainer(containerName);
                 XmlTransaction txn = mgr.createTransaction();
 
@@ -306,14 +313,14 @@ public class BDBXMLHandler {
 
                 txn.commit();
                 closeContainer(cont);
+            } else {
+                output += "<error>"+validation[1]+"</error>";
+            }
             } catch (XmlException e) {
                     output += "<error>"+e.toString()+"</error>";
             } catch (Throwable e) {
                     output += "<error>"+e.toString()+"</error>";
             }
-        } else {
-            output += "<error>"+validation[1]+"</error>";
-        }
         return output;
     }
 
@@ -345,7 +352,7 @@ public class BDBXMLHandler {
         if(validation[0].equals("1")){
             try {
                 if (useTransformation.equals("true")) {
-                    File xsltFile = new File(xsltPath);
+                    File xsltFile = new File(xsltPathPMML);
                     XSLTTransformer xslt = new XSLTTransformer();
                     xml_doc = xslt.xsltTransformation(xml_doc, xsltFile, docID, creationTime, reportUri);
                     output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";

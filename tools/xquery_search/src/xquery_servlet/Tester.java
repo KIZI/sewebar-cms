@@ -15,7 +15,8 @@ public class Tester {
 	String queryDir;
 	String containerName;
 	String useTransformation;
-	String xsltPath;
+	String xsltPathPMML;
+        String xsltPathBKEF;
 	String tempDir;
 	String settingsError;
 
@@ -32,7 +33,7 @@ public class Tester {
          * @param tempDir slozka pro docasne soubory
          * @param settingsError chyby pri nacitani nastaveni
 	 */
-    public Tester(QueryHandler qh, BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPath, String tempDir, String settingsError) {
+    public Tester(QueryHandler qh, BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPathPMML, String xsltPathBKEF, String tempDir, String settingsError) {
     	this.qh = qh;
     	this.bh = bh;
     	this.mgr = mgr;
@@ -40,7 +41,8 @@ public class Tester {
     	this.queryDir = queryDir;
     	this.containerName = containerName;
     	this.useTransformation = useTransformation;
-    	this.xsltPath = xsltPath;
+    	this.xsltPathPMML = xsltPathPMML;
+        this.xsltPathBKEF = xsltPathBKEF;
     	this.tempDir = tempDir;
     	this.settingsError = settingsError;
     }
@@ -57,7 +59,8 @@ public class Tester {
                     "<queryDir>" + queryDir + "</queryDir>" +
                     "<contName>" + containerName + "</contName>" +
                     "<useTrans>" + useTransformation + "</useTrans>" +
-                    "<xsltPath>" + xsltPath + "</xsltPath>" +
+                    "<xsltPathPMML>" + xsltPathPMML + "</xsltPathPMML>" +
+                    "<xsltPathBKEF>" + xsltPathBKEF + "</xsltPathBKEF>" +
                     "<tempDir>" + tempDir + "</tempDir>" +
                     "<err>" + settingsError + "</err>" +
                 "</settings>";
