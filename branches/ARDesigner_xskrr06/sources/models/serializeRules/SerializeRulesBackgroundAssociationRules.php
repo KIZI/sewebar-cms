@@ -186,7 +186,7 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
         }
         // get <Dictionary>
         $xPath = new DOMXPath($domDD);
-        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_1");
+        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
         $anXPathExpr = "//dd:DataDescription";
         $field = $xPath->query($anXPathExpr);
         foreach ($field as $elField) {

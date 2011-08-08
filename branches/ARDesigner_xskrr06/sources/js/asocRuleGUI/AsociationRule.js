@@ -19,10 +19,11 @@ var AsociationRule = new Class({
      * Returns:
      * {Void} Nothing
      */
-    initialize: function(serverInfo){
+    initialize: function(serverInfo, displayMode){
         this.elements = new Array(); // It stores Attribute, InterestMeasure or Boolean
         this.elementsDisplayed = new Array();
         this.serverInfo = serverInfo;
+        this.displayMode = displayMode;
         this.allowedCombinations = new Array();
         this.initAllowedCom();
         this.maxSize = 25;
@@ -744,7 +745,8 @@ var AsociationRule = new Class({
         var elementsToSolve = this.elements.slice(startingPosition,position);
         var missingBrackets = this.countBrackets();
         var rbrac = new BooleanCl(")","rbrac");
-        var attr = new Attribute("attr1","",new Array());
+        
+        var attr = new Attribute("attr1","",new Array(), this.displayMode);
         if(elementsToSolve[elementsToSolve.length-1] != null){
             if(elementsToSolve[elementsToSolve.length-1].isElementBoolean()){
                 elementsToSolve.push(attr);
@@ -944,11 +946,13 @@ var AsociationRule = new Class({
      * {HTMLElement} element representing this AsociationRule
      */
     display: function(){
-        this.ruleDiv = new Element('div', {
+        /*
+    	this.ruleDiv = new Element('div', {
             name: "ruleDiv",
             'class': "rule"
         });
-        this.ruleDiv.setStyle("height",2*this.maxSize+40);
+        */
+    	
         this.ruleDiv.asociationRule = this;
         var placeForEl = new PlaceForARElement();
         this.placeHTML = placeForEl.display();
@@ -961,9 +965,8 @@ var AsociationRule = new Class({
             this.createNewElement(placeForEl, this.elements[actualElement], actualElement);
         }
         this.placeHTML.set("name","rule"+actualElement);
-        this.placeHTML.setStyle("height",this.maxSize+5);
         this.placeHTML.inject(this.ruleDiv);
-
+        
         if(lastElement != null){
         //this.lastElement = lastElement;
         }
@@ -1003,12 +1006,10 @@ var AsociationRule = new Class({
         var placeForElHTML = placeForElement.display();
         
         if(actualElement != null){
-            elementToBeDisplayed.setStyle("height",this.maxSize);
             elementToBeDisplayed.inject(placeForElHTML);
         }
         placeForElHTML.inject(this.ruleDiv);
         placeForElHTML.set("name","rule"+elementNumber);
-        placeForElHTML.setStyle("height",this.maxSize+5);
 
         // Possibly wrong
         this.placeHTML.dispose();

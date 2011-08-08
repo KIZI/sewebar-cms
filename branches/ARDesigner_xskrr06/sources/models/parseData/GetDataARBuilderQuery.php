@@ -80,7 +80,8 @@ class GetDataARBuilderQuery extends AncestorGetData {
 
         $this->solveNumberBBA();
         $this->solveDepthNesting();
-        $this->solveMoreRules();
+        
+        $this->solveMode();
         
         if ($this->domER !== null) {
           $this->solveTaskState();
@@ -459,12 +460,11 @@ class GetDataARBuilderQuery extends AncestorGetData {
     }
 
     /**
-     * It solves whether it is possible to create more than one rule.
+     * It solves ARBuilder mode - mining or displaying rules.
      */
-    private function solveMoreRules() {
-      // solve moreRules
-      $moreRules = $this->domFL->getElementsByTagName("AllowMultipleRules")->item(0);
-      $this->jsonObject["moreRules"] = $moreRules !== null ? $moreRules->nodeValue : null;
+    private function solveMode() {
+      $displayMode = $this->domFL->getElementsByTagName("AllowMultipleRules")->item(0);
+      $this->jsonObject["displayMode"] = $displayMode !== null ? $displayMode->nodeValue : false;
     }
 
     /**
@@ -531,7 +531,7 @@ class GetDataARBuilderQuery extends AncestorGetData {
           $this->jsonObject["rule".$k] = $ar->toJSON();
         }
         
-        $this->jsonObject["rules"] = count($rules);
+        $this->jsonObject["rules"] = $rules->length;
     }
 
     /**
