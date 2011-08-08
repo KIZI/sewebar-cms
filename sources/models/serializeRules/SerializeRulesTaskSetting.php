@@ -241,7 +241,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     // extension metabase
     $extension = $this->finalXmlDocument->createElement('Extension');
     $extension->setAttribute('name', 'metabase');
-    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[Name='Metabase']/Value")->item(0)->value);
+    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[Name='Metabase']/Value")->item(0)->nodeValue);
     $this->arQuery->appendChild($extension);
     
     $bbaSettings = $this->finalXmlDocument->createElement("BBASettings");

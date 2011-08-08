@@ -13,10 +13,12 @@
     $FL = "XML/featurelistQueryByAr.xml";
     $ER = null;
     
-    /* 
+    /*
     // BKEF patterns
     $DD = "XML/bkef/datadescription.xml";
+    $DD = "XML/bkef/barbora_BKEF2FDML0_2_updated.xml";
     $FL = "XML/bkef/featurelist.xml";
+    $ER = null;
     $ER = "XML/bkef/barbora_bkef11_patterns.xml"; 
     */
     
