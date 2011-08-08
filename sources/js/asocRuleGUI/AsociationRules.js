@@ -138,19 +138,14 @@ var AsociationRules = new Class({
                 AsociationRules.attrCoef = item.attrCoef;
                 LanguageSupport.actualLang = this.lang;
 
-                this.serverInfo = new ServerInfo(item)
-                var moreRules = this.serverInfo.getMoreRules();
-                if(moreRules == "false"){
-                    moreRules = false;
-                }
-                else{
-                    moreRules = true;
-                }
-                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, moreRules, this.maxNumHits, this.sources);
+                this.serverInfo = new ServerInfo(item);
+                var displayMode = this.serverInfo.getDisplayMode();
+                
+                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, displayMode, this.maxNumHits, this.sources);
 
-                if(moreRules){
-                    $("newRule").addEvent('click', function(event){
-                        var newRule = new AsociationRule(this.serverInfo);
+                if(displayMode){
+                    $("newRule").addEvent('click', function(event) {
+                        var newRule = new AsociationRule(this.serverInfo, displayMode);
                         newRule.addEvent("display", function(){
                             this.setDraggability();
                         }.bind(this));
@@ -161,57 +156,57 @@ var AsociationRules = new Class({
                         this.drag.removeDragability();
                         this.drag.createDragability();
                     }.bind(this));
+                    
+                    $("saveRule").addEvent('click', function(event) {
+                        var wholeJson = new JSONHelp();
+                        var rule = null;
+                        for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
+                            rule = this.asociationRules[actualRule].toJSON();
+                            if(rule == null){
+                                new Hlaseni(this.language.getName(this.language.INCORRECT_RULE, this.lang));
+                                return;
+                            }
+                            wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
+                        }
+                        wholeJson.rules = actualRule;
+                        var jsonString = JSON.encode(wholeJson);
+                        $$('.rule').each(function(ele){
+                            ele.dispose();
+                        });
+                        this.saveServer(jsonString);
+                    }.bind(this));
+                } else {
+                	$("getHits").addEvent('click', function(event){
+                    	var wholeJson = new JSONHelp();
+                    	this.maxNumHits = $('limitHitsInput').value;
+                    	wholeJson.limitHits = this.maxNumHits;
+                        var rule = null;
+                        for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
+                            rule = this.asociationRules[actualRule].toJSON();
+                            if(rule == null){
+                            	this.setRuleLabel(this.language.getName(this.language.RULE_STATE_INCOMPLETE, this.lang));
+                            	return;
+                            }
+                            wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
+                        }
+                        wholeJson.rules = actualRule;
+                        var jsonString = JSON.encode(wholeJson);
+                        
+                        this.setRuleLabel(this.language.getName(this.language.RULE_STATE_COMPLETE, this.lang));
+                        
+                        // call server and get hits
+                        this.numHitsDisplayed = 0;
+                        
+                        // clear hits
+                        
+                        // get hits for each source
+                        for (i = 0; i < this.sources.length; i++) {
+                        	this.clearHits(this.sources[i]["id"]);
+                        	this.sources[i]["inProgress"] = true;
+                        	this.getHits(this.sources[i]["id"], jsonString, 0);                    	
+                        }
+                    }.bind(this));
                 }
-
-                $("saveRule").addEvent('click', function(event){
-                    var wholeJson = new JSONHelp();
-                    var rule = null;
-                    for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
-                        rule = this.asociationRules[actualRule].toJSON();
-                        if(rule == null){
-                            new Hlaseni(this.language.getName(this.language.INCORRECT_RULE, this.lang));
-                            return;
-                        }
-                        wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
-                    }
-                    wholeJson.rules = actualRule;
-                    var jsonString = JSON.encode(wholeJson);
-                    $$('.rule').each(function(ele){
-                        ele.dispose();
-                    });
-                    this.saveServer(jsonString);
-                }.bind(this));
-                
-                $("getHits").addEvent('click', function(event){
-                	var wholeJson = new JSONHelp();
-                	this.maxNumHits = $('limitHitsInput').value;
-                	wholeJson.limitHits = this.maxNumHits;
-                    var rule = null;
-                    for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
-                        rule = this.asociationRules[actualRule].toJSON();
-                        if(rule == null){
-                        	$('ruleLabel').innerHTML = this.language.getName(this.language.RULE_STATE_INCOMPLETE, this.lang);
-                        	return;
-                        }
-                        wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
-                    }
-                    wholeJson.rules = actualRule;
-                    var jsonString = JSON.encode(wholeJson);
-                    
-                    $('ruleLabel').innerHTML = this.language.getName(this.language.RULE_STATE_COMPLETE, this.lang);
-                	
-                    // call server and get hits
-                    this.numHitsDisplayed = 0;
-                    
-                    // clear hits
-                    
-                    // get hits for each source
-                    for (i = 0; i < this.sources.length; i++) {
-                    	this.clearHits(this.sources[i]["id"]);
-                    	this.sources[i]["inProgress"] = true;
-                    	this.getHits(this.sources[i]["id"], jsonString, 0);                    	
-                    }
-                }.bind(this));
                 
                 this.maxSize = this.solveSize();
                 var allRules = this.serverInfo.getExistingRules();
@@ -225,8 +220,9 @@ var AsociationRules = new Class({
                 }
                 this.asociationRules = this.asociationRules.concat(allRules);
                 
-                if(!moreRules && this.asociationRules.length < 1){
-                    var newAsociationRule = new AsociationRule(this.serverInfo);
+                if(!displayMode && this.asociationRules.length < 1){
+                	
+                    var newAsociationRule = new AsociationRule(this.serverInfo, displayMode);
                     newAsociationRule.addEvent("display", function(){
                         this.setDraggability();
                     }.bind(this));
@@ -235,11 +231,15 @@ var AsociationRules = new Class({
                     // This should be injected into the left part.
                     newRuleDiv.inject($('rightDivPlace'));
                 }
-
+                
                 this.drag = new Dragability(".ARElement",".prvek");
                 this.setDraggability();
             }.bind(this)
         }).get();
+    },
+    
+    setRuleLabel: function($html) {
+    	$('ruleLabel').innerHTML = $html;
     },
 
     /**
@@ -304,7 +304,6 @@ var AsociationRules = new Class({
      */
     getHits: function(id_source, which, numAlreadyFound){
     	url = this.urlHits + id_source;
-    	
     	if (this.numHitsDisplayed != 0 && this.getSourcesInProgress(null)) {
     		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsFound+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
     	} else {
@@ -317,8 +316,6 @@ var AsociationRules = new Class({
             	if (this.numHitsDisplayed <= this.maxNumHits) {
 	            	this.serverInfo.solveHits(id_source, item);
 	            	this.serverInfo.solveTaskState(item);
-	            	console.log('TaskState: ' + this.serverInfo.getTaskState());
-
 	            	var limitExceeded = false;
 	            	if ((this.numHitsDisplayed - numAlreadyFound + this.serverInfo.countHits(id_source)) > this.maxNumHits) {
 	            		limitExceeded = true;
@@ -424,7 +421,7 @@ var AsociationRules = new Class({
      */
     stopHitRequests: function() {
     	for (i = 0; i < this.hitRequests.length; i++) {
-    		if (this.hitRequests[i].running) {
+    		if (this.hitRequests[i].isRunning()) {
     			this.hitRequests[i].cancel();
     		}
     	}

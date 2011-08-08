@@ -7,23 +7,18 @@
     require_once('sources/models/parseData/TaskSettingParser.php');
     require_once('sources/models/Utils.php');
     
+    // standard setting
     $DD = "XML/datadescription_0.2.xml";
     //$FL = "XML/featurelistQueryByAr_loose.xml";
     $FL = "XML/featurelistQueryByAr.xml";
     $ER = null;
     
-    //$FL = "XML/featurelist1.xml";
-    //$ER = "XML/taskSetting.xml";
-    //$ER = "XML/associationRules.xml";
-    //$ER = "XML/arQuery.xml";
-    //$ER = "testSelenium/test30Rules/associationRules.xml";
-    //$ER = "testSelenium/test30ElementsRule/associationRules.xml";
-    
-    /*
-    $DD = "tests/testSelenium/testSpeed200attributes/datadescription.xml";
-    $FL = "tests/testSelenium/testSpeed200attributes/featurelist.xml";
-    $ER = "tests/testSelenium/testSpeed200attributes/associationRules.xml";
-	*/
+    /* 
+    // BKEF patterns
+    $DD = "XML/bkef/datadescription.xml";
+    $FL = "XML/bkef/featurelist.xml";
+    $ER = "XML/bkef/barbora_bkef11_patterns.xml"; 
+    */
     
     $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
     echo $sr->getData();

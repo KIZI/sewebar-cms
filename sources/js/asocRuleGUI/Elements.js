@@ -126,13 +126,14 @@ var Attribute = new Class({
      * oneCategoryInfo    {Array} array of possible options for one category.
      * attributeFields  {Array} Array of possible attribute fields
      */
-    initialize: function(name, oneCategoryInfo, attributeFields){
+    initialize: function(name, oneCategoryInfo, attributeFields, displayMode){
         ATTTRIBUTE_TYPE = "attr";
         this.attributeFields = attributeFields;
         this.name = name;
         this.nameLang = name;
         this.type = ATTTRIBUTE_TYPE;
-
+        this.displayMode = displayMode;
+        
         // This sets one category info to all attrfFields, so they know it if they need it.
         for(var actualAttrFields = 0; actualAttrFields < attributeFields.length; actualAttrFields++){
             attributeFields[actualAttrFields].setOneCategoryInfo(oneCategoryInfo);
@@ -403,8 +404,10 @@ var Attribute = new Class({
         }
         $(this.specificId).set('html',textToDisplay);
     //this.fireEvent("save");
-        
-        $('getHits').fireEvent('click');
+
+        if (!this.displayMode) {
+        	$('getHits').fireEvent('click');
+        }
     },
 
     /**
@@ -599,11 +602,12 @@ var InterestMeasure = new Class({
      * explanation {String} explanation of this specific Interest measure.
      * fields   {Array} fields
      */
-    initialize: function(name, nameLang, explanation, fields){
+    initialize: function(name, nameLang, explanation, fields, displayMode){
         IM_TYPE = "oper";
         this.name = name;
         this.nameLang = nameLang;
         this.explanation = explanation;
+        this.displayMode = displayMode;
 
         this.fields = fields;
 
@@ -829,7 +833,9 @@ var InterestMeasure = new Class({
         $(this.specificId).set('html',textToDisplay);
     //this.fireEvent("save");
         
-        $('getHits').fireEvent('click');
+        if (!this.displayMode) {
+        	$('getHits').fireEvent('click');
+        }
     },
 
     /**

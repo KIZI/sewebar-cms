@@ -25,11 +25,13 @@ var BasicStructureGUI = new Class({
      * interestMeasures     {Array} Array of interestMeasures to be created
      * lang         {String} Language in which should the application be created.
      * limitHits    {String} Max. number of hits to be retreived
+     * displayMode  {Bool} Display mode
+     * sources      {Array} Sources for mining mode 
      */
-    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, moreRules, limitHits, sources){
+    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, displayMode, limitHits, sources){
         this.lang = lang;
         this.language = new LanguageSupport();
-        this.moreRules = moreRules;
+        this.displayMode = displayMode;
 
         // Create basic divs
         this.createMainDivs(idMainDiv, limitHits, sources);
@@ -58,7 +60,6 @@ var BasicStructureGUI = new Class({
         var rightDiv = utils.createDiv("right");
         var rightDivCreate = utils.createDiv("rightDivPlace");
         var rightDivButton = utils.createDiv("rightDivButton");
-        var rightDivHits = utils.createDiv("rightDivHits");
         var hitsHeader = utils.createDiv("hitsHeader");
         var booleansDiv = utils.createDivClas("booleans", "booleans");
 
@@ -71,38 +72,35 @@ var BasicStructureGUI = new Class({
         var booleansHeader = utils.createDivHtmlClas(this.language.getName(this.language.CONNECTIVES, this.lang), "headersLeft");
         var operatorsHeader = utils.createDivHtmlClas(this.language.getName(this.language.INTEREST_MEASURES, this.lang), "headersLeft");
         var attributesHeader = utils.createDivHtmlClas(this.language.getName(this.language.FIELDS, this.lang), "headersLeft");
-        var ruleHeader = utils.createDivIdHtmlClas("ruleLabel", this.language.getName(this.language.MINING_SETTING_CREATE, this.lang), "ruleLabel");
-       
-        // hits
-        var limitHitsDiv = utils.createDiv("limitHits");
-        var limitHitsLabel = utils.createLabel(this.language.getName(this.language.HITS_LIMIT, this.lang)); 
-        limitHitsLabel.inject(limitHitsDiv);
-        var limitHitsInput = utils.createInputText("limitHitsInput", limitHits);
-        limitHitsInput.inject(limitHitsDiv);
-        var limitHitsSubmit = utils.createInputSubmit("limitHitsSubmit", this.language.getName(this.language.HITS_SEARCH_AGAIN, this.lang));
-        limitHitsSubmit.addEvent('click', function(event) {
-        	limitHitsSubmit.hide();
-        	$("getHits").fireEvent('click');
-        }.bind(this));
-        limitHitsSubmit.hide();
-        limitHitsSubmit.inject(limitHitsDiv);
-        var hitsLabel = utils.createDivIdHtml("hitsLabel", this.language.getName(this.language.HITS_LABEL, this.lang), "hitsLabel"); 
-        hitsLabel.inject(hitsHeader);
-        limitHitsDiv.inject(hitsHeader);
         
-        // sources
-        for (i = 0; i < sources.length; i++) {
-        	var sourceLabel = utils.createIdLabel('sourceLabel' + sources[i]["id"], this.language.getName(this.language.HITS_SOURCE, this.lang) + ': ' + sources[i]["id"]);
-        	sourceLabel.hide();
-        	sourceLabel.inject(rightDivHits);
-        	var sourceDiv = utils.createDivIdClas('sourceHits' + sources[i]["id"], 'sourceHits');
-			sourceDiv.inject(rightDivHits);
-		}
-        
-        // Adding another rule
-        if(this.moreRules){
-            var nextRule = utils.createDivIdClas("newRule","newRule");
-            var nextRuleInnerDiv = utils.createHtmlIdClick("createRuleButton", this.language.getName(this.language.NEW_RULE, this.lang), "");
+        if (!this.displayMode) {
+        	var rightDivHits = utils.createDiv("rightDivHits");
+        	
+	        // hits
+	        var limitHitsDiv = utils.createDiv("limitHits");
+	        var limitHitsLabel = utils.createLabel(this.language.getName(this.language.HITS_LIMIT, this.lang)); 
+	        limitHitsLabel.inject(limitHitsDiv);
+	        var limitHitsInput = utils.createInputText("limitHitsInput", limitHits);
+	        limitHitsInput.inject(limitHitsDiv);
+	        var limitHitsSubmit = utils.createInputSubmit("limitHitsSubmit", this.language.getName(this.language.HITS_SEARCH_AGAIN, this.lang));
+	        limitHitsSubmit.addEvent('click', function(event) {
+	        	limitHitsSubmit.hide();
+	        	$("getHits").fireEvent('click');
+	        }.bind(this));
+	        limitHitsSubmit.hide();
+	        limitHitsSubmit.inject(limitHitsDiv);
+	        var hitsLabel = utils.createDivIdHtml("hitsLabel", this.language.getName(this.language.HITS_LABEL, this.lang), "hitsLabel"); 
+	        hitsLabel.inject(hitsHeader);
+	        limitHitsDiv.inject(hitsHeader);
+	        
+	        // sources
+	        for (i = 0; i < sources.length; i++) {
+	        	var sourceLabel = utils.createIdLabel('sourceLabel' + sources[i]["id"], this.language.getName(this.language.HITS_SOURCE, this.lang) + ': ' + sources[i]["id"]);
+	        	sourceLabel.hide();
+	        	sourceLabel.inject(rightDivHits);
+	        	var sourceDiv = utils.createDivIdClas('sourceHits' + sources[i]["id"], 'sourceHits');
+				sourceDiv.inject(rightDivHits);
+			}
         }
 
         var buttonPlaceDown = utils.createDivIdClas("buttonPlaceDown", "buttonPlaceDown");
@@ -111,9 +109,7 @@ var BasicStructureGUI = new Class({
         var save = utils.createDivClas("saveWhole");
         var saveInnerDiv = utils.createHtmlIdClick("saveRule", this.language.getName(this.language.SAVE, this.lang), "")
 
-        // get hits
-        var hitsButton = utils.createHtmlIdClick("getHits", this.language.getName(this.language.SAVE, this.lang), "")
-        
+       
         mainDiv.inject($(idMainDiv));
         rightDiv.inject(mainDiv);
         leftDiv.inject(mainDiv);
@@ -125,25 +121,36 @@ var BasicStructureGUI = new Class({
         operatorsHeader.inject(operators);
         attributes.inject(leftDiv);
         attributesHeader.inject(attributes);
-        ruleHeader.inject(rightDiv);
-
+        
+        if (!this.displayMode) {
+        	var ruleHeader = utils.createDivIdHtmlClas("ruleLabel", this.language.getName(this.language.MINING_SETTING_CREATE, this.lang), "ruleLabel");
+            ruleHeader.inject(rightDiv);
+        }
+        
         rightDivCreate.inject(rightDiv);
         rightDivButton.inject(rightDiv);
         
         hitsHeader.inject(rightDiv);
-        
-        rightDivHits.inject(rightDiv);
 
         buttonPlaceDown.inject(rightDivButton);
+        save.inject(buttonPlaceDown);
 
-        if(this.moreRules){
+        if(this.displayMode){
+        	// new rule button
+            var nextRule = utils.createDivIdClas("newRule", "newRule");
+            var nextRuleInnerDiv = utils.createHtmlIdClick("createRuleButton", this.language.getName(this.language.NEW_RULE, this.lang), "");
             nextRule.inject(buttonPlaceDown);
             nextRuleInnerDiv.inject(nextRule);
+            
+            // save button
+            saveInnerDiv.inject(save);
+        } else {
+        	// get hits button (hidden)
+            var hitsButton = utils.createHtmlIdClick("getHits", this.language.getName(this.language.SAVE, this.lang), "")
+        	hitsButton.inject(save);
+            
+            rightDivHits.inject(rightDiv);
         }
-
-        save.inject(buttonPlaceDown);
-        saveInnerDiv.inject(save);
-        hitsButton.inject(save);
 
         var elementSpecificCol;
         for(var i = 0; i < this.COLS_INTEREST_MEASURES; i++){

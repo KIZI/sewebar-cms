@@ -16,9 +16,14 @@
     $states = array_merge($finishedStates, $inProgressStates);
     
     // select random hitlist
-    sleep(3);
-    $randNum = rand(0, count($states) - 1);
-    $ER = "XML/hitlist_".strtolower(strtr($states[$randNum], " ", "_")).".xml";
+    $ER = "XML/hitlist_".strtolower(strtr($states[array_rand($states)], " ", "_")).".xml";
+    
+    /*
+    // BKEF patterns hitlist
+    $ER = "XML/bkef/hitlist_bkef.xml";
+    */
+    
+    sleep(rand(1, 4));
     
     $sr = new GetDataARBuilderQuery($DD, $FL, $ER, 'en');
     echo $sr->getData();

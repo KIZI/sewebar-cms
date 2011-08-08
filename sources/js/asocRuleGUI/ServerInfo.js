@@ -31,9 +31,11 @@ var ServerInfo = new Class({
 
         this.supportedIMCombinations = new Array();
 
-        this.moreRules = true;
         this.rules = new Array();
 
+        // solve display mode
+        this.solveDisplayMode(item);
+        
         this.solveInterestMeasures(item);
         this.solvePossibleCoefficients(item);
         this.solveAttributes(item);
@@ -159,8 +161,8 @@ var ServerInfo = new Class({
             fields = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "", fieldMin, fieldMax);
             fields2 = this.solveFields(fieldNames,fieldLangs,fieldMinValues,fieldMaxValues,fieldDatatypes,fieldExplanations, "", fieldMin, fieldMax);
             
-            this.interestMeasures.push(new InterestMeasure(name, nameLang, explanation, fields));
-            this.interestMeasures2.push(new InterestMeasure(name, nameLang, explanation, fields2));
+            this.interestMeasures.push(new InterestMeasure(name, nameLang, explanation, fields, this.displayMode));
+            this.interestMeasures2.push(new InterestMeasure(name, nameLang, explanation, fields2, this.displayMode));
         }
     },
 
@@ -276,8 +278,8 @@ var ServerInfo = new Class({
                 oneCategoryInfo = new Array();
             }
 
-            this.attributes.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields)));
-            this.attributes2.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields2)));
+            this.attributes.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields), this.displayMode));
+            this.attributes2.push(new Attribute(attrName, oneCategoryInfo, clone_obj(this.attributesFields2), this.displayMode));
         }
     },
 
@@ -447,6 +449,14 @@ var ServerInfo = new Class({
         }
         return "";
     },
+    
+    /**
+     * Function: solveDisplayMode
+     * It solves ARBuilder mode - display or mining
+     */
+    solveDisplayMode: function(item) {
+    	this.displayMode = item.displayMode == "true";
+    },
 
     /**
      * Function: solveRules
@@ -454,9 +464,10 @@ var ServerInfo = new Class({
      * will be shown later in process.
      */
     solveRules: function(item){
-        this.moreRules = item.moreRules;
         var amountOfRules = item.rules;
-        if(this.moreRules == "false"){
+        
+        /*
+        if(this.displayMode == "false"){
             if(amountOfRules > 0){
                 this.solveRule(item["rule0"], this.attributes, this.interestMeasures);
             }
@@ -465,7 +476,9 @@ var ServerInfo = new Class({
             	this.existingRules.push(asociationRule);
             }
         }
-        else{
+        */
+
+        if (this.displayMode) {
             for(var actualRule = 0; actualRule < amountOfRules; actualRule++){
             	var asociationRule = this.solveRule(item["rule"+actualRule], this.attributes, this.interestMeasures);
             	this.existingRules.push(asociationRule);
@@ -486,7 +499,7 @@ var ServerInfo = new Class({
     solveRule: function(rule, attributes, interestMeasures){
         var ruleElement, actualField, type, name, category, fields, oldElement, fieldName, fieldValue;
         var positionInRule = 0;
-        var asociationRule = new AsociationRule(this);
+        var asociationRule = new AsociationRule(this, this.displayMode);
         for(var actualElement = 0; actualElement < rule.length; actualElement++){
             ruleElement = rule[actualElement];
             type = ruleElement.type;
@@ -634,14 +647,14 @@ var ServerInfo = new Class({
     },
 
     /**
-     * Function: getMoreRules
-     * getter it gets moreRules
+     * Function: getDisplayMode
+     * getter it gets displayMode
      *
      * Returns:
-     * {mixed} moreRUles
+     * {mixed} displayMode
      */
-    getMoreRules: function(){
-        return this.moreRules
+    getDisplayMode: function(){
+        return this.displayMode
     },
     
     /**
