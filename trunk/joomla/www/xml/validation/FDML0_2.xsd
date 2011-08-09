@@ -272,11 +272,20 @@
                 <xs:attribute name="numberOfFields" type="xs:integer"/>
                 <xs:attribute name="sourceFormat" type="sourceFormatType" use="required"/>
                 <xs:attribute name="sourceName" type="xs:string"/>
+                <xs:attribute name="sourceDictType" type="dictType_all"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StandaloneRawDictionary">
+        <xs:complexContent>
+            <xs:extension base="AbstractDictionary">
+                <xs:attribute name="numberOfFields" type="xs:integer"/>
+                <xs:attribute name="sourceFormat" type="sourceFormatType" use="required"/>
+                <xs:attribute name="sourceName" type="xs:string"/>
                 <xs:attribute name="sourceDictType" type="dictType_raw"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
 
 
     <xs:complexType name="Dictionary">
@@ -334,6 +343,13 @@
             <xs:enumeration value="Range"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="dictType_prepr">
+        <xs:restriction base="dictType_all">
+            <xs:enumeration value="TransformationDictionary"/>
+            <xs:enumeration value="DiscretizationHint"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
     <xs:simpleType name="dictType_bkef">
         <xs:restriction base="dictType_all">
             <xs:enumeration value="DiscretizationHint"/>
