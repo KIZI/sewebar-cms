@@ -8,6 +8,9 @@
  */
 class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
 
+    private $dd;
+    private $ddXpath;
+    
     private $id = 0;
     private $finalXMLDocument;
     private $antecedent = -1;
@@ -16,7 +19,7 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
     private $rulePosition = -1;
     private $Dictionary;
     private $ARQuery;
-    private $ONE_CATEGORY = "One Category";
+    private $ONE_CATEGORY = "One category";
     private $bbas = array();
     private $dbas = array();
     private $rules = array();
@@ -25,7 +28,20 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
      * It creates instance of this class.
      */
     function __construct() {
-        parent::__construct();
+      parent::__construct();
+        
+      // load Data Description XML
+      $domDdPath = $_SESSION["ARBuilder_domDataDescr"];
+      $this->dd = new DomDocument();
+      if (file_exists($domDdPath)) {
+          $this->dd->load($domDdPath);
+      } else {
+          $this->dd->loadXML($domDdPath);
+      }
+      
+      // init XPath
+      $this->ddXpath = new DOMXPath($this->dd); 
+      $this->ddXpath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
     }
 
     /**
@@ -154,18 +170,93 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
    private function createBasicStructure() {
         $this->finalXMLDocument = new DomDocument("1.0", "UTF-8");
 
-        $ARBuilder = $this->finalXMLDocument->createElement("ar:ARBuilder");
-        $ARBuilder->setAttribute("xmlns:ar", "http://keg.vse.cz/ns/arbuilder0_1");
-        $ARBuilder->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        $ARBuilder->setAttribute("xmlns:dd", "http://keg.vse.cz/ns/datadescription0_1");
-        $ARBuilder->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd");
-        $ARBuilder->setAttribute("xmlns:guha", "http://keg.vse.cz/ns/GUHA0.1rev1");
-        $root = $this->finalXMLDocument->appendChild($ARBuilder);
+        // add BKEF XSL processing instruction
+        $pi = $this->finalXMLDocument->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="bkef-styl.xsl"');
+        $this->finalXMLDocument->appendChild($pi);
+        
+        // add BKEF patterns XSD processing instruction
+        $pi = $this->finalXMLDocument->createProcessingInstruction('xml-model', 'href="http://sewebar.vse.cz/schemas/BKEF1_1_Patterns.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"');
+        $this->finalXMLDocument->appendChild($pi);
 
+        $BKEFPatterns = $this->finalXMLDocument->createElement("bkef:BKEFPatterns");
+        $BKEFPatterns->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $BKEFPatterns->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/bkef_patterns http://sewebar.vse.cz/schemas/BKEF1_1_Patterns.xsd");
+        $BKEFPatterns->setAttribute("xmlns:bkef", "http://keg.vse.cz/bkef_patterns");
+        $root = $this->finalXMLDocument->appendChild($BKEFPatterns);
+        
+        $this->createHeader($root);
+        
         $this->createDictionary($root);
+        
+        // add Patterns
+        $patterns = $this->finalXMLDocument->createElement("Patterns");
+        
+        // add AssociationRules
+        $associationRules = $this->finalXMLDocument->createElement("AssociationRules");
+        
+        // add BackgroundAssociationRules
+        $backgroundAssociationRules = $this->finalXMLDocument->createElement("BackgroundAssociationRules");
+        $this->ARQuery = $associationRules->appendChild($backgroundAssociationRules);
+        $patterns->appendChild($associationRules);
+        $root->appendChild($patterns);
+    }
+    
+    /**
+     * TODO func spec
+     * 
+     * TODO param spec
+     */
+    private function createHeader($root) {
+      // element Header
+      $header = $this->finalXMLDocument->createElement('Header');
+      
+      // element Application
+      $application = $this->finalXMLDocument->createElement('Application');
+      $application->setAttribute('name', 'ARBuilder');
+      $application->setAttribute('version', '0.1');
+      $header->appendChild($application);
+      
+      // element Title
+      $title = $this->finalXMLDocument->createElement('Title');
+      $titleTextContent = $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[Name='Metabase']/Value")->item(0)->nodeValue;
+      $title->appendChild($this->finalXMLDocument->createTextNode($titleTextContent.' BKEF patterns'));
+      $header->appendChild($title);
+      
+      // element Created
+      $created = $this->finalXMLDocument->createElement('Created');
+      $timestamp = $this->finalXMLDocument->createElement('Timestamp');
+      $timestamp->appendChild($this->finalXMLDocument->createTextNode(date('Y-m-d').'T'.date('H:i:s')));
+      $created->appendChild($timestamp);
+      $author = $this->finalXMLDocument->createElement('Author');
+      $created->appendChild($author);
+      $header->appendChild($created);
+      
+      // element LastModified
+      $lastModified = $this->finalXMLDocument->createElement('LastModified');
+      $timestamp = $this->finalXMLDocument->createElement('Timestamp');
+      $timestamp->appendChild($this->finalXMLDocument->createTextNode(date('Y-m-d').'T'.date('H:i:s')));
+      $lastModified->appendChild($timestamp);
+      $author = $this->finalXMLDocument->createElement('Author');
+      $lastModified->appendChild($author);
+      $header->appendChild($lastModified);
+      
+      // element BaseBKEF
+      $baseBKEF = $this->finalXMLDocument->createElement('BaseBKEF');
+      $documentId = $this->finalXMLDocument->createElement('DocumentID');
+      $baseBKEF->appendChild($documentId);
+      $uri = $this->finalXMLDocument->createElement('URI');
+      $baseBKEF->appendChild($uri);
+      $lastModified = $this->finalXMLDocument->createElement('LastModified');
+      $timestamp = $this->finalXMLDocument->createElement('Timestamp');
+      $timestamp->appendChild($this->finalXMLDocument->createTextNode(date('Y-m-d').'T'.date('H:i:s')));
+      $lastModified->appendChild($timestamp);
+      $author = $this->finalXMLDocument->createElement('Author');
+      $lastModified->appendChild($author);
+      $baseBKEF->appendChild($lastModified);
+      $header->appendChild($baseBKEF);
+      
+      $root->appendChild($header);
 
-        $ARQuery = $this->finalXMLDocument->createElement("AssociationRules");
-        $this->ARQuery = $root->appendChild($ARQuery);
     }
 
     /**
@@ -175,8 +266,10 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
     private function createDictionary($root) {
         $Dictionary = $this->finalXMLDocument->createElement("DataDescription");
         $this->Dictionary = $root->appendChild($Dictionary);
+        
         // Get data from Session
         $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
+
         // load XML
         $domDD = new DomDocument();
         if (file_exists($domDD1)) {
@@ -184,15 +277,22 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
         } else {
             $domDD->loadXML($domDD1);
         }
-        // get <Dictionary>
+        
         $xPath = new DOMXPath($domDD);
+
+        // solve DataDescription
         $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
-        $anXPathExpr = "//dd:DataDescription";
-        $field = $xPath->query($anXPathExpr);
-        foreach ($field as $elField) {
+        $fieldsXPathExpr = "//dd:DataDescription";
+        $fields = $xPath->query($fieldsXPathExpr);
+        foreach ($fields as $elField) {
             $fields = $elField->childNodes;
             foreach ($fields as $fieldSmall) {
-                $this->Dictionary->appendChild($this->finalXMLDocument->importNode($fieldSmall, true));
+              if ($fieldSmall->nodeName == 'Dictionary') {
+                $fieldSmall->removeAttribute('sourceFormat');
+                $fieldSmall->removeAttribute('default');
+                //$fieldSmall->removeAttribute('sourceName');
+              }
+              $this->Dictionary->appendChild($this->finalXMLDocument->importNode($fieldSmall, true));
             }
         }
         //return $this->finalXMLDocument->createElement("Dictionary");
@@ -236,7 +336,7 @@ class SerializeRulesBackgroundAssociationRules extends AncestorSerializeRules {
 
         $Name = $this->finalXMLDocument->createElement("CatRef");
         $Name->appendChild($this->finalXMLDocument->createTextNode($category));
-
+        
         $BBASetting->appendChild($Text);
         $BBASetting->appendChild($FieldRef);
         $BBASetting->appendChild($Name);

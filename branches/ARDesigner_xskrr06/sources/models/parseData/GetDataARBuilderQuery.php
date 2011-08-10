@@ -198,22 +198,16 @@ class GetDataARBuilderQuery extends AncestorGetData {
     private function solveData() {
         $OPEN = "open";
         //$CLOSED = "closed";
+        
+        // init XPath
         $xPath = new DOMXPath($this->domDD);
         
-        // solve FDMLDictionary
-        $xPath->registerNamespace('fdmldict', "http://keg.vse.cz/ns/fdml0_2_dict");
-        $fdmlXPathExpr = "/fdmldict:FDMLDictionary";
-        $fdmldict = $xPath->query($fdmlXPathExpr);
-        if ($fdmldict->length > 0) {
-          $fieldsXPathExpr = "/fdmldict:FDMLDictionary/Dictionary[1]/Field";
-        } else { // solve DataDescription
-          $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
-          $fieldsXPathExpr = "//dd:DataDescription/Dictionary[@default='true']/Field";
-        }
-
-        $field = $xPath->query($fieldsXPathExpr);
+        // solve fields
+        $xPath->registerNamespace('dd', "http://keg.vse.cz/ns/datadescription0_2");
+        $fieldsXPathExpr = "//dd:DataDescription/Dictionary[@default='true']/Field";
+        $fields = $xPath->query($fieldsXPathExpr);
         $attributeArray = array();
-        foreach ($field as $elField) {
+        foreach ($fields as $elField) {
             $attribute = array();
             $fieldChildren = $elField->childNodes;
             $choices = array();
