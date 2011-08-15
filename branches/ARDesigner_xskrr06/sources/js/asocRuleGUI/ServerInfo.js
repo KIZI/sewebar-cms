@@ -48,7 +48,7 @@ var ServerInfo = new Class({
         
         // init hits
         this.initHits(null);
-        this.taskState = '';
+        this.taskState = [];
     },
 
     /**
@@ -573,17 +573,17 @@ var ServerInfo = new Class({
     	}
     },
     
-    getTaskState: function(){
-        return this.taskState;
+    getTaskState: function(id_source){
+        return this.taskState[id_source];
     },
     
-    initTaskState: function() {
-    	this.taskState = '';	
+    initTaskState: function(id_source) {
+    	this.taskState[id_source] = '';	
     },
     
-    solveTaskState: function(item) {
-    	this.initTaskState();
-    	this.taskState = item.taskState;
+    solveTaskState: function(id_source, item) {
+    	this.initTaskState(id_source);
+    	this.taskState[id_source] = item.taskState;
     },
 
     /**

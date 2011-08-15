@@ -24,17 +24,16 @@ var BasicStructureGUI = new Class({
      * attributes     {Array} Array of attributes to be created
      * interestMeasures     {Array} Array of interestMeasures to be created
      * lang         {String} Language in which should the application be created.
-     * limitHits    {String} Max. number of hits to be retreived
      * displayMode  {Bool} Display mode
-     * sources      {Array} Sources for mining mode 
+     * hits      {Hits} Instance of hits class
      */
-    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, displayMode, limitHits, sources){
+    initialize: function(booleans, attributes, interestMeasures, idMainDiv, lang, displayMode, hits){
         this.lang = lang;
         this.language = new LanguageSupport();
         this.displayMode = displayMode;
 
         // Create basic divs
-        this.createMainDivs(idMainDiv, limitHits, sources);
+        this.createMainDivs(idMainDiv, hits);
 
         // Create booleans
         this.createElements(this.COLS_BOOL, booleans, this.ID_BOOLEANS_DIV);
@@ -52,7 +51,7 @@ var BasicStructureGUI = new Class({
      * idMainDiv     {String} Id of div in which should the application be created
      * limitHits     {String} Max. number of hits to be retreived
      */
-    createMainDivs: function(idMainDiv, limitHits, sources){
+    createMainDivs: function(idMainDiv, hits, sources){
         var utils = new UtilsAR();
         // real main and necessary structure
         var mainDiv = utils.createDiv("main");
@@ -80,7 +79,7 @@ var BasicStructureGUI = new Class({
 	        var limitHitsDiv = utils.createDiv("limitHits");
 	        var limitHitsLabel = utils.createLabel(this.language.getName(this.language.HITS_LIMIT, this.lang)); 
 	        limitHitsLabel.inject(limitHitsDiv);
-	        var limitHitsInput = utils.createInputText("limitHitsInput", limitHits);
+	        var limitHitsInput = utils.createInputText("limitHitsInput", hits.getMaxNumHits());
 	        limitHitsInput.inject(limitHitsDiv);
 	        var limitHitsSubmit = utils.createInputSubmit("limitHitsSubmit", this.language.getName(this.language.HITS_SEARCH_AGAIN, this.lang));
 	        limitHitsSubmit.addEvent('click', function(event) {
@@ -94,11 +93,12 @@ var BasicStructureGUI = new Class({
 	        limitHitsDiv.inject(hitsHeader);
 	        
 	        // sources
-	        for (i = 0; i < sources.length; i++) {
-	        	var sourceLabel = utils.createIdLabel('sourceLabel' + sources[i]["id"], this.language.getName(this.language.HITS_SOURCE, this.lang) + ': ' + sources[i]["id"]);
+	        for (i = 0; i < hits.getSourcesLength(); i++) {
+	        	var source = hits.getSourceByPos(i);
+	        	var sourceLabel = utils.createIdLabel('sourceLabel' + source["id"], this.language.getName(this.language.HITS_SOURCE, this.lang) + ': ' + source["id"]);
 	        	sourceLabel.hide();
 	        	sourceLabel.inject(rightDivHits);
-	        	var sourceDiv = utils.createDivIdClas('sourceHits' + sources[i]["id"], 'sourceHits');
+	        	var sourceDiv = utils.createDivIdClas('sourceHits' + source["id"], 'sourceHits');
 				sourceDiv.inject(rightDivHits);
 			}
         }
@@ -193,5 +193,76 @@ var BasicStructureGUI = new Class({
                 column = 0;
             }
         }
-    }
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    setRuleLabel: function($html) {
+    	$('ruleLabel').innerHTML = $html;
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    setHitsStatusLabel: function($html) {
+    	$('hitsLabel').innerHTML = $html;
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    showLimitHitsSubmit: function() {
+    	$('limitHitsSubmit').show('inline');
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    hideLimitHitsSubmit: function() {
+    	$('limitHitsSubmit').hide();
+    },
+    
+    /**
+     * Function: clearHits
+     * This function is called to clear hits
+     * 
+     * TODO params doc
+     */
+    clearHits: function(id_source){
+    	$('sourceHits' + id_source).empty();
+    	$('sourceLabel' + id_source).hide();
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    showSourceLabel: function(id_source) {
+    	$('sourceLabel' + id_source).show('inline');
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    displayHit: function(hits, hit, id_source) {
+		hit.addEvent("display", function(){
+			// TODO resolve draggability
+            //this.setDraggability();
+        }.bind(hits));
+	    var newRuleDiv = hit.display();
+	    newRuleDiv.inject($('sourceHits'+id_source));
+    },
+    
 });
