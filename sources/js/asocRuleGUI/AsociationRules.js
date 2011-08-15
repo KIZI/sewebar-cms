@@ -20,104 +20,24 @@ var AsociationRules = new Class({
      * urlHits      {String} Url where the app gets hits
      */
     initialize: function(lang, urlGet, urlSet, urlHits){
-    	// sources
-    	this.sources = [];
-    	
-    	// urls
-    	this.urlSet = urlSet;
-        this.parseUrlHits(urlHits);
-        
         // lang
         this.lang = lang;
+        this.language = new LanguageSupport();
+    	
+    	// hits
+    	this.hits = new Hits(this, this.lang, this.language);
+    	this.hits.parseSources(urlHits);
+    	
+    	this.urlSet = urlSet;
 
-        this.asociationRules = new Array();
-
+        // init options
         this.availableBooleans = new Array();
         this.availableAttributes = new Array();
-        this.availableInterestMeasures = new Array()
+        this.availableInterestMeasures = new Array();
+        this.asociationRules = new Array();
 
-        this.language = new LanguageSupport();
-        
-        // init TaskStates
-        this.interruptedStates = ['Interrupted'];
-        this.finishedStates = ['Solved'].combine(this.interruptedStates);
-    	this.inProgressStates = ['Waiting', 'Running', 'Not Generated'].combine(this.interruptedStates);
-
-    	// init hits display
-    	this.maxNumHits = 2;
-    	this.numHitsDisplayed = 0;
-    	
-    	// init hit Request array
-    	this.hitRequests = [];
-    	
+        // load data for UI
         this.getInfo(urlGet);
-    },
-    
-    getSourceById: function(id_source) {
-    	for (i = 0; i< this.sources.length; i++) {
-    		if (this.sources[i]["id"] == id_source) {
-    			this.sources[i];
-    		}
-    	}
-    	
-    	return null;
-    },
-    
-    getSourcesInProgress: function(id_source) {
-    	if (id_source != null) {
-    		var source = this.getSourceById(id_source);
-    		return source["inProgress"];
-    	}
-    	
-    	for (i = 0; i< this.sources.length; i++) {
-    		if (this.sources[i]["inProgress"] == true) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
-    },
-
-    parseUrlHits: function(url) {
-    	var idSource = this.getUrlVar(url, "id_source");
-    	if (idSource != null) {
-    		if (idSource.indexOf(',') != -1) {
-    			var ids = idSource.split(',');
-    			for (i = 0; i < ids.length; i++) {
-    				this.sources[i] = [];
-    				this.sources[i]["id"] = ids[i].toInt();
-        			this.sources[i]["inProgress"] = false;
-    			}
-    		} else {
-    			this.sources[0] = [];
-    			this.sources[0]["id"] = idSource.toInt();
-    			this.sources[0]["inProgress"] = false;
-    		}
-    	}
-    	
-    	this.urlHits = url.slice(0, url.indexOf("id_source") + 10);
-    },
-    
-    getUrlVar: function(url, name) {
-    	var vars = this.getUrlVars(url);
-    	if (vars.indexOf(name) != -1) {
-    		return vars[name];
-    	}
-    	
-    	return null;
-    },
-    
-    getUrlVars: function(url) {
-    	var vars = [], hash;
-    	var hashes = url.slice(url.indexOf('?') + 1).split('&');
-    	
-    	for(var i = 0; i < hashes.length; i++) {
-    		hash = hashes[i].split('=');
-    		vars.push(hash[0]);
-    		vars[hash[0]] = hash[1];
-    	}
-
-    	return vars;
     },
     
     /**
@@ -138,14 +58,18 @@ var AsociationRules = new Class({
                 AsociationRules.attrCoef = item.attrCoef;
                 LanguageSupport.actualLang = this.lang;
 
+                // parse data from server
                 this.serverInfo = new ServerInfo(item);
-                var displayMode = this.serverInfo.getDisplayMode();
+                this.hits.setServerInfo(this.serverInfo);
+                this.displayMode = this.serverInfo.getDisplayMode();
                 
-                new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, displayMode, this.maxNumHits, this.sources);
-
-                if(displayMode){
+                // init GUI
+                this.gui = new BasicStructureGUI(this.serverInfo.getBooleans(), this.serverInfo.getAttributes(), this.serverInfo.getOperators(), this.MAIN_DIV_ID, this.lang, this.displayMode, this.hits);
+                this.hits.setGUI(this.gui);
+                
+                if(this.displayMode){
                     $("newRule").addEvent('click', function(event) {
-                        var newRule = new AsociationRule(this.serverInfo, displayMode);
+                        var newRule = new AsociationRule(this.serverInfo, this.displayMode);
                         newRule.addEvent("display", function(){
                             this.setDraggability();
                         }.bind(this));
@@ -176,35 +100,35 @@ var AsociationRules = new Class({
                         this.saveServer(jsonString);
                     }.bind(this));
                 } else {
-                	$("getHits").addEvent('click', function(event){
-                    	var wholeJson = new JSONHelp();
-                    	this.maxNumHits = $('limitHitsInput').value;
-                    	wholeJson.limitHits = this.maxNumHits;
-                        var rule = null;
-                        for(var actualRule = 0; actualRule < this.asociationRules.length; actualRule++){
-                            rule = this.asociationRules[actualRule].toJSON();
-                            if(rule == null){
-                            	this.setRuleLabel(this.language.getName(this.language.RULE_STATE_INCOMPLETE, this.lang));
-                            	return;
-                            }
-                            wholeJson["rule"+actualRule] = this.asociationRules[actualRule].toJSON();
-                        }
-                        wholeJson.rules = actualRule;
-                        var jsonString = JSON.encode(wholeJson);
-                        
-                        this.setRuleLabel(this.language.getName(this.language.RULE_STATE_COMPLETE, this.lang));
-                        
-                        // call server and get hits
-                        this.numHitsDisplayed = 0;
-                        
-                        // clear hits
-                        
-                        // get hits for each source
-                        for (i = 0; i < this.sources.length; i++) {
-                        	this.clearHits(this.sources[i]["id"]);
-                        	this.sources[i]["inProgress"] = true;
-                        	this.getHits(this.sources[i]["id"], jsonString, 0);                    	
-                        }
+                	$("getHits").addEvent('click', function(event) {
+                		if (this.validateRules()) {
+                			// update rule state
+                			this.gui.setRuleLabel(this.language.getName(this.language.RULE_STATE_COMPLETE, this.lang));
+                			
+                			// init JSON
+                			var json = new JSONHelp();
+                			
+                			// set maxNumHits
+                			json.limitHits = this.hits.updateMaxNumHits();
+                        	
+                			// set rules
+                			var rulesJSON = this.getAssociationRulesJSON();
+                			for (var i = 0; i < rulesJSON.length; i++) {
+                				json['rule' + i] = rulesJSON[i];
+                			}
+                			json.rules = rulesJSON.length;
+                			
+                			// encode JSON
+                			var encodedJSON = JSON.encode(json);
+                			
+                			// get hits
+                			this.hits.getHits(encodedJSON);
+                    	} else {
+                    		// update rule state
+                    		this.gui.setRuleLabel(this.language.getName(this.language.RULE_STATE_INCOMPLETE, this.lang));
+                    	}
+                    	
+
                     }.bind(this));
                 }
                 
@@ -220,9 +144,9 @@ var AsociationRules = new Class({
                 }
                 this.asociationRules = this.asociationRules.concat(allRules);
                 
-                if(!displayMode && this.asociationRules.length < 1){
+                if(!this.displayMode && this.asociationRules.length < 1){
                 	
-                    var newAsociationRule = new AsociationRule(this.serverInfo, displayMode);
+                    var newAsociationRule = new AsociationRule(this.serverInfo, this.displayMode);
                     newAsociationRule.addEvent("display", function(){
                         this.setDraggability();
                     }.bind(this));
@@ -238,8 +162,47 @@ var AsociationRules = new Class({
         }).get();
     },
     
-    setRuleLabel: function($html) {
-    	$('ruleLabel').innerHTML = $html;
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    getAssociationRulesJSON: function() {
+    	var encodedRules = [];
+    	for(var i = 0; i < this.asociationRules.length; i++) {
+    		encodedRules.push(this.asociationRules[i].toJSON());
+        }
+    	
+    	return encodedRules;
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    validateRules: function() {
+    	for(var i = 0; i < this.asociationRules.length; i++) {
+            if (this.validateRule(i) === false) { 
+            	return false; 
+            }	
+        }
+    	
+    	return true;
+    },
+    
+    /**
+     *  TODO func spec
+     *  
+     *  TODO param spec
+     */
+    validateRule: function(pos) {
+    	var rule = this.asociationRules[pos].toJSON();
+        if(rule == null){
+        	return false;
+        }
+        
+        return true;
     },
 
     /**
@@ -292,142 +255,7 @@ var AsociationRules = new Class({
         }).post({
             'data': which
         });
-    },
-    
-    /**
-     * Function: getHits
-     * This function is called to get hits for the active association rule
-     *
-     * Parameters:
-     * url    {String} URL to be called.
-     * which  {String} Data that should be sent to the server.
-     */
-    getHits: function(id_source, which, numAlreadyFound){
-    	url = this.urlHits + id_source;
-    	if (this.numHitsDisplayed != 0 && this.getSourcesInProgress(null)) {
-    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsFound+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
-    	} else {
-    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_LOADING_IMG, this.lang)+' '+this.language.getName(this.language.HITS_LABEL_LOADING, this.lang);
-    	}
-    	
-        var req = new Request.JSON({
-            url: url,
-            onComplete: function(item) {
-            	if (this.numHitsDisplayed <= this.maxNumHits) {
-	            	this.serverInfo.solveHits(id_source, item);
-	            	this.serverInfo.solveTaskState(item);
-	            	var limitExceeded = false;
-	            	if ((this.numHitsDisplayed - numAlreadyFound + this.serverInfo.countHits(id_source)) > this.maxNumHits) {
-	            		limitExceeded = true;
-	            		
-	            		this.stopHitRequests();
-	            	} else {
-	            		searchLimit = this.maxNumHits - this.numHitsDisplayed - numAlreadyFound;
-	            	}
-	            	
-	            	if (this.interruptedStates.indexOf(this.serverInfo.getTaskState()) != -1 && this.serverInfo.countHits(id_source) == this.maxNumHits) {
-	            		// mining is finished, it has reached the specified limit
-	            		this.updateHits(id_source, true, numAlreadyFound);
-	            		this.hitsInProgress = false;
-	            	} else if (this.finishedStates.indexOf(this.serverInfo.getTaskState()) != -1) {
-	            		// mining is finished
-	            		this.updateHits(id_source, limitExceeded, numAlreadyFound);
-	            		this.hitsInProgress = false;
-	            	} else if (this.inProgressStates.indexOf(this.serverInfo.getTaskState()) != -1) {
-	            		// mining is in progress
-	            		this.updateHits(id_source, limitExceeded, numAlreadyFound);
-	            		if (limitExceeded) {
-	            			this.hitsInProgress = false;
-	            		} else {
-	            			which.limitHits = searchLimit;
-	            			this.hitsInProgress = true;
-	            			this.getHits(id_source, which, this.serverInfo.countHits(id_source));
-	            		}
-	            	} else {
-	            		// TODO new state?
-	            		this.hitsInProgress = false;
-	            	}
-            	}
-            	
-            }.bind(this)
-        }).post({'data': which});
-        
-        this.addHitRequest(req);
-    },
-    
-    /**
-     * Function: updateHits
-     * This function is called to repaint hits for the active association rule
-     */
-    updateHits: function(id_source, limitExceeded, numAlreadyFound) {
-    	this.clearHits(id_source);
-    	var hits = this.serverInfo.getHits(id_source);
-    	
-    	if (this.serverInfo.countHits(id_source) != 0) {
-    		$('sourceLabel'+id_source).show('inline');
-    	}
-    	
-    	for(var actualRule = 0; actualRule < hits.length; actualRule++) {
-    		// do not display more rules than set limit
-    		if ((this.numHitsDisplayed - numAlreadyFound + actualRule) == this.maxNumHits) { break; }
-    		
-    		hit = hits[actualRule];
-    		hit.setMaxSize(this.maxSize / 2);
-    		hit.addEvent("display", function(){
-    			// TODO resolve draggability
-                //this.setDraggability();
-            }.bind(this));
-    	    var newRuleDiv = hit.display();
-    	    newRuleDiv.inject($('sourceHits'+id_source));
-        }	
-    	
-    	$('limitHitsSubmit').show('inline');
-    	
-    	this.numHitsDisplayed = Math.min(this.maxNumHits, this.numHitsDisplayed + this.serverInfo.countHits(id_source) - numAlreadyFound);
-    	
-    	if (limitExceeded) {
-    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed + ' ' + this.language.getName(this.language.HITS_LIMIT_REACHED, this.lang);
-    	} else {
-    		$('hitsLabel').innerHTML = this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed;	
-    	}
-    },
-    
-    /**
-     * Function: clearHits
-     * This function is called to clear hits
-     * 
-     * TODO params doc
-     */
-    clearHits: function(id_source){
-    	$('sourceHits' + id_source).empty();
-    	$('sourceLabel' + id_source).hide();
-    },
-    
-    /**
-     * Function: addHitRequest
-     * TODO function spec
-     * 
-     * TODO params doc
-     */
-    addHitRequest: function(req){
-    	this.hitRequests.push(req);
-    },
-    
-    /**
-     * Function: stopHitRequests
-     * TODO function spec
-     * 
-     * TODO params doc
-     */
-    stopHitRequests: function() {
-    	for (i = 0; i < this.hitRequests.length; i++) {
-    		if (this.hitRequests[i].isRunning()) {
-    			this.hitRequests[i].cancel();
-    		}
-    	}
-    }
-
-    
+    },  
     
 });
 
