@@ -262,7 +262,7 @@ var Hits = new Class({
             			// TODO stop?
             		} else {
             			json.limitHits = searchLimit;
-            			this.getHitsRequest(id_source, json, this.serverInfo.countHits(id_source));
+            			this.getHitsRequest(id_source, json, this.serverInfo.countHits(id_source)).delay(3000);
             		}
             	} else {
             		// TODO new state?
