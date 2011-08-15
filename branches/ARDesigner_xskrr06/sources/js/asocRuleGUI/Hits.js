@@ -249,23 +249,27 @@ var Hits = new Class({
             	
             	if (this.interruptedStates.indexOf(this.serverInfo.getTaskState(id_source)) != -1 && this.serverInfo.countHits(id_source) == this.maxNumHits) {
             		// mining is finished, it has reached the specified limit
-            		this.updateHits(id_source, true, numAlreadyFound);
-            		// TODO stop?
+            		this.updateHits(id_source, numAlreadyFound);
+            		this.handleHitsInfo(limitExceeded);
             	} else if (this.finishedStates.indexOf(this.serverInfo.getTaskState(id_source)) != -1) {
             		// mining is finished
-            		this.updateHits(id_source, limitExceeded, numAlreadyFound);
-            		// TODO stop?
+            		this.updateHits(id_source, numAlreadyFound);
+            		this.handleHitsInfo(limitExceeded);
             	} else if (this.inProgressStates.indexOf(this.serverInfo.getTaskState(id_source)) != -1) {
             		// mining is in progress
-            		this.updateHits(id_source, limitExceeded, numAlreadyFound);
-            		if (limitExceeded) {
-            			// TODO stop?
-            		} else {
+            		this.updateHits(id_source, numAlreadyFound);
+            		if (!limitExceeded) {
             			json.limitHits = searchLimit;
-            			this.getHitsRequest(id_source, json, this.serverInfo.countHits(id_source)).delay(3000);
+            			setTimeout(function() { 
+            				this.getHitsRequest(id_source, json, this.serverInfo.countHits(id_source));
+            				this.handleHitsInfo(limitExceeded);
+            			}.bind(this), 1000);
+            		} else {
+            			this.handleHitsInfo(limitExceeded);
             		}
             	} else {
             		// TODO new state?
+            		this.handleHitsInfo(limitExceeded);
             	}
             }.bind(this),
             
@@ -288,7 +292,7 @@ var Hits = new Class({
      * Function: updateHits
      * This function is called to repaint hits for the active association rule
      */
-    updateHits: function(id_source, limitExceeded, numAlreadyFound) {
+    updateHits: function(id_source, numAlreadyFound) {
     	this.gui.clearHits(id_source);
     	var hits = this.serverInfo.getHits(id_source);
     	
@@ -303,16 +307,7 @@ var Hits = new Class({
             }	
     	}
     	
-    	// TODO when? every time?
-    	this.gui.showLimitHitsSubmit();
     	this.numHitsDisplayed = Math.min(this.maxNumHits, this.numHitsDisplayed + this.serverInfo.countHits(id_source) - numAlreadyFound);
-    	
-    	if (limitExceeded) {
-    		this.gui.setHitsStatusLabel(this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed + ' ' + this.language.getName(this.language.HITS_LIMIT_REACHED, this.lang));
-    	} else {
-    		this.gui.setHitsStatusLabel(this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed);
-    	}
-
     },
 	
     /**
@@ -353,6 +348,17 @@ var Hits = new Class({
     			} catch(err) {}
     		}
     	});
-    }
+    },
+    
+    handleHitsInfo: function(limitExceeded) {
+    	if (!this.hitsInProgress()) {
+    		this.gui.showLimitHitsSubmit();
+	    	if (limitExceeded) {
+	    		this.gui.setHitsStatusLabel(this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed + ' ' + this.language.getName(this.language.HITS_LIMIT_REACHED, this.lang));
+	    	} else {
+	    		this.gui.setHitsStatusLabel(this.language.getName(this.language.HITS_LABEL_FOUND, this.lang)+this.numHitsDisplayed);
+	    	}
+    	}
+    },
     
 });
