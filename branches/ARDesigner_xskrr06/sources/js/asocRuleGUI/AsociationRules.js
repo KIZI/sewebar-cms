@@ -110,7 +110,7 @@ var AsociationRules = new Class({
                 			
                 			// set maxNumHits
                 			json.limitHits = this.hits.updateMaxNumHits();
-                        	
+                			
                 			// set rules
                 			var rulesJSON = this.getAssociationRulesJSON();
                 			for (var i = 0; i < rulesJSON.length; i++) {
