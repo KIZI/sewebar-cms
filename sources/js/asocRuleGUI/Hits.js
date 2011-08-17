@@ -50,7 +50,7 @@ var Hits = new Class({
 	updateMaxNumHits: function() {
 		this.maxNumHits = parseInt($('limitHitsInput').value);
 		
-		this.getMaxNumHits();
+		return this.getMaxNumHits();
 	},
 	
 	/**
