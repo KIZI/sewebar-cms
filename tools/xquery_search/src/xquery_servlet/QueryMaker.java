@@ -98,6 +98,8 @@ public class QueryMaker {
                         Element catElement = (Element)catsList.item(k);
                         NodeList cats = catElement.getChildNodes();
                         Node cat = cats.item(0);
+                        String catString = "";
+                        if (cat != null) {catString = cat.getNodeValue();}
                         String connective = "";
                         if(k > 0) {
                             if (type.getNodeValue().equals("At least one from listed")){
@@ -108,7 +110,7 @@ public class QueryMaker {
                         }
                         String sign = "";
                         if (!inference) { sign = "="; } else { sign = "!="; }
-                        output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName"+ sign +"\""+cat.getNodeValue()+"\"";
+                        output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName"+ sign +"\""+catString+"\"";
                     }
                 } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
                     Element intElement = (Element)intsList.item(0);
