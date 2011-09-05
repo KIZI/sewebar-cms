@@ -489,7 +489,62 @@ public class BDBXMLHandler {
         }
         return output;
     }
-
+    
+    /**
+     * Metoda pro ziskani cachovaneho DataDescription
+     * @return DataDescription / chyba
+     */
+    public String getDataDescriptionCache() {
+        String output = "";
+        try {
+            XmlContainer cont = mgr.openContainer("__DataDescriptionCacheContainer");
+            XmlTransaction txn = mgr.createTransaction();
+            if (cont.getDocument("__DataDescriptionCacheDocument") != null) {
+                XmlDocument doc = cont.getDocument("__DataDescriptionCacheDocument");
+                output += "<message><![CDATA["+doc.getContentAsString()+"]]></message>";
+            } else {
+                output += "<error>Chyba cache</error>";
+            }
+            txn.commit();
+            closeContainer(cont);
+            } catch (XmlException ex) {
+                //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
+                output += "<error>"+ex.toString()+"</error>";
+            }
+        return output;
+    }
+    
+    /**
+     * Metoda pro ulozeni aktualniho DataDescription do cache
+     * @return Provedeno / chyba
+     */
+    public String actualizeDataDescriptionCache() {
+        String output = "";
+        XmlContainer cont;
+        try {
+            if (mgr.openContainer("__DataDescriptionCacheContainer") == null) {
+                cont = mgr.createContainer("__DataDescriptionCacheContainer");
+                cont.setAutoIndexing(false);
+                cont = mgr.openContainer("__DataDescriptionCacheContainer");
+            } else {
+                cont = mgr.openContainer("__DataDescriptionCacheContainer");
+            }
+            XmlTransaction txn = mgr.createTransaction();
+            String dataDescription = getDataDescription();
+            if (cont.getDocument("__DataDescriptionCacheDocument") != null) {
+                cont.deleteDocument("__DataDescriptionCacheDocument");
+            }
+            cont.putDocument("__DataDescriptionCacheDocument", dataDescription);
+            output += "<message>DataDescription cache aktualizovan</message>";
+            
+            txn.commit();
+            closeContainer(cont);
+            } catch (XmlException ex) {
+                //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
+                output += "<error>"+ex.toString()+"</error>";
+            }
+        return output;
+    }
     /**
      * Metoda pro vytvoreni DataDescription dat ulozenych v XML DB
      * @return DataDescription

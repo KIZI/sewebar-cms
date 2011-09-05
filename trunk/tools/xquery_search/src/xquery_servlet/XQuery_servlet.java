@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.15 (2.8.2011)
+ * @version 1.16 (4.9.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
@@ -79,12 +79,12 @@ public class XQuery_servlet extends HttpServlet {
                 String schemaPath = settings[8];
 
                 if (settingsError != null) {
-                        output += "<error><![CDATA[Trida: XQuery_servlet | Metoda: processRequest | Chyba: " + settingsError + "]]></error>";
+                        output += "<error><![CDATA[Error: " + settingsError + "]]></error>";
                 } else {
                         try {
                         // Parametr action neni vyplnen => error, jinak naplneni promennych a odeslani ke zpracovani
                         if (request.getParameter("action").equals("")){
-                                output += "<error><![CDATA[Trida: XQuery_servlet | Metoda: processRequest | Chyba: Parametr akce neni vyplnen!]]></error>";
+                                output += "<error><![CDATA[Error: Parametr akce neni vyplnen!]]></error>";
                         } else {
                             String action = request.getParameter("action").toString().toLowerCase();
                             if (action.equals("showsettings")) {
@@ -136,7 +136,7 @@ public class XQuery_servlet extends HttpServlet {
                 catch (Throwable ex) {
                     StringWriter sw = new StringWriter();
                     ex.printStackTrace(new PrintWriter(sw));
-                    output += "<error><![CDATA[Trida:  XQuery_servlet | Metoda: processRequest | Chyba: " + sw.toString() +"]]></error>";
+                    output += "<error><![Error: " + sw.toString() +"]]></error>";
                     }
                 }
             }
@@ -365,7 +365,8 @@ public class XQuery_servlet extends HttpServlet {
         if (action.equals("delindex")) returnID = 17; else
         if (action.equals("getdescription")) returnID = 18; else
         if (action.equals("removealldocuments")) returnID = 19; else
-        if (action.equals("jaxpquery")) returnID = 20;
+        if (action.equals("jaxpquery")) returnID = 20; else
+        if (action.equals("actdescription")) returnID = 21;
         return returnID;
 	}
 
@@ -391,7 +392,7 @@ public class XQuery_servlet extends HttpServlet {
     	int mappedAction = mapAction(action);
         String output = "";
         // Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content 
-        int except[] = {2,3,7,8,10,13,14,16,17,18,19,20};
+        int except[] = {2,3,7,8,10,13,14,16,17,18,19,20,21};
 
         Boolean except_bool = false;
         for (int i = 0; i < except.length; i++){
@@ -474,7 +475,7 @@ public class XQuery_servlet extends HttpServlet {
                         String dotaz = content.toString();
                         output += bh.delIndex(dotaz);
                     } break;
-            case 18: output += bh.getDataDescription(); break;
+            case 18: output += bh.getDataDescriptionCache(); break;
             case 19: output += /*bh.removeAllDocuments();*/"<not implemented yet/>"; break;
             case 20: /*if (content.equals("")) {
                         output += "<error><![CDATA[Nebyl zadan dotaz!]]></error>";
@@ -482,6 +483,7 @@ public class XQuery_servlet extends HttpServlet {
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
                         output += bh.queryShortened(qm.makeXPath(is));
                     }*/ break;
+            case 21: output += bh.actualizeDataDescriptionCache(); break;
             default: output += "<error><![CDATA[Zadana akce neexistuje]]></error>"; break;
             }
         }
