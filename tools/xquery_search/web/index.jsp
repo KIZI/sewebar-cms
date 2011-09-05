@@ -47,7 +47,7 @@
   </head>
   <script type="text/javascript">
       function zobrazPole(vybrano){
-          if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest" || vybrano == "listIn" || vybrano == "getDescription" || vybrano == "removeAllDocuments") {
+          if (vybrano == "getDocsNames" || vybrano == "getQueriesNames" || vybrano == "completeTest" || vybrano == "listIn" || vybrano == "getDescription" || vybrano == "removeAllDocuments" || vybrano == "actDescription") {
               window.document.getElementById("id").style.display = "none";
               window.document.getElementById("content").style.display = "none";
               window.document.getElementById("docName").style.display = "none";
@@ -120,6 +120,7 @@
       <option value="addIndex">Přidat index</option>
       <option value="delIndex">Odstranit index</option>
       <option value="listIn">Zobrazit indexy</option>
+      <option value="actDescription">Aktualizovat DataDescription</option>
       <option value="getDescription">Zobrazit DataDescription</option>
       <option value="completeTest">Otestování nastavení</option>
       <option value="removeAllDocuments">!!! Odstranit všechny dokumenty !!!</option>
@@ -153,7 +154,7 @@
     </table>
     <br />
     <br />
-    <i>verze 1.15 (2.8.2011)</i>
+    <i>verze 1.16 (4.9.2011)</i>
     <hr />
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
