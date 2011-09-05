@@ -499,16 +499,16 @@ public class BDBXMLHandler {
         try {
             XmlContainer cont = mgr.openContainer("__DataDescriptionCacheContainer");
             XmlTransaction txn = mgr.createTransaction();
-            if (cont.getDocument("__DataDescriptionCacheDocument") != null) {
-                XmlDocument doc = cont.getDocument("__DataDescriptionCacheDocument");
-                output += "<message><![CDATA["+doc.getContentAsString()+"]]></message>";
-            } else {
-                output += "<error>Chyba cache</error>";
-            }
+            XmlDocument doc = cont.getDocument("__DataDescriptionCacheDocument");
+            output += doc.getContentAsString();
             txn.commit();
             closeContainer(cont);
             } catch (XmlException ex) {
-                //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
+                if (ex.getErrorCode() == XmlException.DOCUMENT_NOT_FOUND) {
+                    output += "<error>Chyba cache - Document not found</error>";
+                } else if (ex.getErrorCode() == XmlException.CONTAINER_NOT_FOUND) {
+                    output += "<error>Chyba cache - Container not found</error>";
+                }
                 output += "<error>"+ex.toString()+"</error>";
             }
         return output;
@@ -520,28 +520,35 @@ public class BDBXMLHandler {
      */
     public String actualizeDataDescriptionCache() {
         String output = "";
-        XmlContainer cont;
+        XmlContainer cont = null;
         try {
-            if (mgr.openContainer("__DataDescriptionCacheContainer") == null) {
-                cont = mgr.createContainer("__DataDescriptionCacheContainer");
-                cont.setAutoIndexing(false);
-                cont = mgr.openContainer("__DataDescriptionCacheContainer");
-            } else {
-                cont = mgr.openContainer("__DataDescriptionCacheContainer");
-            }
+            cont = mgr.openContainer("__DataDescriptionCacheContainer");
             XmlTransaction txn = mgr.createTransaction();
             String dataDescription = getDataDescription();
-            if (cont.getDocument("__DataDescriptionCacheDocument") != null) {
-                cont.deleteDocument("__DataDescriptionCacheDocument");
-            }
             cont.putDocument("__DataDescriptionCacheDocument", dataDescription);
             output += "<message>DataDescription cache aktualizovan</message>";
             
             txn.commit();
             closeContainer(cont);
             } catch (XmlException ex) {
-                //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
-                output += "<error>"+ex.toString()+"</error>";
+                if (ex.getErrorCode() == XmlException.CONTAINER_NOT_FOUND) {
+                    try {
+                        cont = mgr.createContainer("__DataDescriptionCacheContainer");
+                        cont.setAutoIndexing(false);
+                        actualizeDataDescriptionCache();
+                    } catch (XmlException ex1) {
+                        output += "<error>"+ex1.toString()+"</error>";
+                    }
+                } else if (ex.getErrorCode() == XmlException.UNIQUE_ERROR) {
+                    try {
+                        cont.deleteDocument("__DataDescriptionCacheDocument");
+                        actualizeDataDescriptionCache();
+                    } catch (XmlException ex1) {
+                        output += "<error>"+ex1.toString()+"</error>";
+                    }
+                } else {
+                    output += "<error>"+ex.toString()+"</error>";
+                }
             }
         return output;
     }
