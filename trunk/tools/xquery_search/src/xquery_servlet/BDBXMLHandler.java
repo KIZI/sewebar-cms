@@ -699,8 +699,11 @@ public class BDBXMLHandler {
                     + "<ExecutionTime>" + (System.currentTimeMillis() - startTime) + "</ExecutionTime>"
                     + "<DocumentsSearched></DocumentsSearched>"
                     + "<RulesSearched></RulesSearched>"
-                + "</Statistics>"
-                + "<Hits>";
+                + "</Statistics>";
+        if (restructure) {
+            output += "<DataDescription>" + dataDescriptionPrepare("<Hits>" + queryResult + "</Hits>") + "</DataDescription>";
+        }
+        output += "<Hits>";
         if (restructure) {
             output += restructureOutput("<Hits>"+queryResult+"</Hits>");
         } else {
@@ -709,7 +712,65 @@ public class BDBXMLHandler {
         output += "</Hits></SearchResult>";
         return output;
     }
-    
+    private String dataDescriptionPrepare(String queryOutput) {
+        String output = "";
+        String ddPrepareQuery = "declare function local:descriptionTransform($inputData) {"
+                + "let $dataDictOutput := <Dictionary sourceDictType=\"DataDictionary\" sourceFormat=\"PMML\" default=\"true\" completeness=\"ReferencedFromPatterns\" id=\"DataDictionary\">"
+                + "            { for $bbaName in distinct-values($inputData/DataDictionary/FieldName)"
+                + "                let $cats := for $cat in distinct-values($inputData/DataDictionary[FieldName=$bbaName]/CatName) return <Category>{$cat}</Category>"
+                + "                let $intsAll := for $int in $inputData/DataDictionary[FieldName=$bbaName]/Interval return $int"
+                + "                let $ints := for $left in distinct-values($intsAll/@left) return for $right in distinct-values($intsAll[@left = $left]/@right) return <Interval leftMargin=\"{$left}\" rightMargin=\"{$right}\" closure=\"{distinct-values($intsAll[@left = $left and @right = $right]/@type)}\"/>"
+                + "            return <Field id=\"{concat(\"f\",index-of($inputData//DataDictionary/FieldName, $bbaName)[1])}\"><Name>{$bbaName}</Name>{$cats, $ints}</Field>}"
+                + "            </Dictionary>"
+                + "let $transDictOutput := <Dictionary sourceDictType=\"DiscretizationHint\" sourceFormat=\"PMML\" default=\"true\" completeness=\"ReferencedFromPatterns\" id=\"TransformationDictionary\">"
+                + "            {for $bbaName in distinct-values($inputData/TransformationDictionary/FieldName)"
+                + "                let $cats := for $cat in distinct-values($inputData/TransformationDictionary[FieldName=$bbaName]/CatName) return <Category>{$cat}</Category>"
+                + "                let $intsAll := for $int in $inputData/TransformationDictionary[FieldName=$bbaName]/Interval return $int"
+                + "                let $ints := for $left in distinct-values($intsAll/@left) return for $right in distinct-values($intsAll[@left = $left]/@right) return <Interval leftMargin=\"{$left}\" rightMargin=\"{$right}\" closure=\"{distinct-values($intsAll[@left = $left and @right = $right]/@type)}\"/>"
+                + "            return <Field id=\"{concat(\"f\",index-of($inputData//TransformationDictionary/FieldName, $bbaName)[1])}\"><Name>{$bbaName}</Name>{$cats, $ints}</Field>}"
+                + "            </Dictionary>"
+                + "let $mappingOutput := <DictionaryMapping>"
+                + "            {for $ddName in distinct-values($inputData/DataDictionary/FieldName)"
+                + "                let $id := $dataDictOutput/Field[index-of($dataDictOutput/Field/Name, $ddName)]/@id"
+                + "                let $tdNames := for $tdName in distinct-values($inputData[DataDictionary/FieldName=$ddName]/TransformationDictionary/FieldName) return $tdName"
+                + "                let $valueMappings := if (count($inputData/DataDictionary[FieldName=$ddName]/Interval) > 0) then"
+                + "                    for $intervalLeft in distinct-values($inputData/DataDictionary[FieldName=$ddName]/Interval/@left)"
+                + "                        return for $intervalRight in distinct-values($inputData/DataDictionary[FieldName=$ddName and Interval/@left = $intervalLeft]/Interval/@right)"
+                + "                        return for $intervalClosure in distinct-values($inputData/DataDictionary[FieldName=$ddName and Interval/@left = $intervalLeft and Interval/@right = $intervalRight]/Interval/@type)"
+                + "                        let $tdValues := for $tdValue in distinct-values($inputData[DataDictionary/FieldName=$ddName and DataDictionary/Interval/@left = $intervalLeft and DataDictionary/Interval/@right = $intervalRight and DataDictionary/Interval/@type = $intervalClosure]/TransformationDictionary/CatName)"
+                + "                        return $tdValue"
+                + "                    return <IntervalMapping><Field><Interval leftMargin=\"{$intervalLeft}\" rightMargin=\"{$intervalRight}\" closure=\"{$intervalClosure}\" /></Field><Field>{for $tdValueOut in $tdValues return <CatRef>{$tdValueOut}</CatRef>}</Field></IntervalMapping>"
+                + "                else"
+                + "                    for $ddValue in distinct-values($inputData/DataDictionary[FieldName=$ddName]/CatName)"
+                + "                        let $tdValues := for $tdValue in distinct-values($inputData[DataDictionary/FieldName = $ddName and DataDictionary/CatName = $ddValue]/TransformationDictionary/CatName) return $tdValue"
+                + "                    return <ValueMapping><Field><CatRef>{$ddValue}</CatRef></Field><Field>{for $tdValueOut in $tdValues return <CatRef>{$tdValueOut}</CatRef>}</Field></ValueMapping>"
+                + "            return <FieldMapping><AppliesTo>"
+                + "            <FieldRef id=\"{$id}\" dictID=\"DataDictionary\"><Name>{$ddName}</Name></FieldRef>"
+                + "            <FieldRef id=\"{$id}\" dictID=\"TransformationDictionary\">{for $tdNameOut in $tdNames return <Name>{$tdNameOut}</Name>}</FieldRef>"
+                + "            </AppliesTo>{$valueMappings}</FieldMapping>}"
+                + "            </DictionaryMapping>"
+                + "return $dataDictOutput union $transDictOutput union $mappingOutput"
+                + "};"
+                + "let $dd := " + queryOutput
+                + "return local:descriptionTransform($dd//BBA)";
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            Configuration config = new Configuration();
+            StaticQueryContext sqc = config.newStaticQueryContext();
+            XQueryExpression xqe = sqc.compileQuery(ddPrepareQuery);
+            DynamicQueryContext dqc = new DynamicQueryContext(config);
+            Properties props = new Properties();
+            props.setProperty(OutputKeys.METHOD, "html");
+            props.setProperty(OutputKeys.INDENT, "no");
+            xqe.run(dqc, new StreamResult(baos), props);
+            output += baos.toString("UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            
+        } catch (XPathException ex) {
+            //output += "<error>" + ex.toString() + "</error>";
+        }
+        return output;
+    }
     /**
      * Metoda pro zmenu struktury vystupu query
      * @param queryOutput puvodni vystup query
@@ -725,7 +786,7 @@ public class BDBXMLHandler {
                     + "\nlet $ARAntePointer := if(count($hit/Detail/Antecedent)>0) then concat(\"ante_00\", $position) else ()"
                     + "\nlet $ARConsPointer := if(count($hit/Detail/Consequent)>0) then concat(\"cons_00\", $position) else ()"
                     + "\nlet $ARCondPointer := if(count($hit/Detail/Condition)>0) then concat(\"cond_00\", $position) else ()"
-                    + "\nreturn <AssociationRule antecedent=\"{$ARAntePointer}\" consequent=\"{$ARConsPointer}\" condition=\"{$ARCondPointer}\">{$hit/Detail/IMValue}</AssociationRule>"
+                    + "\nreturn <Hit docID=\"{$hit/@docID}\" ruleID=\"{$hit/@ruleID}\" docName=\"{$hit/@docName}\" database=\"{$hit/@database}\" reportURI=\"{$hit/@reportURI}\"><AssociationRule antecedent=\"{$ARAntePointer}\" consequent=\"{$ARConsPointer}\" condition=\"{$ARCondPointer}\">{$hit/Text}{$hit/Detail/IMValue}</AssociationRule></Hit>"
                 + "\nlet $DBAs := let $positions := $queryOutput/Hit/position() for $position in $positions return for $hit in $queryOutput/Hit[$position]"
                     + "\nlet $ante := local:getDBAs(concat('ante_00', $position), $hit/Detail/Antecedent)"
                     + "\nlet $cons := local:getDBAs(concat('cons_00', $position), $hit/Detail/Consequent)"

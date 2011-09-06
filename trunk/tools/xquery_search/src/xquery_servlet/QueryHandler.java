@@ -212,7 +212,7 @@ public class QueryHandler {
                             + "\n if ($everyCat/name() = \"Interval\") then <Interval closure=\"{$everyCat/@closure}\" left=\"{$everyCat/@leftMargin}\" right=\"{$everyCat/@rightMargin}\"/> else $everyCat"
                     + "\n return if (count($fieldTrans) > 0) then "
                         + "\n <Field dictionary=\"{distinct-values($fieldTrans[1]/@dictionary)}\"><Name>{distinct-values($fieldTrans[1]/@name/string())}</Name><Type>{$coeff/Type/text()}</Type>{$category}</Field> else ()};"
-                + "\n let $vstup := "+deleteDeclaration(request)
+                + "\n let $vstup := " + deleteDeclaration(request)
                 + "\n return local:processRequest($vstup)";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
