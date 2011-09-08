@@ -85,7 +85,7 @@
 					<DataType>String</DataType>
 					<ValueType>Cardinal</ValueType>
 					<Collation type="Enumeration" sense="Descending"/>
-					<Range>
+					<Range type="enumeration">
 						<Value>A</Value>
 						<Value>B</Value>
 						<Value>C</Value>
@@ -192,7 +192,7 @@
 					<DataType>Integer</DataType>
 					<ValueType>Ordinal</ValueType>
 					<Collation type="Numerical" sense="Ascending"/>
-					<Range>
+					<Range type="interval">
 						<Interval closure="closedClosed" leftMargin="1" rightMargin="60"/>
 					</Range>
 
@@ -270,7 +270,7 @@
 					</LastModified>
 					<DataType>String</DataType>
 					<ValueType>Nominal</ValueType>
-					<Range>
+					<Range type="enumeration">
 						<Value>Praha</Value>
 						<Value>Brno</Value>
 						<Value>Bruntál</Value>
@@ -359,7 +359,7 @@
 						<Timestamp>2002-10-10T12:00:00-05:00</Timestamp>
 						<Author>Testovací anotátor</Author>
 					</LastModified>
-					<Range>
+					<Range type="enumeration">
 						<Value>Male</Value>
 						<Value>Female</Value>
 					</Range>
