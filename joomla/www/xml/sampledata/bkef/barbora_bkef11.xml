@@ -86,7 +86,7 @@
 					<DataType>String</DataType>
 					<ValueType>Cardinal</ValueType>
 					<Collation type="Enumeration" sense="Descending"/>
-					<Range>
+					<Range type="enumeration">
 						<Value>A</Value>
 						<Value>B</Value>
 						<Value>C</Value>
@@ -193,7 +193,7 @@
 					<DataType>Integer</DataType>
 					<ValueType>Ordinal</ValueType>
 					<Collation type="Numerical" sense="Ascending"/>
-					<Range>
+					<Range type="interval">
 						<Interval closure="closedClosed" leftMargin="1" rightMargin="60"/>
 					</Range>
 
@@ -271,7 +271,7 @@
 					</LastModified>
 					<DataType>String</DataType>
 					<ValueType>Nominal</ValueType>
-					<Range>
+					<Range type="enumeration">
 						<Value>Praha</Value>
 						<Value>Brno</Value>
 						<Value>Bruntál</Value>
@@ -362,7 +362,7 @@
 						<Timestamp>2002-10-10T12:00:00-05:00</Timestamp>
 						<Author>Testovací anotátor</Author>
 					</LastModified>
-					<Range>
+					<Range type="enumeration">
 						<Value>Male</Value>
 						<Value>Female</Value>
 					</Range>
@@ -391,14 +391,8 @@
 	-->
 	<DataDescription>
 		<Dictionary id="d0" sourceDictType="Range" completeness="ReferencedFromPatterns">
-			<Identifier>
-				<Name>Metaattribute</Name>
-				<Value>kvalita úvěru</Value>
-			</Identifier>
-			<Identifier>
-				<Name>Format</Name>
-				<Value>Points of International Loan Quality Scale</Value>
-			</Identifier>
+			<Identifier name="Metaattribute">kvalita úvěru</Identifier>
+			<Identifier name="Format">Points of International Loan Quality Scale</Identifier>
 			<Field id="f1">
 				<Category id="1">A</Category>
 				<Category id="2">B</Category>
@@ -408,25 +402,14 @@
 				<Category id="6">x</Category>
 			</Field>
 			<Field id="f2">
-				<Identifier>
-					<Name>Metaattribute</Name>
-					<Value>trvání úvěru</Value>
-				</Identifier>
-				<Identifier>
-					<Name>Format</Name>
-					<Value>month</Value>
-				</Identifier>
+				<Identifier name="Metaattribute">trvání úvěru</Identifier>
+				<Identifier name="Format">month</Identifier>				
 				<Interval closure="closedClosed" leftMargin="1" rightMargin="60"/>
 			</Field>
 			<Field id="f3">
-				<Identifier>
-					<Name>Metaattribute</Name>
-					<Value>bydliště klienta</Value>
-				</Identifier>
-				<Identifier>
-					<Name>Format</Name>
-					<Value>district</Value>
-				</Identifier>
+				<Identifier name="Metaattribute">bydliště klienta</Identifier>
+				<Identifier name="Format">district</Identifier>				
+				
 				<Category id="1">Praha</Category>
 				<Category id="2">Brno</Category>
 				<Category id="3">Bruntál</Category>
@@ -435,51 +418,24 @@
 		</Dictionary>
 		<Dictionary id="d1" sourceDictType="DiscretizationHint" completeness="ReferencedFromPatterns">
 			<Field id="f1">
-				<Identifier>
-					<Name>Metaattribute</Name>
-					<Value>trvání úvěru</Value>
-				</Identifier>
-				<Identifier>
-					<Name>Format</Name>
-					<Value>month</Value>
-				</Identifier>
-				<Identifier>
-					<Name>DiscretizationHint</Name>
-					<Value>predpriprava pro detailni analyzu</Value>
-				</Identifier>
+				<Identifier name="Metaattribute">trvání úvěru</Identifier>
+				<Identifier name="Format">month</Identifier>				
+				<Identifier name="DiscretizationHint">predpriprava pro detailni analyzu</Identifier>
 				<Name>Trvání úvěru</Name>
 				<Category id="c1">Extrémní</Category>
 			</Field>
 			<Field id="f2">
-				<Identifier>
-					<Name>Metaattribute</Name>
-					<Value>kvalita úvěru</Value>
-				</Identifier>
-				<Identifier>
-					<Name>Format</Name>
-					<Value>Points of International Loan Quality Scale</Value>
-				</Identifier>
-				<Identifier>
-					<Name>DiscretizationHint</Name>
-					<Value>predpriprava pro detailni analyzu</Value>
-				</Identifier>
+				<Identifier name="Metaattribute">kvalita úvěru</Identifier>
+				<Identifier name="Format">Points of International Loan Quality Scale</Identifier>				
+				<Identifier name="DiscretizationHint">predpriprava pro detailni analyzu</Identifier>
 				<Name>Kvalita úvěru</Name>
 				<Category id="c1">dobrý</Category>
 				<Category id="c2">nevypadá to dobře</Category>
 			</Field>
 			<Field id="f3">
-				<Identifier>
-					<Name>Metaattribute</Name>
-					<Value>bydliště klienta</Value>
-				</Identifier>
-				<Identifier>
-					<Name>Format</Name>
-					<Value>district</Value>
-				</Identifier>
-				<Identifier>
-					<Name>DiscretizationHint</Name>
-					<Value>Bydliště</Value>
-				</Identifier>
+				<Identifier name="Metaattribute">bydliště klienta</Identifier>
+				<Identifier name="Format">district</Identifier>				
+				<Identifier name="DiscretizationHint">Bydliště</Identifier>
 				<Name>Bydliště</Name>
 				<Category id="c1">Praha</Category>
 			</Field>
@@ -487,31 +443,31 @@
 		<DictionaryMapping>
 			<FieldMapping>
 				<AppliesTo>
-					<FieldRef id="f1" dictID="d0">
-						<Name/>						
-					</FieldRef>
-					<FieldRef id="f2" dictID="d1">
-						<Name>Kvalita úvěru</Name>
-					</FieldRef>
+					<FieldRef id="f1" dictID="d0"/>		
+					
+					<FieldRef id="f2" dictID="d1"/>					
 				</AppliesTo>
-				<ValueMapping>
-					<Field>
-						<CatRef>A</CatRef>
-						<CatRef>B</CatRef>
-					</Field>
-					<Field>
-						<CatRef>dobrý</CatRef>
-					</Field>
-				</ValueMapping>
-				<ValueMapping>
-					<Field>
-						<CatRef>C</CatRef>
-						<CatRef>D</CatRef>
-					</Field>
-					<Field>
-						<CatRef>nevypadá to dobře</CatRef>
-					</Field>
-				</ValueMapping>
+				<ValueMappings>
+					<ValueMapping>
+						<Field id="f1" dictID="d0">
+							<CatRef>A</CatRef>
+							<CatRef>B</CatRef>
+						</Field>
+						<Field id="f2" dictID="d1">
+							<CatRef>dobrý</CatRef>
+						</Field>
+					</ValueMapping>
+					<ValueMapping>
+						<Field id="f1" dictID="d0">
+							<CatRef>C</CatRef>
+							<CatRef>D</CatRef>
+						</Field>
+						<Field id="f2" dictID="d1">
+							<CatRef>nevypadá to dobře</CatRef>
+						</Field>
+					</ValueMapping>
+				</ValueMappings>
+
 				<!--ValueMapping>
 					<Field>
 						<CatRef>E</CatRef>
@@ -523,40 +479,38 @@
 			</FieldMapping>
 			<FieldMapping>
 				<AppliesTo>
-					<FieldRef id="f3" dictID="d0">
-						<Name/>
-					</FieldRef>
-					<FieldRef id="f3" dictID="d1">
-						<Name>Bydliště</Name>
-					</FieldRef>
+					<FieldRef id="f3" dictID="d0"/>					
+					<FieldRef id="f3" dictID="d1"/>
+					
 				</AppliesTo>
-				<ValueMapping>
-					<Field>
-						<CatRef>Praha</CatRef>
-					</Field>
-					<Field>
-						<CatRef id="c1">Praha</CatRef>
-					</Field>
-				</ValueMapping>
+				<ValueMappings>
+					<ValueMapping>
+						<Field id="f3" dictID="d0">
+							<CatRef>Praha</CatRef>
+						</Field>
+						<Field id="f3" dictID="d1">
+							<CatRef id="c1">Praha</CatRef>
+						</Field>
+					</ValueMapping>
+				</ValueMappings>
 			</FieldMapping>
 			<FieldMapping>
 				<AppliesTo>
-					<FieldRef id="" dictID="d0">
-						<Name/>
-					</FieldRef>
-					<FieldRef id="f1" dictID="d1">
-						<Name>Trvání úvěru</Name>
-					</FieldRef>					
+					<FieldRef id="" dictID="d0"/>
+					<FieldRef id="f1" dictID="d1"/>
+										
 				</AppliesTo>
-				<ValueMapping>
-					<Field>
-						<Interval closure="closedClosed" leftMargin="1" rightMargin="20"/>
-						<Interval closure="openClosed" leftMargin="40" rightMargin="60"/>							
-					</Field>
-					<Field>
-						<CatRef id="c1">Extrémní</CatRef>
-					</Field>
-				</ValueMapping>
+				<ValueMappings>
+					<ValueMapping>
+						<Field id="" dictID="d0">
+							<Interval closure="closedClosed" leftMargin="1" rightMargin="20"/>
+							<Interval closure="openClosed" leftMargin="40" rightMargin="60"/>							
+						</Field>
+						<Field id="f1" dictID="d1">
+							<CatRef id="c1">Extrémní</CatRef>
+						</Field>
+					</ValueMapping>
+				</ValueMappings>
 			</FieldMapping>			
 		</DictionaryMapping>		
 	</DataDescription>

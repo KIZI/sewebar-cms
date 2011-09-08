@@ -18,14 +18,8 @@
 <!-- Matrix -->
 
 	<Dictionary numberOfFields="10" sourceFormat="PMML" sourceDictType="DataDictionary">
-         <Identifier>
-          <Name>Metabase</Name>
-          <Value>LM LMBarbora1.mdb MB</Value>
-         </Identifier>
-         <Identifier>
-           <Name>Dataset</Name>
-           <Value>Loans</Value>
-         </Identifier>
+		<Identifier name="Metabase">LM LMBarbora1.mdb MB</Identifier>
+		<Identifier name="Dataset">Loans</Identifier>				
 	 <Field optype="continuous" dataType="integer"> 
 	  <Extension name="Avg" value="43.357386" extender="Avg"/>
 	  <Extension name="StDev" value="-1.000000" extender="StDev"/>

@@ -8,17 +8,10 @@
         <Timestamp>2002-10-10T12:00:00-05:00</Timestamp>
         <Author>Data miner</Author>        
     </Header>
-    <Dictionary sourceDictType="Range"  sourceFormat="BKEF" sourceName="Barbora.bkef">
-        <Identifier>
-            <Name>Metaattribute</Name>
-            <Value>kvalita úvěru</Value>
-        </Identifier>
-        <Identifier>
-            <Name>Format</Name>
-            <Value>Points of International Loan Quality Scale</Value>
-        </Identifier>
+    <Dictionary sourceDictType="Range"  sourceFormat="BKEF" sourceName="Barbora.bkef">               
         <Field id="f1">
-            
+            <Identifier name="Metaattribute">kvalita úvěru</Identifier>
+            <Identifier name="Format">Points of International Loan Quality Scale</Identifier>				                    
             <Category id="1">A</Category>
             <Category id="2">B</Category>
             <Category id="3">C</Category>
@@ -27,25 +20,14 @@
             <Category id="6">x</Category>
         </Field>
         <Field id="f2">
-            <Identifier>
-                <Name>Metaattribute</Name>
-                <Value>trvání úvěru</Value>
-            </Identifier>
-            <Identifier>
-                <Name>Format</Name>
-                <Value>month</Value>
-            </Identifier>
+            <Identifier name="Metaattribute">trvání úvěru</Identifier>
+            <Identifier name="Format">month</Identifier>				
             <Interval closure="closedClosed" leftMargin="1" rightMargin="60"/>
         </Field>
         <Field id="f3">
-            <Identifier>
-                <Name>Metaattribute</Name>
-                <Value>bydliště klienta</Value>
-            </Identifier>
-            <Identifier>
-                <Name>Format</Name>
-                <Value>district</Value>
-            </Identifier>
+            <Identifier name="Metaattribute">bydliště klienta</Identifier>
+            <Identifier name="Format">district</Identifier>				
+            
             <Name>Bydliště</Name>
             <Category id="1">Praha</Category>
             <Category id="2">Brno</Category>

@@ -45,49 +45,48 @@
         <DictionaryMapping>
             <FieldMapping>
                 <AppliesTo>
-                    <FieldRef id="f3" dictID="DataDictionary">
-                        <Name>status</Name>						
-                    </FieldRef>
-                    <FieldRef id="f3" dictID="TransformationDictionary">
-                        <Name>Quality</Name>
-                    </FieldRef>
-                </AppliesTo>                               
-                <ValueMapping>
-                    <Field>
-                        <CatRef>A</CatRef>
-                        <CatRef>C</CatRef>
-                    </Field>
-                    <Field>
-                        <CatRef>good</CatRef>
-                    </Field>
-                </ValueMapping>
+                    <FieldRef id="f3" dictID="DataDictionary"/>
+                    
+                    <FieldRef id="f3" dictID="TransformationDictionary"/>
+                    
+                </AppliesTo>     
+                <ValueMappings>
+                    <ValueMapping>
+                        <Field id="f3" dictID="DataDictionary">
+                            <CatRef>A</CatRef>
+                            <CatRef>C</CatRef>
+                        </Field>
+                        <Field id="f3" dictID="TransformationDictionary">
+                            <CatRef>good</CatRef>
+                        </Field>
+                    </ValueMapping>
+                </ValueMappings>
+
             </FieldMapping>
             <FieldMapping>
                 <AppliesTo>
-                    <FieldRef id="f2" dictID="DataDictionary">
-                        <Name>Sex</Name>						
-                    </FieldRef>
-                    <FieldRef id="f1" dictID="TransformationDictionary">
-                        <Name>Sex</Name>
-                    </FieldRef>
-                </AppliesTo>                               
-                <ValueMapping>
-                    <Field>
-                        <CatRef>No</CatRef>
-                    </Field>
-                    <Field>
-                        <CatRef>M</CatRef>
-                    </Field>
-                </ValueMapping>
+                    <FieldRef id="f2" dictID="DataDictionary"/>	
+
+                    <FieldRef id="f1" dictID="TransformationDictionary"/>
+                    
+                </AppliesTo>   
+                <ValueMappings>
+                    <ValueMapping>
+                        <Field id="f2" dictID="DataDictionary">
+                            <CatRef>No</CatRef>
+                        </Field>
+                        <Field id="f1" dictID="TransformationDictionary">
+                            <CatRef>M</CatRef>
+                        </Field>
+                    </ValueMapping>
+                </ValueMappings>
+
             </FieldMapping>
             <FieldMapping>
                 <AppliesTo>
-                    <FieldRef id="f1" dictID="DataDictionary">
-                        <Name>amount</Name>						
-                    </FieldRef>
-                    <FieldRef id="f2" dictID="TransformationDictionary">
-                        <Name>Amount</Name>
-                    </FieldRef>
+                    <FieldRef id="f1" dictID="DataDictionary"/>					
+                    
+                    <FieldRef id="f2" dictID="TransformationDictionary"/>                    
                 </AppliesTo>                               
                 <IntervalMapping/>
             </FieldMapping>
@@ -127,7 +126,7 @@
         </DBA>
         <Hit docID="1" ruleID="1" docName="dx.xml" database="Barbora" reportURI="http://sewbar.vse.cz/cardio/foo-dx-1.html">
             <AssociationRule antecedent="7" consequent="68">
-                <Text>Sex(M) & Amount(&lt;50;100)=>Quality(good)</Text>
+                <Text>Sex(M) &amp; Amount(&lt;50;100)=>Quality(good)</Text>
                 <IMValue name="Support">0.6</IMValue>
             </AssociationRule>            
         </Hit>

@@ -9,14 +9,9 @@
         <Author>Data miner</Author>        
     </Header>
     <Dictionary numberOfFields="10" sourceFormat="PMML" sourceDictType="DataDictionary" id="pmml">
-        <Identifier>
-            <Name>Metabase</Name>
-            <Value>LM LMBarbora1.mdb MB</Value>
-        </Identifier>
-        <Identifier>
-            <Name>Dataset</Name>
-            <Value>Loans</Value>
-        </Identifier>
+        <Identifier name="metabase">LM LMBarbora1.mdb MB</Identifier>
+        <Identifier name="Dataset">Loans</Identifier>
+
         <Field optype="continuous" dataType="integer" id="1"> 
             <Extension name="Avg" value="43.357386" extender="Avg"/>
             <Extension name="StDev" value="-1.000000" extender="StDev"/>
@@ -241,14 +236,8 @@
         </Field>
     </Dictionary>
     <Dictionary  sourceFormat="BKEF"  sourceDictType="Range"   sourceName="Barbora.bkef" id="bkef">
-        <Identifier>
-            <Name>Metaattribute</Name>
-            <Value>kvalita úvěru</Value>
-        </Identifier>
-        <Identifier>
-            <Name>Format</Name>
-            <Value>Points of International Loan Quality Scale</Value>
-        </Identifier>
+        <Identifier name="Metaattribute">kvalita úvěru</Identifier>
+        <Identifier name="Format">Points of International Loan Quality Scale</Identifier>
         <Field id="f1">            
             <Category id="1">A</Category>
             <Category id="2">B</Category>
@@ -258,25 +247,14 @@
             <Category id="6">x</Category>
         </Field>
         <Field id="f2">
-            <Identifier>
-                <Name>Metaattribute</Name>
-                <Value>trvání úvěru</Value>
-            </Identifier>
-            <Identifier>
-                <Name>Format</Name>
-                <Value>month</Value>
-            </Identifier>
+            <Identifier name="Metaattribute">trvání úvěru</Identifier>
+            <Identifier name="Format">month</Identifier>	
             <Interval closure="closedClosed" leftMargin="1" rightMargin="60"/>
         </Field>
         <Field id="f3">
-            <Identifier>
-                <Name>Metaattribute</Name>
-                <Value>bydliště klienta</Value>
-            </Identifier>
-            <Identifier>
-                <Name>Format</Name>
-                <Value>district</Value>
-            </Identifier>            
+            <Identifier name="Metaattribute">bydliště klienta</Identifier>
+            <Identifier name="Format">district</Identifier>				
+            
             <Category id="1">Praha</Category>
             <Category id="2">Brno</Category>
             <Category id="3">Bruntál</Category>
@@ -287,12 +265,8 @@
         <FieldMapping>
             <!-- BKEF Reference by id only -->
             <AppliesTo>
-                <FieldRef dictID="pmml" id="4">
-                    <Name>District</Name>
-                </FieldRef>
-                <FieldRef dictID="bkef" id="f3">
-                    <Name/>
-                </FieldRef>
+                <FieldRef dictID="pmml" id="4"/>                
+                <FieldRef dictID="bkef" id="f3"/>                
             </AppliesTo>
             <MappingInfo>
                 <FieldMappingType>                    
@@ -303,82 +277,80 @@
                     </Autosuggestion>
                 </FieldMappingType>
             </MappingInfo>
-            <ValueMapping>
-                <Field>
-                    <CatRef>Praha</CatRef>
-                </Field>
-                <Field>
-                    <CatRef id="1"/>
-                </Field>
-            </ValueMapping>
-            <ValueMapping>
-                <Field>
-                    <CatRef>Brno - venkov</CatRef>
-                </Field>                
-                <Field>
-                    <CatRef id="2"/>
-                </Field>
-            </ValueMapping>
-            <ValueMapping>                
-                <Field>
-                    <CatRef>Bruntal</CatRef>
-                </Field>
-                <Field>
-                    <CatRef id ="3"/>
-                </Field>
-            </ValueMapping>            
+            <ValueMappings>
+                <ValueMapping>
+                    <Field dictID="pmml" id="4">
+                        <CatRef>Praha</CatRef>
+                    </Field>
+                    <Field dictID="bkef" id="f3">
+                        <CatRef id="1"/>
+                    </Field>
+                </ValueMapping>
+                <ValueMapping>
+                    <Field dictID="pmml" id="4">
+                        <CatRef>Brno - venkov</CatRef>
+                    </Field>                
+                    <Field dictID="bkef" id="f3">
+                        <CatRef id="2"/>
+                    </Field>
+                </ValueMapping>
+                <ValueMapping>                
+                    <Field dictID="pmml" id="4">
+                        <CatRef>Bruntal</CatRef>
+                    </Field>
+                    <Field dictID="bkef" id="f3">
+                        <CatRef id ="3"/>
+                    </Field>
+                </ValueMapping> 
+            </ValueMappings>
+           
         </FieldMapping>
         <FieldMapping>
             <!-- BKEF Reference by value and id -->
             <AppliesTo>
-                <FieldRef id="10" dictID="pmml">
-                    <Name>status</Name>
-                </FieldRef>
-                <FieldRef id="f1" dictID="bkef">
-                    <Name></Name>
-                </FieldRef>
+                <FieldRef id="10" dictID="pmml"/>                
+                <FieldRef id="f1" dictID="bkef"/>                
             </AppliesTo>
-            <ValueMapping>
-                <Field>
-                    <CatRef>A</CatRef>
-                </Field>
-                <Field>
-                    <CatRef id="1">A</CatRef>
-                </Field>
-            </ValueMapping>
-            <ValueMapping>
-                <Field>
-                    <CatRef>B</CatRef>
-                </Field>
-                <Field>
-                    <CatRef id="2">B</CatRef>
-                </Field>
-            </ValueMapping>
-            <ValueMapping>
-                <Field>
-                    <CatRef>C</CatRef>
-                </Field>
-                <Field>
-                    <CatRef  id="3">C</CatRef>
-                </Field>
-            </ValueMapping>
-            <ValueMapping>
-                <Field>
-                    <CatRef>D</CatRef>
-                </Field>
-                <Field>
-                    <CatRef id="4">D</CatRef>
-                </Field>
-            </ValueMapping>              
+            <ValueMappings>
+                <ValueMapping>
+                    <Field id="10" dictID="pmml">
+                        <CatRef>A</CatRef>
+                    </Field>
+                    <Field id="f1" dictID="bkef">
+                        <CatRef id="1">A</CatRef>
+                    </Field>
+                </ValueMapping>
+                <ValueMapping>
+                    <Field id="10" dictID="pmml">
+                        <CatRef>B</CatRef>
+                    </Field>
+                    <Field id="f1" dictID="bkef">
+                        <CatRef id="2">B</CatRef>
+                    </Field>
+                </ValueMapping>
+                <ValueMapping>
+                    <Field id="10" dictID="pmml">
+                        <CatRef>C</CatRef>
+                    </Field>
+                    <Field id="f1" dictID="bkef">
+                        <CatRef  id="3">C</CatRef>
+                    </Field>
+                </ValueMapping>
+                <ValueMapping>
+                    <Field id="10" dictID="pmml">
+                        <CatRef>D</CatRef>
+                    </Field>
+                    <Field id="f1" dictID="bkef">
+                        <CatRef id="4">D</CatRef>
+                    </Field>
+                </ValueMapping>           
+            </ValueMappings>
+   
         </FieldMapping>
         <FieldMapping>
             <AppliesTo>
-                <FieldRef id="5" dictID="pmml">
-                    <Name>duration</Name>
-                </FieldRef>
-                <FieldRef id="f2" dictID="bkef">
-                    <Name/>
-                </FieldRef>
+                <FieldRef id="5" dictID="pmml"/>                
+                <FieldRef id="f2" dictID="bkef"/>                
             </AppliesTo>
             <IntervalMapping/>            
         </FieldMapping>        
