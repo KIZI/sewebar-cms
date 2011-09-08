@@ -680,6 +680,12 @@ public class BDBXMLHandler {
     public String queryShortened(String XPathRequest, boolean restructure){
         long startTime = System.currentTimeMillis();
         String output = "";
+        String schema = "";
+        if (restructure) {
+            schema = "http://sewebar.vse.cz/schemas/SearchResult0_2.xsd";
+        } else {
+            schema = "http://sewebar.vse.cz./schemas/SearchResult0_1.xsd";
+        }
         String query = "for $ar in " + XPathRequest
             + "\n return"
             + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
@@ -688,7 +694,7 @@ public class BDBXMLHandler {
             + "\n </Hit>";
         String queryResult = query("", query, 0);
         output += "<SearchResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + "xsi:noNamespaceSchemaLocation=\"http://sewebar.vse.cz./schemas/SearchResult0_1.xsd\">"
+                + "xsi:noNamespaceSchemaLocation=\""+ schema +"\">"
                 + "<Metadata>"
                     + "<SearchTimestamp>" + getDateTime() + "</SearchTimestamp>"
                     + "<LastIndexUpdate>2011-05-30T09:00:00</LastIndexUpdate>"
@@ -697,8 +703,8 @@ public class BDBXMLHandler {
                 + "</Metadata>"
                 + "<Statistics>"
                     + "<ExecutionTime>" + (System.currentTimeMillis() - startTime) + "</ExecutionTime>"
-                    + "<DocumentsSearched></DocumentsSearched>"
-                    + "<RulesSearched></RulesSearched>"
+                    + "<DocumentsSearched>" + query("", "count(collection(\""+ containerName +"\")/PMML)", 0) + "</DocumentsSearched>"
+                    + "<RulesSearched>" + query("", "count(collection(\""+ containerName +"\")/PMML/AssociationRule)", 0) + "</RulesSearched>"
                 + "</Statistics>";
         if (restructure) {
             output += "<DataDescription>" + dataDescriptionPrepare("<Hits>" + queryResult + "</Hits>") + "</DataDescription>";
@@ -780,13 +786,18 @@ public class BDBXMLHandler {
         String output = "";
         String restructureQuery = 
                 "declare function local:restructure($queryOutput) {"
-                + "\nlet $BBAs := $queryOutput//BBA "
+                + "\nlet $BBAs := for $bba in $queryOutput//BBA let $fieldRef := $bba/TransformationDictionary/FieldName/string() let $catName := $bba/TransformationDictionary/CatName/string() return <BBA id=\"{$bba/@id}\"><Text>{concat($fieldRef, \"(\", $catName, \")\")}</Text><FieldRef>{$fieldRef}</FieldRef><CatRef>{$catName}</CatRef></BBA>"
                 + "\nlet $ARs := let $positions := $queryOutput/Hit/position()"
                     + "\nfor $position in $positions return for $hit in $queryOutput/Hit[$position]"
                     + "\nlet $ARAntePointer := if(count($hit/Detail/Antecedent)>0) then concat(\"ante_00\", $position) else ()"
                     + "\nlet $ARConsPointer := if(count($hit/Detail/Consequent)>0) then concat(\"cons_00\", $position) else ()"
                     + "\nlet $ARCondPointer := if(count($hit/Detail/Condition)>0) then concat(\"cond_00\", $position) else ()"
-                    + "\nreturn <Hit docID=\"{$hit/@docID}\" ruleID=\"{$hit/@ruleID}\" docName=\"{$hit/@docName}\" database=\"{$hit/@database}\" reportURI=\"{$hit/@reportURI}\"><AssociationRule antecedent=\"{$ARAntePointer}\" consequent=\"{$ARConsPointer}\" condition=\"{$ARCondPointer}\">{$hit/Text}{$hit/Detail/IMValue}</AssociationRule></Hit>"
+                    + "\nreturn <Hit docID=\"{$hit/@docID}\" ruleID=\"{$hit/@ruleID}\" docName=\"{$hit/@docName}\" database=\"{$hit/@database}\" reportURI=\"{$hit/@reportURI}\">"
+                        + "{if (count($ARCondPointer) > 0) then"
+                        + "<AssociationRule antecedent=\"{$ARAntePointer}\" consequent=\"{$ARConsPointer}\" condition=\"{count($ARCondPointer)}\">{$hit/Text}{$hit/Detail/IMValue}</AssociationRule>"
+                        + "else"
+                        + "<AssociationRule antecedent=\"{$ARAntePointer}\" consequent=\"{$ARConsPointer}\">{$hit/Text}{$hit/Detail/IMValue}</AssociationRule>}"
+                    + "</Hit>"
                 + "\nlet $DBAs := let $positions := $queryOutput/Hit/position() for $position in $positions return for $hit in $queryOutput/Hit[$position]"
                     + "\nlet $ante := local:getDBAs(concat('ante_00', $position), $hit/Detail/Antecedent)"
                     + "\nlet $cons := local:getDBAs(concat('cons_00', $position), $hit/Detail/Consequent)"
@@ -854,8 +865,9 @@ public class BDBXMLHandler {
      * @return aktualni datum a cas
      */
     private String getDateTime(){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df2 = new SimpleDateFormat("HH:mm:ss");
         Date date = new Date();
-        return df.format(date);
+        return df1.format(date)+"T"+df2.format(date);
     }
 }
