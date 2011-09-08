@@ -3,10 +3,7 @@
  xsi:schemaLocation="http://keg.vse.cz/ns/datadescription0_2 http://sewebar.vse.cz/schemas/DataDescription0_2.xsd"
  xmlns:data="http://keg.vse.cz/ns/datadescription0_2">
     <Dictionary sourceDictType="TransformationDictionary" sourceFormat="PMML" default="true" completeness="All" id="bkef">
-        <Identifier>
-            <Name>Metabase</Name>
-            <Value>LM LMBarbora.mdb MB</Value>
-        </Identifier>
+        <Identifier name="Metabase">LM LMBarbora.mdb MB</Identifier>
         <Field dataType="string">
             <Name>Age_in_years</Name>
             <Category>21</Category>
