@@ -100,6 +100,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="UserSelection"/>
             <xs:enumeration value="All"/>
+            <xs:enumeration value="ReferencedFromPatterns"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -124,7 +125,10 @@
             <xs:restriction base="fdml:FieldMapping">
                 <xs:sequence>
                     <xs:element name="AppliesTo" type="fdml:AppliesTo"/>
-                    <xs:element name="ValueMapping" type="fdml:ValueMapping" maxOccurs="unbounded"/>
+                    <xs:choice>
+                        <xs:element name="ValueMappings" type="fdml:ValueMappings"/>                        
+                        <xs:element name="IntervalMapping"/>
+                    </xs:choice>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

@@ -10,7 +10,11 @@
       BKEF Data 1.1 
       Author: Tomáš Kliegr
       tomas.kliegr@vse.cz
-      Date:   7/2011    
+      Date:   7/2011   
+      
+      Revision: 9/2011
+      added type atribute on Range
+      
     </xs:documentation>  
   </xs:annotation>
   
@@ -177,6 +181,15 @@
       <xs:element name="Regex" type="RegexType" maxOccurs="unbounded"/>
       <xs:element name="Interval" type="base:IntervalType" maxOccurs="unbounded"/>
     </xs:choice>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="enumeration"></xs:enumeration>
+          <xs:enumeration value="regex"></xs:enumeration>
+          <xs:enumeration value="interval"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
   </xs:complexType>
 
 <xs:simpleType name="RegexType">
