@@ -39,7 +39,7 @@
        Document header
        =============== -->
        <!-- uses: 4FTPMML2HTML-header -->
-    <h1><xsl:copy-of select="keg:translate('Description of Data Mining Task', 10)"/> „<xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName|/p:PMML/guha:SD4ftModel/@modelName"/>“</h1>
+    <h1><xsl:copy-of select="keg:translate('Description of Data Mining Task', 10)"/> „<xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName | /p:PMML/guha:Ac4ftModel/@modelName"/>“</h1>
     <p><xsl:copy-of select="keg:translate('This document contains automatically generated report on a data mining task.',20)"/></p>
     <p><xsl:copy-of select="keg:translate('The report contains firstly describes the data, then provides information about the created attributes, that is how the data was discretized. Afterwards the document provides the task setting and finally the patterns (association rules) found.',640)"/></p>
     <!-- task metadata -->
@@ -68,7 +68,7 @@
         <div class="dim"><xsl:apply-templates select="guha:AssociationModel/TaskSetting" mode="toc"/></div>
       </li>
       <li><a href="#sect5"><xsl:copy-of select="keg:translate('Discovered Association Rules',60)"/></a>
-          <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel" mode="toc"/>
+          <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="toc"/>
       </li>
     </ol>
     </div>
@@ -150,7 +150,7 @@
       </ul>
 
       <p><xsl:copy-of select="keg:translate('Below, all the interest measures for the output association rules are stated. The table contains name of the quantifier (interest measure) and also minimal values of the quantifier threshold(s).',750)"/></p>
-      <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel" mode="sect4"/>
+      <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="sect4"/>
     </div>
 
     <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DMTaskSetting','','end')"/></xsl:comment>
@@ -164,13 +164,13 @@
       <p><xsl:copy-of select="keg:translate('Discovered association rules relate to the following attributes',110)"/>: <xsl:apply-templates select="p:DataDictionary/p:DataField" mode="sect5" />.</p>
 
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('NumberOfRulesFound','','start')"/></xsl:comment>
-      <p><xsl:copy-of select="keg:translate('Number of discovered association rules',120)"/>: <xsl:value-of select="guha:AssociationModel/@numberOfRules | guha:SD4ftModel/@numberOfRules"/></p>
+      <p><xsl:copy-of select="keg:translate('Number of discovered association rules',120)"/>: <xsl:value-of select="guha:AssociationModel/@numberOfRules | guha:SD4ftModel/@numberOfRules | guha:Ac4ftModel/@numberOfRules"/></p>
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('NumberOfRulesFound','','end')"/></xsl:comment>
 
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRules_Contents','','start')"/></xsl:comment>
       <div id="sectDiscoveredArToc">
         <h3><xsl:copy-of select="keg:translate('Content (list of rules)',130)"/></h3>
-        <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel" mode="toc">
+        <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="toc">
           <xsl:with-param name="checkbox" select="1"/>
         </xsl:apply-templates>
       </div>
@@ -178,6 +178,7 @@
 
       <xsl:apply-templates select="guha:AssociationModel/AssociationRules/AssociationRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
       <xsl:apply-templates select="guha:SD4ftModel/SD4ftRules/SD4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
+      <xsl:apply-templates select="guha:Ac4ftModel/Ac4ftRules/Ac4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
     </div>
 
     <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredARs','','end')"/></xsl:comment>

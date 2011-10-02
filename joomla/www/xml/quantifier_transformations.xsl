@@ -9,14 +9,30 @@
   <xsl:variable name="InterestMeasureDictionary" select="document('pmml/dict/GUHAQuantifier-InterestMeasureDictionary.xml')"/>
 
   <xsl:param name="roundTo" select="1000"/>
-  <xsl:variable name="basePresent" select="count(/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[text() = 'Support' or text() = 'BASE'])+count(/p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Extension[@name='ShortName' and (text() = 'Support' or text() = 'BASE')])"></xsl:variable>
+  <xsl:variable name="basePresent" select="
+       count(/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[text() = 'Support' or text() = 'BASE'])
+     + count(/p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Extension[@name='ShortName' and (text() = 'Support' or text() = 'BASE')])
+     + count(/p:PMML/guha:Ac4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Extension[@name='ShortName' and (text() = 'Support' or text() = 'BASE')])
+  "/>
   <xsl:variable name="numberOfQuantifiers"
-    select="count(/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[not(text() = '')]) + count(/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula[not(@name = '')])+count(/p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[not(text() = '')]) + count(/p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula[not(@name = '')])" />
+    select="
+       count(/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[not(text() = '')])
+     + count(/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula[not(@name = '')])
+     + count(/p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[not(text() = '')])
+     + count(/p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula[not(@name = '')])
+     + count(/p:PMML/guha:Ac4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure[not(text() = '')])
+     + count(/p:PMML/guha:Ac4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula[not(@name = '')])
+   " />
   <xsl:variable name="encloseQuantifiersInBrackets" select="($numberOfQuantifiers > 1 and $basePresent = 0) or ($numberOfQuantifiers > 2)"></xsl:variable>
   <xsl:variable name="contentsQuantifier">
     <xsl:variable name="quantifiers">
-      <xsl:for-each select="/p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure | /p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula | /p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure">
-        <xsl:copy-of select="keg:selectQuantifier(text() | @name,'1')"/>
+      <xsl:for-each select="
+         /p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure
+       | /p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula
+       | /p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure
+       | /p:PMML/guha:Ac4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure
+      ">
+        <span title="{text() | @name}"><xsl:copy-of select="keg:selectQuantifier(text() | @name,'1')"/></span>
       </xsl:for-each>
     </xsl:variable>
     <xsl:choose>

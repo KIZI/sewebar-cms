@@ -8,7 +8,7 @@
        Section 5 - Discovered ARs
        ========================== -->
   <!-- found rule detail -->
-  <xsl:template match="AssociationRule | SD4ftRule" mode="sect5">
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="sect5">
     <!-- rule link is made according to its position (number) -->
     <xsl:variable name="arText">
       <xsl:apply-templates select="." mode="ruleBody"/>
@@ -92,15 +92,55 @@
           </tbody>
         </table>
       </xsl:if>
+      <!-- 4FT table for Ac4ftRule / SD4ftMiner, Ac4ftMiner -->
+      <xsl:if test="local-name()='Ac4ftRule'">
+        <!-- 4FT: four field table -->
+        <table style="margin: 0 auto;">
+          <tbody>
+            <tr>
+              <td>
+                State before four field quantifier
+                <xsl:apply-templates select="StateBefore" mode="sect5-qtable">
+                  <xsl:with-param name="rulePos" select="$rulePos"/>
+                </xsl:apply-templates>
+                State before four field contingency table
+                <xsl:call-template name="FourFieldTable">
+                  <xsl:with-param name="a" select="StateBefore/FourFtTable/@a"/>
+                  <xsl:with-param name="b" select="StateBefore/FourFtTable/@b"/>
+                  <xsl:with-param name="c" select="StateBefore/FourFtTable/@c"/>
+                  <xsl:with-param name="d" select="StateBefore/FourFtTable/@d"/>
+                  <xsl:with-param name="arText" select="$arText"/>
+                </xsl:call-template>
+              </td>
+              <td>
+                State after four field quantifier
+                <xsl:apply-templates select="StateAfter" mode="sect5-qtable">
+                  <xsl:with-param name="rulePos" select="$rulePos"/>
+                </xsl:apply-templates>
+                State after four field contingency table
+                <xsl:call-template name="FourFieldTable">
+                  <xsl:with-param name="a" select="StateAfter/FourFtTable/@a"/>
+                  <xsl:with-param name="b" select="StateAfter/FourFtTable/@b"/>
+                  <xsl:with-param name="c" select="StateAfter/FourFtTable/@c"/>
+                  <xsl:with-param name="d" select="StateAfter/FourFtTable/@d"/>
+                  <xsl:with-param name="arText" select="$arText"/>
+                </xsl:call-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>        
+      </xsl:if>
     </div>
   </xsl:template>
 
   <!-- quantifier table -->
-  <xsl:template match="AssociationRule | SD4ftRule | FirstSet | SecondSet" mode="sect5-qtable">
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule | FirstSet | SecondSet | StateBefore | StateAfter" mode="sect5-qtable">
     <xsl:param name="rulePos"/>
     <xsl:variable name="sect">
       <xsl:if test="local-name()='FirstSet'">fs-</xsl:if>
       <xsl:if test="local-name()='SecondSet'">ss-</xsl:if>
+      <xsl:if test="local-name()='StateBefore'">sb-</xsl:if>
+      <xsl:if test="local-name()='StateAfter'">sa-</xsl:if>
     </xsl:variable>
     <table class="itable" summary="Values of associated test criteria">
       <thead>
@@ -134,7 +174,7 @@
         </tbody>
       </xsl:if>
       <!-- AssociationRule or SD4ftRule table rows -->
-      <xsl:if test="local-name()='AssociationRule' or local-name()='SD4ftRule'">
+      <xsl:if test="local-name()='AssociationRule' or local-name()='SD4ftRule' or local-name()='Ac4ftRule'">
         <tbody id="sect5-rule{$rulePos}-task">
           <!-- other quantifiers from task setting -->
           <xsl:apply-templates select="IMValue[not(@name='Support') and not(@name='Confidence') and @imSettingRef]" mode="sect5"/>
@@ -198,7 +238,7 @@
 
   </xsl:template>
 
-  <xsl:template match="AssociationRule | SD4ftRule" mode="ruleBody">
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="ruleBody">
     <xsl:param name="arrowOnly"/>
     <xsl:variable name="ante" select="@antecedent"/>
     <xsl:variable name="cons" select="@consequent | @succedent"/>
@@ -207,7 +247,7 @@
       - condition is optional
     -->
     <xsl:choose>
-      <xsl:when test="count(../DBA[@id=$ante]/BARef)+count(../BBA[@id=$ante])>0">
+      <xsl:when test="(count(../DBA[@id=$ante]/BARef) + count(../BBA[@id=$ante])) > 0">
         <xsl:call-template name="cedent">
           <xsl:with-param name="cedentID" select="$ante"/>
         </xsl:call-template>
@@ -256,6 +296,7 @@
 
   <xsl:template name="cedent">
     <xsl:param name="cedentID"/>
+    <span title="{$cedentID}">
     <xsl:choose>
       <!-- LISp-Miner has a text representation of the whole cedent in the text extension -->
       <xsl:when test="/p:PMML/p:Header/p:Application/@name='LISp-Miner'">
@@ -269,6 +310,7 @@
         </xsl:apply-templates>
       </xsl:otherwise>
     </xsl:choose>
+    </span>
   </xsl:template>
 
   <xsl:template match="BBA">

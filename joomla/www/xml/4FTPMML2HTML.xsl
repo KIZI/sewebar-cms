@@ -84,7 +84,7 @@
       <xsl:otherwise>
         <html>
           <head>
-            <title><xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName"/> - <xsl:copy-of select="keg:translate('Description of Data Mining Task',10)"/></title>
+            <title><xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName | /p:PMML/guha:Ac4ftModel/@modelName"/> - <xsl:copy-of select="keg:translate('Description of Data Mining Task',10)"/></title>
             <link rel="stylesheet" type="text/css" href="design.css"/>
           </head>
           <body>
