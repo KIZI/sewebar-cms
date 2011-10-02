@@ -112,28 +112,37 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="AssociationRule" mode="toc">
+  <xsl:template match="guha:Ac4ftModel" mode="toc">
+    <xsl:param name="checkbox"/>
+    <xsl:variable name="numberOfRules" select="count(/p:PMML/guha:Ac4ftModel/Ac4ftRules/Ac4ftRule)"/>
+    <xsl:choose>
+      <xsl:when test="$numberOfRules>0">
+        <ol>
+          <xsl:apply-templates select="Ac4ftRules/Ac4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="toc">
+            <xsl:with-param name="checkbox" select="$checkbox"/>
+          </xsl:apply-templates>
+        </ol>
+      </xsl:when>
+      <xsl:when test="$numberOfRules=0">
+        <p style="color: red">
+          <xsl:copy-of select="keg:translate('No rules found',191)"/>
+        </p>
+      </xsl:when>
+      <xsl:when test="$numberOfRules &gt; $maxRulesToList">
+        <p style="color: red">
+          <xsl:copy-of select="keg:translate('Exceeded',190)"/> maxRulesToList = <xsl:value-of select="$maxRulesToList"/>; <xsl:copy-of select="keg:translate('first',200)"/> <xsl:value-of select="$maxRulesToList"/> <xsl:copy-of select="keg:translate('from the total number of',210)"/> <xsl:value-of select="count(AssociationRule)"/>  <xsl:copy-of select="keg:translate('rules',220)"/>.
+        </p>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="toc">
     <xsl:param name="checkbox"/>
     <li>
       <xsl:if test="$checkbox">
         <input type="checkbox" checked="checked" onclick="ShowChecked(this,'sect5-rule{position()}')"/>
       </xsl:if>
       <a href="#sect5-rule{position()}" onclick="Show(this,'sect5-rule{position()}')">
-        <!-- from 4FTPMML2HTML-sect5 -->
-        <xsl:apply-templates select="." mode="ruleBody">
-          <xsl:with-param name="arrowOnly" select="1"/>
-        </xsl:apply-templates>
-      </a>
-    </li>
-  </xsl:template>
-
-  <xsl:template match="SD4ftRule" mode="toc">
-    <xsl:param name="checkbox"/>
-    <li>
-      <xsl:if test="$checkbox">
-        <input type="checkbox" checked="checked" onclick="ShowChecked(this,'sect5-rule{position()}')"/>
-      </xsl:if>
-      <a href="#sect5-rule{position()}">
         <!-- from 4FTPMML2HTML-sect5 -->
         <xsl:apply-templates select="." mode="ruleBody">
           <xsl:with-param name="arrowOnly" select="1"/>

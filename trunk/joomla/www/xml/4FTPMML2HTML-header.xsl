@@ -16,6 +16,7 @@
               <td align="right"><xsl:copy-of select="keg:translate('Task name',150)"/> </td>
               <td><i><xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName"/>
                   <xsl:value-of select="/p:PMML/guha:SD4ftModel/@modelName"/>
+                  <xsl:value-of select="/p:PMML/guha:Ac4ftModel/@modelName"/>
               </i></td>
           </tr>
           <tr>

@@ -7,7 +7,7 @@
   <!-- ========================
        Data Mining Task Setting
        ======================== -->
-  <xsl:template match="guha:AssociationModel | guha:SD4ftModel" mode="sect4">
+  <xsl:template match="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="sect4">
     <div class="idiv">
       <p><xsl:copy-of select="keg:translate('Task name',150)"/>: <xsl:value-of select="@modelName"/></p>
       <!-- Used quantifier table -->
@@ -135,10 +135,10 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:choose>
       <xsl:when test="$link">
-        <a href="#sect4-attribute-{$id}"><xsl:value-of select="Name"/></a>
+        <a href="#sect4-attribute-{$id}" title="{$id}"><xsl:value-of select="Name"/></a>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="Name"/>
+        <span title="{$id}"><xsl:value-of select="Name"/></span>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
