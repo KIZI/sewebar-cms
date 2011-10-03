@@ -152,7 +152,7 @@ public class BDBXMLHandler {
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = queryShortened(xpath, false);
+            output_temp = queryShortened(xpath, false, 9999);
             //output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
@@ -677,7 +677,7 @@ public class BDBXMLHandler {
      * @param XPathRequest XPath dotaz
      * @return vysledky hledani v SearchResult formatu
      */
-    public String queryShortened(String XPathRequest, boolean restructure){
+    public String queryShortened(String XPathRequest, boolean restructure, int maxResults){
         long startTime = System.currentTimeMillis();
         String output = "";
         String schema = "";
@@ -686,7 +686,7 @@ public class BDBXMLHandler {
         } else {
             schema = "http://sewebar.vse.cz./schemas/SearchResult0_1.xsd";
         }
-        String query = "for $ar in " + XPathRequest
+        String query = "for $ar in subsequence(" + XPathRequest + ", 1, " + maxResults + ")"
             + "\n return"
             + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
                 + "\n {$ar/Text}"
