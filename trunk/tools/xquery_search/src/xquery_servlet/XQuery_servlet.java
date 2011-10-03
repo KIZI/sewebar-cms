@@ -27,6 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 public class XQuery_servlet extends HttpServlet {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/**
      * Metoda zpracovavajici vstup a vytvarejici vystup. Podporuje <code>GET</code> a <code>POST</code> metody.
      * @param request prijaty pozadavek
      * @param response vytvorena odpoved (vystup)
@@ -412,8 +418,8 @@ public class XQuery_servlet extends HttpServlet {
                         /*String dotaz = content.toString();
                         output += bh.query(id, dotaz, 1);*/
                         InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        output += bh.queryShortened(qm.makeXPath(is), restructure);
-                        //output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
+                        //output += bh.queryShortened(qm.makeXPath(is), restructure);
+                        output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
                         //output += qh.queryPrepare(content).toString();
                     } break;
             case 2: if (content.equals("")) {

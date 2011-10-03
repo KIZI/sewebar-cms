@@ -50,7 +50,8 @@ public class QueryMaker {
                  if (consList.getLength() > 0) { output += "(" + cedentPrepare(consList) + ")"; }
                  if ((anteList.getLength() > 0 && condList.getLength() > 0) || (consList.getLength() > 0 && condList.getLength() > 0)) { output += " and "; }
                  if (condList.getLength() > 0) { output += "(" + cedentPrepare(condList) + ")"; }
-                     
+                 
+                 
             } else {
                 int x = 0;
                 NodeList BBAList = doc.getElementsByTagName("BBA");
@@ -66,6 +67,23 @@ public class QueryMaker {
                     x++;
                 }
             }
+            
+            NodeList imsList = doc.getElementsByTagName("IMs");
+            Element imsElement = (Element) imsList.item(0);
+            NodeList imsChilds = imsElement.getChildNodes();
+            for (int j = 0; j < imsChilds.getLength(); j++) {
+            	Element ims = (Element) imsChilds.item(j);
+            	NodeList imList = ims.getElementsByTagName("InterestMeasure");
+            	Element interestMeasureElement = (Element) imList.item(0);
+            	NodeList interestMeasureList = interestMeasureElement.getChildNodes();
+            	Node interestMeasure = interestMeasureList.item(0);
+            	NodeList thList = ims.getElementsByTagName("Threshold");
+            	Element thresholdElement = (Element) thList.item(0);
+            	NodeList thresholdList = thresholdElement.getChildNodes();
+            	Node threshold = thresholdList.item(0);
+            	output += " and IMValue[@name=\"" + interestMeasure.getNodeValue() + "\"]/text() >= " + threshold.getNodeValue();
+            }
+            
             output += "]";
         } catch (SAXException ex) {
             //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
