@@ -1,10 +1,16 @@
 package xquery_servlet;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,7 +37,7 @@ public class QueryMaker {
      * @return XPath dotaz
      */
     public String makeXPath(InputStream xmlQuery){
-        String output = "";
+    	String output = "";
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -83,7 +89,7 @@ public class QueryMaker {
             	Node threshold = thresholdList.item(0);
             	output += " and IMValue[@name=\"" + interestMeasure.getNodeValue() + "\"]/text() >= " + threshold.getNodeValue();
             }
-            
+            //output += "MaxResults: " + getMaxResults(xmlQuery);
             output += "]";
         } catch (SAXException ex) {
             //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,5 +205,53 @@ public class QueryMaker {
             }
          }
         return output;
-    }    
+    }
+    
+    public int getMaxResults(InputStream xmlQuery) {
+		int maxResInt = 200;
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			 
+			Document doc = db.parse(xmlQuery);
+			doc.getDocumentElement().normalize();
+			
+			NodeList maxResultsList = doc.getElementsByTagName("MaxResults");
+			Element maxResultsElement = (Element)maxResultsList.item(0);
+			NodeList maxResultsList2 = maxResultsElement.getChildNodes();
+			Node maxResults = maxResultsList2.item(0);
+			maxResInt = Integer.parseInt(maxResults.getNodeValue());
+		} catch (ParserConfigurationException e) {
+			//maxResInt = 1001;
+		} catch (SAXException e) {
+			//maxResInt = 1002;
+			e.printStackTrace();
+		} catch (IOException e) {
+			//maxResInt = 1003;
+		}
+		return maxResInt;
+    }
+    
+    /**
+     * Metoda pro zmenu hodnot Interesting Measures mezi vstupni hodnotou a hodnotou ulozenou v DB 
+     * @param value Vyhledavana hodnota
+     * @param fromDict Vychozi slovnik
+     * @param toDict Cilovy slovnik
+     * @return Zmenena hodnota
+     */
+    private String IMValueSwitch(String value, int fromDict, int toDict){
+    	String output = "";
+    	String [][] dictionary = new String[3][2];
+    	//Naplenni hodnot slovniku -> pozice 0 v radku - vstup, pozice 1 v radku - hodnoty v DB
+    	dictionary[0][0] = "Confidence";
+    	dictionary[0][1] = "Conf";
+    	dictionary[1][0] = "Support";
+    	dictionary[1][1] = "Supp";
+    	for (int i = 0; i < dictionary.length; i++) {
+    		if (dictionary[i][fromDict].toLowerCase().equals(value.toLowerCase())) {
+    			output = dictionary[i][toDict];
+    		}
+    	}
+    	return output;
+    }
 }

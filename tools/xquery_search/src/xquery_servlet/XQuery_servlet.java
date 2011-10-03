@@ -417,9 +417,10 @@ public class XQuery_servlet extends HttpServlet {
                     } else {
                         /*String dotaz = content.toString();
                         output += bh.query(id, dotaz, 1);*/
-                        InputStream is = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-                        //output += bh.queryShortened(qm.makeXPath(is), restructure);
-                        output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
+                        InputStream is1 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
+                        InputStream is2 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
+                        output += bh.queryShortened(qm.makeXPath(is1), restructure, qm.getMaxResults(is2));
+                        //output += "<xpath><![CDATA["+ qm.makeXPath(is)+"]]></xpath>";
                         //output += qh.queryPrepare(content).toString();
                     } break;
             case 2: if (content.equals("")) {
