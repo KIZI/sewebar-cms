@@ -1,0 +1,495 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows1250">
+		<!-- 4ftMiner.Task.HTML.Template, version of 2010-01-16 -->
+	
+		<title><?LM:MB:Task?> - Task solution</title>
+		<link rel="stylesheet" type="text/css" href="design.css">
+	</head>
+	<body>
+		<h1>Solution of the data mining task '<?LM:MB:Task?>'</h1>
+		<p>This documenten contains automatically generated description of a data mining task.</p>
+		<table id="metadata" summary="Task metadata">
+			<tr>
+				<th colspan="2">Task Metadata</th>
+			</tr>
+			<tr>
+				<td align="right">Task Name: </td>
+				<td><i><?LM:MB:Task?></i></td>
+			</tr>
+			<tr>
+				<td align="right">Group of Tasks: </td>
+				<td><?LM:MB:Task.TaskGroup?></td>
+			</tr>
+			<tr>
+				<td align="right">Data Matrix: </td>
+				<td><?LM:MB:Task.Matrix?></td>
+			</tr>
+			<tr>
+				<td align="right">Number of found 4ft Association Rules: </td>
+				<td><?LM:MB:Task.Hypothesis#Count?></td>
+			</tr>
+			<tr>
+				<td align="right">Number of verified patterns: </td>
+				<td><?LM:MB:Task.GenerationNrOfTests?></td>
+			</tr>
+			<tr>
+				<td align="right">Start of task: </td>
+				<td><?LM:MB:Task.GenerationStartTime?></td>
+			</tr>
+			<tr>
+				<td align="right">Task duration: </td>
+				<td><?LM:MB:Task.GenerationTime?></td>
+			</tr>
+			<tr>
+				<td align="right">Handling of missing values: </td>
+				<td><?LM:MB:Task.MissingsType?></td>
+			</tr>
+			<tr>
+				<td align="right">Include antecedent extensions of all implications: </td>
+				<td><?LM:MB:Task.Prolong100A?></td>
+			</tr>
+			<tr>
+				<td align="right">Include succedent extension of 100% implications: </td>
+				<td><?LM:MB:Task.MissingsType?></td>
+			</tr>
+			<tr>
+				<td align="right">Prime rule test for implications enabled: </td>
+				<td><?LM:MB:Task.PrimeCheck?></td>
+			</tr>
+			<tr>
+				<td align="right">Prime rule test including minimal length check: </td>
+				<td><?LM:MB:Task.PrimeCheckMinLen?></td>
+			</tr>
+			<tr>
+				<td align="right">Include both symetric hypotheses: </td>
+				<td><?LM:MB:Task.IncludeSymetric?></td>
+			</tr>
+			<tr>
+				<td align="right">Software system: </td>
+				<td>LISp-Miner</td>
+			</tr>
+			<tr>
+				<td align="right">Version: </td>
+				<td><?LM:System:Version?></td>
+			</tr>
+			<tr>
+				<td align="right">Author: </td>
+				<td><?LM:System:User?></td>
+			</tr>
+			<tr>
+				<td align="right">Notice: </td>
+				<td><?LM:MB:Task.Notice?></td>
+			</tr>
+
+		</table>
+
+		<h2>Content</h2>
+
+		<ol type="I">
+			<li><a href="#section1">Analysed data description</a><ol>
+				<?LM:Loop:Task.Attribute?>
+					<li><a href="#section1-<?LM:MB:Task.Attribute?>"><?LM:MB:Task.Attribute?></a></li>
+				<?LM:EndLoop:Task.Attribute?>
+				</ol>
+			</li>
+			<li><a href="#section3">Created attributes</a><ol>
+				<?LM:Loop:Task.Quantity?>
+					<li><a href="#section3-<?LM:MB:Task.Quantity?>"><?LM:MB:Task.Quantity?></a></li>
+				<?LM:EndLoop:Task.Quantity?>
+				</ol>
+			</li>
+			<li><a href="#section4">Task Description</a><br></li>
+			<li><a href="#section5">Found 4ft Association Rules</a><ol>
+				<?LM:Loop:Task.Hypothesis?>
+					<li><a href="#section5-rule<?LM:MB:Task.Hypothesis.HypothesisID?>"><?LM:MB:Task.Hypothesis.Name?></a></li>
+				<?LM:EndLoop:Task.Hypothesis?>
+				</ol>
+			</li>
+
+<!-- Data Description -->
+
+		</ol><a id="section1"></a><h2>Analysed data description</h2>
+	        <p>Data matrix: <?LM:MB:Task.Matrix.Name?><br>
+	        Number of records in data matrix: <?LM:MB:Task.Matrix.RecordCount?></p>
+		<table class="itable" summary="Table: data description">
+			<caption valign="bottom">Table: data description</caption>
+			<tr>
+				<th colspan="5">Data matrix columns</th>
+			</tr>
+			<tr>
+				<th>Column name</th>
+				<th>Data type</th>
+				<th>Attribute type</th>
+				<th>Cardinality</th>
+			</tr>
+			<?LM:Loop:Task.Attribute?>
+			<tr>
+				<a id="section1-<?LM:MB:Task.Attribute?>">
+				<td><?LM:MB:Task.Attribute?></td>
+				<td><?LM:MB:Task.Attribute.ValueSubType?></td>
+				<td><?LM:MB:Task.Attribute.AttributeSubType?></td>
+				<td><?LM:MB:Task.Attribute.Cardinality?></td>
+			</tr>
+			<?LM:EndLoop:Task.Attribute?>
+
+		</table>
+
+<!-- Attributes -->
+
+		</div><a id="section3"></a><h2>Created attributes</h2>
+		<p>There were created attributes based on data matrix columns. This attributes will be used in task description.</p>
+		<h3>Content (list of attributes)</h3>
+		<ol>
+			<?LM:Loop:Task.Quantity?>
+			<li><a href="#section3-<?LM:MB:Task.Quantity?>"><?LM:MB:Task.Quantity?></a></li>
+			<?LM:EndLoop:Task.Quantity?>
+		</ol>
+		<p>Number of created attributes: <b><?LM:MB:Task.Quantity#Count?></b></p>
+		<?LM:Loop:Task.Quantity?>
+		<div class="idiv"><a id="section3-<?LM:MB:Task.Quantity?>"></a>
+			<table class="itable" summary="Table: attribute <?LM:MB:Task.Quantity?>">
+				<caption valign="bottom">Table: attribute <?LM:MB:Task.Quantity?></caption>
+				<tr>
+					<td colspan="8">
+                        Attribute <b><?LM:MB:Task.Quantity?></b>
+                        based on column <b><?LM:MB:Task.Quantity.Attribute?></b></td>
+				</tr>
+				<tr>
+					<th>Category</th>
+					<th>Type</th>
+					<th>Bool</th>
+					<th>Values</th>
+					<th>+NULL?</th>
+					<th>Frequency</th>
+					<th>XCat?</th>
+					<th>Notice</th>
+				</tr>
+				<?LM:Loop:Task.Quantity.Category?>
+				<tr>
+					<td><?LM:MB:Task.Quantity.Category?></td>
+					<td><?LM:MB:Task.Quantity.Category.CategorySubType?></td>
+					<td><?LM:MB:Task.Quantity.Category.BoolType.ShortName?></td>
+					<td>
+						<?LM:IFF:Task.Quantity.Category.CategorySubType:Enumeration?>
+						<?LM:Loop:Task.Quantity.Category.Enum?>
+							<?LM:MB:Task.Quantity.Category.Enum?>&nbsp;
+						<?LM:EndLoop:Task.Quantity.Category.Enum?>
+						<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+						<?LM:IFF:Task.Quantity.Category.CategorySubType:Interval?>
+						<?LM:Loop:Task.Quantity.Category.Interval?>
+							<?LM:MB:Task.Quantity.Category.Interval.Name?>
+//					  		<?LM:MB:Task.Quantity.Category.Interval.LeftBracketType.ShortName?>
+//							<?LM:MB:Task.Quantity.Category.Interval.FromValue?>;<?LM:MB:Task.Quantity.Category.Interval.ToValue?>
+//							<?LM:MB:Task.Quantity.Category.Interval.RightBracketType.ShortName?>&nbsp;
+						<?LM:EndLoop:Task.Quantity.Category.Interval?>
+						<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+					</td>
+					<td><?LM:MB:Task.Quantity.Category.IncludeNULL?></td>
+					<td><?LM:MB:Task.Quantity.Category.Frequency?></td>
+					<td><?LM:MB:Task.Quantity.Category.XCategory?></td>
+					<td><?LM:MB:Task.Quantity.Category.Notice?></td>
+				</tr>
+				<?LM:EndLoop:Task.Quantity.Category?>
+			</table>
+		</div>
+		<?LM:EndLoop:Task.Quantity?>
+
+<!-- Task Description -->
+
+		</div><a id="section4"></a><h2>Task Description</h2>
+		<div class="idiv">
+			<p>Task Name: <?LM:MB:Task?></p>
+			<table class="itable" summary="Table: used 4ft quantifiers">
+				<caption valign="bottom">Table: used 4ft quantifiers</caption>
+				<tr>
+					<th>Quantifier</th>
+					<th>Threshold</th>
+					<th>Significance level</th>
+				</tr>
+				<?LM:Loop:Task.Quantifier?>
+				<tr>
+					<td><?LM:MB:Task.Quantifier.FTQuantifierType?></td>
+					<td><?LM:MB:Task.Quantifier.Threshold?></td>
+					<td><?LM:MB:Task.Quantifier.SignificanceLevel?></td>
+				</tr>
+				<?LM:EndLoop:Task.Quantifier?>
+			</table>
+		</div>
+
+//		<div class="idiv">                
+//            	Hledaná asociaèní pravidla jsou tvaru:<br><b> =&gt; statusAgregovane(SS[2-2]) / sex(SS[1-1])</b>
+//		</div>
+
+	<!-- Antecedent Description -->
+
+		<div class="idiv">
+			<table class="itable" summary="Table: Antecedent -- partial cedents">
+				<caption valign="bottom">Table: Antecedent -- partial cedents</caption>
+				<tr>
+					<th colspan="4">Antecedent -- partial cedents</th>
+				</tr>
+				<tr>
+					<th>Partial cedent</th>
+					<th>Conj/Disj</th>
+					<th>MinLen</th>
+					<th>MaxLen</th>
+				</tr>
+			<?LM:Loop:Task.FTAntecedentD?>
+				<tr>
+					<td><?LM:MB:Task.FTAntecedentD?></td>
+					<td><?LM:MB:Task.FTAntecedentD.BoolOpType?></td>
+					<td><?LM:MB:Task.FTAntecedentD.MinLen?></td>
+					<td><?LM:MB:Task.FTAntecedentD.MaxLen?></td>
+				</tr>
+			<?LM:EndLoop:Task.FTAntecedentD?>
+			</table>
+		</div>
+
+		<div class="idiv">
+			<table class="itable" summary="Table: Antecedent -- Literals">
+				<caption valign="bottom">Table: Antecedent -- Literals</caption>
+				<tr>
+					<th colspan="9">Table: Antecedent -- Literals</th>
+				</tr>
+				<tr>
+//					<th>CedentType</th>
+					<th>Partial Cedent</th>
+					<th>Literal</th>
+					<th>Attribute</th>
+					<th>Column</th>
+					<th>Gace</th>
+					<th>Coefficient</th>
+					<th>EqClass</th>
+					<th>MinLen</th>
+					<th>MaxLen</th>
+				</tr>
+
+			<?LM:Loop:Task.FTAntecedentD?>
+			<?LM:Loop:Task.FTAntecedentD.LiteralD?>
+				<tr>
+//					<td><?LM:MB:Task.FTAntecedentD.CedentType?></td>
+					<td><?LM:MB:Task.FTAntecedentD?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.Name?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.Quantity?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.Quantity.Attribute?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.LiteralType?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.CoefficientType?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.EquivalenceClass?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.MinLen?></td>
+					<td><?LM:MB:Task.FTAntecedentD.LiteralD.MaxLen?></td>
+				</tr>
+			<?LM:EndLoop:Task.FTAntecedentD.LiteralD?>
+			<?LM:EndLoop:Task.FTAntecedentD?>
+
+			</table>
+		</div>
+
+	<!-- Succedent Description -->
+
+		<div class="idiv">
+			<table class="itable" summary="Table: Succedent -- partial cedents">
+				<caption valign="bottom">Table: Succedent -- partial cedents</caption>
+				<tr>
+					<th colspan="4">Succedent -- partial cedents</th>
+				</tr>
+				<tr>
+					<th>Partial cedent</th>
+					<th>Conj/Disj</th>
+					<th>MinLen</th>
+					<th>MaxLen</th>
+				</tr>
+			<?LM:Loop:Task.FTSuccedentD?>
+				<tr>
+					<td><?LM:MB:Task.FTSuccedentD?></td>
+					<td><?LM:MB:Task.FTSuccedentD.BoolOpType?></td>
+					<td><?LM:MB:Task.FTSuccedentD.MinLen?></td>
+					<td><?LM:MB:Task.FTSuccedentD.MaxLen?></td>
+				</tr>
+			<?LM:EndLoop:Task.FTSuccedentD?>
+			</table>
+		</div>
+
+		<div class="idiv">
+			<table class="itable" summary="Table: Succedent -- Literals">
+				<caption valign="bottom">Table: Succedent -- Literals</caption>
+				<tr>
+					<th colspan="9">Table: Succedent -- Literals</th>
+				</tr>
+				<tr>
+//					<th>CedentType</th>
+					<th>Partial Cedent</th>
+					<th>Literal</th>
+					<th>Attribute</th>
+					<th>Column</th>
+					<th>Gace</th>
+					<th>Coefficient</th>
+					<th>EqClass</th>
+					<th>MinLen</th>
+					<th>MaxLen</th>
+				</tr>
+
+			<?LM:Loop:Task.FTSuccedentD?>
+			<?LM:Loop:Task.FTSuccedentD.LiteralD?>
+				<tr>
+//					<td><?LM:MB:Task.FTSuccedentD.CedentType?></td>
+					<td><?LM:MB:Task.FTSuccedentD?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.Name?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.Quantity?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.Quantity.Attribute?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.LiteralType?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.CoefficientType?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.EquivalenceClass?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.MinLen?></td>
+					<td><?LM:MB:Task.FTSuccedentD.LiteralD.MaxLen?></td>
+				</tr>
+			<?LM:EndLoop:Task.FTSuccedentD.LiteralD?>
+			<?LM:EndLoop:Task.FTSuccedentD?>
+
+			</table>
+		</div>
+
+	<!-- Condition Description -->
+
+		<div class="idiv">
+			<table class="itable" summary="Table: Condition -- partial cedents">
+				<caption valign="bottom">Table: Condition -- partial cedents</caption>
+				<tr>
+					<th colspan="4">Condition -- partial cedents</th>
+				</tr>
+				<tr>
+					<th>Partial cedent</th>
+					<th>Conj/Disj</th>
+					<th>MinLen</th>
+					<th>MaxLen</th>
+				</tr>
+			<?LM:Loop:Task.FTConditionD?>
+				<tr>
+					<td><?LM:MB:Task.FTConditionD?></td>
+					<td><?LM:MB:Task.FTConditionD.BoolOpType?></td>
+					<td><?LM:MB:Task.FTConditionD.MinLen?></td>
+					<td><?LM:MB:Task.FTConditionD.MaxLen?></td>
+				</tr>
+			<?LM:EndLoop:Task.FTConditionD?>
+			</table>
+		</div>
+
+		<div class="idiv">
+			<table class="itable" summary="Table: Condition -- Literals">
+				<caption valign="bottom">Table: Condition -- Literals</caption>
+				<tr>
+					<th colspan="9">Table: Condition -- Literals</th>
+				</tr>
+				<tr>
+//					<th>CedentType</th>
+					<th>Partial Cedent</th>
+					<th>Literal.Name</th>
+					<th>Attribute</th>
+					<th>Column</th>
+					<th>Gace</th>
+					<th>Coefficient</th>
+					<th>EqClass</th>
+					<th>MinLen</th>
+					<th>MaxLen</th>
+				</tr>
+
+			<?LM:Loop:Task.FTConditionD?>
+			<?LM:Loop:Task.FTConditionD.LiteralD?>
+				<tr>
+//					<td><?LM:MB:Task.FTConditionD.CedentType?></td>
+					<td><?LM:MB:Task.FTConditionD?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.Quantity?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.Quantity.Attribute?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.LiteralType?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.CoefficientType?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.EquivalenceClass?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.MinLen?></td>
+					<td><?LM:MB:Task.FTConditionD.LiteralD.MaxLen?></td>
+				</tr>
+			<?LM:EndLoop:Task.FTConditionD.LiteralD?>
+			<?LM:EndLoop:Task.FTConditionD?>
+
+			</table>
+		</div>
+
+<!-- Association rules -->
+
+		</div><a id="section5"></a><h2>Found 4ft Association Rules</h2>
+		<p>Found 4ft Association Rules concerns following data matrix columns: 
+		<?LM:Loop:Task.HypothesisAttribute?>
+			<?LM:MB:Task.HypothesisAttribute?>&nbsp;
+		<?LM:EndLoop:Task.HypothesisAttribute?>
+		</p>
+
+		<p>Number of found 4ft association rules: <?LM:MB:Task.Hypothesis#Count?></p>
+
+		<h3>Content (list of rules)</h3>
+		<ol>
+			<?LM:Loop:Task.Hypothesis?>
+			<li><a href="#section5-rule<?LM:MB:Task.Hypothesis.HypothesisID?>"><?LM:MB:Task.Hypothesis.Name?></a></li>
+			<?LM:EndLoop:Task.Hypothesis?>
+		</ol>
+
+	<!-- Hypothesis -->
+
+		<?LM:Loop:Task.Hypothesis?>
+
+		<a id="section5-rule<?LM:MB:Task.Hypothesis.HypothesisID?>"></a><h3>Rule</h3>
+		<p><b><?LM:MB:Task.Hypothesis.Name?></b></p>
+		<p>
+
+		<p>
+		Antecedent: <b><?LM:MB:Task.Hypothesis.FTAntecedent?></b><br>
+		Succedent: <b><?LM:MB:Task.Hypothesis.FTSuccedent?></b><br>
+		<?LM:IFF:Task.Hypothesis.FTConditionLiteralI#Count:0:Not?>
+	        Condition: <b><?LM:MB:Task.Hypothesis.FTCondition?></b>
+		<?LM:EndIFF:Task.Hypothesis.FTConditionLiteralI#Count?>
+		</p>
+
+	<!-- Quantifier Values -->
+	
+		<table class="itable" summary="Quantifier Values">
+			<tr>
+				<th colspan="3">Quantifier Values</th>
+			</tr>
+			<tr>
+				<th>Quantifier</th>
+				<th>Value</th>
+				<th>Description</th>
+			</tr>
+			<?LM:Loop:Task.Hypothesis.QuantifierValue?>
+			<tr>
+				<td><?LM:MB:Task.Hypothesis.QuantifierValue.Name?></td>
+				<td><?LM:MB:Task.Hypothesis.QuantifierValue.Value?></td>
+				<td><?LM:MB:Task.Hypothesis.QuantifierValue.Notice?></td>
+			</tr>
+			<?LM:EndLoop:Task.Hypothesis.QuantifierValue?>
+		</table>
+
+	<!-- 4ft Contingency Table -->
+
+		<h5>4ft Contingency Table</h5>
+		<table class="itable" summary="4ft Contingency Table">
+			<tr>
+				<td />
+				<td>Succedent</td>
+				<td>¬Succedent</td>
+			</tr>
+			<tr>
+				<td>Antecedent</td>
+				<td style="background: rgb(255,106,106);"><?LM:MB:Task.Hypothesis.FreqA?></td>
+				<td style="background: rgb(255,219,219);"><?LM:MB:Task.Hypothesis.FreqB?></td>
+			</tr>
+			<tr>
+				<td>¬Antecedent</td>
+				<td style="background: rgb(255,223,223);"><?LM:MB:Task.Hypothesis.FreqC?></td>
+				<td style="background: rgb(255,215,215);"><?LM:MB:Task.Hypothesis.FreqD?></td>
+			</tr>
+		</table>
+
+
+		<?LM:EndLoop:Task.Hypothesis?>
+
+	</body>
+</html>

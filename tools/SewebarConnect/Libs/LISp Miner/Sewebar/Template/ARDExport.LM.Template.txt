@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<arb:ARBuilder mode="AssociationRules" xmlns:arb="http://keg.vse.cz/ns/arbuilder0_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      
+    xsi:schemaLocation="http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd" taskState="<?LM:MB:Task.GenerationStatus?>">
+		<AssociationRules>
+//		<!-- Item: LiteralI -->	
+		<?LM:Loop:Task.HypothesisFTLiteralI?>		  
+		    <BBA id="BBA_FTLiteralI_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?>" literal="false">
+			<Text><?LM:MB:Task.HypothesisFTLiteralI?></Text>
+			<FieldRef><?LM:MB:Task.HypothesisFTLiteralI.LiteralD.Quantity?></FieldRef>
+			<?LM:Loop:Task.HypothesisFTLiteralI.Coefficient?>
+			<CatRef><?LM:MB:Task.HypothesisFTLiteralI.Coefficient?></CatRef>
+			<?LM:EndLoop:Task.HypothesisFTLiteralI.Coefficient?>
+		    </BBA>
+		<?LM:EndLoop:Task.HypothesisFTLiteralI?>
+
+//		<!-- DBA: Sign (Gace) -->	
+		<?LM:Loop:Task.HypothesisFTLiteralI?>
+// IF Literal is negative, literal="true" flag is placed on the DBA to mark that the referenced BBA cannot be thought of as a literal (the default value for DBA is false)
+		<?LM:IFF:Task.HypothesisFTLiteralI.Negation:Yes?>
+		   <DBA id="DBA_FTLiteralI_Sign_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?>" connective="Negation" literal="true">
+			<Text><?LM:MB:Task.HypothesisFTLiteralI?></Text>
+			<BARef>BBA_FTLiteralI_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?></BARef>
+		   </DBA>
+		<?LM:EndIFF:Task.HypothesisFTLiteralI.Negation?>
+		<?LM:IFF:Task.HypothesisFTLiteralI.Negation:No?>
+		   <DBA id="DBA_FTLiteralI_Sign_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?>" connective="Conjunction" literal="true">
+			<Text><?LM:MB:Task.HypothesisFTLiteralI?></Text>
+			<BARef>BBA_FTLiteralI_<?LM:MB:Task.HypothesisFTLiteralI.LiteralIID?></BARef>
+		   </DBA>
+		<?LM:EndIFF:Task.HypothesisFTLiteralI.Negation?>
+		<?LM:EndLoop:Task.HypothesisFTLiteralI?>
+
+//		<!-- DBA: CedentI -->	
+		<?LM:Loop:Task.HypothesisFTCedentI?>
+		   <DBA id="DBA_FTCedentI_<?LM:MB:Task.HypothesisFTCedentI.CedentIID?>" connective="<?LM:MB:Task.HypothesisFTCedentI.CedentD.BoolOpType?>">
+			<Text><?LM:MB:Task.HypothesisFTCedentI?></Text>
+			<?LM:Loop:Task.HypothesisFTCedentI.LiteralI?>
+			<BARef>DBA_FTLiteralI_Sign_<?LM:MB:Task.HypothesisFTCedentI.LiteralI.LiteralIID?></BARef>
+			<?LM:EndLoop:Task.HypothesisFTCedentI.LiteralI?>
+		   </DBA>
+		<?LM:EndLoop:Task.HypothesisFTCedentI?>
+
+//		<!-- DBA: CedentBag -->	
+		<?LM:Loop:Task.Hypothesis?>
+		<?LM:IFF:Task.Hypothesis.FTAntecedentBagI#Count:0:Not?>
+		   <DBA id="DBA_Antecedent_<?LM:MB:Task.Hypothesis.HypothesisID?>" connective="Conjunction">
+			<Text><?LM:MB:Task.Hypothesis.FTAntecedent?></Text>
+			<?LM:Loop:Task.Hypothesis.FTAntecedentBagI?>
+			<BARef>DBA_FTCedentI_<?LM:MB:Task.Hypothesis.FTAntecedentBagI.CedentIID?></BARef>
+			<?LM:EndLoop:Task.Hypothesis.FTAntecedentBagI?>
+		   </DBA>
+		<?LM:EndIFF:Task.Hypothesis.FTAntecedentBagI#Count?>
+		   <DBA id="DBA_Succedent_<?LM:MB:Task.Hypothesis.HypothesisID?>" connective="Conjunction">
+			<Text><?LM:MB:Task.Hypothesis.FTSuccedent?></Text>
+			<?LM:Loop:Task.Hypothesis.FTSuccedentBagI?>
+			<BARef>DBA_FTCedentI_<?LM:MB:Task.Hypothesis.FTSuccedentBagI.CedentIID?></BARef>
+			<?LM:EndLoop:Task.Hypothesis.FTSuccedentBagI?>
+		   </DBA>
+		<?LM:IFF:Task.Hypothesis.FTConditionBagI#Count:0:Not?>
+		   <DBA id="DBA_Condition_<?LM:MB:Task.Hypothesis.HypothesisID?>" connective="Conjunction">
+			<Text><?LM:MB:Task.Hypothesis.FTCondition?></Text>
+			<?LM:Loop:Task.Hypothesis.FTConditionBagI?>
+			<BARef>DBA_FTCedentI_<?LM:MB:Task.Hypothesis.FTConditionBagI.CedentIID?></BARef>
+			<?LM:EndLoop:Task.Hypothesis.FTConditionBagI?>
+		   </DBA>
+		<?LM:EndIFF:Task.Hypothesis.FTConditionBagI#Count?>
+		<?LM:EndLoop:Task.Hypothesis?>
+
+	<!-- Hypothesis -->
+
+		<?LM:Loop:Task.Hypothesis?>
+		   <AssociationRule 
+			id="<?LM:MB:Task.Hypothesis.HypothesisID?>"
+			<?LM:IFF:Task.Hypothesis.FTAntecedentBagI#Count:0:Not?>
+			antecedent="DBA_Antecedent_<?LM:MB:Task.Hypothesis.HypothesisID?>"
+			<?LM:EndIFF:Task.Hypothesis.FTAntecedentBagI#Count?>
+			consequent="DBA_Succedent_<?LM:MB:Task.Hypothesis.HypothesisID?>"
+			<?LM:IFF:Task.Hypothesis.FTConditionBagI#Count:0:Not?>
+			condition="DBA_Condition_<?LM:MB:Task.Hypothesis.HypothesisID?>"
+			<?LM:EndIFF:Task.Hypothesis.FTConditionBagI#Count?>
+		   >
+			<Text><?LM:MB:Task.Hypothesis.Name?></Text>
+	
+//			<!-- InterestMeasures -->
+			<?LM:Loop:Task.Hypothesis.InterestMeasure?>
+			<IMValue imSettingRef="<?LM:MB:Task.Hypothesis.InterestMeasure.QuantifierID?>" name="<?LM:MB:Task.Hypothesis.InterestMeasure.ShortName?>"><?LM:MB:Task.Hypothesis.InterestMeasure.Value?></IMValue>
+			<?LM:EndLoop:Task.Hypothesis.InterestMeasure?>
+
+//			<!-- Frequency table -->
+			<FourFtTable a="<?LM:MB:Task.Hypothesis.FreqA?>" b="<?LM:MB:Task.Hypothesis.FreqB?>" c="<?LM:MB:Task.Hypothesis.FreqC?>" d="<?LM:MB:Task.Hypothesis.FreqD?>"/>
+		   </AssociationRule>
+		<?LM:EndLoop:Task.Hypothesis?>
+		</AssociationRules>
+</arb:ARBuilder>
