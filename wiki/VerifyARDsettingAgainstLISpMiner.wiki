@@ -3,9 +3,9 @@ Steps to verify that ARD is producing the same setting as LISp-Miner GUI (4ft Ta
 !!This assumes that SEWEBAR backend runs against Barbora!!
 
 1) Download LISp-Miner, barbora sample, SEWEBAR,  from lispminer.vse.cz
-**http://lispminer.vse.cz/files/exe/LM.4ft.zip
-**http://lispminer.vse.cz/files/exe/LM.Sewebar.zip
-**http://lispminer.vse.cz/files/exe/Barbora.zip
+* http://lispminer.vse.cz/files/exe/LM.4ft.zip
+* http://lispminer.vse.cz/files/exe/LM.Sewebar.zip
+* http://lispminer.vse.cz/files/exe/Barbora.zip
 
 2) Run LMAdmin, click "Create new datasource", select  Barbora.mdb for Analyzed data MSAccess file and LM Barbora.mdb for LISp-Miner metabase.
 
