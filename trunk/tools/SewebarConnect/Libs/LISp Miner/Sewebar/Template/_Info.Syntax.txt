@@ -1,0 +1,119 @@
+LM System parameters:
+=====================
+
+<?LM:System:User?>
+<?LM:System:Version?>
+
+LM Variables:
+=============
+
+Any column in the LM Metabase could be used as a variable.
+Column links to another table are automaticaly followed (and ID suffix could be omitted).
+
+Matrix:
+
+	Matrix.Attribute
+
+Attribute:
+
+	Attribute.Cardinality
+
+Quantity (Attribute):
+
+	Quantity.Category
+	Quantity.QuantityInGroup
+
+Category:
+
+	Category.Frequency
+
+	IFF:Category.CategorySubType:Enum
+	Category.Enum	
+
+	IFF:Category.CategorySubType:Interval
+	Category.Interval
+
+Task:
+
+	Task.TotalCategories
+	Task.QuantifierSupport, Task.QuantifierConfidence
+
+	Task.FTCedentBagD
+	Task.FTCedentD ... all cedents together
+
+	Task.Antecedent, Succedent, Condition, FirstSet, SecondSet, AntVar, SucVar
+
+	Task.Quantifier.Threshold
+
+	Task.Hypothesis, HypothesisGroup
+
+	Task.Quantity, Task.Attribute
+
+CedentD:
+
+	FTCedentD.LiteralD, FTCedentD.EquivalenceClass
+
+
+Hypothesis:
+
+	Hypothesis.Name
+	Hypothesis.FTAntecedent, FTSuccedent, FTCondition
+
+	Hypothesis.QuantifierValueConfidence, QuantifierValueSupport
+
+	FTAntecedentBagI, FTSuccedentBagI, FTConditionBagI
+	FTFirstSetBagI, FTSecondSetBagI
+	FTAntVarBeforeBagI, FTAntVarAfterBagI, FTSucVarBeforeBagI, FTSucVarAfterBagI
+
+	FTAntecedentLiteralI, FTSuccedentLiteralI, FTConditionLiteralI
+	FTFirstSetLiteralI, FTSecondSetLiteralI
+	FTAntVarBeforeLiteralI, FTAntVarAfterLiteralI, FTSucVarBeforeLiteralI, FTSucVarAfterLiteralI
+
+	Hypothesis.QuantifierValue
+
+FTCedentI:
+
+	FTCedentI.LiteralI
+
+LiteralI:
+
+	FTLiteralI.Coefficient
+
+Loop:
+=====
+
+<?LM:Loop:*?>		loop start
+<?LM:EndLoop:*?>	loop end
+<?LM:MB:*#Count>	number of items in array
+where '*' is any array as mentioned before
+
+E.g.
+
+	<?LM:MB:Task.Hypothesis#Count?>
+	<?LM:Loop:Task.Hypothesis?>
+		... some loop lines here...
+	<?LM:EndLoop:Task.Hypothesis?>
+
+Conditional block:
+==================
+
+<?LM:IFF:*:value?>
+<?LM:EndIFF:*?>
+where '*' is any variable as defined before and 'value' is any value that is compared
+to variable. If they are equal the block is inserted into output
+
+<?LM:IFF:Task.Quantity.Category.CategorySubType:Enum?>
+	this line will be in output only if CategorySubType is 'Enum'
+<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+
+<?LM:IFF:Task.Hypothesis.FTCondition#Count:0:Not?>
+	this line will be in output only if number of literals in condition is NOT zero
+<?LM:EndIFF:Task.Hypothesis.FTCondition#Count?>
+
+Other:
+======
+
+The while <?...?> tag must be on a single line.
+
+// ... comment (must be at the beginning of line)
+
