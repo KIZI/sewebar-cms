@@ -96,6 +96,7 @@
 
     <xs:complexType name="ARQuery">
         <xs:sequence>
+            <xs:element name="MaxResults" type="xs:integer" minOccurs="0"/>
             <xs:element name="BBASettings">
                 <xs:complexType>
                     <xs:sequence>
