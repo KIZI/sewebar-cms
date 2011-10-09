@@ -1,26 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Web;
-using System.Web.SessionState;
 using System.Xml.Linq;
-using LMWrapper.LISpMiner;
 
 namespace SewebarWeb
 {
-	public class Import : IHttpHandler, IRequiresSessionState 
+	public class Import : SessionBase
 	{
-		public bool IsReusable
+		public override void ProcessRequest(HttpContext context)
 		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public void ProcessRequest(HttpContext context)
-		{
+			base.ProcessRequest(context);
 			var response = new XElement("response");
-			var miner = (context.Session["LM"] as LISpMiner);
+			var miner = this.Miner;
 			var content = context.Request["content"];
 			var dataFolder = String.Format("{1}/xml/{0}", miner != null ? miner.Id : String.Empty, AppDomain.CurrentDomain.GetData("DataDirectory"));
 

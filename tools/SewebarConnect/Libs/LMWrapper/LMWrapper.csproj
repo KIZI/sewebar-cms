@@ -47,6 +47,9 @@
     <Compile Include="LISpMiner\LISpMiner.cs" />
     <Compile Include="LISpMiner\LMSwbExporter.cs" />
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
+    <Compile Include="ODBC\AccessConnection.cs" />
+    <Compile Include="ODBC\MySQLConnection.cs" />
+    <Compile Include="ODBC\ODBCConnection.cs" />
     <Compile Include="ODBC\ODBCManagerRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
