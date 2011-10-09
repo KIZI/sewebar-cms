@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Odbc;
 using System.IO;
 using LMWrapper.ODBC;
 
@@ -12,11 +13,9 @@ namespace LMWrapper.LISpMiner
 
 		public string Id { get; protected set; }
 
-		public string Dsn { get; protected set; }
+		public ODBCConnection Database { get; protected set; }
 
-		public string MetabaseDsn { get; protected set; }
-
-		protected string MetabasePath { get; set; }
+		public ODBCConnection Metabase { get; protected set; }
 
 		public string LMPath { get; set; }
 
@@ -42,7 +41,7 @@ namespace LMWrapper.LISpMiner
 					this._importer = new LMSwbImporter
 					{
 						LMPath = this.LMPath,
-						Dsn = this.MetabaseDsn,
+						Dsn = this.Metabase.DSN,
 						LISpMiner = this
 					};
 				}
@@ -61,7 +60,7 @@ namespace LMWrapper.LISpMiner
 					this._exporter = new LMSwbExporter()
 					{
 						LMPath = this.LMPath,
-						Dsn = this.MetabaseDsn,
+						Dsn = this.Metabase.DSN,
 						LISpMiner = this
 					};
 				}
@@ -81,7 +80,7 @@ namespace LMWrapper.LISpMiner
 					this._task4FtGen = new Task4ftGen
 					{
 						LMPath = this.LMPath,
-						Dsn = this.MetabaseDsn,
+						Dsn = this.Metabase.DSN,
 						LISpMiner = this
 					};
 				}
@@ -120,22 +119,42 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		public LISpMiner(Environment environment, string id)
+		public LISpMiner(Environment environment, string id, ODBCConnection database)
 		{
 			this.Id = id;
 			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
-			this.MetabaseDsn = String.Format("LM{0}", this.Id);
-			this.MetabasePath = String.Format(@"{0}\LM_Barbora_{1}.mdb", this.LMPath, this.Id);
-
-			var metabaseOriginal = String.Format(@"{0}\LM Barbora.mdb", environment.DataPath);
-
 			CopyFolder(environment.LMPath, this.LMPath);
 
-			if (!ODBCManagerRegistry.DSNExists(this.MetabaseDsn) && !File.Exists(this.MetabasePath))
-			{
-				File.Copy(metabaseOriginal, this.MetabasePath, true);
+			var metabase = new AccessConnection(String.Format(@"{0}\LM_Barbora_{1}.mdb", this.LMPath, id),
+												String.Format(@"{0}\LM Barbora.mdb", environment.DataPath)) { DSN = String.Format("LM{0}", id) };
 
-				ODBCManagerRegistry.CreateDSN(this.MetabaseDsn, "", "Microsoft Access Driver (*.mdb)", this.MetabasePath);
+			this.Init(environment, id, database, metabase);
+		}
+
+		public LISpMiner(Environment environment, string id, ODBCConnection database, ODBCConnection metabase)
+		{
+			this.Id = id;
+			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
+			CopyFolder(environment.LMPath, this.LMPath);
+
+			this.Init(environment, id, database, metabase);
+		}
+
+		protected void Init(Environment environment, string id, ODBCConnection database, ODBCConnection metabase)
+		{
+			this.SetDatabaseDsnToMetabase(metabase, database);
+		}
+
+		protected void SetDatabaseDsnToMetabase(ODBCConnection metabase, ODBCConnection database)
+		{
+			string sql = String.Format("UPDATE tpParamsDB SET strValue='{0}' WHERE Name='DSN'", database.DSN);
+
+			using (var connection = new OdbcConnection(metabase.ConnestionString))
+			{
+				connection.Open();
+
+				var command = new OdbcCommand(sql, connection);
+				command.ExecuteNonQuery();
 			}
 		}
 
@@ -143,10 +162,12 @@ namespace LMWrapper.LISpMiner
 		{
 			//if (ODBCManagerRegistry.DSNExists(this.MetabaseDsn))
 			//{
-			ODBCManagerRegistry.RemoveDSN(this.MetabaseDsn);
+			ODBCManagerRegistry.RemoveDSN(this.Metabase.DSN);
 			//}
 
-			File.Delete(this.MetabasePath);
+			this.Metabase.Dispose();
+			this.Database.Dispose();
+
 			Directory.Delete(this.LMPath, true);
 		}
 	}

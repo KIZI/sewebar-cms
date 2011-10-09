@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
 using log4net;
@@ -8,8 +9,9 @@ namespace SewebarWeb
 	public class Global : System.Web.HttpApplication
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Global));
-
 		private static LMWrapper.Environment _env;
+
+		#region Properties
 
 		public static LMWrapper.Environment Environment
 		{
@@ -29,24 +31,17 @@ namespace SewebarWeb
 			}
 		}
 
+		#endregion
+
 		protected void Application_Start(object sender, EventArgs e)
 		{
 			// Load logging info
 			log4net.Config.XmlConfigurator.Configure();
-
-			if (!ODBCManagerRegistry.DSNExists("Barbora"))
-			{
-				ODBCManagerRegistry.CreateDSN("Barbora",
-											  "",
-											  "Microsoft Access Driver (*.mdb)",
-											  String.Format(@"{0}\Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory")));
-			}
 		}
 
 		protected void Session_Start(object sender, EventArgs e)
 		{
-			if(Session["LM"] == null)
-				Session["LM"] = new LISpMiner(Environment, Session.SessionID);
+		
 		}
 
 		protected void Application_BeginRequest(object sender, EventArgs e)
@@ -66,12 +61,7 @@ namespace SewebarWeb
 
 		protected void Session_End(object sender, EventArgs e)
 		{
-			var miner = Session["LM"] as IDisposable;
-			
-			if(miner != null)
-			{
-				miner.Dispose();
-			}
+			SessionBase.Clean(Session);
 		}
 
 		protected void Application_End(object sender, EventArgs e)

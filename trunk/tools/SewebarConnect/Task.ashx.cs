@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.SessionState;
 using System.Xml;
 using System.Xml.XPath;
 using LMWrapper;
@@ -11,18 +10,10 @@ using log4net;
 
 namespace SewebarWeb
 {
-	public class Task : IHttpHandler, IRequiresSessionState
+	public class Task : SessionBase
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Task));
 		private static readonly string InvalidChars = string.Format(@"[{0}]+", Regex.Escape(new string(Path.GetInvalidFileNameChars())));
-
-		public bool IsReusable
-		{
-			get
-			{
-				return false;
-			}
-		}
 
 		protected string GetTaskName(string xml)
 		{
@@ -56,9 +47,10 @@ namespace SewebarWeb
 			return node != null ? node.Value : null;
 		}
 
-		public void ProcessRequest(HttpContext context)
+		public override void ProcessRequest(HttpContext context)
 		{
-			var miner = (context.Session["LM"] as LISpMiner);
+			base.ProcessRequest(context);
+			var miner = this.Miner;
 			var content = context.Request["content"];
 			var dataFolder = String.Format("{1}/xml/{0}", miner != null ? miner.Id : String.Empty, AppDomain.CurrentDomain.GetData("DataDirectory"));
 

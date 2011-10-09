@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="SewebarWeb._Default" %>
+<%@ Import Namespace="SewebarWeb" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,13 +11,20 @@
     <form id="form1" runat="server">
     <div>
 	<h1>SEWEBAR Connect</h1>
-    <ol>
+	<h2>Create new metabase</h2>
+	<ul>
 		<li>
-			New user session
+			<a href="Register.ashx">Register</a>
+		</li>
+		<li>
+			No registration needed. With every new user session new LISpMiner with default settings is created.
 			<ul>
-				<li>Create copy of empty Metabase</li>
+				<li>Creates copy of empty Metabase</li>
 			</ul>
 		</li>
+	</ul>
+	<h2>Use data miners</h2>
+    <ol>
 		<li><a href="Import.ashx">Import DataDictionary</a></li>
 		<li>
 			<a href="Task.ashx">Run task</a>
@@ -27,13 +35,19 @@
 			</ul>
 		</li>
 	</ol>
-	<hr />
+	<h1>Environment</h1>
 	<dl>
 		<dt>BaseDirectory</dt>
 		<dd><%=System.AppDomain.CurrentDomain.BaseDirectory %></dd>
 		<dt>Session ID</dt>
 		<dd><%=Session.SessionID %></dd>
 	</dl>
+	<h2>Existing miners</h2>
+	<ul>
+		<% foreach (var miner in Global.Environment.ExistingMiners) { %>
+		<li><%=miner %></li>
+		<% } %>
+	</ul>
     </div>
 	</form>
 </body>
