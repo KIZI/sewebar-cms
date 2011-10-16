@@ -13,7 +13,7 @@ namespace LMWrapper.ODBC
 
 		public virtual string DSN { get; set; }
 
-		public abstract string ConnestionString { get; }
+		public abstract string ConnectionString { get; }
 
 		public virtual void Dispose()
 		{
