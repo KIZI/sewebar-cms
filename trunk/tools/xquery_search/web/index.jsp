@@ -154,7 +154,7 @@
     </table>
     <br />
     <br />
-    <i>verze 1.17 (8.9.2011)</i>
+    <i>verze 1.18 (16.10.2011)</i>
     <hr />
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
