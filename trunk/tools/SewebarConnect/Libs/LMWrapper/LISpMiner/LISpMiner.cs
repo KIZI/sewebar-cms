@@ -149,7 +149,7 @@ namespace LMWrapper.LISpMiner
 		{
 			string sql = String.Format("UPDATE tpParamsDB SET strValue='{0}' WHERE Name='DSN'", database.DSN);
 
-			using (var connection = new OdbcConnection(metabase.ConnestionString))
+			using (var connection = new OdbcConnection(metabase.ConnectionString))
 			{
 				connection.Open();
 
@@ -160,11 +160,6 @@ namespace LMWrapper.LISpMiner
 
 		public void Dispose()
 		{
-			//if (ODBCManagerRegistry.DSNExists(this.MetabaseDsn))
-			//{
-			ODBCManagerRegistry.RemoveDSN(this.Metabase.DSN);
-			//}
-
 			this.Metabase.Dispose();
 			this.Database.Dispose();
 

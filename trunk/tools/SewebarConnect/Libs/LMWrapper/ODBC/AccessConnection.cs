@@ -34,12 +34,11 @@ namespace LMWrapper.ODBC
 
 		protected string FromFile { get; set; }
 
-		public override string ConnestionString
+		public override string ConnectionString
 		{
 			get
 			{
-				var s = this.DSN;
-				return String.Format("DSN=c{0}", i++);
+				return String.Format("DSN={0}", this.DSN);
 			}
 		}
 
@@ -56,6 +55,11 @@ namespace LMWrapper.ODBC
 		public override void Dispose()
 		{
 			File.Delete(this.Path);
+
+            //if (ODBCManagerRegistry.DSNExists(this.MetabaseDsn))
+            //{
+            //ODBCManagerRegistry.RemoveDSN(this.Metabase.DSN);
+            //}
 
 			base.Dispose();
 		}
