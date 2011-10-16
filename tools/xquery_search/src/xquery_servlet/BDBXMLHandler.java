@@ -148,11 +148,11 @@ public class BDBXMLHandler {
         String output_temp = "";
         QueryMaker qm = new QueryMaker(containerName);
         InputStream is = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
-        String xpath = qm.makeXPath(is);
+        String xpath = qm.makeXPath(is)[0];
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = queryShortened(xpath, false, 9999);
+            output_temp = queryShortened(xpath, false, false, 9999);
             //output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
@@ -677,7 +677,7 @@ public class BDBXMLHandler {
      * @param XPathRequest XPath dotaz
      * @return vysledky hledani v SearchResult formatu
      */
-    public String queryShortened(String XPathRequest, boolean restructure, int maxResults){
+    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults){
         long startTime = System.currentTimeMillis();
         String output = "";
         String schema = "";

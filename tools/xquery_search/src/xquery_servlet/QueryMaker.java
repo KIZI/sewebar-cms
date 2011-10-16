@@ -1,9 +1,5 @@
 package xquery_servlet;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -36,26 +32,33 @@ public class QueryMaker {
      * @param xmlQuery query ve formatu XML
      * @return XPath dotaz
      */
-    public String makeXPath(InputStream xmlQuery){
-    	String output = "";
+    public String[] makeXPath(InputStream xmlQuery){
+    	String output[] = new String[2];
+    	output[0] = "";
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(xmlQuery);
             doc.getDocumentElement().normalize();
 
-            output += "collection(\""+containerName+"\")/PMML/AssociationRule[";
+            output[0] += "collection(\""+containerName+"\")/PMML/AssociationRule[";
             NodeList scope = doc.getElementsByTagName("Scope");
             if (scope.getLength() == 0) {
                  NodeList anteList = doc.getElementsByTagName("Antecedent");
                  NodeList consList = doc.getElementsByTagName("Consequent");
                  NodeList condList = doc.getElementsByTagName("Condition");
                  
-                 if (anteList.getLength() > 0) { output += "(" + cedentPrepare(anteList) + ")"; }
-                 if (anteList.getLength() > 0 && consList.getLength() > 0) { output += " and "; }
-                 if (consList.getLength() > 0) { output += "(" + cedentPrepare(consList) + ")"; }
-                 if ((anteList.getLength() > 0 && condList.getLength() > 0) || (consList.getLength() > 0 && condList.getLength() > 0)) { output += " and "; }
-                 if (condList.getLength() > 0) { output += "(" + cedentPrepare(condList) + ")"; }
+                 output[1] = "false";
+                 
+                 if (anteList.getLength() > 0) { output[0] += "(" + cedentPrepare(anteList)[0] + ")"; }
+                 if (anteList.getLength() > 0 && consList.getLength() > 0) { output[0] += " and "; }
+                 if (consList.getLength() > 0) {
+                	 String consCedent[] = cedentPrepare(consList); 
+                	 output[0] += "(" + consCedent[0] + ")";
+                	 output[1] = consCedent[1];
+         		 }
+                 if ((anteList.getLength() > 0 && condList.getLength() > 0) || (consList.getLength() > 0 && condList.getLength() > 0)) { output[0] += " and "; }
+                 if (condList.getLength() > 0) { output[0] += "(" + cedentPrepare(condList)[0] + ")"; }
                  
                  
             } else {
@@ -65,11 +68,11 @@ public class QueryMaker {
                     Element BBAElement = (Element)BBAList.item(i);
                     NodeList fieldList = BBAElement.getElementsByTagName("Field");
                     if (x > 0) {
-                        output += " and ";
+                        output[0] += " and ";
                     }
-                    output += "(";
-                    output += BBAMake(fieldList, "./", false);    
-                    output += ")";
+                    output[0] += "(";
+                    output[0] += BBAMake(fieldList, "./", false);    
+                    output[0] += ")";
                     x++;
                 }
             }
@@ -84,13 +87,15 @@ public class QueryMaker {
             	NodeList interestMeasureList = interestMeasureElement.getChildNodes();
             	Node interestMeasure = interestMeasureList.item(0);
             	NodeList thList = ims.getElementsByTagName("Threshold");
-            	Element thresholdElement = (Element) thList.item(0);
-            	NodeList thresholdList = thresholdElement.getChildNodes();
-            	Node threshold = thresholdList.item(0);
-            	output += " and IMValue[@name=\"" + interestMeasure.getNodeValue() + "\"]/text() >= " + threshold.getNodeValue();
+            	if (thList.item(0) != null) {
+	            	Element thresholdElement = (Element) thList.item(0);
+	            	NodeList thresholdList = thresholdElement.getChildNodes();
+	            	Node threshold = thresholdList.item(0);
+	            	output[0] += " and IMValue[@name=\"" + interestMeasure.getNodeValue() + "\"]/text() >= " + threshold.getNodeValue();
+            	}
             }
-            //output += "MaxResults: " + getMaxResults(xmlQuery);
-            output += "]";
+            //output[0] += "MaxResults: " + getMaxResults(xmlQuery);
+            output[0] += "]";
         } catch (SAXException ex) {
             //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -134,7 +139,10 @@ public class QueryMaker {
                         }
                         String sign = "";
                         if (!inference) { sign = "="; } else { sign = "!="; }
-                        output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]/CatName"+ sign +"\""+catString+"\"";
+                        output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]";
+                        if (catString.length() > 0) {
+                        	output += "/CatName"+ sign +"\""+catString+"\"";
+                        }
                     }
                 } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
                     Element intElement = (Element)intsList.item(0);
@@ -144,8 +152,9 @@ public class QueryMaker {
         }
         return output;
     }
-    private String cedentPrepare(NodeList cedentList){
-        String output = "";
+    private String[] cedentPrepare(NodeList cedentList){
+        String output[] = new String[2];
+        output[0] = "";
         String axisCedent = "";
         String axisDBA1 = "";
         String axisDBA2 = "";
@@ -156,6 +165,7 @@ public class QueryMaker {
                 Element cedentElement = (Element)cedentList.item(j);
                 boolean exception = false;
                 if (cedentElement.getAttribute("exception") != null) {if (cedentElement.getAttribute("exception").toString().toLowerCase().equals("true")) {exception = true;} }
+                output[1] = String.valueOf(exception);
                 NodeList cedentDBA1 = cedentElement.getChildNodes();
                 for (int k = 0; k < cedentDBA1.getLength(); k++){
                     Element cedentDBA1Element = (Element) cedentDBA1.item(k);
@@ -182,22 +192,21 @@ public class QueryMaker {
                                 axisDBA2 += "/DBA[@connective=\""+ connective +"\"]";
                             }
                             String BBAConnection = "and";
-                            if (exception) {BBAConnection = "or";}
                             NodeList fieldList = BBAElement.getElementsByTagName("Field");
-                            if (l > 0) { output += " "+ BBAConnection +" "; }
+                            if (l > 0) { output[0] += " "+ BBAConnection +" "; }
                             /*if (cedentDBA2.getLength() > 1) 
                             {*/
-                                output += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
+                                output[0] += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
                                 if (inference) {
                                     if (connective.equals("both")){
-                                        output += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA", true);
+                                        output[0] += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA", true);
                                     } else {
-                                        output += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA[@connective!=\"" + connective + "\"]", true);
+                                        output[0] += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA[@connective!=\"" + connective + "\"]", true);
                                     }
                                 }
-                                output  += ")";
+                                output[0]  += ")";
                             /*} else {
-                                output += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
+                                output[0] += BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
                             }*/
                         }
                     }
@@ -222,24 +231,24 @@ public class QueryMaker {
 			Node maxResults = maxResultsList2.item(0);
 			maxResInt = Integer.parseInt(maxResults.getNodeValue());
 		} catch (ParserConfigurationException e) {
-			//maxResInt = 1001;
+			e.printStackTrace();
 		} catch (SAXException e) {
-			//maxResInt = 1002;
 			e.printStackTrace();
 		} catch (IOException e) {
-			//maxResInt = 1003;
+			e.printStackTrace();
 		}
 		return maxResInt;
     }
     
     /**
-     * Metoda pro zmenu hodnot Interesting Measures mezi vstupni hodnotou a hodnotou ulozenou v DB 
+     * Metoda pro zmenu hodnot Interesting Measures mezi vstupni hodnotou a hodnotou ulozenou v DB.
+     * 0. pozice v radku -> hodnoty z dotazu, 1. pozice v radku -> hodnoty v DB
      * @param value Vyhledavana hodnota
      * @param fromDict Vychozi slovnik
      * @param toDict Cilovy slovnik
      * @return Zmenena hodnota
      */
-    private String IMValueSwitch(String value, int fromDict, int toDict){
+    /*private String IMValueSwitch(String value, int fromDict, int toDict){
     	String output = "";
     	String [][] dictionary = new String[3][2];
     	//Naplenni hodnot slovniku -> pozice 0 v radku - vstup, pozice 1 v radku - hodnoty v DB
@@ -253,5 +262,5 @@ public class QueryMaker {
     		}
     	}
     	return output;
-    }
+    }*/
 }
