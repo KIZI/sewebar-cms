@@ -2,20 +2,55 @@
 using System.Data.Odbc;
 using System.IO;
 using LMWrapper.ODBC;
+using OdbcConnection = LMWrapper.ODBC.OdbcConnection;
 
 namespace LMWrapper.LISpMiner
 {
 	public class LISpMiner : IDisposable
 	{
+		#region Statics
+
+		protected static void CopyFolder(string sourceFolder, string destFolder)
+		{
+			if (!Directory.Exists(destFolder))
+			{
+				Directory.CreateDirectory(destFolder);
+			}
+
+			foreach (string folder in Directory.GetDirectories(sourceFolder))
+			{
+				string name = Path.GetFileName(folder);
+
+				if (name == null) continue;
+
+				string dest = Path.Combine(destFolder, name);
+				CopyFolder(folder, dest);
+			}
+
+			foreach (string file in Directory.GetFiles(sourceFolder))
+			{
+				string name = Path.GetFileName(file);
+
+				if (name == null) continue;
+
+				string dest = Path.Combine(destFolder, name);
+				File.Copy(file, dest, true);
+			}
+		}
+
+		#endregion
+
 		private LMSwbImporter _importer;
 		private LMSwbExporter _exporter;
 		private Task4ftGen _task4FtGen;
 
+		#region Properties
+
 		public string Id { get; protected set; }
 
-		public ODBCConnection Database { get; protected set; }
+		public OdbcConnection Database { get; protected set; }
 
-		public ODBCConnection Metabase { get; protected set; }
+		public AccessConnection Metabase { get; protected set; }
 
 		public string LMPath { get; set; }
 
@@ -57,7 +92,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._exporter == null)
 				{
-					this._exporter = new LMSwbExporter()
+					this._exporter = new LMSwbExporter
 					{
 						LMPath = this.LMPath,
 						Dsn = this.Metabase.DSN,
@@ -91,77 +126,80 @@ namespace LMWrapper.LISpMiner
 			set { this._task4FtGen = value; }
 		}
 
-		static public void CopyFolder(string sourceFolder, string destFolder)
-		{
-			if (!Directory.Exists(destFolder))
-			{
-				Directory.CreateDirectory(destFolder);
-			}
+		protected Environment Environment { get; set; }
 
-			foreach (string folder in Directory.GetDirectories(sourceFolder))
-			{
-				string name = Path.GetFileName(folder);
+		#endregion
 
-				if (name == null) continue;
-
-				string dest = Path.Combine(destFolder, name);
-				CopyFolder(folder, dest);
-			}
-
-			foreach (string file in Directory.GetFiles(sourceFolder))
-			{
-				string name = Path.GetFileName(file);
-
-				if (name == null) continue;
-
-				string dest = Path.Combine(destFolder, name);
-				File.Copy(file, dest, true);
-			}
-		}
-
-		public LISpMiner(Environment environment, string id, ODBCConnection database)
+		protected LISpMiner(Environment environment, string id)
 		{
 			this.Id = id;
+			this.Environment = environment;
 			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
+
 			CopyFolder(environment.LMPath, this.LMPath);
-
-			var metabase = new AccessConnection(String.Format(@"{0}\LM_Barbora_{1}.mdb", this.LMPath, id),
-												String.Format(@"{0}\LM Barbora.mdb", environment.DataPath)) { DSN = String.Format("LM{0}", id) };
-
-			this.Init(environment, id, database, metabase);
 		}
 
-		public LISpMiner(Environment environment, string id, ODBCConnection database, ODBCConnection metabase)
+		/// <summary>
+		/// Creates LISpMiner with Access DB from given file.
+		/// </summary>
+		/// <param name="environment">Environment settings</param>
+		/// <param name="id">Desired ID.</param>
+		/// <param name="databasePrototypeFile">Original database.</param>
+		public LISpMiner(Environment environment, string id, string databasePrototypeFile)
+			: this(environment, id)
 		{
-			this.Id = id;
-			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
-			CopyFolder(environment.LMPath, this.LMPath);
+			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypeFile);
+			var databaseFile = String.Format(@"{0}\LM-{2}-{1}.mdb", this.LMPath, this.Id, databaseName);
+			var databaseDSN = String.Format("LM-{1}-{0}", id, databaseName.Substring(0, 32 - 4 - id.Length));
+			this.Database = new AccessConnection(databaseFile, databasePrototypeFile, databaseDSN);
 
-			this.Init(environment, id, database, metabase);
+			this.CreateMetabase();
 		}
 
-		protected void Init(Environment environment, string id, ODBCConnection database, ODBCConnection metabase)
+		/// <summary>
+		/// Creates LISpMiner with given database. Metabase is created as Access DB.
+		/// </summary>
+		/// <param name="environment">Environment settings</param>
+		/// <param name="id">Desired ID.</param>
+		/// <param name="database">Original database.</param>
+		public LISpMiner(Environment environment, string id, OdbcConnection database)
+			: this(environment, id)
 		{
-			this.SetDatabaseDsnToMetabase(metabase, database);
-		}
-
-		protected void SetDatabaseDsnToMetabase(ODBCConnection metabase, ODBCConnection database)
-		{
-			string sql = String.Format("UPDATE tpParamsDB SET strValue='{0}' WHERE Name='DSN'", database.DSN);
-
-			using (var connection = new OdbcConnection(metabase.ConnectionString))
+			if (database != null)
 			{
-				connection.Open();
-
-				var command = new OdbcCommand(sql, connection);
-				command.ExecuteNonQuery();
+				this.Database = database;
 			}
+			else
+			{
+				throw new NullReferenceException("Database can't be null.");
+			}
+
+			this.CreateMetabase();
+		}
+
+		protected void CreateMetabase()
+		{
+			//TODO: make default connection configurable
+			var metabaseFile = String.Format(@"{0}\LM-metabase-{1}.mdb", this.LMPath, this.Id);
+			var metabasePrototypeFile = String.Format(@"{0}\LM Barbora.mdb", Environment.DataPath);
+			var metabaseDSN = String.Format("LMM-{0}", this.Id);
+
+			this.Metabase = new AccessConnection(metabaseFile, metabasePrototypeFile, metabaseDSN);
+
+			this.Metabase.SetDatabaseDsnToMetabase(this.Database);
 		}
 
 		public void Dispose()
 		{
-			this.Metabase.Dispose();
-			this.Database.Dispose();
+			if (this.Metabase != null)
+			{
+				this.Metabase.Destroy();
+			}
+
+			if (this.Database != null)
+			{
+				this.Database.Destroy();
+			}
 
 			Directory.Delete(this.LMPath, true);
 		}

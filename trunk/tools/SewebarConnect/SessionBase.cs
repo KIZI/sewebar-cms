@@ -62,17 +62,9 @@ namespace SewebarWeb
 						else
 						{
 							var id = _context.Session.SessionID;
-							var environment = Global.Environment;
-							var databasePath = String.Format(@"{0}\Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"));
+							var db = String.Format(@"{0}\Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"));
 
-							//TODO: make default connection configurable
-							var metabase = new AccessConnection(
-								String.Format(@"{0}\LM_Barbora_{1}.mdb", environment.LMPath, id),
-								String.Format(@"{0}\LM Barbora.mdb", environment.DataPath)) {DSN = String.Format("LM{0}", id)};
-
-							var database = new AccessConnection("Barbora", databasePath);
-							
-							this._miner = new LISpMiner(Global.Environment, id, database, metabase);
+							this._miner = new LISpMiner(Global.Environment, id, db);
 							this._context.Session[SESSION_KEY] = this._miner;
 						}
 					}

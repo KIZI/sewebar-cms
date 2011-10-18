@@ -193,6 +193,58 @@ namespace LMWrapper.ODBC
 		}
 
 		/// <summary>
+		/// Creates a new DSN entry for MySQL database with the specified values. If the DSN exists, the values are updated.
+		/// </summary>
+		/// <param name="dsnName">Name of the DSN for use by client applications</param>
+		/// <param name="description">Description of the DSN that appears in the ODBC control panel applet</param>
+		/// <param name="server">Server to connect to</param>
+		/// <param name="database">Name of the datbase to connect to</param>
+		/// <param name="username">Username used to authenticate</param>
+		/// <param name="password">Password used to authenticate</param>
+		public static void CreateDSN(string dsnName, string description, string server, string database, string username, string password)
+		{
+			// Lookup driver path from driver name]
+			const string driverName = "MySQL ODBC 5.1 Driver";
+			var driverKey = Registry.LocalMachine.CreateSubKey(ODBCINST_INI_REG_PATH + driverName);
+			
+			if (driverKey == null)
+			{
+				throw new Exception(
+					string.Format(
+						"ODBC Registry key for driver '{0}' does not exist. Please install from http://dev.mysql.com/downloads/connector/odbc/.",
+						driverName));
+			}
+			
+			string driverPath = driverKey.GetValue("Driver").ToString();
+
+			// Add value to odbc data sources
+			var datasourcesKey = Registry.LocalMachine.CreateSubKey(ODBC_INI_REG_PATH + "ODBC Data Sources");
+			
+			if (datasourcesKey == null)
+			{
+				throw new Exception("ODBC Registry key for datasources does not exist");
+			}
+			
+			datasourcesKey.SetValue(dsnName, driverName);
+
+			// Create new key in odbc.ini with dsn name and add values
+			var dsnKey = Registry.LocalMachine.CreateSubKey(ODBC_INI_REG_PATH + dsnName);
+			
+			if (dsnKey == null)
+			{
+				throw new Exception("ODBC Registry key for DSN was not created");
+			}
+			
+			dsnKey.SetValue("DATABASE", database); // 1. DATABASE - Name of the database (in my case it is "test")
+			dsnKey.SetValue("Driver", driverPath); // 2. Driver - Path of the MySQL driver (in my case for MYSQL 5.1 it should be "C:\Program Files\MySQL\Connector ODBC 5.1\myodbc5.dll")
+			//dsnKey.SetValue("OPTION", ); // 3. OPTION - advance options value (in my case it is 3147784)
+			dsnKey.SetValue("PORT", 3306); // 4. PORT - Port No for your MYSQL (in my case it is 3306)
+			dsnKey.SetValue("PWD", password); // 5. PWD - Password for the database (in my it is case ... :) )
+			dsnKey.SetValue("SERVER", server); // 6. SERVER - MySQL server name (in my case it is localhost)
+			dsnKey.SetValue("UID", username); // 7. UID - User Name for the MYSQL Server (in my case it is root)
+		}
+
+		/// <summary>
 		/// Removes a DSN entry
 		/// </summary>
 		/// <param name="dsnName">Name of the DSN to remove.</param>

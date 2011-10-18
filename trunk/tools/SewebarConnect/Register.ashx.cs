@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using LMWrapper;
 using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
 using Newtonsoft.Json;
+using log4net;
 
 namespace SewebarWeb
 {
@@ -14,6 +13,8 @@ namespace SewebarWeb
 	/// </summary>
 	public class Register : IHttpHandler
 	{
+		private static readonly ILog Log = LogManager.GetLogger(typeof(Register));
+
 		#region Properties
 
 		public bool IsReusable
@@ -28,18 +29,42 @@ namespace SewebarWeb
 
 		public void ProcessRequest(HttpContext context)
 		{
-			var id = ShortGuid.NewGuid();
-			var database = new AccessConnection(String.Format(@"{0}\Barbora_{1}.mdb", Global.Environment.LMPath, id),
-			                                    String.Format(@"{0}\Barbora.mdb", Global.Environment.DataPath))
-			               	{DSN = String.Format("LM{0}", id)};
+			OdbcConnectionsEnum conn;
 
+			//context.Response.ContentType = "application/json";
+			context.Response.ContentType = "text/plain";
 
-			//var guid = Global.Environment.Register(ODBCConnection.Create());
-			Global.Environment.Register(new LISpMiner(Global.Environment, id.ToString(), database));
-			var result = new {Status = "success", Name = id.Value};
+			var type = context.Request.Params["type"];
 
-			context.Response.ContentType = "text/json";
-			context.Response.Write(JsonConvert.SerializeObject(result));
+			if (Enum.TryParse(type, true, out conn))
+			{
+				try
+				{
+					var id = ShortGuid.NewGuid();
+					var database = OdbcConnection.Create(conn, Global.Environment, id.ToString(), context.Request.Params);
+
+					Global.Environment.Register(new LISpMiner(Global.Environment, id.ToString(), database));
+
+					var result = new {Status = "success", Name = id.Value};
+					context.Response.Write(JsonConvert.SerializeObject(result));
+				}
+				catch (Exception ex)
+				{
+					Log.Error(ex);
+
+					var result = new { Status = "failure", Reason = ex.Message };
+					context.Response.Write(JsonConvert.SerializeObject(result));
+				}
+			}
+			else
+			{
+				const string message = "Database was not correctly defined (type).";
+
+				Log.Error(message);
+
+				var result = new { Status = "failure", Reason = message };
+				context.Response.Write(JsonConvert.SerializeObject(result));
+			}
 		}
 	}
 }
