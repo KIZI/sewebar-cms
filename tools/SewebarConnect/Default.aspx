@@ -5,16 +5,32 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <title>SEWEBAR Connect</title>
+	<title>SEWEBAR Connect</title>
 </head>
 <body>
-    <form id="form1" runat="server">
-    <div>
+	<form id="form1" runat="server">
+	<div>
 	<h1>SEWEBAR Connect</h1>
 	<h2>Create new metabase</h2>
 	<ul>
 		<li>
-			<a href="Register.ashx">Register</a>
+			<a href="Register.ashx?type=mysqlconnection&amp;server=rewko.eu&amp;database=lisp&amp;username=lisp&amp;password=PrzxFjXi">Register with parameters in POST/GET.</a>
+			<dl>
+				<dt>type</dt>
+				<dd>{ AccessConnection | MySQLConnection }</dd>
+
+				<dt>server</dt>
+				<dd></dd>
+
+				<dt>database</dt>
+				<dd></dd>
+
+				<dt>username</dt>
+				<dd></dd>
+
+				<dt>password</dt>
+				<dd></dd>
+			</dl>
 		</li>
 		<li>
 			No registration needed. With every new user session new LISpMiner with default settings is created.
@@ -24,7 +40,7 @@
 		</li>
 	</ul>
 	<h2>Use data miners</h2>
-    <ol>
+	<ol>
 		<li><a href="Import.ashx">Import DataDictionary</a></li>
 		<li>
 			<a href="Task.ashx">Run task</a>
@@ -48,7 +64,7 @@
 		<li><%=miner %></li>
 		<% } %>
 	</ul>
-    </div>
+	</div>
 	</form>
 </body>
 </html>

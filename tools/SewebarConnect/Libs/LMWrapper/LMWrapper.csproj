@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment.cs" />
+    <Compile Include="IMetabase.cs" />
     <Compile Include="LISpMinerException.cs" />
     <Compile Include="LISpMiner\Executable.cs" />
     <Compile Include="LISpMiner\4ftGen.cs" />
@@ -49,7 +50,8 @@
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
     <Compile Include="ODBC\AccessConnection.cs" />
     <Compile Include="ODBC\MySQLConnection.cs" />
-    <Compile Include="ODBC\ODBCConnection.cs" />
+    <Compile Include="ODBC\OdbcConnection.cs" />
+    <Compile Include="ODBC\OdbcConnectionsEnum.cs" />
     <Compile Include="ODBC\ODBCManagerRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortGuid.cs" />

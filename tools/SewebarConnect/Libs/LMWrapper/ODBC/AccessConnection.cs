@@ -1,38 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Odbc;
 using System.IO;
-using System.Text;
 
 namespace LMWrapper.ODBC
 {
-	public class AccessConnection : ODBCConnection
+	public class AccessConnection : OdbcConnection, IMetabase
 	{
-		private static int i = 0;
-
-		public override string DSN
-		{
-			get
-			{
-				var dsn = base.DSN;
-
-				if (!ODBCManagerRegistry.DSNExists(dsn) && !File.Exists(this.Path))
-				{
-					File.Copy(FromFile, this.Path, true);
-
-					ODBCManagerRegistry.CreateDSN(dsn, "", "Microsoft Access Driver (*.mdb)", this.Path);
-				}
-
-				return dsn;
-			}
-			set
-			{
-				base.DSN = value;
-			}
-		}
+		#region Properties
 
 		public string Path { get; protected set; }
-
-		protected string FromFile { get; set; }
 
 		public override string ConnectionString
 		{
@@ -42,26 +18,48 @@ namespace LMWrapper.ODBC
 			}
 		}
 
-		public AccessConnection(string file)
+		#endregion
+
+		public AccessConnection(string file, string dsn) : base(dsn)
 		{
 			this.Path = file;
+
+			if (!ODBCManagerRegistry.DSNExists(this.DSN))
+			{
+				ODBCManagerRegistry.CreateDSN(this.DSN, "Auto created DSN for LISpMiner", "Microsoft Access Driver (*.mdb)", this.Path);
+			}
 		}
 
-		public AccessConnection(string file, string fromFile) : this(file)
+		public AccessConnection(string file, string fromFile, string dsn)
+			: this(file, dsn)
 		{
-			this.FromFile = fromFile;
+			if (!File.Exists(this.Path) && !String.IsNullOrEmpty(fromFile) && File.Exists(fromFile))
+			{
+				File.Copy(fromFile, this.Path, true);
+			}
 		}
 
-		public override void Dispose()
+		public virtual void SetDatabaseDsnToMetabase(OdbcConnection database)
+		{
+			string sql = String.Format("UPDATE tpParamsDB SET strValue='{0}' WHERE Name='DSN'", database.DSN);
+
+			using (var connection = new System.Data.Odbc.OdbcConnection(this.ConnectionString))
+			{
+				connection.Open();
+
+				var command = new OdbcCommand(sql, connection);
+				command.ExecuteNonQuery();
+			}
+		}
+
+		public override void Destroy()
 		{
 			File.Delete(this.Path);
 
-            //if (ODBCManagerRegistry.DSNExists(this.MetabaseDsn))
-            //{
-            //ODBCManagerRegistry.RemoveDSN(this.Metabase.DSN);
-            //}
-
-			base.Dispose();
+			if (ODBCManagerRegistry.DSNExists(this.DSN))
+			{
+				ODBCManagerRegistry.RemoveDSN(this.DSN);
+			}
 		}
 	}
 }

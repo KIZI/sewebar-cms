@@ -19,11 +19,13 @@ namespace SewebarWeb
 			{
 				if(_env == null)
 				{
+					var appData = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+
 					_env = new LMWrapper.Environment
 					{
-						DataPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString(),
-						LMPoolPath = String.Format(@"{0}\Libs", System.AppDomain.CurrentDomain.BaseDirectory),
-						LMPath = String.Format(@"{0}\Libs\{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
+						DataPath = appData,
+						LMPoolPath = String.Format(@"{0}\pool", appData),
+						LMPath = String.Format(@"{0}\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 					};
 				}
 

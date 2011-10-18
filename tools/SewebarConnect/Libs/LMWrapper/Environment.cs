@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LMWrapper.ODBC;
+﻿using System.Collections.Generic;
 
 namespace LMWrapper
 {
@@ -38,11 +36,10 @@ namespace LMWrapper
 		}
 
 		/// <summary>
-		/// TODO: make protected
+		/// Registers existing miner.
 		/// </summary>
-		/// <param name="guid"></param>
-		/// <param name="database"></param>
-		/// <returns></returns>
+		/// <param name="miner">LISpMiner to register.</param>
+		/// <returns>ID of registered LISpMiner.</returns>
 		public string Register(LISpMiner.LISpMiner miner)
 		{
 			RegisteredMiners.Add(miner.Id, miner);
