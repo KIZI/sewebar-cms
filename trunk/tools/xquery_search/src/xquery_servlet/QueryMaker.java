@@ -228,8 +228,10 @@ public class QueryMaker {
 			NodeList maxResultsList = doc.getElementsByTagName("MaxResults");
 			Element maxResultsElement = (Element)maxResultsList.item(0);
 			NodeList maxResultsList2 = maxResultsElement.getChildNodes();
-			Node maxResults = maxResultsList2.item(0);
-			maxResInt = Integer.parseInt(maxResults.getNodeValue());
+			if (maxResultsList2.item(0) != null) {
+				Node maxResults = maxResultsList2.item(0);
+				maxResInt = Integer.parseInt(maxResults.getNodeValue());
+			}
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
