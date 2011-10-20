@@ -67,7 +67,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 
 // ziskani vysledku tasku z LISpMiner-a
-echo $response = curl_exec($ch); die;
+$response = curl_exec($ch);
 $info = curl_getinfo($ch);
 curl_close($ch);
 
