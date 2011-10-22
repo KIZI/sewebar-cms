@@ -65,6 +65,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <xs:element ref="TreeModel"/>
             <xs:element ref="guha:AssociationModel"/>
             <xs:element ref="guha:SD4ftModel"/>
+            <xs:element ref="guha:Ac4ftModel"/>
           </xs:choice>
         </xs:sequence>
         <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>

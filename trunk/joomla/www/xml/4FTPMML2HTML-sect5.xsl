@@ -128,7 +128,7 @@
               </td>
             </tr>
           </tbody>
-        </table>        
+        </table>
       </xsl:if>
     </div>
   </xsl:template>
