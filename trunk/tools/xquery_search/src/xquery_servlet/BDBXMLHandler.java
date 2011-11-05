@@ -10,6 +10,7 @@ import com.sleepycat.dbxml.XmlQueryContext;
 import com.sleepycat.dbxml.XmlResults;
 import com.sleepycat.dbxml.XmlTransaction;
 import com.sleepycat.dbxml.XmlValue;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,12 +33,18 @@ import net.sf.saxon.query.StaticQueryContext;
 import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.trans.XPathException;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
  * @author Tomas Marek
  */
 public class BDBXMLHandler {
-    XmlManager mgr;
+	QueryMaker qm;
+	XmlManager mgr;
     QueryHandler qh;
     SchemaChecker sc;
     String containerName;
@@ -63,6 +70,7 @@ public class BDBXMLHandler {
         this.useTransformation = useTransformation;
         this.xsltPathPMML = xsltPathPMML;
         this.xsltPathBKEF = xsltPathBKEF;
+        qm = new QueryMaker(containerName);
     }
 
     /**
@@ -147,12 +155,13 @@ public class BDBXMLHandler {
         String output = "";
         String output_temp = "";
         QueryMaker qm = new QueryMaker(containerName);
-        InputStream is = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
-        String xpath = qm.makeXPath(is)[0];
+        InputStream query = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
+        InputStream query2 = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
+        String xpath = qm.makeXPath(query)[0];
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
             double time_start = System.currentTimeMillis();
-            output_temp = queryShortened(xpath, false, false, 9999);
+            output_temp = queryShortened(xpath, false, false, 9999, query2);
             //output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
             if (i == 9){
@@ -671,13 +680,26 @@ public class BDBXMLHandler {
             }
         return output;
     }
+    
+    private String selectByXPath(String xpath, String document) {
+    	String output = "";
+    	try {
+	        XPathFactory factory = XPathFactory.newInstance();
+	        XPath xp = factory.newXPath();
+			XPathExpression expr = xp.compile(xpath);
+			output = expr.evaluate(document);
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+		}
+    	return output;
+    }
 
     /**
      * Metoda pro dotazovani pomoci vytvoreneho XPath dotazu
      * @param XPathRequest XPath dotaz
      * @return vysledky hledani v SearchResult formatu
      */
-    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults){
+    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults, InputStream xmlQuery){
         long startTime = System.currentTimeMillis();
         String output = "";
         String schema = "";
@@ -693,6 +715,13 @@ public class BDBXMLHandler {
                 + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
             + "\n </Hit>";
         String queryResult = query("", query, 0);
+        if (exception) {
+        	String xpath = qm.getExceptionPath(xmlQuery);
+        	System.out.println("XPath: " + xpath);
+        	System.out.println("Results before: " + queryResult);
+        	queryResult = selectByXPath(xpath, queryResult);
+            System.out.println("Results after: " + queryResult);
+        }
         output += "<SearchResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\""+ schema +"\">"
                 + "<Metadata>"
                     + "<SearchTimestamp>" + getDateTime() + "</SearchTimestamp>"
@@ -717,6 +746,8 @@ public class BDBXMLHandler {
         output += "</Hits></SearchResult>";
         return output;
     }
+    
+    
     private String dataDescriptionPrepare(String queryOutput) {
         String output = "";
         String ddPrepareQuery = "declare function local:descriptionTransform($inputData) {"
