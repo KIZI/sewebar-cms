@@ -28,12 +28,6 @@ import com.sleepycat.dbxml.XmlManagerConfig;
 public class XQuery_servlet extends HttpServlet {
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-
-	/**
 	 * Metoda zpracovavajici vstup a vytvarejici vystup. Podporuje <code>GET</code> a <code>POST</code> metody.
 	 * @param request prijaty pozadavek
 	 * @param response vytvorena odpoved (vystup)
@@ -420,8 +414,9 @@ public class XQuery_servlet extends HttpServlet {
                         output += bh.query(id, dotaz, 1);*/
 				InputStream is1 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
 				InputStream is2 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
+				InputStream is3 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
 				String xpath[] = qm.makeXPath(is1);
-				output += bh.queryShortened(xpath[0], restructure, Boolean.parseBoolean(xpath[1]), qm.getMaxResults(is2));
+				output += bh.queryShortened(xpath[0], restructure, Boolean.parseBoolean(xpath[1]), qm.getMaxResults(is2), is3);
 				//output += "<xpath><![CDATA["+ xpath[0]+"]]></xpath><exception>" + xpath[1] + "</exception>";
 				//output += qh.queryPrepare(content).toString();
 			} break;

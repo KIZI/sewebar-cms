@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
  * @author Tomas Marek
  */
 public class QueryMaker {
+	final String dictionaryLC = "transformationdictionary";
     String containerName;
     /**
      * Konstruktor instance tridy QueryMaker
@@ -33,6 +34,7 @@ public class QueryMaker {
      * @return XPath dotaz
      */
     public String[] makeXPath(InputStream xmlQuery){
+    	getExceptionPath(xmlQuery);
     	String output[] = new String[2];
     	output[0] = "";
         try {
@@ -107,10 +109,10 @@ public class QueryMaker {
     }
     
     private String BBAMake(NodeList fieldList, String axis, boolean inference) {
-        String output = "";
+    	String output = "";
         for (int j = 0; j < fieldList.getLength() ; j++) {
             Element fieldChildElement = (Element)fieldList.item(j);
-            if (fieldChildElement.getAttribute("dictionary").equals("TransformationDictionary")) {
+            if (fieldChildElement.getAttribute("dictionary").toLowerCase().equals(dictionaryLC)) {
                 NodeList namesList = fieldChildElement.getElementsByTagName("Name");
                 NodeList typesList = fieldChildElement.getElementsByTagName("Type");
                 NodeList catsList = fieldChildElement.getElementsByTagName("Category");
@@ -242,27 +244,86 @@ public class QueryMaker {
 		return maxResInt;
     }
     
-    /**
-     * Metoda pro zmenu hodnot Interesting Measures mezi vstupni hodnotou a hodnotou ulozenou v DB.
-     * 0. pozice v radku -> hodnoty z dotazu, 1. pozice v radku -> hodnoty v DB
-     * @param value Vyhledavana hodnota
-     * @param fromDict Vychozi slovnik
-     * @param toDict Cilovy slovnik
-     * @return Zmenena hodnota
-     */
-    /*private String IMValueSwitch(String value, int fromDict, int toDict){
-    	String output = "";
-    	String [][] dictionary = new String[3][2];
-    	//Naplenni hodnot slovniku -> pozice 0 v radku - vstup, pozice 1 v radku - hodnoty v DB
-    	dictionary[0][0] = "Confidence";
-    	dictionary[0][1] = "Conf";
-    	dictionary[1][0] = "Support";
-    	dictionary[1][1] = "Supp";
-    	for (int i = 0; i < dictionary.length; i++) {
-    		if (dictionary[i][fromDict].toLowerCase().equals(value.toLowerCase())) {
-    			output = dictionary[i][toDict];
-    		}
-    	}
-    	return output;
-    }*/
+   public String getExceptionPath(InputStream xmlQuery) {
+	   String output = "/AssociationRule[";
+	   try {
+           DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+           DocumentBuilder db = dbf.newDocumentBuilder();
+           Document doc = db.parse(xmlQuery);
+           doc.getDocumentElement().normalize();
+           
+           NodeList consList = doc.getElementsByTagName("Consequent");
+           Element consElement = (Element) consList.item(0);
+           NodeList dbas = consElement.getChildNodes();
+           for (int a = 0; a < dbas.getLength(); a++) {
+        	   Element dba = (Element) dbas.item(a);
+        	   NodeList dbas2 = dba.getChildNodes();
+        	   System.out.println("loop: " + a);
+        	   for (int b = 0; b < dbas2.getLength(); b++) {
+        		   for (int z = 0; z < 2; z++) {
+        			   System.out.println("Logic loop: " + z);
+	        		   Element dba2 = (Element) dbas2.item(b);
+	        		   String connective = dba2.getAttribute("connective").toString();
+	        		   if (connective.toLowerCase().equals("positive") && z < 1) {
+	        			   connective = "Negative";
+	        		   } else if (connective.toLowerCase().equals("negative") && z < 1) {
+	        			   connective = "Positive";
+	        		   }
+	        		   String connect = "";
+	        		   if (z == 1) { connect = " or "; }
+	        		   output += connect + "Consequent/DBA/DBA[@connective=" + connective + "]";
+	        		   System.out.println("innerloop: " + b);
+	        		   System.out.println("DBA New Connective: " + connective);
+	        		   
+	        		   NodeList bbas = dba2.getChildNodes();
+	        		   for (int c = 0; c < bbas.getLength(); c++) {
+	        			   Element bbaElement = (Element) bbas.item(c);
+	
+	        			   System.out.println("\tBBA loop: " + c);
+	        			   
+	        			   NodeList fields = bbaElement.getChildNodes();
+	        			   for (int d = 0; d < fields.getLength(); d++) {
+	        				   Element fieldElement = (Element) fields.item(d);
+	        				   if (fieldElement.getAttribute("dictionary").toLowerCase().equals(dictionaryLC)) {
+	        					   NodeList nameList = fieldElement.getElementsByTagName("Name");
+	//        					   NodeList typeList = fieldElement.getElementsByTagName("Type");
+		    		               NodeList catsList = fieldElement.getElementsByTagName("Category");
+	//	    		               NodeList intsList = fieldElement.getElementsByTagName("Interval");
+		    		               
+		    		               Element nameElement = (Element) nameList.item(0);
+		    		               Node name = nameElement.getChildNodes().item(0);
+		    		               String fieldName = name.getNodeValue();
+		    		               output += "/BBA[";
+		    		               System.out.println("\tBBA Name: " + name.getNodeValue());
+		    		               for (int e = 0; e < catsList.getLength(); e++) {
+		    		            	   Element catElement = (Element) catsList.item(e);
+		    		            	   Node cat = catElement.getChildNodes().item(0);
+		    		            	   String catName = cat.getNodeValue();
+		    		            	   String catNameCondition = "@CatName=" + catName;
+		    		            	   if (z == 1) {
+		    		            		   catNameCondition = "@CatName!=" + catName;
+		    		            	   }
+		    		            	   output += "@FieldName=" + fieldName + " and " + catNameCondition;
+		    		            	   System.out.println("\t\t Cat loop: " + e);
+		    		            	   System.out.println("\t\t BBA Category: " + catName);
+		    		               }
+		    		               output += "]";
+	        				   }
+	        			   }
+	        		   }
+        		   }
+        	   }
+           }
+	   } catch (ParserConfigurationException e) {
+		   e.printStackTrace();
+	   } catch (SAXException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	   output += "]";
+	   System.out.println("Output: " + output);
+	   return output;
+   }
+   
 }
