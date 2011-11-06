@@ -23,7 +23,7 @@ import com.sleepycat.dbxml.XmlManagerConfig;
 /**
  * Trida pro zpracovani vstupnich pozadavku a vraceni vysledku
  * @author Tomas Marek
- * @version 1.18 (16.10.2011)
+ * @version 1.19 (6.11.2011)
  */
 public class XQuery_servlet extends HttpServlet {
 
