@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  * @author Tomas Marek
  */
 public class QueryMaker {
-	final String dictionaryLC = "transformationdictionary";
+	final String dictionary = "TransformationDictionary";
     String containerName;
     /**
      * Konstruktor instance tridy QueryMaker
@@ -34,7 +34,6 @@ public class QueryMaker {
      * @return XPath dotaz
      */
     public String[] makeXPath(InputStream xmlQuery){
-    	getExceptionPath(xmlQuery);
     	String output[] = new String[2];
     	output[0] = "";
         try {
@@ -73,7 +72,7 @@ public class QueryMaker {
                         output[0] += " and ";
                     }
                     output[0] += "(";
-                    output[0] += BBAMake(fieldList, "./", false);    
+                    output[0] += BBAMake(fieldList, "./", false, false);    
                     output[0] += ")";
                     x++;
                 }
@@ -96,23 +95,22 @@ public class QueryMaker {
 	            	output[0] += " and IMValue[@name=\"" + interestMeasure.getNodeValue() + "\"]/text() >= " + threshold.getNodeValue();
             	}
             }
-            //output[0] += "MaxResults: " + getMaxResults(xmlQuery);
             output[0] += "]";
         } catch (SAXException ex) {
-            //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
+            
         } catch (IOException ex) {
-            //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
+            
         } catch (ParserConfigurationException ex) {
-            //Logger.getLogger(QueryMaker.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
         return output;
     }
     
-    private String BBAMake(NodeList fieldList, String axis, boolean inference) {
+    private String BBAMake(NodeList fieldList, String axis, boolean inference, boolean exception) {
     	String output = "";
         for (int j = 0; j < fieldList.getLength() ; j++) {
             Element fieldChildElement = (Element)fieldList.item(j);
-            if (fieldChildElement.getAttribute("dictionary").toLowerCase().equals(dictionaryLC)) {
+            if (fieldChildElement.getAttribute("dictionary").toLowerCase().equals(dictionary.toLowerCase())) {
                 NodeList namesList = fieldChildElement.getElementsByTagName("Name");
                 NodeList typesList = fieldChildElement.getElementsByTagName("Type");
                 NodeList catsList = fieldChildElement.getElementsByTagName("Category");
@@ -130,7 +128,29 @@ public class QueryMaker {
                         NodeList cats = catElement.getChildNodes();
                         Node cat = cats.item(0);
                         String catString = "";
+                        boolean isSubset = false;
                         if (cat != null) {catString = cat.getNodeValue();}
+                        if (catString.toLowerCase().contains("subset")) {
+                        	String[] catSplit = catString.split(" ");
+                        	if (catSplit.length > 2) {
+                        		catString = "";
+                        	} else {
+                        		String[] boundsSplit = catSplit[1].split("-");
+                        		if (boundsSplit.length > 2) {
+                        			catString = "";
+                        		} else {
+                        			int min = Integer.parseInt(boundsSplit[0]);
+                        			int max = Integer.parseInt(boundsSplit[1]);
+                        			if (min == max) {
+                        				isSubset = true;
+                            			catString = "(count(CatName) = " + min + ")";
+                            		} else {
+                            			isSubset = true;
+                            			catString = "(count(CatName) >= " + min + " and count(CatName) <= " + max + ")";
+                        			}
+                				}
+                    		}
+                    	}
                         String connective = "";
                         if(k > 0) {
                             if (type.getNodeValue().equals("At least one from listed")){
@@ -141,9 +161,17 @@ public class QueryMaker {
                         }
                         String sign = "";
                         if (!inference) { sign = "="; } else { sign = "!="; }
-                        output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]";
-                        if (catString.length() > 0) {
-                        	output += "/CatName"+ sign +"\""+catString+"\"";
+                        if (exception) {
+                        	output += connective+axis+"/BBA/TransformationDictionary[FieldName=\"" + name.getNodeValue() + "\"]";
+                        } else {
+	                        if (isSubset) {
+	                        	output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\" and " + catString + "]";
+	                        } else {
+	                        	output += connective+axis+"/BBA/TransformationDictionary[FieldName=\""+name.getNodeValue()+"\"]";
+	                        }
+	                        if (catString.length() > 0 && !isSubset) {
+	                        	output += "/CatName"+ sign +"\""+catString+"\"";
+	                        }
                         }
                     }
                 } else if (catsList.getLength() == 0 && intsList.getLength() > 0) {
@@ -191,19 +219,19 @@ public class QueryMaker {
                             if (connective.toLowerCase().equals("both")) {
                                 axisDBA2 += "/DBA";
                             } else {
-                                axisDBA2 += "/DBA[@connective=\""+ connective +"\"]";
+                                if (exception) { axisDBA2 = "/DBA"; } else { axisDBA2 += "/DBA[@connective=\""+ connective +"\"]"; }
                             }
                             String BBAConnection = "and";
                             NodeList fieldList = BBAElement.getElementsByTagName("Field");
                             if (l > 0) { output[0] += " "+ BBAConnection +" "; }
                             /*if (cedentDBA2.getLength() > 1) 
                             {*/
-                                output[0] += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false);
+                                output[0] += "(" + BBAMake(fieldList, axisCedent+axisDBA1+axisDBA2, false, exception);
                                 if (inference) {
                                     if (connective.equals("both")){
-                                        output[0] += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA", true);
+                                        output[0] += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA", true, exception);
                                     } else {
-                                        output[0] += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA[@connective!=\"" + connective + "\"]", true);
+                                        output[0] += " or " + BBAMake(fieldList, axisCedent+axisDBA1+"/DBA[@connective!=\"" + connective + "\"]", true, exception);
                                     }
                                 }
                                 output[0]  += ")";
@@ -218,6 +246,11 @@ public class QueryMaker {
         return output;
     }
     
+    /**
+     * Metoda pro ziskani omezeni poctu vysledku
+     * @param xmlQuery vstupni XML dotaz
+     * @return maximalni pocet vysledku
+     */
     public int getMaxResults(InputStream xmlQuery) {
 		int maxResInt = 200;
 		try {
@@ -243,7 +276,12 @@ public class QueryMaker {
 		}
 		return maxResInt;
     }
-    
+   
+   /**
+    * Metoda pro vytvoreni XPath dotazu, ktery pomaha vybrat pravidla u exception query 
+    * @param xmlQuery vstupni XML dotaz
+    * @return XPath dotaz
+    */
    public String getExceptionPath(InputStream xmlQuery) {
 	   String output = "/AssociationRule[";
 	   try {
@@ -258,10 +296,8 @@ public class QueryMaker {
            for (int a = 0; a < dbas.getLength(); a++) {
         	   Element dba = (Element) dbas.item(a);
         	   NodeList dbas2 = dba.getChildNodes();
-        	   System.out.println("loop: " + a);
         	   for (int b = 0; b < dbas2.getLength(); b++) {
         		   for (int z = 0; z < 2; z++) {
-        			   System.out.println("Logic loop: " + z);
 	        		   Element dba2 = (Element) dbas2.item(b);
 	        		   String connective = dba2.getAttribute("connective").toString();
 	        		   if (connective.toLowerCase().equals("positive") && z < 1) {
@@ -271,41 +307,32 @@ public class QueryMaker {
 	        		   }
 	        		   String connect = "";
 	        		   if (z == 1) { connect = " or "; }
-	        		   output += connect + "Consequent/DBA/DBA[@connective=" + connective + "]";
-	        		   System.out.println("innerloop: " + b);
-	        		   System.out.println("DBA New Connective: " + connective);
-	        		   
+	        		   output += connect + "Consequent/DBA/DBA[@connective=\"" + connective + "\"]";
+
 	        		   NodeList bbas = dba2.getChildNodes();
 	        		   for (int c = 0; c < bbas.getLength(); c++) {
 	        			   Element bbaElement = (Element) bbas.item(c);
 	
-	        			   System.out.println("\tBBA loop: " + c);
-	        			   
 	        			   NodeList fields = bbaElement.getChildNodes();
 	        			   for (int d = 0; d < fields.getLength(); d++) {
 	        				   Element fieldElement = (Element) fields.item(d);
-	        				   if (fieldElement.getAttribute("dictionary").toLowerCase().equals(dictionaryLC)) {
+	        				   if (fieldElement.getAttribute("dictionary").toLowerCase().equals(dictionary.toLowerCase())) {
 	        					   NodeList nameList = fieldElement.getElementsByTagName("Name");
-	//        					   NodeList typeList = fieldElement.getElementsByTagName("Type");
 		    		               NodeList catsList = fieldElement.getElementsByTagName("Category");
-	//	    		               NodeList intsList = fieldElement.getElementsByTagName("Interval");
 		    		               
 		    		               Element nameElement = (Element) nameList.item(0);
 		    		               Node name = nameElement.getChildNodes().item(0);
 		    		               String fieldName = name.getNodeValue();
 		    		               output += "/BBA[";
-		    		               System.out.println("\tBBA Name: " + name.getNodeValue());
 		    		               for (int e = 0; e < catsList.getLength(); e++) {
 		    		            	   Element catElement = (Element) catsList.item(e);
 		    		            	   Node cat = catElement.getChildNodes().item(0);
 		    		            	   String catName = cat.getNodeValue();
-		    		            	   String catNameCondition = "@CatName=" + catName;
+		    		            	   String catNameCondition = "CatName=\"" + catName + "\"";
 		    		            	   if (z == 1) {
-		    		            		   catNameCondition = "@CatName!=" + catName;
+		    		            		   catNameCondition = "CatName!=\"" + catName + "\"";
 		    		            	   }
-		    		            	   output += "@FieldName=" + fieldName + " and " + catNameCondition;
-		    		            	   System.out.println("\t\t Cat loop: " + e);
-		    		            	   System.out.println("\t\t BBA Category: " + catName);
+		    		            	   output += "FieldName=\"" + fieldName + "\" and " + catNameCondition;
 		    		               }
 		    		               output += "]";
 	        				   }
@@ -322,7 +349,6 @@ public class QueryMaker {
 		e.printStackTrace();
 	}
 	   output += "]";
-	   System.out.println("Output: " + output);
 	   return output;
    }
    

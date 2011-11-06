@@ -38,6 +38,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.xml.sax.InputSource;
+
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
  * @author Tomas Marek
@@ -683,11 +685,12 @@ public class BDBXMLHandler {
     
     private String selectByXPath(String xpath, String document) {
     	String output = "";
+    	InputSource bais = new InputSource(new ByteArrayInputStream(document.getBytes()));
     	try {
 	        XPathFactory factory = XPathFactory.newInstance();
 	        XPath xp = factory.newXPath();
 			XPathExpression expr = xp.compile(xpath);
-			output = expr.evaluate(document);
+			output = expr.evaluate(bais);
 		} catch (XPathExpressionException e) {
 			e.printStackTrace();
 		}
@@ -715,7 +718,7 @@ public class BDBXMLHandler {
                 + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
             + "\n </Hit>";
         String queryResult = query("", query, 0);
-        if (exception) {
+        if (exception && !queryResult.isEmpty()) {
         	String xpath = qm.getExceptionPath(xmlQuery);
         	System.out.println("XPath: " + xpath);
         	System.out.println("Results before: " + queryResult);
