@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using LMWrapper.LISpMiner;
-using LMWrapper.ODBC;
 using log4net;
 
 namespace SewebarWeb
@@ -10,6 +9,7 @@ namespace SewebarWeb
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Global));
 		private static LMWrapper.Environment _env;
+		private static Dictionary<string, LISpMiner> _registeredSessionMiners;
 
 		#region Properties
 
@@ -24,13 +24,38 @@ namespace SewebarWeb
 					_env = new LMWrapper.Environment
 					{
 						DataPath = appData,
-						LMPoolPath = String.Format(@"{0}\pool", appData),
+						LMPoolPath = String.Format(@"{0}", @"C:\LMs\"),
 						LMPath = String.Format(@"{0}\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 					};
 				}
 
 				return _env;
 			}
+		}
+
+		protected static Dictionary<string, LISpMiner> RegisteredSessionMiners
+		{
+			get
+			{
+				if (_registeredSessionMiners == null)
+				{
+					_registeredSessionMiners = new Dictionary<string, LISpMiner>();
+				}
+
+				return _registeredSessionMiners;
+			}
+		}
+
+		public static Dictionary<string, LISpMiner>.KeyCollection ExistingSessionMiners
+		{
+			get { return RegisteredSessionMiners.Keys; }
+		}
+
+		public static string RegisterSessionMiner(LISpMiner miner)
+		{
+			RegisteredSessionMiners.Add(miner.Id, miner);
+
+			return miner.Id;
 		}
 
 		#endregion
@@ -63,6 +88,11 @@ namespace SewebarWeb
 
 		protected void Session_End(object sender, EventArgs e)
 		{
+			if (RegisteredSessionMiners.ContainsKey(Session.SessionID))
+			{
+				RegisteredSessionMiners.Remove(Session.SessionID);
+			}
+
 			SessionBase.Clean(Session);
 		}
 

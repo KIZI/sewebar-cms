@@ -4,9 +4,6 @@ namespace LMWrapper
 {
 	public class Environment
 	{
-		/// <summary>
-		/// TODO: also try to load miners from existing folders (registered before Global.Application_Start() and maybe session).
-		/// </summary>
 		private Dictionary<string, LISpMiner.LISpMiner> _registeredMiners;
 
 		public string LMPoolPath { get; set; }

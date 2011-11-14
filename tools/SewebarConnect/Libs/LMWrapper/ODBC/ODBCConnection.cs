@@ -6,13 +6,13 @@ namespace LMWrapper.ODBC
 {
 	public abstract class OdbcConnection
 	{
-        public static OdbcConnection Create(OdbcConnectionsEnum type, Environment environment, string id, NameValueCollection parameters)
+        public static OdbcConnection Create(OdbcDrivers type, Environment environment, string id, NameValueCollection parameters)
         {
             var databaseDSN = String.Format("LM{0}", id);
 
             switch (type)
             {
-                case OdbcConnectionsEnum.MySQLConnection:
+                case OdbcDrivers.MySqlConnection:
                     var databaseServer = parameters["server"];
                     var databaseDatabase = parameters["database"];
                     var databasePassword = parameters["password"];
@@ -20,7 +20,7 @@ namespace LMWrapper.ODBC
 
                     return new MySQLConnection(databaseDSN, databaseServer, databaseDatabase, databaseUsername, databasePassword);
                     break;
-                case OdbcConnectionsEnum.AccessConnection:
+                case OdbcDrivers.AccessConnection:
                 default:
                     var databaseFile = String.Format(@"{0}\Barbora_{1}.mdb", environment, id);
                     var databasePrototypeFile = String.Format(@"{0}\Barbora.mdb", environment.DataPath);

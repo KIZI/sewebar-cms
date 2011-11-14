@@ -29,7 +29,7 @@ namespace SewebarWeb
 
 		public void ProcessRequest(HttpContext context)
 		{
-			OdbcConnectionsEnum conn;
+			OdbcDrivers conn;
 
 			//context.Response.ContentType = "application/json";
 			context.Response.ContentType = "text/plain";
@@ -45,7 +45,7 @@ namespace SewebarWeb
 
 					Global.Environment.Register(new LISpMiner(Global.Environment, id.ToString(), database));
 
-					var result = new {Status = "success", Name = id.Value};
+					var result = new { Status = "success", Name = id.Value };
 					context.Response.Write(JsonConvert.SerializeObject(result));
 				}
 				catch (Exception ex)
