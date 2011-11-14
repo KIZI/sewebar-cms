@@ -1,8 +1,8 @@
 ﻿namespace LMWrapper.ODBC
 {
-	public enum OdbcConnectionsEnum
+	public enum OdbcDrivers
 	{
 		AccessConnection,
-		MySQLConnection
+		MySqlConnection
 	}
 }

@@ -6,6 +6,8 @@ namespace LMWrapper.ODBC
 {
 	public class AccessConnection : OdbcConnection, IMetabase
 	{
+		private const string Driver = "Microsoft Access Driver (*.mdb)";
+
 		#region Properties
 
 		public string Path { get; protected set; }
@@ -26,7 +28,7 @@ namespace LMWrapper.ODBC
 
 			if (!ODBCManagerRegistry.DSNExists(this.DSN))
 			{
-				ODBCManagerRegistry.CreateDSN(this.DSN, "Auto created DSN for LISpMiner", "Microsoft Access Driver (*.mdb)", this.Path);
+				ODBCManagerRegistry.CreateDSN(this.DSN, "Auto created DSN for LISpMiner", Driver, this.Path);
 			}
 		}
 

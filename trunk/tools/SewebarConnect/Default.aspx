@@ -59,11 +59,17 @@
 		<dd><%=Session.SessionID %></dd>
 	</dl>
 	<h2>Existing miners</h2>
-	<ul>
+	<ol>
 		<% foreach (var miner in Global.Environment.ExistingMiners) { %>
 		<li><%=miner %></li>
 		<% } %>
-	</ul>
+	</ol>
+	<h2>Active session miners</h2>
+	<ol>
+		<% foreach (var miner in Global.ExistingSessionMiners) { %>
+		<li><%=miner %></li>
+		<% } %>
+	</ol>
 	</div>
 	</form>
 </body>

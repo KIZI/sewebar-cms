@@ -65,6 +65,7 @@ namespace SewebarWeb
 							var db = String.Format(@"{0}\Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"));
 
 							this._miner = new LISpMiner(Global.Environment, id, db);
+							Global.RegisterSessionMiner(this._miner);
 							this._context.Session[SESSION_KEY] = this._miner;
 						}
 					}
