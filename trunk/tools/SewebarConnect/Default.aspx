@@ -14,7 +14,7 @@
 	<h2>Create new metabase</h2>
 	<ul>
 		<li>
-			<a href="Register.ashx?type=mysqlconnection&amp;server=rewko.eu&amp;database=lisp&amp;username=lisp&amp;password=PrzxFjXi">Register with parameters in POST/GET.</a>
+			<a href="Register.ashx?type=mysqlconnection&amp;server=localhost&amp;database=barbora&amp;username=lisp&amp;password=lisp">Register with parameters in POST/GET.</a>
 			<dl>
 				<dt>type</dt>
 				<dd>{ AccessConnection | MySQLConnection }</dd>

@@ -206,8 +206,8 @@ namespace LMWrapper.ODBC
 			// Lookup driver path from driver name]
 			const string driverName = "MySQL ODBC 5.1 Driver";
 			var driverKey = Registry.LocalMachine.CreateSubKey(ODBCINST_INI_REG_PATH + driverName);
-			
-			if (driverKey == null)
+
+            if (driverKey == null || driverKey.GetValue("Driver") == null)
 			{
 				throw new Exception(
 					string.Format(
