@@ -19,7 +19,9 @@
                 <xs:element name="FieldGroupConfig" minOccurs="0" maxOccurs="unbounded" type="FieldGroupConfig" />
                 
             </xs:sequence>
-        </xs:complexType>        
+            <xs:attribute name="rootConfigID" type="xs:integer" use="required"></xs:attribute>
+        </xs:complexType>   
+        
     </xs:element>
     <xs:complexType name="ChildFieldGroups">
         <xs:sequence>
@@ -45,7 +47,6 @@
             </xs:element>
             <xs:element name="ChildFieldGroups"  minOccurs="0" maxOccurs="unbounded" type="ChildFieldGroups"></xs:element>
         </xs:sequence>
-        <xs:attribute name="root" type="xs:boolean"/>
         <xs:attribute name="id" type="xs:integer"/>            
         <xs:attribute name="connective" type="ConnectiveSuggestType" /> <!-- potřeboval bych nějaký Connective typ -->
     </xs:complexType>
