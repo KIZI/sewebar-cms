@@ -184,10 +184,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Above Average Implication</str>
+        <str lang="MasterName">AAD</str>
         <!-- Support je relativni -->
         <str lang="pmml" software="Ferda">AboveAverageDependence</str>
-        <str lang="pmml" software="LISp-Miner">Above Average Implication</str>
+        <str lang="pmml" software="LISp-Miner">AAD</str>
         <str lang="en">Above Average Dependence</str>
         <str lang="cs">Above Average Dependence</str>        
         <TestCriteria>
@@ -203,13 +203,13 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Below Average Implication</str>
+        <str lang="MasterName">BAD</str>
         
         <!-- Support je relativni -->
         <str lang="pmml" software="Ferda">Below Average Implication</str>
-        <str lang="pmml" software="LISp-Miner">BelowAverageDependence</str>
-        <str lang="en">Below Average Implication</str>
-        <str lang="cs">Above Average Dependence</str>        
+        <str lang="pmml" software="LISp-Miner">BAD</str>
+        <str lang="en">Below Average Dependance</str>
+        <str lang="cs">Below Average Dependence</str>        
         <TestCriteria>
             <TestCriterion>
                 <str lang="MasterName">Below Average Difference</str>
@@ -223,11 +223,11 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Double Founded Implication</str>
+        <str lang="MasterName">DFUI</str>
         
         <!-- Support je relativni -->
         <str lang="pmml" software="Ferda">DoubleFoundedImplication</str>
-        <str lang="pmml" software="LISp-Miner">Double Founded Implication</str>
+        <str lang="pmml" software="LISp-Miner">DFUI</str>
         <str lang="en">Double Founded Implication</str>
         <str lang="cs">Double Founded Implication</str>        
         <TestCriteria>
@@ -243,9 +243,9 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Lower Critical Implication</str>            
+        <str lang="MasterName">LCI</str>            
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Lower Critical Implication</str>
+        <str lang="pmml" software="LISp-Miner">LCI</str>
         <str lang="en">Lower Critical Implication</str>
         <str lang="cs">Lower Critical Implication</str>
         <TestCriteria>
@@ -269,10 +269,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Upper Critical Implication</str>
+        <str lang="MasterName">UCI</str>
         
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Upper Critical Implication</str>
+        <str lang="pmml" software="LISp-Miner">UCI</str>
         <str lang="en">Upper Critical Implication</str>
         <str lang="cs">Upper Critical Implication</str>        
         <TestCriteria>
@@ -295,10 +295,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Double Lower Critical Implication</str>
+        <str lang="MasterName">DLCI</str>
         
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Double Lower Critical Implication</str>
+        <str lang="pmml" software="LISp-Miner">DLCI</str>
         <str lang="en">Double Lower Critical Implication</str>
         <str lang="cs">Double Lower Critical Implication</str>        
         <TestCriteria>
@@ -321,10 +321,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="Double Upper Critical Implication"></str>
+        <str lang="MasterName">DUCI</str>
         
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Double Upper Critical Implication</str>
+        <str lang="pmml" software="LISp-Miner">DUCI</str>
         <str lang="en">Double Upper Critical Implication</str>
         <str lang="cs">Double Upper Critical Implication</str>        
         <TestCriteria>
@@ -347,10 +347,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Founded Equivalence</str>
+        <str lang="MasterName">FUE</str>
         
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Founded Equivalence</str>
+        <str lang="pmml" software="LISp-Miner">FUE</str>
         <str lang="pmml" software="Ferda">FoundedEquivalence</str>
         <str lang="en">Founded Equivalence</str>
         <str lang="cs">Founded Equivalence</str>        
@@ -367,10 +367,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Lower Critical Equivalence</str>
+        <str lang="MasterName">LCE</str>
         
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Lower Critical Equivalence</str>
+        <str lang="pmml" software="LISp-Miner">LCE</str>
         <str lang="en">Lower Critical Equivalence</str>
         <str lang="cs">Lower Critical Equivalence</str>        
         <TestCriteria>
@@ -392,10 +392,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Upper Critical Equivalence</str>
+        <str lang="MasterName">UCE</str>
         
         <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">Upper Critical Equivalence</str>
+        <str lang="pmml" software="LISp-Miner">UCE</str>
         <str lang="en">Upper Critical Equivalence</str>
         <str lang="cs">Upper Critical Equivalence</str>        
         <TestCriteria>
