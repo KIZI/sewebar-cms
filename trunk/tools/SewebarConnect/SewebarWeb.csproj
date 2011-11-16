@@ -87,9 +87,6 @@
     <Content Include="Libs\LISp Miner\Sewebar\Template\SD4ftMiner.HypoInGroup.PMML.Template.txt" />
     <Content Include="Libs\LISp Miner\Sewebar\Template\SD4ftMiner.Task.PMML.Template.txt" />
     <Content Include="Libs\LISp Miner\Sewebar\Template\_Info.Syntax.txt" />
-    <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.4.1.js" />
-    <Content Include="Scripts\jquery-1.4.1.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -99,7 +96,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="WebService.asmx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Default.aspx.cs">
@@ -123,10 +119,6 @@
     <Compile Include="Task.ashx.cs">
       <DependentUpon>Task.ashx</DependentUpon>
     </Compile>
-    <Compile Include="WebService.asmx.cs">
-      <DependentUpon>WebService.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Libs\LMWrapper\LMWrapper.csproj">
@@ -140,6 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Register.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
