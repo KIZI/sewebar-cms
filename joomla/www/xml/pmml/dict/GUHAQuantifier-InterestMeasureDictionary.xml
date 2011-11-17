@@ -196,8 +196,8 @@
                 <str lang="MasterName">AAD</str>
                 <str lang="pmml" software="Ferda">AboveAverageDependence</str>
                 <str lang="pmml" software="LISp-Miner">AAD</str>
-                <str lang="en">Above Average Difference</str>
-                <str lang="cs">Above Average Difference</str>                        
+                <str lang="en">Lift</str>
+                <str lang="cs">Lift</str>                
             </TestCriterion>
         </TestCriteria>
         <Symbol>≈<sup>+</sup></Symbol>
