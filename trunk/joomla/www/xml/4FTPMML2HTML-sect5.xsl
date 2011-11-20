@@ -142,10 +142,16 @@
       <xsl:if test="local-name()='StateBefore'">sb-</xsl:if>
       <xsl:if test="local-name()='StateAfter'">sa-</xsl:if>
     </xsl:variable>
+    <xsl:variable name="tableColspan">
+      <xsl:choose>
+        <xsl:when test="IMValue[@sourceMode]">3</xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <table class="itable" summary="Values of associated test criteria">
       <thead>
         <tr>
-          <th colspan="2">
+          <th colspan="{$tableColspan}">
             <input type="checkbox" onclick="ShowChecked(this,'sect5-{$sect}rule{$rulePos}-non-task')"/>
             <xsl:copy-of select="keg:translate('Table of values for test criteria', 422)"/>
           </th>
@@ -153,6 +159,9 @@
         <tr>
           <th><xsl:copy-of select="keg:translate('Interest Measure',421)"/></th>
           <th><xsl:copy-of select="keg:translate('Value',252)"/></th>
+          <xsl:if test="IMValue[@sourceMode]">
+            <th>Source mode</th>
+          </xsl:if>
         </tr>
       </thead>
       <xsl:if test="IMValue[@name='Support']!=-1 or IMValue[@name='Confidence']!=-1">
@@ -173,7 +182,7 @@
           </xsl:if>
         </tbody>
       </xsl:if>
-      <!-- AssociationRule or SD4ftRule table rows -->
+      <!-- AssociationRule or SD4ftRule or Ac4ftRule table rows -->
       <xsl:if test="local-name()='AssociationRule' or local-name()='SD4ftRule' or local-name()='Ac4ftRule'">
         <tbody id="sect5-rule{$rulePos}-task">
           <!-- other quantifiers from task setting -->
@@ -184,8 +193,8 @@
           <xsl:apply-templates select="IMValue[not(@name='Support') and not(@name='Confidence') and not(@imSettingRef)]" mode="sect5"/>
         </tbody>
       </xsl:if>
-      <!-- SD4ftRule/FirstSet or SD4ftRule/SecondSet table rows -->
-      <xsl:if test="local-name()='FirstSet' or local-name()='SecondSet'">
+      <!-- SD4ftRule/FirstSet or SD4ftRule/SecondSet, Ac4ftRule/StateBefore or Ac4ftRule/StateAfter table rows -->
+      <xsl:if test="local-name()='FirstSet' or local-name()='SecondSet' or local-name()='StateBefore' or local-name()='StateAfter'">
         <tbody class="dim hidden" id="sect5-{$sect}rule{$rulePos}-non-task">
           <!-- other quantifiers from task setting -->
           <xsl:apply-templates select="IMValue[not(@name='Support') and not(@name='Confidence')]" mode="sect5"/>
@@ -252,6 +261,16 @@
           <xsl:with-param name="cedentID" select="$ante"/>
         </xsl:call-template>
       </xsl:when>
+      <!-- antecedent for StateBefore/StateAfter of Ac4ftRule -->
+      <xsl:when test="StateBefore and StateAfter">
+        [ <xsl:call-template name="cedent">
+          <xsl:with-param name="cedentID" select="StateBefore/@antecedentVarBefore"/>
+        </xsl:call-template> -&gt;
+        <xsl:call-template name="cedent">
+          <xsl:with-param name="cedentID" select="StateAfter/@antecedentVarAfter"/>
+        </xsl:call-template>
+        ]
+      </xsl:when>
       <!-- antecedent exists, but doesn't refer any other items -->
       <xsl:otherwise>
         [[ <xsl:copy-of select="keg:translate('No restriction',221)"/>]]
@@ -275,6 +294,16 @@
         <xsl:with-param name="cedentID" select="SecondSet/@set"/>
       </xsl:call-template>
     </xsl:if>
+    <!-- antecedent for StateBefore/StateAfter of Ac4ftRule -->
+    <xsl:if test="StateBefore and StateAfter">
+      [ <xsl:call-template name="cedent">
+        <xsl:with-param name="cedentID" select="StateBefore/@consequentVarBefore"/>
+      </xsl:call-template> -&gt;
+      <xsl:call-template name="cedent">
+        <xsl:with-param name="cedentID" select="StateAfter/@consequentVarAfter"/>
+      </xsl:call-template>
+      ]
+    </xsl:if>
     <!-- condition -->
     <xsl:if test="../BBA[@id=$cond] | ../DBA[@id=$cond]"> /
       <xsl:call-template name="cedent">
@@ -291,6 +320,9 @@
       </td>
       <!-- quantifier value -->
       <td><xsl:value-of select="format-number(text(),'0.0000')"/></td>
+      <xsl:if test="@sourceMode">
+        <td><xsl:value-of select="@sourceMode"/></td>
+      </xsl:if>
     </tr>
   </xsl:template>
 
