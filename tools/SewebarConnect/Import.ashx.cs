@@ -17,7 +17,7 @@ namespace SewebarWeb
 			Request = new API.ImportRequest(this.Miner, context);
 			
 			Response = new API.ImportResponse(context) {
-			                                      Id = context.Session.SessionID
+			                                      Id = this.Miner.Id
 			                                  };
 
 			if (this.Miner != null && Request.DataDictionary != null)

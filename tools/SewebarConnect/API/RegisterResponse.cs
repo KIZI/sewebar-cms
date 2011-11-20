@@ -1,23 +1,36 @@
 ﻿using System.Web;
-using Newtonsoft.Json;
+using System.Xml.Linq;
 
 namespace SewebarWeb.API
 {
-    public class RegisterResponse : Response
-    {
-        public string Name { get; set; }
+	public class RegisterResponse : Response
+	{
+		public string Id { get; set; }
 
-        public RegisterResponse(HttpContext context) : base(context)
-        {
-        }
+		public RegisterResponse(HttpContext context)
+			: base(context)
+		{
+		}
 
-        public override void Write()
-        {
-            //this.HttpContext.Response.ContentType = "application/json";
-            this.HttpContext.Response.ContentType = "text/plain";
+		public override void Write()
+		{
+			//this.HttpContext.Response.ContentType = "application/json";
+			//this.HttpContext.Response.ContentType = "text/plain";
+			this.HttpContext.Response.ContentType = "text/xml";
 
-            var result = new { Status = "success", Name = this.Name };
-            this.HttpContext.Response.Write(JsonConvert.SerializeObject(result));
-        }
-    }
+			if (this.Status == Status.failure)
+			{
+				this.WriteException();
+				return;
+			}
+
+			new XDocument(
+				new XDeclaration("1.0", "utf-8", "yes"),
+				new XElement("response",
+				             new XAttribute("status", this.Status.ToString()),
+				             new XAttribute("id", this.Id)
+					)
+				).Save(this.HttpContext.Response.OutputStream);
+		}
+	}
 }

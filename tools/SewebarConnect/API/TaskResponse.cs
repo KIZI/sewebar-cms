@@ -1,31 +1,32 @@
 ﻿using System.IO;
 using System.Web;
-using LMWrapper;
 
 namespace SewebarWeb.API
 {
-    public class TaskResponse : Response
-    {
-        public string OutputFilePath { get; set; }
+	public class TaskResponse : Response
+	{
+		public string OutputFilePath { get; set; }
 
-        public TaskResponse(HttpContext context): base(context)
-        {
-        }
+		public TaskResponse(HttpContext context)
+			: base(context)
+		{
+		}
 
-        public override void Write()
-        {
-            this.HttpContext.Response.ContentType = "text/xml";
+		public override void Write()
+		{
+			this.HttpContext.Response.ContentType = "text/xml";
 
-            // write results to response
-            if (File.Exists(this.OutputFilePath))
-            {
-                this.HttpContext.Response.WriteFile(this.OutputFilePath);
-                //context.Response.Write(String.Format("{0}", status));
-            }
-            else
-            {
-                throw new LISpMinerException("Results generation did not succeed.");
-            }
-        }
-    }
+			if (this.Status == Status.failure || !File.Exists(this.OutputFilePath))
+			{
+				this.Status = Status.failure;
+				this.Message = this.Message ?? "Results generation did not succeed.";
+
+				this.WriteException();
+				return;
+			}
+
+			// write results to response
+			this.HttpContext.Response.WriteFile(this.OutputFilePath);
+		}
+	}
 }

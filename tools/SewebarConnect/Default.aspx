@@ -6,6 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
 	<title>SEWEBAR Connect</title>
+	<link href="styles.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<form id="form1" runat="server">
@@ -13,11 +14,11 @@
 	<h1>SEWEBAR Connect</h1>
 	<ol>
 		<li>Create new metabase
-			<ol type="a">
+			<ol class="a">
 				<li>
 					<a href="Register.ashx?type=mysqlconnection&amp;server=localhost&amp;database=barbora&amp;username=lisp&amp;password=lisp">Registration</a>
 					<ul>
-						<li>Input
+						<li>Input <em>(Only MySQL supported at this moment)</em>
 							<dl>
 								<dt>type</dt>
 								<dd>{ AccessConnection | MySQLConnection }</dd>
@@ -35,7 +36,11 @@
 								<dd></dd>
 							</dl>
 						</li>
-						<li>Output</li>							
+						<li>Output example: 
+							<code>
+							&lt;response id="{Registered LISpMiner ID}" status="success" /&gt;
+							</code>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -47,18 +52,42 @@
 		<li>
 			<a href="Import.ashx">Import DataDictionary</a>
 			<ul>
-				<li>Input</li>
-				<li>Output</li>
+				<li>Input
+					<dl>
+						<dt>guid</dt>
+						<dd><em>Optional</em> Registered LISpMiner ID to use. If not provided session LISpMiner is used/created.</dd>
+						<dt>content</dt>
+						<dd>DataDictionary in format LISpMiner can import it.</dd>
+					</dl>
+				</li>
+				<li>Output example:
+					<code>
+					&lt;response id="{used LISpMiner ID}" status="success" /&gt;
+					</code>
+				</li>
 			</ul>
 		</li>
 		<li>
 			<a href="Task.ashx">Run task</a>
 			<ul>
-				<li>Input</li>
-				<li>Output</li>
+				<li>Input
+					<dl>
+						<dt>guid</dt>
+						<dd><em>Optional</em> Registered LISpMiner ID to use. If not provided session LISpMiner is used/created.</dd>
+						<dt>content</dt>
+						<dd>Task in format LISpMiner can import it.</dd>
+					</dl>
+				</li>
+				<li>Output: Task results exported from LISpMiner</li>
 			</ul>
 		</li>
 	</ol>
+	<h2>Exceptions</h2>
+	In case of failured execution the response contains in header status code <em>500 Internal Server Error</em> and body:
+	<br/>
+	<code>
+	&lt;response status="failure"&gt;&lt;message&gt;{Exception message}&lt;/message&gt;&lt;/response&gt;
+	</code>
 	<h1>Environment</h1>
 	<dl>
 		<dt>BaseDirectory</dt>
