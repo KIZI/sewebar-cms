@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -96,6 +96,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\HttpHandler.cs" />
+    <Compile Include="API\ImportRequest.cs" />
+    <Compile Include="API\RegisterRequest.cs" />
+    <Compile Include="API\RegisterResponse.cs" />
+    <Compile Include="API\Request.cs" />
+    <Compile Include="API\Response.cs" />
+    <Compile Include="API\TaskRequest.cs" />
+    <Compile Include="API\TaskResponse.cs" />
     <Compile Include="Default.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>Default.aspx</DependentUpon>
@@ -113,7 +121,7 @@
     <Compile Include="Register.ashx.cs">
       <DependentUpon>Register.ashx</DependentUpon>
     </Compile>
-    <Compile Include="SessionBase.cs" />
+    <Compile Include="API\HttpHandlerSession.cs" />
     <Compile Include="Task.ashx.cs">
       <DependentUpon>Task.ashx</DependentUpon>
     </Compile>
@@ -138,10 +146,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+      <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
@@ -169,7 +176,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="API\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

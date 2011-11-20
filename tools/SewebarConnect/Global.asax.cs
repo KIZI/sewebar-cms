@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LMWrapper.LISpMiner;
+using SewebarWeb.API;
 using log4net;
 
 namespace SewebarWeb
@@ -93,7 +94,7 @@ namespace SewebarWeb
 				RegisteredSessionMiners.Remove(Session.SessionID);
 			}
 
-			SessionBase.Clean(Session);
+			HttpHandlerSession.Clean(Session);
 		}
 
 		protected void Application_End(object sender, EventArgs e)

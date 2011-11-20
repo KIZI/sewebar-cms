@@ -4,67 +4,47 @@ using LMWrapper;
 using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
 using Newtonsoft.Json;
+using SewebarWeb.API;
 using log4net;
 
 namespace SewebarWeb
 {
-	/// <summary>
-	/// Summary description for Register
-	/// </summary>
-	public class Register : IHttpHandler
-	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof(Register));
+    public class Register : HttpHandler
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof (Register));
 
-		#region Properties
+        private API.RegisterResponse Response { get; set; }
 
-		public bool IsReusable
-		{
-			get
-			{
-				return false;
-			}
-		}
+        private API.RegisterRequest Request { get; set; }
 
-		#endregion
+        public override void ProcessRequest(HttpContext context)
+        {
+            this.Request = new API.RegisterRequest(null, context);
 
-		public void ProcessRequest(HttpContext context)
-		{
-			OdbcDrivers conn;
+            this.Response = new API.RegisterResponse(context);
 
-			//context.Response.ContentType = "application/json";
-			context.Response.ContentType = "text/plain";
+            try
+            {
+                var id = ShortGuid.NewGuid();
+                var database = OdbcConnection.Create(this.Request.Connection, Global.Environment, id.ToString(), this.Request.Parameters);
+                var miner = new LISpMiner(Global.Environment, id.ToString(), database);
 
-			var type = context.Request.Params["type"];
+                Global.Environment.Register(miner);
 
-			if (Enum.TryParse(type, true, out conn))
-			{
-				try
-				{
-					var id = ShortGuid.NewGuid();
-					var database = OdbcConnection.Create(conn, Global.Environment, id.ToString(), context.Request.Params);
+                this.Response.Status = Status.success;
+                this.Response.Name = id.Value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
 
-					Global.Environment.Register(new LISpMiner(Global.Environment, id.ToString(), database));
-
-					var result = new { Status = "success", Name = id.Value };
-					context.Response.Write(JsonConvert.SerializeObject(result));
-				}
-				catch (Exception ex)
-				{
-					Log.Error(ex);
-
-					var result = new { Status = "failure", Reason = ex.Message };
-					context.Response.Write(JsonConvert.SerializeObject(result));
-				}
-			}
-			else
-			{
-				const string message = "Database was not correctly defined (type).";
-
-				Log.Error(message);
-
-				var result = new { Status = "failure", Reason = message };
-				context.Response.Write(JsonConvert.SerializeObject(result));
-			}
-		}
-	}
+                this.Response.Status = Status.failure;
+                this.Response.Message = ex.Message;
+            }
+            finally
+            {
+                this.Response.Write();
+            }
+        }
+    }
 }
