@@ -15,6 +15,12 @@ namespace SewebarWeb.API
 		{
 			this.HttpContext.Response.ContentType = "text/xml";
 
+			if (this.Status == Status.failure)
+			{
+				this.WriteException();
+				return;
+			}
+
 			new XDocument(
 				new XDeclaration("1.0", "utf-8", "yes"),
 				new XElement("response",

@@ -85,6 +85,7 @@
     <Content Include="Libs\LISp Miner\Sewebar\Template\SD4ftMiner.HypoInGroup.PMML.Template.txt" />
     <Content Include="Libs\LISp Miner\Sewebar\Template\SD4ftMiner.Task.PMML.Template.txt" />
     <Content Include="Libs\LISp Miner\Sewebar\Template\_Info.Syntax.txt" />
+    <Content Include="styles.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
