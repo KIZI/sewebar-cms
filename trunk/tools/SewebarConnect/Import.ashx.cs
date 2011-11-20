@@ -1,45 +1,36 @@
 ﻿using System;
-using System.IO;
 using System.Web;
+using SewebarWeb.API;
 
 namespace SewebarWeb
 {
-	public class Import : SessionBase
+	public class Import : HttpHandlerSession
 	{
+		private API.ImportResponse Response { get; set; }
+	
+		private API.ImportRequest Request { get; set; }
+	
 		public override void ProcessRequest(HttpContext context)
 		{
 			base.ProcessRequest(context);
 			
-			var miner = this.Miner;
-			var content = context.Request["content"];
-			var dataFolder = String.Format("{1}/xml/{0}", miner != null ? miner.Id : String.Empty, AppDomain.CurrentDomain.GetData("DataDirectory"));
-			var response = new API.ImportResponse {
-				Id = context.Session.SessionID
-			};
+			Request = new API.ImportRequest(this.Miner, context);
+			
+			Response = new API.ImportResponse(context) {
+			                                      Id = context.Session.SessionID
+			                                  };
 
-			if (miner != null && content != null)
+			if (this.Miner != null && Request.DataDictionary != null)
 			{
-				if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);
-
-				var input = String.Format(@"{0}/DataDictionary_{1:yyyyMMdd-Hmmss}.xml", dataFolder, DateTime.Now);
-
-				using (var file = File.CreateText(input))
-				{
-					file.Write(content);
-					file.Close();
-				}
-
-				var importer = miner.Importer;
-				importer.Input = input;
+				var importer = this.Miner.Importer;
+				importer.Input = Request.DataDictionaryPath;
 				importer.Execute();
 
-				response.Message = String.Format("Imported {0} to {1}", importer.Input, importer.Dsn);
-				response.Status = Status.success;
+				Response.Message = String.Format("Imported {0} to {1}", importer.Input, importer.Dsn);
+				Response.Status = Status.success;
 			}
 			
-			context.Response.ContentType = "text/xml";
-
-			response.ToXml().Save(context.Response.OutputStream);
+			Response.Write();
 		}
 	}
 }
