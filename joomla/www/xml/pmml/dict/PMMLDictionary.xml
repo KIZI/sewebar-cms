@@ -465,5 +465,8 @@
         <str lang="en">Normalization Dictionary Version</str>
         <str lang="cs">Verze normalizačního slovníku</str>
     </Entry>   
-    
+    <Entry id="840">
+        <str lang="en">Interest measure values</str>
+        <str lang="cs">Tabulka hodnot měr zajímavosti</str>
+    </Entry>   
 </Dictionary>
