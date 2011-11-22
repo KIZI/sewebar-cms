@@ -18,7 +18,7 @@
       <table class="itable" summary="Table {$tabs+2}: quantifiers used">
         <tr><th colspan="2"><xsl:copy-of select="keg:translate('Interest Measures used',420)"/></th></tr>
         <tr>
-          <th><xsl:copy-of select="keg:translate('Interest Measure',421)"/></th>
+          <th><xsl:copy-of select="keg:translate('Interest Measure',590)"/></th>
           <th><xsl:copy-of select="keg:translate('Minimum value',430)"/></th>
         </tr>
         <xsl:apply-templates select="TaskSetting/InterestMeasureSetting/InterestMeasureThreshold" mode="sect4"/>

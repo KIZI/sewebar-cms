@@ -237,10 +237,6 @@
         <str lang="cs">Použité míry zajímavosti</str>
     </Entry>
     <Entry id="421">
-        <str lang="en">Interest measure</str>
-        <str lang="cs">Míra zajímavosti</str>
-    </Entry>
-    <Entry id="421">
         <str lang="en">Table of values for test criteria</str>
         <str lang="cs">Tabulka hodnot testových kritérií</str>
     </Entry>      
