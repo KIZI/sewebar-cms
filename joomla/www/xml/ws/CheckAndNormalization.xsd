@@ -10,7 +10,8 @@ xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1">
 				<xs:element ref="TransformationDictionary" minOccurs="0"  />
 				<xs:choice>
 					<xs:element ref="guha:AssociationModel"/>
-					<xs:element ref="guha:SD4ftModel"></xs:element>					
+					<xs:element ref="guha:SD4ftModel"></xs:element>
+					<xs:element ref="guha:Ac4ftModel"></xs:element>					
 				</xs:choice>
 				
 			</xs:sequence>
