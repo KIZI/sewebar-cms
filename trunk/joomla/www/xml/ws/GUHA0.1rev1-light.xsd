@@ -10,6 +10,7 @@
     </xs:annotation>
     <xs:element name="AssociationModel" type="anyContent"> </xs:element>
     <xs:element name="SD4ftModel" type="anyContent"> </xs:element>
+    <xs:element name="Ac4ftModel" type="anyContent"> </xs:element>
     <xs:complexType name="anyContent">
         <xs:sequence maxOccurs="unbounded" minOccurs="0">
             <xs:any processContents="skip"/>
