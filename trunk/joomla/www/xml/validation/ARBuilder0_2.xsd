@@ -111,8 +111,14 @@
                                             <xs:sequence>
                                                 <xs:element name="Type" minOccurs="0"
                                                   type="arf:coefList"/>
+                                                <xs:choice>
                                                 <xs:element name="Category" type="xs:string"
-                                                  minOccurs="0" maxOccurs="unbounded"/>
+                                                  minOccurs="1" maxOccurs="unbounded"/>
+                                                <xs:sequence>
+                                                    <xs:element name="MinimalLength" minOccurs="1" type="xs:nonNegativeInteger"></xs:element>
+                                                    <xs:element name="MaximalLength" minOccurs="1" type="xs:nonNegativeInteger"></xs:element>
+                                                </xs:sequence>
+                                                </xs:choice>
                                             </xs:sequence>
                                             <xs:attribute name="match" type="ar:match">
                                                 <!-- requireListed_exclusive, requireListed_notexclusive - complementWithUnlisted, traverseOnly (DBASetting only)- no match required but proceed to children, requirePresence (DBA Only)-->
