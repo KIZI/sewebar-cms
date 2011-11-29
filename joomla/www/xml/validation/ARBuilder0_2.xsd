@@ -172,7 +172,7 @@
                                         <xs:element name="InterestMeasure" type="arf:IMList"/>
                                         <xs:element name="Formula" type="guha:Formula"/>
                                     </xs:choice>
-                                    <xs:element name="Threshold" type="xs:decimal" minOccurs="0"/>
+                                    <xs:element name="Threshold" type="guha:Threshold" minOccurs="0"/>
                                     <xs:element name="CompareType" type="guha:CompareType"
                                         minOccurs="0"/>
                                     <xs:element name="SignificanceLevel" type="xs:decimal"
