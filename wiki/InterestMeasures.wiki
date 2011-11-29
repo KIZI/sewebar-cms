@@ -83,7 +83,7 @@ The Dictionary is automatically used by  XSLT transformation templates to make t
 This dictionary should be used to create ARFeaure.xml documents, which define the palette of available measures used as test criteria in ARD.
 
 When preparing an ARFeaure document, observe the following guidelines:
-  * select the list of interest measures to be included into the palette and for each interest measure decide on one  ThresholdType and CompareType and create an entry in GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type
-  * GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type/Field/Validation must be adjusted according to the selected option
+  # Select the list of interest measures to be included into the palette and for each interest measure decide on one  ThresholdType and CompareType and create an entry in GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type
+  # {{{ GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type/Field/Validation}}} must be adjusted according to the selected option
 
 The ARD then does not need to "understand" these two elements, it is only required to copy them to PMML//InterestMeasureSetting/InterestMeasureThreshold element.
