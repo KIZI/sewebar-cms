@@ -9,10 +9,10 @@ LISp-Miner is based on the GUHA method, which originated in the 1960's that it i
 
 While the LISp-Miner system continues to use the GUHA terminology, SEWEBAR attempts to stick to terminology which we know consider as mainstream.
 
-
-uses quantifiers which translate to multiple partial quantifiers which correspond to interest measures defined in the literature(e.g. Founded implication translates to confidence and support) 
 ==Test criteria and informative interest measures==
 In SEWEBAR we distinguish two types of interest measures
+  # test criteria interest measures
+  # informative interest measures 
 === Interest measures used as test criteria in task setting===
 These interest measures have always associated a threshold or a significance level and their purpose is to filter out the uninteresting rules.  There is at lease one such interest measure defined in each mining task in the TaskSetting/InterestMeasureSetting element
 
