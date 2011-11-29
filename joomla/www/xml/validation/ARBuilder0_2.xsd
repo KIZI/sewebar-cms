@@ -15,7 +15,7 @@
     <xs:import namespace="http://keg.vse.cz/bkef_patterns"
         schemaLocation="http://sewebar.vse.cz/schemas/BKEF1_1_Patterns.xsd"/>
     <xs:import namespace="http://keg.vse.cz/ns/arfeatures_01"
-        schemaLocation="http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"/>
+        schemaLocation="http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"/>  
     <xs:element name="ARBuilder">
         <xs:complexType>
             <xs:sequence>
@@ -93,7 +93,12 @@
         <xs:attribute name="literal" type="xs:boolean" default="true"/>
         <xs:attribute name="weight" type="xs:double"/>
     </xs:complexType>
-
+    <xs:simpleType name="coefList">
+        <xs:restriction base="arf:coefList">
+            <xs:enumeration value="Subset"></xs:enumeration>
+            <xs:enumeration value="One category"></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="ARQuery">
         <xs:sequence>
             <xs:element name="MaxResults" type="xs:integer" minOccurs="0"/>
@@ -110,7 +115,7 @@
                                         <xs:complexType>
                                             <xs:sequence>
                                                 <xs:element name="Type" minOccurs="0"
-                                                  type="arf:coefList"/>
+                                                    type="ar:coefList"/>
                                                 <xs:choice>
                                                 <xs:element name="Category" type="xs:string"
                                                   minOccurs="1" maxOccurs="unbounded"/>
