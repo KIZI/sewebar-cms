@@ -579,13 +579,16 @@
                 <xs:element name="Formula" type="Formula"/>
             </xs:choice>
             <xs:element name="SourceType" type="xs:string"/>
-            <xs:element name="Threshold" type="xs:decimal"/>
+            <xs:element name="Threshold" type="Threshold"/>
             <xs:element name="CompareType" type="CompareType"/>
             <xs:element name="SignificanceLevel" type="xs:decimal" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
     </xs:complexType>
 
+<xs:simpleType name="Threshold">
+    <xs:restriction base="xs:decimal"/>    
+</xs:simpleType>
     <xs:complexType name="TaskSetting4ft">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
