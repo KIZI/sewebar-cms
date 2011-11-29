@@ -47,7 +47,7 @@ The InterestMeasure  entries have the following structure
 
 One InterestMeasure entry defines an informative interest measure. If it is associated with one or more test criterion, these are listed in TestCriterion elements.
 
-  * str elements defines  the names for the interest measure. 
+  * *str* elements defines  the names for the interest measure. 
 {{{
         <str lang="MasterName">BASE</str>        
         <str lang="pmml" software="Ferda">Base</str>
@@ -66,11 +66,11 @@ element Threshold{"Yes"|"No"},element SignificanceLevel{"Yes"|"No"}, element str
 }}}
 
 
-  * the type attribute is informative and does not currently have any use 
+  * the *type* attribute is informative and does not currently have any use 
   * ThresholdType,CompareType - the list of supported threshold specifications by LISp-Miner
-  * Threshold - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a Threshold element or not?
-  * SignificanceLevel - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a SignificanceLevel element or not?
-  * str elements defines  the names for the interest measure. The {{{<str lang="MasterName">}}} has a special importance as it defines the canonical name for the interest measure as it appears in GUHA AR PMML InterestMeasureThreshold/InterestMeasure element.
+  * *Threshold* - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a Threshold element or not?
+  * *SignificanceLevel* - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a SignificanceLevel element or not?
+  * *str* elements defines  the names for the interest measure. The {{{<str lang="MasterName">}}} has a special importance as it defines the canonical name for the interest measure as it appears in GUHA AR PMML {{{InterestMeasureThreshold/InterestMeasure}}} element.
 
 Note that at least one of Threshold and SignificanceLevel must be se to Yes.
 
@@ -83,7 +83,7 @@ The Dictionary is automatically used by  XSLT transformation templates to make t
 This dictionary should be used to create ARFeaure.xml documents, which define the palette of available measures used as test criteria in ARD.
 
 When preparing an ARFeaure document, observe the following guidelines:
-  # Select the list of interest measures to be included into the palette and for each interest measure decide on one  ThresholdType and CompareType and create an entry in GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type
+  # Select the list of interest measures to be included into the palette and for each interest measure decide on one  {{{ThresholdType}}} and {{{CompareType}}} and create an entry in {{{ GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type }}}
   # {{{ GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type/Field/Validation}}} must be adjusted according to the selected option
 
-The ARD then does not need to "understand" these two elements, it is only required to copy them to PMML//InterestMeasureSetting/InterestMeasureThreshold element.
+The ARD then does not need to "understand" these two elements, it is only required to copy them to {{{PMML//InterestMeasureSetting/InterestMeasureThreshold}}} element.
