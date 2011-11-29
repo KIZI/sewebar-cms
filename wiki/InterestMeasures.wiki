@@ -2,7 +2,7 @@
 
 = Introduction =
 
-SEWEBAR allows to use multiple interest measures as test criteria. The list of supported *interest measures* is determined by the list  of *quantifiers* of the underlying LISp-Miner data mining system. 
+SEWEBAR allows to use multiple interest measures as test criteria. The list of supported *interest measures* is determined by the list  of *quantifiers* implemented in the underlying LISp-Miner data mining system. 
 
 ==History==
 LISp-Miner is based on the GUHA method, which originated in the 1960's that it is before the term "interest measure" became widely accepted. Widely referenced example of a quantifier is "Founded implication", which corresponds to what is now known as support and confidence interest measures.
