@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://sewebar.vse.cz/schemas/InterestMeasureDictionary.rnc" type="application/relax-ng-compact-syntax"?>
 <InterestMeasures dictionaryVersion="0.1">       
     <InterestMeasure>
-        <str lang="MasterName">BASE</str>
-        <Symbol>⇑</Symbol>
-        <!-- Support je relativni -->
+        <str lang="MasterName">BASE</str>        
         <str lang="pmml" software="Ferda">Base</str>
         <str lang="pmml" software="LISp-Miner">BASE</str>            
         <str lang="en">Support</str>
         <str lang="cs">Podpora</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>% of all</ThresholdType>
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Greater than or equal</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
                 <str lang="MasterName">BASE</str>
                 <str lang="pmml" software="LISp-Miner">BASE</str>
                 <str lang="pmml" software="Ferda">Support</str>
@@ -17,163 +21,26 @@
                 <str lang="cs">Podpora</str>                        
             </TestCriterion>
         </TestCriteria>
+        <Symbol>⇑</Symbol>
     </InterestMeasure>
 
-    <InterestMeasure>
-        <str lang="MasterName">a-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">a-frequency</str>
-        <str lang="en">a-frequency</str>
-        <str lang="cs">a frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">a-frequency</str>
-                <str lang="pmml" software="LISp-Miner">a</str>
-                <str lang="en">a-frequency</str>
-                <str lang="cs">a-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>a</Symbol>
-    </InterestMeasure>
-    <InterestMeasure>
-        <str lang="MasterName">b-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">b-frequency</str>
-        <str lang="en">b-frequency</str>
-        <str lang="cs">b frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">b-frequency</str>
-                <str lang="pmml" software="LISp-Miner">b</str>
-                <str lang="en">b-frequency</str>
-                <str lang="cs">b-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>b</Symbol>
-    </InterestMeasure>  
-    <InterestMeasure>
-        <str lang="MasterName">c-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">c-frequency</str>
-        <str lang="en">c-frequency</str>
-        <str lang="cs">c frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">c-frequency</str>
-                <str lang="pmml" software="LISp-Miner">c</str>
-                <str lang="en">c-frequency</str>
-                <str lang="cs">c-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>c</Symbol>
-    </InterestMeasure>
-    <InterestMeasure>
-        <str lang="MasterName">d-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">d-frequency</str>
-        <str lang="en">d-frequency</str>
-        <str lang="cs">d frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">d-frequency</str>
-                <str lang="pmml" software="LISp-Miner">d</str>
-                <str lang="en">d-frequency</str>
-                <str lang="cs">d-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>d</Symbol>
-    </InterestMeasure>
-    <InterestMeasure>
-        <str lang="MasterName">r-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">r-frequency</str>
-        <str lang="en">r-frequency</str>
-        <str lang="cs">r frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">r-frequency</str>
-                <str lang="pmml" software="LISp-Miner">r</str>
-                <str lang="en">r-frequency</str>
-                <str lang="cs">r-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>r</Symbol>
-    </InterestMeasure>
-    <InterestMeasure>
-        <str lang="MasterName">s-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">s-frequency</str>
-        <str lang="en">s-frequency</str>
-        <str lang="cs">s frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">s-frequency</str>
-                <str lang="pmml" software="LISp-Miner">s</str>
-                <str lang="en">s-frequency</str>
-                <str lang="cs">s-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>s</Symbol>
-    </InterestMeasure>
-    <InterestMeasure>
-        <str lang="MasterName">k-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">k-frequency</str>
-        <str lang="en">k-frequency</str>
-        <str lang="cs">k frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">k-frequency</str>
-                <str lang="pmml" software="LISp-Miner">k</str>
-                <str lang="en">k-frequency</str>
-                <str lang="cs">k-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>k</Symbol>
-    </InterestMeasure>
-    <InterestMeasure>
-        <str lang="MasterName">l-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">l-frequency</str>
-        <str lang="en">l-frequency</str>
-        <str lang="cs">l frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">l-frequency</str>
-                <str lang="pmml" software="LISp-Miner">l</str>
-                <str lang="en">l-frequency</str>
-                <str lang="cs">l-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>l</Symbol>
-    </InterestMeasure>    
-    
-    <InterestMeasure>
-        <str lang="MasterName">n-frequency</str>
-        <!-- Support je relativni -->
-        <str lang="pmml" software="LISp-Miner">n-frequency</str>
-        <str lang="en">n-frequency</str>
-        <str lang="cs">n frekvence</str>        
-        <TestCriteria>
-            <TestCriterion>
-                <str lang="MasterName">n-frequency</str>
-                <str lang="pmml" software="LISp-Miner">n</str>
-                <str lang="en">n-frequency</str>
-                <str lang="cs">n-frekvence</str>                        
-            </TestCriterion>
-        </TestCriteria>
-        <Symbol>n</Symbol>
-    </InterestMeasure> 
     
     <InterestMeasure>
         <str lang="MasterName">FUI</str>
-        <!-- Support je relativni -->
         <str lang="pmml" software="LISp-Miner">FUI</str>
         <str lang="pmml" software="Ferda">Confidence</str>
         <str lang="en">Confidence</str>
         <str lang="cs">Spolehlivost</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>                
+                <CompareType>Greater than</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
                 <str lang="MasterName">FUI</str>
                 <str lang="pmml" software="LISp-Miner">FUI</str>
                 <str lang="pmml" software="Ferda">Confidence</str>
@@ -186,18 +53,27 @@
     
     <InterestMeasure>
         <str lang="MasterName">AAD</str>
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="Ferda">AboveAverageDependence</str>
         <str lang="pmml" software="LISp-Miner">AAD</str>
         <str lang="en">Above Average Dependence</str>
         <str lang="cs">Above Average Dependence</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional"> 
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
                 <str lang="MasterName">AAD</str>
                 <str lang="pmml" software="Ferda">AboveAverageDependence</str>
                 <str lang="pmml" software="LISp-Miner">AAD</str>
                 <str lang="en">Lift</str>
-                <str lang="cs">Lift</str>                
+                <str lang="cs">Lift</str>        
+                
             </TestCriterion>
         </TestCriteria>
         <Symbol>≈<sup>+</sup></Symbol>
@@ -206,13 +82,21 @@
     <InterestMeasure>
         <str lang="MasterName">BAD</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="Ferda">Below Average Implication</str>
         <str lang="pmml" software="LISp-Miner">BAD</str>
         <str lang="en">Below Average Dependance</str>
         <str lang="cs">Below Average Dependence</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
                 <str lang="MasterName">BAD</str>
                 <str lang="pmml" software="Ferda">BelowAverageDependence</str>
                 <str lang="pmml" software="LISp-Miner">BAD</str>
@@ -226,13 +110,21 @@
     <InterestMeasure>
         <str lang="MasterName">DFUI</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="Ferda">DoubleFoundedImplication</str>
         <str lang="pmml" software="LISp-Miner">DFUI</str>
         <str lang="en">Double Founded Implication</str>
         <str lang="cs">Double Founded Implication</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
                 <str lang="MasterName">DFUI</str>
                 <str lang="pmml" software="Ferda">DoubleFoundedImplication</str>
                 <str lang="pmml" software="LISp-Miner">DFUI</str>
@@ -245,26 +137,27 @@
     
     <InterestMeasure>
         <str lang="MasterName">LCI</str>            
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">LCI</str>
         <str lang="en">Lower Critical Implication</str>
         <str lang="cs">Lower Critical Implication</str>
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>
                 <str lang="MasterName">LCI</str>
                 <str lang="pmml" software="LISp-Miner">LCI</str>
                 <str lang="en">Lower Critical Implication</str>
                 <str lang="cs">Lower Critical Implication</str>                        
             </TestCriterion>
-            <!-- type="SignificanceLevel" znaci, ze hodnota je v zadani vypisovana v ramci elementu SignificanceLevel nikoliv Threshold  -->
-            <TestCriterion type="SignificanceLevel">
-                <str lang="MasterName">Lower Critical Implication Significance Level</str>
-                <!-- missing=true znaci situaci,kdy LM nevypisuje hodnotu kvantifikatoru ve vystupnich AR, 
-                ale pouze v zadani -->
-                <str lang="pmml" software="LISp-Miner" missing="true"/>
-                <str lang="en">LCI Significance Level</str>
-                <str lang="cs">Míra významnosti LCI</str>                        
-            </TestCriterion>                
+                           
         </TestCriteria>
         <Symbol>⇒<sup>!</sup></Symbol>
     </InterestMeasure>
@@ -272,25 +165,27 @@
     <InterestMeasure>
         <str lang="MasterName">UCI</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">UCI</str>
         <str lang="en">Upper Critical Implication</str>
         <str lang="cs">Upper Critical Implication</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>
                 <str lang="MasterName">UCI</str>
                 <str lang="pmml" software="LISp-Miner">UCI</str>
                 <str lang="en">Upper Critical Implication</str>
                 <str lang="cs">Upper Critical Implication</str>                        
             </TestCriterion>
-            <TestCriterion type="SignificanceLevel">
-                <str lang="MasterName">Upper Critical Implication Significance Level</str>
-                <!-- missing=true znaci situaci,kdy LM nevypisuje hodnotu kvantifikatoru ve vystupnich AR, 
-                    ale pouze v zadani -->
-                <str lang="pmml" software="LISp-Miner" missing="true"/>
-                <str lang="en">UCI Significance Level</str>
-                <str lang="cs">Míra významnosti UCI</str>                        
-            </TestCriterion>                  
+      
         </TestCriteria>
         <Symbol>⇒<sup>?</sup></Symbol>
     </InterestMeasure>
@@ -298,25 +193,27 @@
     <InterestMeasure>
         <str lang="MasterName">DLCI</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">DLCI</str>
         <str lang="en">Double Lower Critical Implication</str>
         <str lang="cs">Double Lower Critical Implication</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>
                 <str lang="MasterName">DLCI</str>
                 <str lang="pmml" software="LISp-Miner">DLCI</str>
                 <str lang="en">Double Lower Critical Implication</str>
                 <str lang="cs">Double Lower Critical Implication</str>                        
             </TestCriterion>
-            <TestCriterion type="SignificanceLevel">
-                <str lang="MasterName">Double Lower Critical Implication Significance Level</str>
-                <!-- missing=true znaci situaci,kdy LM nevypisuje hodnotu kvantifikatoru ve vystupnich AR, 
-                    ale pouze v zadani -->
-                <str lang="pmml" software="LISp-Miner" missing="true"/>
-                <str lang="en">DLI Significance Level</str>
-                <str lang="cs">Míra významnosti DLI</str>                        
-            </TestCriterion>       
+
         </TestCriteria>
         <Symbol>⇔<sup>!</sup></Symbol>
     </InterestMeasure>
@@ -324,25 +221,27 @@
     <InterestMeasure>
         <str lang="MasterName">DUCI</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">DUCI</str>
         <str lang="en">Double Upper Critical Implication</str>
         <str lang="cs">Double Upper Critical Implication</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>
                 <str lang="MasterName">DUCI</str>                    
                 <str lang="pmml" software="LISp-Miner">DUCI</str>
                 <str lang="en">Double Upper Critical Implication</str>
                 <str lang="cs">Double Upper Critical Implication</str>                        
             </TestCriterion>
-            <TestCriterion type="SignificanceLevel">
-                <str lang="MasterName">Double Upper Critical Implication Significance Level</str>
-                <!-- missing=true znaci situaci,kdy LM nevypisuje hodnotu kvantifikatoru ve vystupnich AR, 
-                    ale pouze v zadani -->
-                <str lang="pmml" software="LISp-Miner" missing="true"/>
-                <str lang="en">DUI Significance Level</str>
-                <str lang="cs">Míra významnosti DUI</str>                        
-            </TestCriterion>  
+
         </TestCriteria>
         <Symbol>⇔<sup>?</sup></Symbol>
     </InterestMeasure>
@@ -350,13 +249,21 @@
     <InterestMeasure>
         <str lang="MasterName">FUE</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">FUE</str>
         <str lang="pmml" software="Ferda">FoundedEquivalence</str>
         <str lang="en">Founded Equivalence</str>
         <str lang="cs">Founded Equivalence</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>                
                 <str lang="MasterName">FUE</str>
                 <str lang="pmml" software="LISp-Miner">FUE</str>
                 <str lang="pmml" software="Ferda">FoundedEquivalence</str>
@@ -368,52 +275,54 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">LCE</str>
-        
-        <!-- Support je relativni -->
+        <str lang="MasterName">LCE</str>               
         <str lang="pmml" software="LISp-Miner">LCE</str>
         <str lang="en">Lower Critical Equivalence</str>
         <str lang="cs">Lower Critical Equivalence</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>
+                
                 <str lang="MasterName">LCE</str>
                 <str lang="pmml" software="LISp-Miner">LCE</str>
                 <str lang="en">Lower Critical Equivalence</str>
                 <str lang="cs">Lower Critical Equivalence</str>                        
             </TestCriterion>
-            <TestCriterion type="SignificanceLevel">
-                <str lang="MasterName">Lower Critical Equivalence Significance Level</str>
-                <!-- missing=true znaci situaci,kdy LM nevypisuje hodnotu kvantifikatoru ve vystupnich AR, 
-                    ale pouze v zadani -->
-                <str lang="pmml" software="LISp-Miner" missing="true"/>
-                <str lang="en">LCE Significance Level</str>
-                <str lang="cs">Míra významnosti LCE</str>                        
-            </TestCriterion>  
         </TestCriteria>            
+        <Symbol>⇒ <sup>lce</sup></Symbol>
     </InterestMeasure>
     
     <InterestMeasure>
         <str lang="MasterName">UCE</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">UCE</str>
         <str lang="en">Upper Critical Equivalence</str>
         <str lang="cs">Upper Critical Equivalence</str>        
         <TestCriteria>
-            <TestCriterion>
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <!-- SignificanceLevel=Yes - hodnota je v zadani vypisovana v ramci elementu SignificanceLevel nikoliv Threshold  -->
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>                
                 <str lang="MasterName">UCE</str>
                 <str lang="pmml" software="LISp-Miner">UCE</str>
                 <str lang="en">Upper Critical Equivalence</str>
                 <str lang="cs">Upper Critical Equivalence</str>                        
             </TestCriterion>
-            <TestCriterion type="SignificanceLevel">
-                <str lang="MasterName">Upper Critical Equivalence Significance Level</str>
-                <!-- missing=true znaci situaci,kdy LM nevypisuje hodnotu kvantifikatoru ve vystupnich AR, 
-                    ale pouze v zadani -->
-                <str lang="pmml" software="LISp-Miner" missing="true"/>
-                <str lang="en">UCE Significance Level</str>
-                <str lang="cs">Míra významnosti UCE</str>                        
-            </TestCriterion>  
+
         </TestCriteria>
         <Symbol>≡<sup>?</sup></Symbol>
     </InterestMeasure>
@@ -424,7 +333,16 @@
         <str lang="en">Fisher</str>
         <str lang="cs">Fisher</str>                    
         <TestCriteria>
-            <TestCriterion type="SignificanceLevel">
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Less than or equal</CompareType>                
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <Threshold>No</Threshold>          
+                <SignificanceLevel>Yes</SignificanceLevel>                
                 <str lang="MasterName">Fisher</str>
                 <str lang="pmml" software="LISp-Miner Ferda">Fisher</str>
                 <str lang="en">Fisher</str>
@@ -437,12 +355,21 @@
     <InterestMeasure>
         <str lang="MasterName">Chi-Square</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">Chi-Squared quantifier</str>
         <str lang="en">Chi-Square</str>
         <str lang="cs">Chi-Square</str>        
         <TestCriteria>
-            <TestCriterion type="SignificanceLevel">
+            <TestCriterion type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <!-- SignificanceLevel=Yes - hodnota je v zadani vypisovana v ramci elementu SignificanceLevel nikoliv Threshold  -->
+                <Threshold>No</Threshold>
+                <SignificanceLevel>Yes</SignificanceLevel>                                
                 <str lang="MasterName">Chi-Square Significance Level</str>
                 <str lang="pmml" software="LISp-Miner">Chi-Sq</str>
                 <str lang="en">Chi-Square test</str>
@@ -455,12 +382,20 @@
     <InterestMeasure>
         <str lang="MasterName">Simple Deviation</str>
         
-        <!-- Support je relativni -->
+        
         <str lang="pmml" software="LISp-Miner">Simple Deviation</str>
         <str lang="en">Simple Deviation</str>
         <str lang="cs">Směrodatná odchylka</str>        
         <TestCriteria>
-            <TestCriterion type="SignificanceLevel">
+            <TestCriterion  type="Functional">
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>                
                 <str lang="MasterName">Simple Deviation Significance Level</str>
                 <str lang="pmml" software="LISp-Miner">Simple Deviation</str>
                 <str lang="en">Simple Deviation</str>
@@ -468,6 +403,345 @@
             </TestCriterion>
         </TestCriteria>
         <Symbol>≈ <sup>*</sup></Symbol>
+    </InterestMeasure>
+    
+    
+    
+    <InterestMeasure>
+        <str lang="MasterName">a-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">a-frequency</str>
+        <str lang="en">a-frequency</str>
+        <str lang="cs">a-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>          
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>                
+                <str lang="MasterName">a-frequency</str>
+                <str lang="pmml" software="LISp-Miner">a-frequency</str>
+                <str lang="en">a-frequency</str>
+                <str lang="cs">a-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>af</sup></Symbol>
+    </InterestMeasure>
+    
+    
+    <InterestMeasure>
+        <str lang="MasterName">b-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">b-frequency</str>
+        <str lang="en">b-frequency</str>
+        <str lang="cs">b-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>            
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>           
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">b-frequency</str>
+                <str lang="pmml" software="LISp-Miner">b-frequency</str>
+                <str lang="en">b-frequency</str>
+                <str lang="cs">b-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>bf</sup></Symbol>
+    </InterestMeasure>
+    
+    <InterestMeasure>
+        <str lang="MasterName">c-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">c-frequency</str>
+        <str lang="en">c-frequency</str>
+        <str lang="cs">c-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>         
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">c-frequency</str>
+                <str lang="pmml" software="LISp-Miner">c-frequency</str>
+                <str lang="en">c-frequency</str>
+                <str lang="cs">c-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>cf</sup></Symbol>
+    </InterestMeasure>
+   
+    <InterestMeasure>
+        <str lang="MasterName">d-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">d-frequency</str>
+        <str lang="en">d-frequency</str>
+        <str lang="cs">d-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>          
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">d-frequency</str>
+                <str lang="pmml" software="LISp-Miner">d-frequency</str>
+                <str lang="en">d-frequency</str>
+                <str lang="cs">d-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>df</sup></Symbol>
+    </InterestMeasure>
+    
+    <InterestMeasure>
+        <str lang="MasterName">r-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">r-frequency</str>
+        <str lang="en">r-frequency</str>
+        <str lang="cs">r-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>          
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">r-frequency</str>
+                <str lang="pmml" software="LISp-Miner">r-frequency</str>
+                <str lang="en">r-frequency</str>
+                <str lang="cs">r-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>rf</sup></Symbol>
+    </InterestMeasure>
+    <InterestMeasure>
+        <str lang="MasterName">s-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">s-frequency</str>
+        <str lang="en">s-frequency</str>
+        <str lang="cs">s-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>            
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">s-frequency</str>
+                <str lang="pmml" software="LISp-Miner">s-frequency</str>
+                <str lang="en">s-frequency</str>
+                <str lang="cs">s-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>sf</sup></Symbol>
+    </InterestMeasure>
+    <InterestMeasure>
+        <str lang="MasterName">k-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">k-frequency</str>
+        <str lang="en">k-frequency</str>
+        <str lang="cs">k-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>          
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">k-frequency</str>
+                <str lang="pmml" software="LISp-Miner">k-frequency</str>
+                <str lang="en">k-frequency</str>
+                <str lang="cs">k-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>kf</sup></Symbol>
+    </InterestMeasure>
+    <InterestMeasure>
+        <str lang="MasterName">l-frequency</str>        
+        
+        <str lang="pmml" software="LISp-Miner">l-frequency</str>
+        <str lang="en">l-frequency</str>
+        <str lang="cs">l-frequency</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>           
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">l-frequency</str>
+                <str lang="pmml" software="LISp-Miner">l-frequency</str>
+                <str lang="en">l-frequency</str>
+                <str lang="cs">l-frequency</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>lf</sup></Symbol>
+    </InterestMeasure>
+    
+    <InterestMeasure>
+        <str lang="MasterName">Sum of values</str>        
+        
+        <str lang="pmml" software="LISp-Miner">Sum of values</str>
+        <str lang="en">Sum of values</str>
+        <str lang="cs">Sum of values</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>             
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">Sum of values</str>
+                <str lang="pmml" software="LISp-Miner">Sum of values</str>
+                <str lang="en">Sum of values</str>
+                <str lang="cs">Sum of values</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>sumval</sup></Symbol>
+    </InterestMeasure>
+    <InterestMeasure>
+        <str lang="MasterName">Min value</str>        
+        
+        <str lang="pmml" software="LISp-Miner">Min value</str>
+        <str lang="en">Min value</str>
+        <str lang="cs">Min value</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>                
+                <CompareType>Less than or equal</CompareType>
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">Min value</str>
+                <str lang="pmml" software="LISp-Miner">Min value</str>
+                <str lang="en">Min value</str>
+                <str lang="cs">Min value</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>minval</sup></Symbol>
+    </InterestMeasure>
+    <InterestMeasure>
+        <str lang="MasterName">Max value</str>        
+        
+        <str lang="pmml" software="LISp-Miner">Max value</str>
+        <str lang="en">Max value</str>
+        <str lang="cs">Max value</str>        
+        <TestCriteria>
+            <TestCriterion type="Aggregational">
+                <ThresholdType>% of act</ThresholdType>
+                <!-- z poctu zaznamu splnujicich podminku-->
+                <ThresholdType>% of all</ThresholdType>
+                <!-- z poctu zaznamu v cele matici -->
+                <ThresholdType>% of max</ThresholdType>
+                <!-- z maximalni frekvence v prave vygenerovat ctyrpolni tabulce-->
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Equal</CompareType>
+                <CompareType>Less than</CompareType>
+                <CompareType>Less than or equal</CompareType>                
+                <CompareType>Greater than or equal</CompareType>
+                <CompareType>Greater than</CompareType>                
+                <Threshold>No</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">Max value</str>
+                <str lang="pmml" software="LISp-Miner">Max value</str>
+                <str lang="en">Max value</str>
+                <str lang="cs">Max value</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇒ <sup>maxval</sup></Symbol>
     </InterestMeasure>
 </InterestMeasures>
 
