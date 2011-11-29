@@ -67,7 +67,7 @@ element Threshold{"Yes"|"No"},element SignificanceLevel{"Yes"|"No"}, element str
 
 
   * the *type* attribute is informative and does not currently have any use 
-  * ThresholdType,CompareType - the list of supported threshold specifications by LISp-Miner
+  * **ThresholdType**,**CompareType** - the list of supported threshold specifications by LISp-Miner
   * *Threshold* - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a Threshold element or not?
   * *SignificanceLevel* - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a SignificanceLevel element or not?
   * *str* elements defines  the names for the interest measure. The {{{<str lang="MasterName">}}} has a special importance as it defines the canonical name for the interest measure as it appears in GUHA AR PMML {{{InterestMeasureThreshold/InterestMeasure}}} element.
