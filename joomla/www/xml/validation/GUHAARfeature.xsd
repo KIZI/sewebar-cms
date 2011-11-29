@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+THIS SCHEMA DEFINES CONFIGURATION FOR ARD 
+THE LIST OF INTEREST MEASURES SHOULD BE CREATED BASED ON  pmml/dict/GUHAQuantifier-InterestMeasureDictionary.xml
+For some interest measures, the dictionary defines multiple possibilities for ThresholdType and CompareType elements.
+1] ONE OPTION SHOULD BE SELECTED AND INSERTED INTO GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type
+2] GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type/Field/Validation must be adjusted according to the selected option
+The ARD then does not need to "understand" these two elements, it is only required to copy them to PMML//InterestMeasureSetting/InterestMeasureThreshold element
+
+-->
+
+
 <!-- Version 0.4
   
   author: Tomas Kliegr
@@ -232,12 +243,29 @@ Changes  0.1 to 0.2:
       <xs:element name="Name" type="IMList"/>
       <!-- It might be followed by multiple language specific names -->
       <xs:element name="LocalizedName" type="LocalizedName" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ThresholdType" type="guha:ThresholdType"  maxOccurs="1"/>
+      <xs:element name="CompareType" type="guha:CompareType"  maxOccurs="1"/>
+      
       <xs:element name="Explanation" type="Explanation" minOccurs="0" maxOccurs="unbounded"/>
 
       <xs:element maxOccurs="unbounded" minOccurs="0" name="Field" type="Field"/>
     </xs:sequence>
   </xs:complexType>
-
+  <!--xs:simpleType name="ThresholdType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="% of all"/>
+      <xs:enumeration value="Abs"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="CompareType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Equal"/>
+      <xs:enumeration value="Less than"/>
+      <xs:enumeration value="Greater than or equal"/>
+      <xs:enumeration value="Greater than"/>
+      <xs:enumeration value="Greater than or equal"/>
+    </xs:restriction>
+  </xs:simpleType-->
   <xs:complexType name="CoefType">
     <xs:sequence>
       <!-- The first name is language independent and must come from a list -->

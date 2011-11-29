@@ -761,4 +761,12 @@
             <xs:pattern value="Equal"/>
         </xs:restriction>
     </xs:simpleType>
+    
+    <xs:simpleType name="ThresholdType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="% of all"/>
+            <xs:enumeration value="% of max"/>
+            <xs:enumeration value="Abs"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
