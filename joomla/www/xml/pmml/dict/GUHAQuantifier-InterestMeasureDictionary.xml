@@ -353,10 +353,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Chi-Square</str>
+        <str lang="MasterName">CHI</str>
         
         
-        <str lang="pmml" software="LISp-Miner">Chi-Squared quantifier</str>
+        <str lang="pmml" software="LISp-Miner">CHI</str>
         <str lang="en">Chi-Square</str>
         <str lang="cs">Chi-Square</str>        
         <TestCriteria>
@@ -370,8 +370,8 @@
                 <!-- SignificanceLevel=Yes - hodnota je v zadani vypisovana v ramci elementu SignificanceLevel nikoliv Threshold  -->
                 <Threshold>No</Threshold>
                 <SignificanceLevel>Yes</SignificanceLevel>                                
-                <str lang="MasterName">Chi-Square Significance Level</str>
-                <str lang="pmml" software="LISp-Miner">Chi-Sq</str>
+                <str lang="MasterName">CHI</str>
+                <str lang="pmml" software="LISp-Miner">CHI</str>
                 <str lang="en">Chi-Square test</str>
                 <str lang="cs">Chi-kvadrát test</str>                        
             </TestCriterion>
@@ -380,10 +380,10 @@
     </InterestMeasure>
     
     <InterestMeasure>
-        <str lang="MasterName">Simple Deviation</str>
+        <str lang="MasterName">SID</str>
         
         
-        <str lang="pmml" software="LISp-Miner">Simple Deviation</str>
+        <str lang="pmml" software="LISp-Miner">SID</str>
         <str lang="en">Simple Deviation</str>
         <str lang="cs">Směrodatná odchylka</str>        
         <TestCriteria>
@@ -396,8 +396,8 @@
                 <CompareType>Greater than</CompareType>
                 <Threshold>Yes</Threshold>
                 <SignificanceLevel>No</SignificanceLevel>                
-                <str lang="MasterName">Simple Deviation Significance Level</str>
-                <str lang="pmml" software="LISp-Miner">Simple Deviation</str>
+                <str lang="MasterName">SID</str>
+                <str lang="pmml" software="LISp-Miner">SID</str>
                 <str lang="en">Simple Deviation</str>
                 <str lang="cs">Směrodatná odchylka</str>                        
             </TestCriterion>
