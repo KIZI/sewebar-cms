@@ -347,28 +347,29 @@
 
     <xs:simpleType name="InterestMeasure">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Support"/>
+            <xs:enumeration value="a-frequency"/>
             <xs:enumeration value="BASE"/>
-            <xs:enumeration value="Ceiling"/>
-            <xs:enumeration value="BASE"/>
-            <xs:enumeration value="E-quantifier"/>
-            <xs:enumeration value="Confidence"/>
-            <xs:enumeration value="Above Average Implication"/>
-            <xs:enumeration value="Average Difference"/>
-            <xs:enumeration value="Below Average Implication"/>
-            <xs:enumeration value="Double Founded Implication"/>
-            <xs:enumeration value="Lower Critical Implication"/>
-            <xs:enumeration value="Upper Critical Implication"/>
-            <xs:enumeration value="Double Lower Critical Implication"/>
-            <xs:enumeration value="Double Upper Critical Implication"/>
-            <xs:enumeration value="Founded Equivalence"/>
-            <xs:enumeration value="Founded Implication"/>
-            <xs:enumeration value="Lower Critical Equivalence"/>
-            <xs:enumeration value="Upper Critical Equivalence"/>
+            <xs:enumeration value="b-frequency"/>
+            <xs:enumeration value="c-frequency"/>
+            <xs:enumeration value="d-frequency"/>
+            <xs:enumeration value="r-frequency"/>
+            <xs:enumeration value="s-frequency"/>
+            <xs:enumeration value="l-frequency"/>
+            <xs:enumeration value="n-frequency"/>            
+            <xs:enumeration value="AAD"/>
+            <xs:enumeration value="FUI"/>
+            <xs:enumeration value="BAD"/>
+            <xs:enumeration value="DFUI"/>
+            <xs:enumeration value="LCI"/>
+            <xs:enumeration value="UCI"/>
+            <xs:enumeration value="DLCI"/>
+            <xs:enumeration value="DUCI"/>
+            <xs:enumeration value="FUE"/>            
+            <xs:enumeration value="LCE"/>
             <xs:enumeration value="Fisher"/>
-            <xs:enumeration value="Chi-Square"/>
-            <xs:enumeration value="Simple Deviation"/>
-        </xs:restriction>
+            <xs:enumeration value="CHI"/>
+            <xs:enumeration value="SID"/>
+        </xs:restriction>        
     </xs:simpleType>
 
     <xs:simpleType name="BARef">
@@ -517,10 +518,21 @@
                 <xs:attribute name="name" type="xs:string"/>
                 <xs:attribute name="imSettingRef" type="xs:NMTOKEN" use="optional"/>
                 <xs:attribute name="sourceMode" type="xs:string"/>
+                <!-- this  attribute is only present if imSettingRef is also present-->
+                <xs:attribute name="type" type="ThresholdType"></xs:attribute>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
 
+
+    <xs:simpleType name="ThresholdType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Abs"></xs:enumeration>
+            <xs:enumeration value="% of all"></xs:enumeration>
+            <xs:enumeration value="% of act"></xs:enumeration>
+            <xs:enumeration value="% of max"></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="GeneralSetting">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
@@ -571,21 +583,71 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="InterestMeasureSettingSD4ft">
+        
+        <xs:sequence>
+            <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="InterestMeasureThreshold" type="InterestMeasureThresholdSD4ft"
+                maxOccurs="unbounded"/>                
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="InterestMeasureSettingAC4ft">
+        
+        <xs:sequence>
+            <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="InterestMeasureThreshold" type="InterestMeasureThresholdAC4ft"
+                maxOccurs="unbounded"/>                
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:complexType name="InterestMeasureThreshold">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
             <xs:choice>
                 <xs:element name="InterestMeasure" type="InterestMeasure"/>
                 <xs:element name="Formula" type="Formula"/>
-            </xs:choice>
-            <xs:element name="SourceType" type="xs:string"/>
+            </xs:choice>                        
             <xs:element name="Threshold" type="Threshold"/>
-            <xs:element name="CompareType" type="CompareType"/>
             <xs:element name="SignificanceLevel" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="CompareType" type="CompareType"/>
+            <xs:element name="ThresholdType" type="ThresholdType"/>
+            
         </xs:sequence>
         <xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
     </xs:complexType>
-
+    
+    <xs:complexType name="InterestMeasureThresholdAC4ft">
+        <xs:complexContent>
+            <xs:extension base="InterestMeasureThreshold">
+                <xs:sequence>
+                    <xs:element name="SourceType" type="SourceTypeAC4ft"/>
+                </xs:sequence>                                               
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="InterestMeasureThresholdSD4ft">
+        <xs:complexContent>
+            <xs:extension base="InterestMeasureThreshold">
+                <xs:sequence>
+                    <xs:element name="SourceType" type="SourceTypeSD4ft"/>
+                </xs:sequence>                                               
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="SourceTypeAC4ft">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="State before frequencies"/>
+            <xs:enumeration value="State after frequencies"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SourceTypeSD4ft">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="First set frequencies"/>
+            <xs:enumeration value="Second set frequencies"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
 <xs:simpleType name="Threshold">
     <xs:restriction base="xs:decimal"/>    
 </xs:simpleType>
@@ -637,7 +699,7 @@
                     <xs:field xpath="."/>
                 </xs:keyref>
             </xs:element>
-            <xs:element name="InterestMeasureSetting" type="InterestMeasureSetting"/>
+            <xs:element name="InterestMeasureSetting" type="InterestMeasureSettingSD4ft"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -664,7 +726,7 @@
                     <xs:field xpath="."/>
                 </xs:keyref>
             </xs:element>
-            <xs:element name="InterestMeasureSetting" type="InterestMeasureSetting"/>
+            <xs:element name="InterestMeasureSetting" type="InterestMeasureSettingAC4ft"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -764,12 +826,5 @@
             <xs:pattern value="Equal"/>
         </xs:restriction>
     </xs:simpleType>
-    
-    <xs:simpleType name="ThresholdType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="% of all"/>
-            <xs:enumeration value="% of max"/>
-            <xs:enumeration value="Abs"/>
-        </xs:restriction>
-    </xs:simpleType>
+
 </xs:schema>
