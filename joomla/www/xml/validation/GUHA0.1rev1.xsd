@@ -300,11 +300,10 @@
             <xs:element name="StateBefore" type="StateBefore" minOccurs="1" maxOccurs="1"/>
             <xs:element name="StateAfter" type="StateAfter" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
-        <!--
-        <xs:attribute name="antecedent" type="BARef"/>
-        <xs:attribute name="consequent" type="BARef"/>
-        <xs:attribute name="condition" type="BARef"/>
-        -->
+
+        <xs:attribute name="antecedent" type="BARef" use="optional"/>
+        <xs:attribute name="consequent" type="BARef" use="required"/>
+        <xs:attribute name="condition" type="BARef" use="optional"/>
         <xs:attribute name="id" type="xs:NMTOKEN"/>
     </xs:complexType>
     
@@ -608,11 +607,9 @@
                 <xs:element name="InterestMeasure" type="InterestMeasure"/>
                 <xs:element name="Formula" type="Formula"/>
             </xs:choice>                        
-            <xs:element name="Threshold" type="Threshold"/>
-            <xs:element name="SignificanceLevel" type="xs:decimal" minOccurs="0"/>
             <xs:element name="CompareType" type="CompareType"/>
-            <xs:element name="ThresholdType" type="ThresholdType"/>
-            
+            <xs:element name="Threshold" type="Threshold"/>                       
+            <xs:element name="SignificanceLevel" type="xs:decimal" minOccurs="0"/>            
         </xs:sequence>
         <xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
     </xs:complexType>
@@ -637,8 +634,8 @@
     </xs:complexType>
     <xs:simpleType name="SourceTypeAC4ft">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="State before frequencies"/>
-            <xs:enumeration value="State after frequencies"/>
+            <xs:enumeration value="State-before frequencies"/>
+            <xs:enumeration value="State-after frequencies"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="SourceTypeSD4ft">
@@ -648,9 +645,13 @@
         </xs:restriction>
     </xs:simpleType>
     
-<xs:simpleType name="Threshold">
-    <xs:restriction base="xs:decimal"/>    
-</xs:simpleType>
+    <xs:complexType name="Threshold">
+        <xs:simpleContent>
+            <xs:extension base="xs:decimal">
+                <xs:attribute name="type" type="ThresholdType"></xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
     <xs:complexType name="TaskSetting4ft">
         <xs:sequence>
             <xs:element name="Extension" type="Extension" minOccurs="0" maxOccurs="unbounded"/>
