@@ -300,9 +300,13 @@
             <xs:element name="StateBefore" type="StateBefore" minOccurs="1" maxOccurs="1"/>
             <xs:element name="StateAfter" type="StateAfter" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
-
+        
+        <!--In Ac4ft Consequent has two parts - fixed and variable. Fixed part listed in the AC4ftRule/consequent attribute can be empty (attribute not present). 
+            In that case,consequentVarBefore or consequentVarAfter cannot be empty.    
+            -->        
+        
         <xs:attribute name="antecedent" type="BARef" use="optional"/>
-        <xs:attribute name="consequent" type="BARef" use="required"/>
+        <xs:attribute name="consequent" type="BARef" use="optional"/>
         <xs:attribute name="condition" type="BARef" use="optional"/>
         <xs:attribute name="id" type="xs:NMTOKEN"/>
     </xs:complexType>
@@ -348,6 +352,8 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="a-frequency"/>
             <xs:enumeration value="BASE"/>
+            <!-- workaround for SDxx and AC4ft Miner, where BASE and a frequency is  merged into this one value. Unlike a frequency, a (BASE) can act as a test criterion -->
+            <xs:enumeration value="a (BASE)"/>
             <xs:enumeration value="b-frequency"/>
             <xs:enumeration value="c-frequency"/>
             <xs:enumeration value="d-frequency"/>
