@@ -24,6 +24,34 @@
         <Symbol>⇑</Symbol>
     </InterestMeasure>
 
+     <InterestMeasure>
+         <str lang="MasterName">a (BASE)</str>
+         <str lang="pmml" software="LISp-Miner">a (BASE)</str>
+         <str lang="en">Support</str>
+         <str lang="cs">Podpora</str>
+         <TestCriteria>
+             <TestCriterion  type="Functional">
+                 <ThresholdType>Abs</ThresholdType>
+                   <ThresholdType>% of all</ThresholdType>    <!-- Relative to n -->
+                   <ThresholdType>% of act</ThresholdType>   <!-- Relative to number of rows satisfying condition -->
+                   <ThresholdType>% of max</ThresholdType>  <!-- Relative to the maximal frequency in the actual contingency table -->
+                   <CompareType>Equal</CompareType>
+                   <CompareType>Less than</CompareType>
+                   <CompareType>Less than or equal</CompareType>
+                   <CompareType>Greater than</CompareType>
+
+                   <CompareType>Greater than or equal</CompareType>
+                 <Threshold>Yes</Threshold>
+                 <SignificanceLevel>No</SignificanceLevel>
+                 <str lang="MasterName">BASE</str>
+                 <str lang="pmml" software="LISp-Miner">a (BASE)</str>
+                 <str lang="en">Absolute support in SD4ft/Ac4ft</str>
+                 <str lang="cs">Absolutní podpora v SD4ft a Ac4ft</str>
+             </TestCriterion>
+         </TestCriteria>
+         <Symbol>⇑</Symbol>
+     </InterestMeasure>
+
     
     <InterestMeasure>
         <str lang="MasterName">FUI</str>
