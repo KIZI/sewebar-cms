@@ -16,10 +16,13 @@
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('QuantifiersUsed','','start')"/></xsl:comment>
 
       <table class="itable" summary="Table {$tabs+2}: quantifiers used">
-        <tr><th colspan="2"><xsl:copy-of select="keg:translate('Interest Measures used',420)"/></th></tr>
+        <tr><th colspan="5"><xsl:copy-of select="keg:translate('Interest Measures used',420)"/></th></tr>
         <tr>
           <th><xsl:copy-of select="keg:translate('Interest Measure',590)"/></th>
           <th><xsl:copy-of select="keg:translate('Minimum value',430)"/></th>
+          <th>Type</th>
+          <th>Compare type</th>
+          <th>Source type</th>
         </tr>
         <xsl:apply-templates select="TaskSetting/InterestMeasureSetting/InterestMeasureThreshold" mode="sect4"/>
       </table>
@@ -38,6 +41,9 @@
         <!-- SignificanceLevel is used for static quantifiers, Threshold is used otherwise -->
         <!-- quantifiers using SignificanceLevel and Threshold together -->
       <td><xsl:value-of select="Threshold | SignificanceLevel"/></td>
+      <td><xsl:value-of select="Threshold/@type"/></td>
+      <td><xsl:value-of select="CompareType"/></td>
+      <td><xsl:value-of select="SourceType"/></td>
     </tr>
   </xsl:template>
 
