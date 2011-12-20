@@ -270,7 +270,7 @@
         </xsl:call-template>
       </xsl:when>
       <!-- antecedent for StateBefore/StateAfter of Ac4ftRule -->
-      <xsl:when test="StateBefore and StateAfter">
+      <xsl:when test="StateBefore/@antecedentVarBefore and StateAfter/@antecedentVarAfter">
         [ <xsl:call-template name="cedent">
           <xsl:with-param name="cedentID" select="StateBefore/@antecedentVarBefore"/>
         </xsl:call-template> -&gt;
@@ -293,17 +293,17 @@
     <!-- first set (SD4ftRule) -->
     <xsl:if test="FirstSet">
       : <xsl:call-template name="cedent">
-        <xsl:with-param name="cedentID" select="FirstSet/@set"/>
+        <xsl:with-param name="cedentID" select="FirstSet/@set | FirstSet/@FirstSet"/>
       </xsl:call-template>
     </xsl:if>
     <!-- second set (SD4ftRule) -->
     <xsl:if test="SecondSet">
       x <xsl:call-template name="cedent">
-        <xsl:with-param name="cedentID" select="SecondSet/@set"/>
+        <xsl:with-param name="cedentID" select="SecondSet/@set | SecondSet/@SecondSet"/>
       </xsl:call-template>
     </xsl:if>
     <!-- antecedent for StateBefore/StateAfter of Ac4ftRule -->
-    <xsl:if test="StateBefore and StateAfter">
+    <xsl:if test="StateBefore/@consequentVarBefore and StateAfter/@consequentVarAfter">
       [ <xsl:call-template name="cedent">
         <xsl:with-param name="cedentID" select="StateBefore/@consequentVarBefore"/>
       </xsl:call-template> -&gt;
