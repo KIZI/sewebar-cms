@@ -25,7 +25,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Pattern;
+
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
@@ -39,6 +42,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
@@ -79,25 +83,21 @@ public class BDBXMLHandler {
      * Metoda pro vymazani dokumentu z XML DB
      * @param id ID dokumentu v DB
      * @return Zprava - splneno/chyba
+     * @throws XmlException 
      */
-    public String removeDocument (String id){
+    public String removeDocument (String id) throws XmlException{
         String output = "";
-        try {
+        XmlContainer cont = mgr.openContainer(containerName);
+        XmlTransaction txn = mgr.createTransaction();
 
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
-
-            if (cont.getDocument(id) != null) {
-                cont.deleteDocument(id);
-                output += "<message>Dokument " + id + " smazan!</message>";
-            } else {
-                output += "<error>Dokument nenalezen!</error>";
-            }
-            txn.commit();
-            closeContainer(cont);
-        } catch (Throwable e) {
-                output += "<error>"+e.toString()+"</error>";
+        if (cont.getDocument(id) != null) {
+            cont.deleteDocument(id);
+            output += "<message>Dokument " + id + " smazan!</message>";
+        } else {
+            output += "<error>Dokument nenalezen!</error>";
         }
+        txn.commit();
+        closeContainer(cont);
         return output;
     }
 
@@ -127,24 +127,21 @@ public class BDBXMLHandler {
      * Metoda pro zobrazeni dokumentu z XML DB
      * @param id ID dokumentu v DB
      * @return Zobrazeni dokumentu/chyba
+     * @throws XmlException 
      */
-    public String getDocument(String id){
+    public String getDocument(String id) throws XmlException{
         String output = "";
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
+        XmlContainer cont = mgr.openContainer(containerName);
+        XmlTransaction txn = mgr.createTransaction();
 
-            if (cont.getDocument(id) != null) {
-                XmlDocument doc = cont.getDocument(id);
-                output += doc.getContentAsString();
-            } else {
-                output += "<error>Dokument nenalezen!</error>";
-            }
-            txn.commit();
-            closeContainer(cont);
-        } catch (Throwable e) {
-                output += "<error>"+e.toString()+"</error>";
+        if (cont.getDocument(id) != null) {
+            XmlDocument doc = cont.getDocument(id);
+            output += doc.getContentAsString();
+        } else {
+            output += "<error>Dokument nenalezen!</error>";
         }
+        txn.commit();
+        closeContainer(cont);
         return output;
     }
 
@@ -152,8 +149,14 @@ public class BDBXMLHandler {
      * Cyklycke dotazovani - 10x za sebou stejny dotaz na XML DB (pouzito pri testovani)
      * @param search XQuery dotaz
      * @return cas a vysledky dotazovani 
+     * @throws XPathException 
+     * @throws XPathExpressionException 
+     * @throws XmlException 
+     * @throws IOException 
+     * @throws SAXException 
+     * @throws ParserConfigurationException 
      */
-    public String query_10(String search) {
+    public String query_10(String search) throws XmlException, XPathExpressionException, XPathException, IOException, ParserConfigurationException, SAXException {
         String output = "";
         String output_temp = "";
         QueryMaker qm = new QueryMaker(containerName);
@@ -162,7 +165,7 @@ public class BDBXMLHandler {
         String xpath = qm.makeXPath(query)[0];
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
-            double time_start = System.currentTimeMillis();
+			double time_start = System.currentTimeMillis();
             output_temp = queryShortened(xpath, false, false, 9999, query2);
             //output_temp = query("", search, 0);
             output += "<time>"+ (System.currentTimeMillis() - time_start) +"</time>";
@@ -181,50 +184,45 @@ public class BDBXMLHandler {
      * @param search vstupni dotaz pro XQuery
      * @param type typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
      * @return vysledek vyhledavani
+     * @throws XmlException 
+     * @throws IOException 
     */
-    public String query(String id, String search, int type){
+    public String query(String id, String search, int type) throws XmlException, IOException{
         String output = "";
         int chyba = 0;
-        
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
-            String query = "";
-            if (type == 0) {
-                query = search;
-            } else {
-                    if (qh.getQuery(id)[0].toString().equals("1")) {
-                        output = qh.getQuery(id)[1].toString();
-                        chyba = 1;
-                    } else {
-                        query = qh.getQuery(id)[1].toString();
-                        query += "\nlet $zadani := " + search
-                                + "\nreturn local:mainFunction($zadani)";
-                    }
-            }
-            if (chyba != 1) {
-            	query = qh.deleteDeclaration(query);
-	            XmlQueryContext qc = mgr.createQueryContext();
-	            XmlTransaction txn = mgr.createTransaction();
-	            XmlResults res = mgr.query(query, qc);
+        XmlContainer cont = mgr.openContainer(containerName);
+        String query = "";
+        if (type == 0) {
+            query = search;
+        } else {
+                if (qh.getQuery(id)[0].toString().equals("1")) {
+                    output = qh.getQuery(id)[1].toString();
+                    chyba = 1;
+                } else {
+                    query = qh.getQuery(id)[1].toString();
+                    query += "\nlet $zadani := " + search
+                            + "\nreturn local:mainFunction($zadani)";
+                }
+        }
+        if (chyba != 1) {
+        	query = qh.deleteDeclaration(query);
+            XmlQueryContext qc = mgr.createQueryContext();
+            XmlTransaction txn = mgr.createTransaction();
+            XmlResults res = mgr.query(query, qc);
 
-	            if (res != null) {
-	            // Process results -- just print them
-	                    XmlValue value = new XmlValue();
-	                    while ((value = res.next()) != null) {
-	                        output += (value.asString());
-	                    }
-	            } else {
-	                output = "<error>Zadny vysledek</error>";
-	            }
-	            txn.commit();
-	            res.delete();
-	            closeContainer(cont);
+            if (res != null) {
+            // Process results -- just print them
+                    XmlValue value = new XmlValue();
+                    while ((value = res.next()) != null) {
+                        output += (value.asString());
+                    }
+            } else {
+                output = "<error>Zadny vysledek</error>";
             }
-	        } catch (XmlException e) {
-	                output += "<error>"+e.toString()+"</error>";
-	        } catch (Throwable e) {
-	                output += "<error>"+e.toString()+"</error>";
-	        }
+            txn.commit();
+            res.delete();
+            closeContainer(cont);
+        }
         return output;
     }
 
@@ -259,30 +257,27 @@ public class BDBXMLHandler {
     /**
      * Metoda pro ziskani nazvu dokumentu ulozenych v XML DB
      * @return seznam ulozenych dokumentu
+     * @throws XmlException 
      */
-    public String getDocsNames(){
+    public String getDocsNames() throws XmlException{
         String output = "";
-        try {
-            String query = "let $docs := for $x in collection(\""+containerName+"\") return $x"
-                    + "\nreturn"
-                    + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
-                    + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
-                    + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
+        String query = "let $docs := for $x in collection(\""+containerName+"\") return $x"
+                + "\nreturn"
+                + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
+                + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
+                + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlQueryContext qc = mgr.createQueryContext();
-            XmlTransaction txn = mgr.createTransaction();
-            XmlResults res = mgr.query(query, qc);
+        XmlContainer cont = mgr.openContainer(containerName);
+        XmlQueryContext qc = mgr.createQueryContext();
+        XmlTransaction txn = mgr.createTransaction();
+        XmlResults res = mgr.query(query, qc);
 
-            XmlValue value = new XmlValue();
-            while ((value = res.next()) != null) {
-                output += value.asString();
-            }
-            txn.commit();
-            closeContainer(cont);
-        } catch (Throwable e) {
-                output += "<error>"+e.toString()+"</error>";
+        XmlValue value = new XmlValue();
+        while ((value = res.next()) != null) {
+            output += value.asString();
         }
+        txn.commit();
+        closeContainer(cont);
         return output;
     }
 
@@ -294,44 +289,41 @@ public class BDBXMLHandler {
      * @param creationTime datum a cas vytvoreni dokumentu
      * @param reportUri url adresa reportu
      * @return informace o ulozeni/chybe
+     * @throws XmlException 
+     * @throws SAXException 
+     * @throws TransformerException 
      */
-    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) throws IOException{
+    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) throws IOException, XmlException, SAXException, TransformerException{
         String output = "";
         String xml_doc = "";
         String validation[] = null;
         File xsltFile;
-            try {
-                if (useTransformation.equals("true")) {
-                    if (document.contains("sourceType=\"BKEF\"")) {
-                        xsltFile = new File(xsltPathBKEF);
-                    } else {
-                        validation = sc.validate(document);
-                        xsltFile = new File(xsltPathPMML);
-                    }
-                    XSLTTransformer xslt = new XSLTTransformer();
-                    xml_doc += xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
+            if (useTransformation.equals("true")) {
+                if (document.contains("sourceType=\"BKEF\"")) {
+                    xsltFile = new File(xsltPathBKEF);
                 } else {
-                    xml_doc = document;
+                    validation = sc.validate(document);
+                    xsltFile = new File(xsltPathPMML);
                 }
-            if(validation == null || (validation != null && validation[0].equals("1"))){        
-                XmlContainer cont = mgr.openContainer(containerName);
-                XmlTransaction txn = mgr.createTransaction();
-
-                docName = docName.replaceAll(replaceMask.toString(), replaceBy);
-
-                cont.putDocument(docName, xml_doc);
-                output += "<message>Dokument " + docName + " vlozen</message>";
-
-                txn.commit();
-                closeContainer(cont);
+                XSLTTransformer xslt = new XSLTTransformer();
+                xml_doc += xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
             } else {
-                output += "<error>"+validation[1]+"</error>";
+                xml_doc = document;
             }
-            } catch (XmlException e) {
-                    output += "<error>"+e.toString()+"</error>";
-            } catch (Throwable e) {
-                    output += "<error>"+e.toString()+"</error>";
-            }
+        if(validation == null || (validation != null && validation[0].equals("1"))){        
+            XmlContainer cont = mgr.openContainer(containerName);
+            XmlTransaction txn = mgr.createTransaction();
+
+            docName = docName.replaceAll(replaceMask.toString(), replaceBy);
+
+            cont.putDocument(docName, xml_doc);
+            output += "<message>Dokument " + docName + " vlozen</message>";
+
+            txn.commit();
+            closeContainer(cont);
+        } else {
+            output += "<error>"+validation[1]+"</error>";
+        }
         return output;
     }
 
@@ -343,8 +335,11 @@ public class BDBXMLHandler {
      * @param creationTime datum a cas vytvoreni dokumentu
      * @param reportUri url adresa reportu
      * @return zprava - ulozeno/chyba
+     * @throws XmlException 
+     * @throws TransformerException 
+     * @throws SAXException 
      */
-    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) throws FileNotFoundException, IOException{
+    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) throws FileNotFoundException, IOException, XmlException, TransformerException, SAXException{
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
@@ -361,29 +356,23 @@ public class BDBXMLHandler {
 
         String validation[] = sc.validate(xml_doc);
         if(validation[0].equals("1")){
-            try {
-                if (useTransformation.equals("true")) {
-                    File xsltFile = new File(xsltPathPMML);
-                    XSLTTransformer xslt = new XSLTTransformer();
-                    xml_doc = xslt.xsltTransformation(xml_doc, xsltFile, docID, creationTime, reportUri);
-                    output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
-               }
-
-                XmlContainer cont = mgr.openContainer(containerName);
-                XmlTransaction txn = mgr.createTransaction();
-
-                docName = docName.replaceAll(replaceMask.toString(), replaceBy);
-
-                cont.putDocument(docName, xml_doc);
-                output += "<message>Dokument " + docName + " vlozen</message>";
-                output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
-                txn.commit();
-                closeContainer(cont);
-                } catch (XmlException e) {
-                    output += "<error>"+e.toString()+"</error>";
-            } catch (Throwable e) {
-                    output += "<error>"+e.toString()+"</error>";
-            }
+	        if (useTransformation.equals("true")) {
+	            File xsltFile = new File(xsltPathPMML);
+	            XSLTTransformer xslt = new XSLTTransformer();
+	            xml_doc = xslt.xsltTransformation(xml_doc, xsltFile, docID, creationTime, reportUri);
+	            output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
+	       }
+	
+	        XmlContainer cont = mgr.openContainer(containerName);
+	        XmlTransaction txn = mgr.createTransaction();
+	
+	        docName = docName.replaceAll(replaceMask.toString(), replaceBy);
+	
+	        cont.putDocument(docName, xml_doc);
+	        output += "<message>Dokument " + docName + " vlozen</message>";
+	        output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
+	        txn.commit();
+	        closeContainer(cont);
         } else {
             output += "<error>"+validation[1]+"</error>";
         }
@@ -394,8 +383,11 @@ public class BDBXMLHandler {
      * Metoda pro nahrani vice dokumentu ze slozky
      * @param folder slozka, ze ktere se maji soubory nahrat
      * @return zprava o ulozeni / chyba
+     * @throws XmlException 
+     * @throws SAXException 
+     * @throws TransformerException 
      */
-    public String indexDocumentMultiple (String folder) throws FileNotFoundException, IOException {
+    public String indexDocumentMultiple (String folder) throws FileNotFoundException, IOException, XmlException, TransformerException, SAXException {
         String output = "";
         File uploadFolder = new File(folder);
         File uploadFiles[] = uploadFolder.listFiles();
@@ -410,31 +402,26 @@ public class BDBXMLHandler {
      * Metoda pro pridani indexu XML DB
      * @param index zadani indexu - namespace;node;index type
      * @return zprava o pridani indexu / chybe
+     * @throws XmlException 
      */
-    public String addIndex(String index) {
+    public String addIndex(String index) throws XmlException {
         String output = "";
 
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
+        XmlContainer cont = mgr.openContainer(containerName);
 
-            XmlTransaction txn = mgr.createTransaction();
-            String[] indexPole = index.split(";");
-            if (indexPole.length == 3) {
-                XmlIndexSpecification indexSpec = cont.getIndexSpecification();
-                indexSpec.addIndex(indexPole[0], indexPole[1], indexPole[2]);
-                cont.setIndexSpecification(indexSpec);
-                output = "<message>Index " + index + " pridan</message>";
+        XmlTransaction txn = mgr.createTransaction();
+        String[] indexPole = index.split(";");
+        if (indexPole.length == 3) {
+            XmlIndexSpecification indexSpec = cont.getIndexSpecification();
+            indexSpec.addIndex(indexPole[0], indexPole[1], indexPole[2]);
+            cont.setIndexSpecification(indexSpec);
+            output = "<message>Index " + index + " pridan</message>";
 
-                txn.commit();
-                indexSpec.delete();
-                closeContainer(cont);
-            } else {
-                output = "<error>Spatne zadany index</error>";
-            }
-        } catch (XmlException e) {
-                output += "<error>"+e.toString()+"</error>";
-        }catch (Throwable e) {
-                output += "<error>"+e.toString()+"</error>";
+            txn.commit();
+            indexSpec.delete();
+            closeContainer(cont);
+        } else {
+            output = "<error>Spatne zadany index</error>";
         }
         return output;
     }
@@ -443,30 +430,26 @@ public class BDBXMLHandler {
      * Metoda zajistujici smazani indexu
      * @param index zadani indexu - namespace;node;index type
      * @return zprava o smazani indexu / chybe
+     * @throws XmlException 
      */
-    public String delIndex (String index){
+    public String delIndex (String index) throws XmlException{
         String output = "";
 
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
-            String[] indexPole = index.split(";");
+        XmlContainer cont = mgr.openContainer(containerName);
+        XmlTransaction txn = mgr.createTransaction();
+        String[] indexPole = index.split(";");
 
-            if (indexPole.length == 3) {
-                XmlIndexSpecification indexSpec = cont.getIndexSpecification();
-                indexSpec.deleteIndex(indexPole[0], indexPole[1], indexPole[2]);
-                cont.setIndexSpecification(indexSpec);
-                output = "<message>Index " + index + " odebran</message>";
+        if (indexPole.length == 3) {
+            XmlIndexSpecification indexSpec = cont.getIndexSpecification();
+            indexSpec.deleteIndex(indexPole[0], indexPole[1], indexPole[2]);
+            cont.setIndexSpecification(indexSpec);
+            output = "<message>Index " + index + " odebran</message>";
 
-                txn.commit();
-                indexSpec.delete();
-                closeContainer(cont);
-            } else {
-                output = "<error>Spatne zadany index</error>";
-            }
-        } catch (XmlException ex) {
-            //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
-            output += "<error>"+ex.toString()+"</error>";
+            txn.commit();
+            indexSpec.delete();
+            closeContainer(cont);
+        } else {
+            output = "<error>Spatne zadany index</error>";
         }
         return output;
     }
@@ -474,100 +457,70 @@ public class BDBXMLHandler {
     /**
      * Metoda pro zobrazeni indexu v XML DB
      * @return vypis pouzivanych indexu v XML DB
+     * @throws XmlException 
      */
-    public String listIndex() {
+    public String listIndex() throws XmlException {
         String output = "";
         String outputEnd = "";
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlIndexSpecification indexSpec = cont.getIndexSpecification();
+        XmlContainer cont = mgr.openContainer(containerName);
+        XmlIndexSpecification indexSpec = cont.getIndexSpecification();
 
-            int count = 0;
-            XmlIndexDeclaration indexDecl = null;
-            while ((indexDecl = (indexSpec.next())) != null) {
-                outputEnd += "<index>"
-                            + "<nodeName>" + indexDecl.name + "</nodeName>"
-                            + "<indexType>" + indexDecl.index + "</indexType>"
-                        + "</index>";
-                count++;
-            }
-            output += "<indexCount>" + count + "</indexCount>" + outputEnd;
-            indexSpec.delete();
-            closeContainer(cont);
-        } catch (XmlException ex) {
-            //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
-            output += "<error>"+ex.toString()+"</error>";
+        int count = 0;
+        XmlIndexDeclaration indexDecl = null;
+        while ((indexDecl = (indexSpec.next())) != null) {
+            outputEnd += "<index>"
+                        + "<nodeName>" + indexDecl.name + "</nodeName>"
+                        + "<indexType>" + indexDecl.index + "</indexType>"
+                    + "</index>";
+            count++;
         }
+        output += "<indexCount>" + count + "</indexCount>" + outputEnd;
+        indexSpec.delete();
+        closeContainer(cont);
         return output;
     }
     
     /**
      * Metoda pro ziskani cachovaneho DataDescription
      * @return DataDescription / chyba
+     * @throws XmlException 
      */
-    public String getDataDescriptionCache() {
+    public String getDataDescriptionCache() throws XmlException {
         String output = "";
-        try {
-            XmlContainer cont = mgr.openContainer("__DataDescriptionCacheContainer");
-            XmlTransaction txn = mgr.createTransaction();
-            XmlDocument doc = cont.getDocument("__DataDescriptionCacheDocument");
-            output += doc.getContentAsString();
-            txn.commit();
-            closeContainer(cont);
-            } catch (XmlException ex) {
-                if (ex.getErrorCode() == XmlException.DOCUMENT_NOT_FOUND) {
-                    output += "<error>Chyba cache - Document not found</error>";
-                } else if (ex.getErrorCode() == XmlException.CONTAINER_NOT_FOUND) {
-                    output += "<error>Chyba cache - Container not found</error>";
-                }
-                output += "<error>"+ex.toString()+"</error>";
-            }
+        XmlContainer cont = mgr.openContainer("__DataDescriptionCacheContainer");
+        XmlTransaction txn = mgr.createTransaction();
+        XmlDocument doc = cont.getDocument("__DataDescriptionCacheDocument");
+        output += doc.getContentAsString();
+        txn.commit();
+        closeContainer(cont);
         return output;
     }
     
     /**
      * Metoda pro ulozeni aktualniho DataDescription do cache
      * @return Provedeno / chyba
+     * @throws XmlException 
      */
-    public String actualizeDataDescriptionCache() {
+    public String actualizeDataDescriptionCache() throws XmlException {
         String output = "";
         XmlContainer cont = null;
-        try {
-            cont = mgr.openContainer("__DataDescriptionCacheContainer");
-            XmlTransaction txn = mgr.createTransaction();
-            String dataDescription = getDataDescription();
-            cont.putDocument("__DataDescriptionCacheDocument", dataDescription);
-            output += "<message>DataDescription cache aktualizovan</message>";
-            
-            txn.commit();
-            closeContainer(cont);
-            } catch (XmlException ex) {
-                if (ex.getErrorCode() == XmlException.CONTAINER_NOT_FOUND) {
-                    try {
-                        cont = mgr.createContainer("__DataDescriptionCacheContainer");
-                        cont.setAutoIndexing(false);
-                        actualizeDataDescriptionCache();
-                    } catch (XmlException ex1) {
-                        output += "<error>"+ex1.toString()+"</error>";
-                    }
-                } else if (ex.getErrorCode() == XmlException.UNIQUE_ERROR) {
-                    try {
-                        cont.deleteDocument("__DataDescriptionCacheDocument");
-                        actualizeDataDescriptionCache();
-                    } catch (XmlException ex1) {
-                        output += "<error>"+ex1.toString()+"</error>";
-                    }
-                } else {
-                    output += "<error>"+ex.toString()+"</error>";
-                }
-            }
+        cont = mgr.openContainer("__DataDescriptionCacheContainer");
+        XmlTransaction txn = mgr.createTransaction();
+        String dataDescription = getDataDescription();
+        cont.putDocument("__DataDescriptionCacheDocument", dataDescription);
+        output += "<message>DataDescription cache aktualizovan</message>";
+        
+        txn.commit();
+        closeContainer(cont);
         return output;
     }
+    
     /**
      * Metoda pro vytvoreni DataDescription dat ulozenych v XML DB
      * @return DataDescription
+     * @throws XmlException 
      */
-    public String getDataDescription(){
+    public String getDataDescription() throws XmlException{
         String output = "";
 
         String query = "let $distinctNamesCategorical :="
@@ -663,37 +616,28 @@ public class BDBXMLHandler {
                 + "\n{$values union $ints}"
                 + "\n</Field>}</Dictionary></DataDescription>";*/
 
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlQueryContext qc = mgr.createQueryContext();
-            XmlTransaction txn = mgr.createTransaction();
-            XmlResults res = mgr.query(query, qc);
+        XmlContainer cont = mgr.openContainer(containerName);
+        XmlQueryContext qc = mgr.createQueryContext();
+        XmlTransaction txn = mgr.createTransaction();
+        XmlResults res = mgr.query(query, qc);
 
-            XmlValue value = new XmlValue();
-            while ((value = res.next()) != null) {
-                output += value.asString();
-            }
-            txn.commit();
-            res.delete();
-            closeContainer(cont);
-            } catch (XmlException ex) {
-                //Logger.getLogger(BDBXMLHandler.class.getName()).log(Level.SEVERE, null, ex);
-                output += "<error>"+ex.toString()+"</error>";
-            }
+        XmlValue value = new XmlValue();
+        while ((value = res.next()) != null) {
+            output += value.asString();
+        }
+        txn.commit();
+        res.delete();
+        closeContainer(cont);
         return output;
     }
     
-    private String selectByXPath(String xpath, String document) {
+    private String selectByXPath(String xpath, String document) throws XPathExpressionException {
     	String output = "";
     	InputSource bais = new InputSource(new ByteArrayInputStream(document.getBytes()));
-    	try {
-	        XPathFactory factory = XPathFactory.newInstance();
-	        XPath xp = factory.newXPath();
-			XPathExpression expr = xp.compile(xpath);
-			output = expr.evaluate(bais);
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
-		}
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xp = factory.newXPath();
+		XPathExpression expr = xp.compile(xpath);
+		output = expr.evaluate(bais);
     	return output;
     }
 
@@ -701,8 +645,14 @@ public class BDBXMLHandler {
      * Metoda pro dotazovani pomoci vytvoreneho XPath dotazu
      * @param XPathRequest XPath dotaz
      * @return vysledky hledani v SearchResult formatu
+     * @throws XmlException 
+     * @throws XPathExpressionException 
+     * @throws XPathException 
+     * @throws IOException 
+     * @throws SAXException 
+     * @throws ParserConfigurationException 
      */
-    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults, InputStream xmlQuery){
+    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults, InputStream xmlQuery) throws XmlException, XPathExpressionException, XPathException, IOException, ParserConfigurationException, SAXException{
         long startTime = System.currentTimeMillis();
         String output = "";
         String schema = "";
@@ -720,10 +670,7 @@ public class BDBXMLHandler {
         String queryResult = query("", query, 0);
         if (exception && !queryResult.isEmpty()) {
         	String xpath = qm.getExceptionPath(xmlQuery);
-        	System.out.println("XPath: " + xpath);
-        	System.out.println("Results before: " + queryResult);
         	queryResult = selectByXPath(xpath, queryResult);
-            System.out.println("Results after: " + queryResult);
         }
         output += "<SearchResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\""+ schema +"\">"
                 + "<Metadata>"
@@ -751,7 +698,7 @@ public class BDBXMLHandler {
     }
     
     
-    private String dataDescriptionPrepare(String queryOutput) {
+    private String dataDescriptionPrepare(String queryOutput) throws XPathException, UnsupportedEncodingException {
         String output = "";
         String ddPrepareQuery = "declare function local:descriptionTransform($inputData) {"
                 + "\nlet $dataDictOutput := <Dictionary sourceDictType=\"DataDictionary\" sourceFormat=\"PMML\" default=\"true\" completeness=\"ReferencedFromPatterns\" id=\"DataDictionary\">"
@@ -793,29 +740,25 @@ public class BDBXMLHandler {
                 + "\nlet $dd := " + queryOutput
                 + "\nreturn local:descriptionTransform($dd//BBA)";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            Configuration config = new Configuration();
-            StaticQueryContext sqc = config.newStaticQueryContext();
-            XQueryExpression xqe = sqc.compileQuery(ddPrepareQuery);
-            DynamicQueryContext dqc = new DynamicQueryContext(config);
-            Properties props = new Properties();
-            props.setProperty(OutputKeys.METHOD, "html");
-            props.setProperty(OutputKeys.INDENT, "no");
-            xqe.run(dqc, new StreamResult(baos), props);
-            output += baos.toString("UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            
-        } catch (XPathException ex) {
-            //output += "<error>" + ex.toString() + "</error>";
-        }
+        Configuration config = new Configuration();
+        StaticQueryContext sqc = config.newStaticQueryContext();
+        XQueryExpression xqe = sqc.compileQuery(ddPrepareQuery);
+        DynamicQueryContext dqc = new DynamicQueryContext(config);
+        Properties props = new Properties();
+        props.setProperty(OutputKeys.METHOD, "html");
+        props.setProperty(OutputKeys.INDENT, "no");
+        xqe.run(dqc, new StreamResult(baos), props);
+        output += baos.toString("UTF-8");
         return output;
     }
     /**
      * Metoda pro zmenu struktury vystupu query
      * @param queryOutput puvodni vystup query
      * @return restrukturovana hodnota
+     * @throws XPathException 
+     * @throws UnsupportedEncodingException 
      */
-    private String restructureOutput (String queryOutput) {
+    private String restructureOutput (String queryOutput) throws XPathException, UnsupportedEncodingException {
         String output = "";
         String restructureQuery = 
                 "declare function local:restructure($queryOutput) {"
@@ -863,21 +806,15 @@ public class BDBXMLHandler {
                 + "\nlet $queryOutput := " + queryOutput + "\n"
                 + "\nreturn local:restructure($queryOutput)";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            Configuration config = new Configuration();
-            StaticQueryContext sqc = config.newStaticQueryContext();
-            XQueryExpression xqe = sqc.compileQuery(restructureQuery);
-            DynamicQueryContext dqc = new DynamicQueryContext(config);
-            Properties props = new Properties();
-            props.setProperty(OutputKeys.METHOD, "html");
-            props.setProperty(OutputKeys.INDENT, "no");
-            xqe.run(dqc, new StreamResult(baos), props);
-            output += baos.toString("UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            
-        } catch (XPathException ex) {
-            //output += "<error>" + ex.toString() + "</error>";
-        }
+        Configuration config = new Configuration();
+        StaticQueryContext sqc = config.newStaticQueryContext();
+        XQueryExpression xqe = sqc.compileQuery(restructureQuery);
+        DynamicQueryContext dqc = new DynamicQueryContext(config);
+        Properties props = new Properties();
+        props.setProperty(OutputKeys.METHOD, "html");
+        props.setProperty(OutputKeys.INDENT, "no");
+        xqe.run(dqc, new StreamResult(baos), props);
+        output += baos.toString("UTF-8");
         return output;
     }
     /**

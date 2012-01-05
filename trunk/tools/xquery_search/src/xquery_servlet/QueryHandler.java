@@ -8,8 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
+
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
+
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
 import net.sf.saxon.query.StaticQueryContext;
@@ -36,23 +38,20 @@ public class QueryHandler {
      * @param query ukladana query
      * @param id nazev ukladane query
      * @return zprava o ulozeni / chybe
+     * @throws IOException 
      */
-    public String addQuery(String query, String id){
+    public String addQuery(String query, String id) throws IOException{
         File file = new File(queryDir + id + ".txt");
         String output = "";
-        try {
-                if (file.exists()) {
-                output = "<error>Query jiz existuje!</error>";
-                }
-                else {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        OutputStreamWriter osw = new OutputStreamWriter(fos);
-                        osw.write(query);
-                        osw.close();
-                output = "<message>Query " + id + " ulozena!</message>";
-                }
-        } catch (IOException e) {
-                output += "<error>"+e.toString()+"</error>";
+        if (file.exists()) {
+        output = "<error>Query jiz existuje!</error>";
+        }
+        else {
+                FileOutputStream fos = new FileOutputStream(file);
+                OutputStreamWriter osw = new OutputStreamWriter(fos);
+                osw.write(query);
+                osw.close();
+        output = "<message>Query " + id + " ulozena!</message>";
         }
         return output;
     }
@@ -105,31 +104,27 @@ public class QueryHandler {
      * Metoda pro ziskani ulozene XQuery
      * @param id ID ulozene XQuery
      * @return vracena XQuery/Zprava - nenalezena
+     * @throws IOException 
      */
-    public String[] getQuery(String id){
+    public String[] getQuery(String id) throws IOException{
         FileReader rdr = null;
         BufferedReader out = null;
         File file = new File(queryDir + id + ".txt");
         String output[] = new String[2];
         output[1] = "";
-        try {
-                if (file.exists()) {
-                        rdr = new FileReader(file);
-                        out = new BufferedReader(rdr);
-                        String radek = out.readLine();
-                        while (radek != null){
-                                output[1] += radek + "\n";
-                                radek = out.readLine();
-                        }
-                        output[0] = "0";
-                        out.close();
+        if (file.exists()) {
+                rdr = new FileReader(file);
+                out = new BufferedReader(rdr);
+                String radek = out.readLine();
+                while (radek != null){
+                        output[1] += radek + "\n";
+                        radek = out.readLine();
                 }
-                else {
-                        output[1] = "<error>Query neexistuje!</error>";
-                        output[0] = "1";
-                }
-        } catch (IOException e) {
-                output[1] = "<error>"+e.toString()+"</error>";
+                output[0] = "0";
+                out.close();
+        }
+        else {
+                output[1] = "<error>Query neexistuje!</error>";
                 output[0] = "1";
         }
         return output;
@@ -165,8 +160,9 @@ public class QueryHandler {
      * Metoda prevadi query ze vstupniho ARBuilder formatu do formatu pro dalsi zpracovani
      * @param request vstupni dotaz (ve formatu ARBuilder)
      * @return query v novem formatu
+     * @throws XPathException 
      */
-    public ByteArrayOutputStream queryPrepare(String request){
+    public ByteArrayOutputStream queryPrepare(String request) throws XPathException{
         String query =
                 "declare function local:processRequest($request as node()) {"
                     + "\n let $generalSet := $request/ARQuery/GeneralSetting"
@@ -203,9 +199,10 @@ public class QueryHandler {
                     + "\n let $dictionary := $BBA/FieldRef/@dictionary/string()"
                     + "\n let $field := $BBA/FieldRef/text()"
                     + "\n let $coefficient := $BBA/Coefficient"
-                    + "\n let $category := for $cat in $coefficient//Category return "
-                        + "\n if ($cat/name() = \"Category\") then <Category>{$cat/text()}</Category> else"
-                            + "\n if ($cat/name() = \"Interval\") then <Interval closure=\"{$cat/@closure}\" left=\"{$cat/@leftMargin}\" right=\"{$cat/@rightMargin}\"/> else $cat"
+                    + "\n let $category := for $cat in $coefficient/child::node()[name() != \"Type\"]"
+                    	+ "return if ($cat/name() = \"Category\") then <Category>{$cat/text()}</Category>"
+                    	+ "else if ($cat/name() = \"Interval\") then <Interval closure=\"{$cat/@closure}\" left=\"{$cat/@leftMargin}\" right=\"{$cat/@rightMargin}\"/>"
+                    	+ "else element {$cat/name()} {$cat/text()}"
                     + "\n return if (count($mapping/ValueMapping/Field[@name = $field]) = 0) then "
                         + "\n <BBA id=\"{$BBA/@id}\">"
                             + "\n <Field dictionary=\"TransformationDictionary\"><Name>{$field}</Name><Type>{$coefficient/Type/text()}</Type>{$category}</Field>"
@@ -223,18 +220,14 @@ public class QueryHandler {
                 + "\n let $vstup := " + deleteDeclaration(request)
                 + "\n return local:processRequest($vstup)";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            Configuration config = new Configuration();
-            StaticQueryContext sqc = config.newStaticQueryContext();
-            XQueryExpression xqe = sqc.compileQuery(query);
-            DynamicQueryContext dqc = new DynamicQueryContext(config);
-            Properties props = new Properties();
-            props.setProperty(OutputKeys.METHOD, "html");
-            props.setProperty(OutputKeys.INDENT, "no");
-            xqe.run(dqc, new StreamResult(baos), props);
-        } catch (XPathException ex) {
-            //output += "<error>" + ex.toString() + "</error>";
-        }
+        Configuration config = new Configuration();
+        StaticQueryContext sqc = config.newStaticQueryContext();
+        XQueryExpression xqe = sqc.compileQuery(query);
+        DynamicQueryContext dqc = new DynamicQueryContext(config);
+        Properties props = new Properties();
+        props.setProperty(OutputKeys.METHOD, "html");
+        props.setProperty(OutputKeys.INDENT, "no");
+        xqe.run(dqc, new StreamResult(baos), props);
         return baos;
     }
 }

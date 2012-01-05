@@ -31,23 +31,19 @@ public class SchemaChecker {
      * @param doc vstupni dokument ke kontrole
      * @return [0] - 1/0 (validni/nevalidni), [1] - vypis pripadne chyby a nevalidity
      * @throws IOException
+     * @throws SAXException 
      */
-    public String[] validate(String doc) throws IOException{
+    public String[] validate(String doc) throws IOException, SAXException{
         String output[] = new String[2];
         SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
         File schemaLocation = new File(schemaPath);
-        try {
-            Schema schema = factory.newSchema(schemaLocation);
-            Validator validator = schema.newValidator();
-            InputStream is = new ByteArrayInputStream(doc.getBytes("UTF-8"));
-            Source source = new StreamSource(is);
-            validator.validate(source);
-            output[0] = "1";
-            output[1] = "";
-        } catch (SAXException ex) {
-            output[0] = "0";
-            output[1] = ex.toString();
-        }
+        Schema schema = factory.newSchema(schemaLocation);
+        Validator validator = schema.newValidator();
+        InputStream is = new ByteArrayInputStream(doc.getBytes("UTF-8"));
+        Source source = new StreamSource(is);
+        validator.validate(source);
+        output[0] = "1";
+        output[1] = "";
         return output;
     }
 }

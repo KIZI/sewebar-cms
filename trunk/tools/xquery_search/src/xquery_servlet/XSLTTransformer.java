@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 /**
@@ -22,13 +21,13 @@ public class XSLTTransformer {
      * @param creationTime cas vytvoreni
      * @param reportUri url adresa reportu
      * @return prevedeny soubor ve forme Stringu
+     * @throws TransformerException 
      */
-    public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime, String reportUri) throws UnsupportedEncodingException
+    public String xsltTransformation (File xmlFile, File xsltFile, String docID, String creationTime, String reportUri) throws UnsupportedEncodingException, TransformerException
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        try {
         javax.xml.transform.Source xmlSource =
          new javax.xml.transform.stream.StreamSource(xmlFile);
         javax.xml.transform.Source xsltSource =
@@ -49,12 +48,6 @@ public class XSLTTransformer {
         trans.transform(xmlSource, result);
 
         
-        } catch (TransformerConfigurationException ex) {
-                output += "<err>" + ex.toString() + "</err>";
-        }
-        catch (TransformerException ex) {
-                output += "<err>" + ex.toString() + "</err>";
-        }
         output += baos.toString("UTF-8");
         return output;
    }
@@ -67,8 +60,9 @@ public class XSLTTransformer {
      * @param creationTime cas vytvoreni
      * @param reportUri url adresa reportu
      * @return prevedeny soubor ve forme Stringu
+     * @throws TransformerException 
      */
-    public String xsltTransformation (String xmlString, File xsltFile, String docID, String creationTime, String reportUri) throws UnsupportedEncodingException
+    public String xsltTransformation (String xmlString, File xsltFile, String docID, String creationTime, String reportUri) throws UnsupportedEncodingException, TransformerException
     {
     	String output = "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -76,7 +70,6 @@ public class XSLTTransformer {
         byte[] bytes = xmlString.getBytes("UTF-8");
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
-        try {
         javax.xml.transform.Source xmlSource =
          new javax.xml.transform.stream.StreamSource(bais);
         javax.xml.transform.Source xsltSource =
@@ -96,12 +89,6 @@ public class XSLTTransformer {
         trans.setParameter("reportURI", reportUri);
         trans.transform(xmlSource, result);
 
-        } catch (TransformerConfigurationException ex) {
-                output += "<err>" + ex.toString() + "</err>";
-        }
-        catch (TransformerException ex) {
-                output += "<err>" + ex.toString() + "</err>";
-        }
         output += baos.toString("UTF-8");
         return output;
    }
