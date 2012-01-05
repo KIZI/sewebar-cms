@@ -1,7 +1,12 @@
 package xquery_servlet;
 
+import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlManager;
 import java.io.IOException;
+
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
 
 /**
  * Trida provadi vypis nastaveni a otestovani funkci aplikace
@@ -50,8 +55,11 @@ public class Tester {
     /**
      * Metoda pro provedeni testu spravnosti nastaveni aplikace
      * @return vypis testu
+     * @throws TransformerException 
+     * @throws SAXException 
+     * @throws XmlException 
      */
-    public String runTest() throws IOException{
+    public String runTest() throws IOException, XmlException, SAXException, TransformerException{
         String output = "<testOutput>";
             output +=
                 "<settings>" +
