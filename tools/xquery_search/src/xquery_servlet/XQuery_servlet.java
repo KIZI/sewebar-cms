@@ -35,20 +35,16 @@ import com.sleepycat.dbxml.XmlManagerConfig;
  */
 public class XQuery_servlet extends HttpServlet {
 	
-	Logger logger = Logger.getLogger("xquery_search");
+	static final Logger logger = Logger.getLogger("xquery_search");
 
 	/**
 	 * Metoda zpracovavajici vstup a vytvarejici vystup. Podporuje
 	 * <code>GET</code> a <code>POST</code> metody.
 	 * 
-	 * @param request
-	 *            prijaty pozadavek
-	 * @param response
-	 *            vytvorena odpoved (vystup)
-	 * @throws ServletException
-	 *             chyba tykajici se servletu
-	 * @throws IOException
-	 *             I/O chyba
+	 * @param request prijaty pozadavek
+	 * @param response vytvorena odpoved (vystup)
+	 * @throws ServletException chyba tykajici se servletu
+	 * @throws IOException I/O chyba
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
@@ -156,6 +152,7 @@ public class XQuery_servlet extends HttpServlet {
 						ex.printStackTrace(new PrintWriter(sw));
 //						output += "<error><![Error: " + sw.toString()
 //								+ "]]></error>";
+						output += "<error>" + ex.toString() + "</error>";
 						logger.severe(sw.toString());
 					}
 				}
@@ -165,7 +162,7 @@ public class XQuery_servlet extends HttpServlet {
 		// vytvoreni a odeslani vystupu
 		double time_end = System.currentTimeMillis();
 		String cas = Double.toString(((time_end - time_start)));
-
+		logger.info("Request: \""+ request.getParameter("action").toString() +"\" | Time spent: "+ cas + "ms");
 		// Pokud je pozadavek na zobrazeni dokumentu -> nepridava se XML
 		// deklarace a obalovy element s casem
 		if (request.getParameter("action").equals("showsettings")) {
@@ -259,7 +256,7 @@ public class XQuery_servlet extends HttpServlet {
 		}
 		output += 
 				"\n<html><body>" +
-						"\n<h2>Nastavení</h2> " +
+						"\n<h2>Settings</h2> " +
 						"\n<div id=\"settings\">" +
 						"\n<table>" +
 						"\n<form method=\"post\" action=\"xquery_servlet\">" +
@@ -275,7 +272,7 @@ public class XQuery_servlet extends HttpServlet {
 						"\n<tr><td>XSLT path for BKEF:</td><td><input type=\"text\" name=\"xsltPathBKEF\" value=\""+ settings[6] +"\" size=\"100\"></td></tr>" +
 						"\n<tr><td>Temporary directory:</td><td><input type=\"text\" name=\"tempDir\" value=\""+ settings[7] +"\" size=\"100\"></td></tr>" +
 						"\n<tr><td>Schema Path:</td><td><input type=\"text\" name=\"schemaPath\" value=\""+ settings[8] +"\" size=\"100\"></td></tr>" +
-						"\n<tr><td></td><td><input type=\"submit\" value=\"Upravit nastaveni\"></td></tr>" +
+						"\n<tr><td></td><td><input type=\"submit\" value=\"Save\"></td></tr>" +
 						"\n</form>" +
 						"\n</table>" +
 						"\n</div></body></html>";
