@@ -30,9 +30,16 @@
          /p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure
        | /p:PMML/guha:AssociationModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula
        | /p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure
+       | /p:PMML/guha:SD4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula
        | /p:PMML/guha:Ac4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/InterestMeasure
+       | /p:PMML/guha:Ac4ftModel/TaskSetting/InterestMeasureSetting/InterestMeasureThreshold/Formula
       ">
-        <span title="{text() | @name}"><xsl:copy-of select="keg:selectQuantifier(text() | @name,'1')"/></span>
+        <xsl:if test="
+          ($numberOfQuantifiers>1 and text()!='BASE' and text()!='Support')
+          or ($numberOfQuantifiers>1 and @name!='BASE' and @name!='Support')
+          or $numberOfQuantifiers=1">
+          <span title="{text() | @name}"><xsl:copy-of select="keg:selectQuantifier(text() | @name,'1')"/></span>
+        </xsl:if>
       </xsl:for-each>
     </xsl:variable>
     <xsl:choose>

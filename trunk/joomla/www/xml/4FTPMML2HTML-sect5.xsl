@@ -284,7 +284,7 @@
         [[ <xsl:copy-of select="keg:translate('No restriction',221)"/>]]
       </xsl:otherwise>
     </xsl:choose>
-    <!-- arrow -->
+    <!-- arrow symbol: from quantifier_transformations.xsl -->
     <xsl:copy-of select="$contentsQuantifier"/>
     <!-- consequent -->
     <xsl:call-template name="cedent">

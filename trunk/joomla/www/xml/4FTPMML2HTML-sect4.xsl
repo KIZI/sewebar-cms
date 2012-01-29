@@ -16,11 +16,13 @@
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('QuantifiersUsed','','start')"/></xsl:comment>
 
       <table class="itable" summary="Table {$tabs+2}: quantifiers used">
-        <tr><th colspan="5"><xsl:copy-of select="keg:translate('Interest Measures used',420)"/></th></tr>
+        <tr><th colspan="7"><xsl:copy-of select="keg:translate('Interest Measures used',420)"/></th></tr>
         <tr>
           <th><xsl:copy-of select="keg:translate('Interest Measure',590)"/></th>
           <th><xsl:copy-of select="keg:translate('Minimum value',430)"/></th>
           <th>Type</th>
+          <th>Significance level</th>
+          <th>Name</th>
           <th>Compare type</th>
           <th>Source type</th>
         </tr>
@@ -40,8 +42,10 @@
       <td><xsl:copy-of select="keg:translateInterestMeasure(InterestMeasure | Formula/@name,'InterestMeasure', 'pmml', $reportLang)"/></td>
         <!-- SignificanceLevel is used for static quantifiers, Threshold is used otherwise -->
         <!-- quantifiers using SignificanceLevel and Threshold together -->
-      <td><xsl:value-of select="Threshold | SignificanceLevel"/></td>
+      <td><xsl:value-of select="Threshold"/></td>
       <td><xsl:value-of select="Threshold/@type"/></td>
+      <td><xsl:value-of select="SignificanceLevel"/></td>
+      <td><xsl:value-of select="SignificanceLevel/@name"/></td>
       <td><xsl:value-of select="CompareType"/></td>
       <td><xsl:value-of select="SourceType"/></td>
     </tr>
@@ -108,27 +112,43 @@
     <xsl:variable name="firstSet" select="FirstSetSetting"/>
     <xsl:variable name="secondSet" select="SecondSetSetting"/>
     <!-- / SD4ft -->
+    <!-- Ac4ft -->
+    <xsl:variable name="anteVar" select="AntecedentVarSetting"/>
+    <xsl:variable name="consVar" select="ConsequentVarSetting"/>
+    <!-- / Ac4ft -->
 
     <!-- Rule format: Antecedent => Consequent [/ Condition]
                 or    Antecedent => Consequent : FirstSet x SecondSet [/ Condition]
+                or    Antecedent & AntecedentVar => Consequent & ConsequentVar
           - condition is optional
           - each part of rule can be basic (BBASetting)
           or derived attribute (DBASetting),
           - derived attribute can consist of basic or derived attributes...
       -->
+    <!-- [Antecedent] -->
     <xsl:apply-templates select="BBASettings/BBASetting[@id=$ante] | DBASettings/DBASetting[@id=$ante]" mode="sect4rule"/>
-    <!-- Arrow -->
+      <!-- Ac4ft -->
+      <xsl:if test="AntecedentVarSetting"> &amp;
+        <xsl:apply-templates select="BBASettings/BBASetting[@id=$anteVar] | DBASettings/DBASetting[@id=$anteVar]" mode="sect4rule"/>
+      </xsl:if>
+    <!-- [Arrow] -->
     <xsl:copy-of select="$contentsQuantifier"/>
+    <!-- [Consequent] -->
     <xsl:apply-templates select="BBASettings/BBASetting[@id=$cons] | DBASettings/DBASetting[@id=$cons]" mode="sect4rule"/>
+      <!-- Ac4ft -->
+      <xsl:if test="ConsequentVarSetting"> &amp;
+        <xsl:apply-templates select="BBASettings/BBASetting[@id=$consVar] | DBASettings/DBASetting[@id=$consVar]" mode="sect4rule"/>
+      </xsl:if>
+    
+      <!-- SD4ft -->
+      <xsl:if test="FirstSetSetting"> :
+          <xsl:apply-templates select="BBASettings/BBASetting[@id=$firstSet] | DBASettings/DBASetting[@id=$firstSet]" mode="sect4rule"/>
+          x
+          <xsl:apply-templates select="BBASettings/BBASetting[@id=$secondSet] | DBASettings/DBASetting[@id=$secondSet]" mode="sect4rule"/>
+      </xsl:if>
+      <!-- / SD4ft -->
 
-    <!-- SD4ft -->
-    <xsl:if test="FirstSetSetting"> :
-        <xsl:apply-templates select="BBASettings/BBASetting[@id=$firstSet] | DBASettings/DBASetting[@id=$firstSet]" mode="sect4rule"/>
-        x
-        <xsl:apply-templates select="BBASettings/BBASetting[@id=$secondSet] | DBASettings/DBASetting[@id=$secondSet]" mode="sect4rule"/>
-    </xsl:if>
-    <!-- / SD4ft -->
-
+    <!-- [Condition] -->
     <xsl:if test="ConditionSetting"> /
       <xsl:apply-templates select="BBASettings/BBASetting[@id=$cond] | DBASettings/DBASetting[@id=$cond]" mode="sect4rule"/>
     </xsl:if>
