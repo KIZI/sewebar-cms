@@ -40,6 +40,12 @@ switch($controller)
 	case 'querydefinitions':
 		$controller = new KbiControllerQuerydefinitions();
 		break;
+	case 'lmservers':
+		$controller = new KbiControllerLmservers();
+		break;
+	case 'registerlmserver':
+		$controller = new KbiControllerRegisterlmserver();
+		break;
 	case 'sources':
 	default:
 		require_once(JPATH_COMPONENT.DS.'controllers'.DS.'sources.php');

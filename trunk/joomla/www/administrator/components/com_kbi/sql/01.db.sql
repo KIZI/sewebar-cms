@@ -49,3 +49,12 @@ CREATE TABLE `#__kbi_querydefinitions` (
   `icon` VARCHAR( 255 ) NOT NULL ,
   PRIMARY KEY (`id`)
 );
+
+/* LM Servers */
+DROP TABLE IF EXISTS `#__kbi_lmservers`;
+CREATE TABLE `#__kbi_lmservers` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`name` VARCHAR( 255 ) NOT NULL ,
+	`url` VARCHAR( 255 ),
+	PRIMARY KEY ( `id` )
+);
