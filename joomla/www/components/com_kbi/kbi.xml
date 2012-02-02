@@ -72,6 +72,7 @@
 			<menu controller="sources">Remote Sources</menu>
 			<menu controller="queries">Queries</menu>
 			<menu controller="xslts">XSLTs</menu>
+			<menu controller="lmservers">LISpMiner Servers</menu>
 		</submenu>
 
 		<!-- Administration Main File Copy Section -->
