@@ -1,17 +1,21 @@
-package xquery_servlet;
+package xquerysearch;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import xquerysearch.settings.SettingsManager;
 
 /**
  * Trida obstaravajici sestaveni XPath dotazu podle vstupniho zadani (ARBuilder)
@@ -19,103 +23,110 @@ import org.xml.sax.SAXException;
  * @author Tomas Marek
  */
 public class QueryMaker {
-	final String DICTIONARY = "TransformationDictionary";
-	String containerName;
+	private Logger logger = CommunicationManager.logger;
+	private final String DICTIONARY = "TransformationDictionary";
+	private String containerName;
 
 	/**
 	 * Konstruktor instance tridy QueryMaker
 	 * 
 	 * @param containerName
 	 */
-	public QueryMaker(String containerName) {
-		this.containerName = containerName;
+	public QueryMaker(SettingsManager settings) {
+		this.containerName = settings.getContainerName();
 	}
 
 	/**
 	 * Metoda provadejici prevedeni query na XPath dotaz
 	 * 
-	 * @param xmlQuery
-	 *            query ve formatu XML
+	 * @param xmlQuery query ve formatu XML
 	 * @return XPath dotaz
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
 	 */
-	public String[] makeXPath(InputStream xmlQuery) throws ParserConfigurationException, SAXException, IOException {
+	public String[] makeXPath(InputStream xmlQuery) {
 		String output[] = new String[2];
 		output[0] = "";
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(xmlQuery);
-		doc.getDocumentElement().normalize();
-
-		output[0] += "collection(\"" + containerName
-				+ "\")/PMML/AssociationRule[";
-		NodeList scope = doc.getElementsByTagName("Scope");
-		if (scope.getLength() == 0) {
-			NodeList anteList = doc.getElementsByTagName("Antecedent");
-			NodeList consList = doc.getElementsByTagName("Consequent");
-			NodeList condList = doc.getElementsByTagName("Condition");
-
-			output[1] = "false";
-
-			if (anteList.getLength() > 0) {
-				output[0] += "(" + cedentPrepare(anteList)[0] + ")";
-			}
-			if (anteList.getLength() > 0 && consList.getLength() > 0) {
-				output[0] += " and ";
-			}
-			if (consList.getLength() > 0) {
-				String consCedent[] = cedentPrepare(consList);
-				output[0] += "(" + consCedent[0] + ")";
-				output[1] = consCedent[1];
-			}
-			if ((anteList.getLength() > 0 && condList.getLength() > 0)
-					|| (consList.getLength() > 0 && condList.getLength() > 0)) {
-				output[0] += " and ";
-			}
-			if (condList.getLength() > 0) {
-				output[0] += "(" + cedentPrepare(condList)[0] + ")";
-			}
-
-		} else {
-			int x = 0;
-			NodeList BBAList = doc.getElementsByTagName("BBA");
-			for (int i = 0; i < BBAList.getLength(); i++) {
-				Element BBAElement = (Element) BBAList.item(i);
-				NodeList fieldList = BBAElement
-						.getElementsByTagName("Field");
-				if (x > 0) {
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(xmlQuery);
+			doc.getDocumentElement().normalize();
+	
+			output[0] += "collection(\"" + containerName
+					+ "\")/PMML/AssociationRule[";
+			NodeList scope = doc.getElementsByTagName("Scope");
+			if (scope.getLength() == 0) {
+				NodeList anteList = doc.getElementsByTagName("Antecedent");
+				NodeList consList = doc.getElementsByTagName("Consequent");
+				NodeList condList = doc.getElementsByTagName("Condition");
+	
+				output[1] = "false";
+	
+				if (anteList.getLength() > 0) {
+					output[0] += "(" + cedentPrepare(anteList)[0] + ")";
+				}
+				if (anteList.getLength() > 0 && consList.getLength() > 0) {
 					output[0] += " and ";
 				}
-				output[0] += "(";
-				output[0] += BBAMake(fieldList, "./", false, false);
-				output[0] += ")";
-				x++;
+				if (consList.getLength() > 0) {
+					String consCedent[] = cedentPrepare(consList);
+					output[0] += "(" + consCedent[0] + ")";
+					output[1] = consCedent[1];
+				}
+				if ((anteList.getLength() > 0 && condList.getLength() > 0)
+						|| (consList.getLength() > 0 && condList.getLength() > 0)) {
+					output[0] += " and ";
+				}
+				if (condList.getLength() > 0) {
+					output[0] += "(" + cedentPrepare(condList)[0] + ")";
+				}
+	
+			} else {
+				int x = 0;
+				NodeList BBAList = doc.getElementsByTagName("BBA");
+				for (int i = 0; i < BBAList.getLength(); i++) {
+					Element BBAElement = (Element) BBAList.item(i);
+					NodeList fieldList = BBAElement
+							.getElementsByTagName("Field");
+					if (x > 0) {
+						output[0] += " and ";
+					}
+					output[0] += "(";
+					output[0] += BBAMake(fieldList, "./", false, false);
+					output[0] += ")";
+					x++;
+				}
 			}
-		}
-
-		NodeList imsList = doc.getElementsByTagName("IMs");
-		Element imsElement = (Element) imsList.item(0);
-		NodeList imsChilds = imsElement.getChildNodes();
-		for (int j = 0; j < imsChilds.getLength(); j++) {
-			Element ims = (Element) imsChilds.item(j);
-			NodeList imList = ims.getElementsByTagName("InterestMeasure");
-			Element interestMeasureElement = (Element) imList.item(0);
-			NodeList interestMeasureList = interestMeasureElement
-					.getChildNodes();
-			Node interestMeasure = interestMeasureList.item(0);
-			NodeList thList = ims.getElementsByTagName("Threshold");
-			if (thList.item(0) != null) {
-				Element thresholdElement = (Element) thList.item(0);
-				NodeList thresholdList = thresholdElement.getChildNodes();
-				Node threshold = thresholdList.item(0);
-				output[0] += " and IMValue[@name=\""
-						+ interestMeasure.getNodeValue() + "\"]/text() >= "
-						+ threshold.getNodeValue();
+	
+			NodeList imsList = doc.getElementsByTagName("IMs");
+			Element imsElement = (Element) imsList.item(0);
+			NodeList imsChilds = imsElement.getChildNodes();
+			for (int j = 0; j < imsChilds.getLength(); j++) {
+				Element ims = (Element) imsChilds.item(j);
+				NodeList imList = ims.getElementsByTagName("InterestMeasure");
+				Element interestMeasureElement = (Element) imList.item(0);
+				NodeList interestMeasureList = interestMeasureElement
+						.getChildNodes();
+				Node interestMeasure = interestMeasureList.item(0);
+				NodeList thList = ims.getElementsByTagName("Threshold");
+				if (thList.item(0) != null) {
+					Element thresholdElement = (Element) thList.item(0);
+					NodeList thresholdList = thresholdElement.getChildNodes();
+					Node threshold = thresholdList.item(0);
+					output[0] += " and IMValue[@name=\""
+							+ interestMeasure.getNodeValue() + "\"]/text() >= "
+							+ threshold.getNodeValue();
+				}
 			}
+			output[0] += "]";
+		} catch (DOMException e) {
+			logger.warning("Making of XPath expression failed! - DOM exception");
+		} catch (ParserConfigurationException e) {
+			logger.warning("Making of XPath expression failed! - Parser configuration exception");
+		} catch (IOException e) {
+			logger.warning("Making of XPath expression failed! - IO exception");
+		} catch (SAXException e) {
+			logger.warning("Making of XPath expression failed! - SAX exception");
 		}
-		output[0] += "]";
 		return output;
 	}
 
@@ -361,26 +372,37 @@ public class QueryMaker {
 	 * @param xmlQuery
 	 *            vstupni XML dotaz
 	 * @return maximalni pocet vysledku
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
 	 */
-	public int getMaxResults(InputStream xmlQuery) throws ParserConfigurationException, SAXException, IOException {
+	public Integer getMaxResults(InputStream xmlQuery) {
 		int maxResInt = 200;
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-
-		Document doc = db.parse(xmlQuery);
-		doc.getDocumentElement().normalize();
-
-		NodeList maxResultsList = doc.getElementsByTagName("MaxResults");
-		Element maxResultsElement = (Element) maxResultsList.item(0);
-		NodeList maxResultsList2 = maxResultsElement.getChildNodes();
-		if (maxResultsList2.item(0) != null) {
-			Node maxResults = maxResultsList2.item(0);
-			maxResInt = Integer.parseInt(maxResults.getNodeValue());
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+	
+			Document doc = db.parse(xmlQuery);
+			doc.getDocumentElement().normalize();
+	
+			NodeList maxResultsList = doc.getElementsByTagName("MaxResults");
+			Element maxResultsElement = (Element) maxResultsList.item(0);
+			NodeList maxResultsList2 = maxResultsElement.getChildNodes();
+			if (maxResultsList2.item(0) != null) {
+				Node maxResults = maxResultsList2.item(0);
+				maxResInt = Integer.parseInt(maxResults.getNodeValue());
+			}
+			return maxResInt;
+		} catch (DOMException e) {
+			logger.warning("Error occured during getting max results restriction! - DOM exception");
+			return null;
+		} catch (ParserConfigurationException e) {
+			logger.warning("Error occured during getting max results restriction! - Parser configuration exception");
+			return null;
+		} catch (IOException e) {
+			logger.warning("Error occured during getting max results restriction! - IO exception");
+			return null;
+		} catch (SAXException e) {
+			logger.warning("Error occured during getting max results restriction! - SAX exception");
+			return null;
 		}
-		return maxResInt;
 	}
 
 	/**
@@ -394,80 +416,91 @@ public class QueryMaker {
 	 * @throws IOException 
 	 * @throws SAXException 
 	 */
-	public String getExceptionPath(InputStream xmlQuery) throws ParserConfigurationException, SAXException, IOException {
+	public String getExceptionPath(InputStream xmlQuery) {
 		String output = "/AssociationRule[";
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(xmlQuery);
-		doc.getDocumentElement().normalize();
-
-		NodeList consList = doc.getElementsByTagName("Consequent");
-		Element consElement = (Element) consList.item(0);
-		NodeList dbas = consElement.getChildNodes();
-		for (int a = 0; a < dbas.getLength(); a++) {
-			Element dba = (Element) dbas.item(a);
-			NodeList dbas2 = dba.getChildNodes();
-			for (int b = 0; b < dbas2.getLength(); b++) {
-				for (int z = 0; z < 2; z++) {
-					Element dba2 = (Element) dbas2.item(b);
-					String connective = dba2.getAttribute("connective")
-							.toString();
-					if (connective.toLowerCase().equals("positive")
-							&& z < 1) {
-						connective = "Negative";
-					} else if (connective.toLowerCase().equals("negative")
-							&& z < 1) {
-						connective = "Positive";
-					}
-					String connect = "";
-					if (z == 1) {
-						connect = " or ";
-					}
-					output += connect + "Consequent/DBA/DBA[@connective=\""
-							+ connective + "\"]";
-
-					NodeList bbas = dba2.getChildNodes();
-					for (int c = 0; c < bbas.getLength(); c++) {
-						Element bbaElement = (Element) bbas.item(c);
-
-						NodeList fields = bbaElement.getChildNodes();
-						for (int d = 0; d < fields.getLength(); d++) {
-							Element fieldElement = (Element) fields.item(d);
-							if (fieldElement.getAttribute("dictionary")
-									.toLowerCase()
-									.equals(DICTIONARY.toLowerCase())) {
-								NodeList nameList = fieldElement
-										.getElementsByTagName("Name");
-								NodeList catsList = fieldElement
-										.getElementsByTagName("Category");
-
-								Element nameElement = (Element) nameList
-										.item(0);
-								Node name = nameElement.getChildNodes()
-										.item(0);
-								String fieldName = name.getNodeValue();
-								output += "/BBA[";
-								for (int e = 0; e < catsList.getLength(); e++) {
-									Element catElement = (Element) catsList
-											.item(e);
-									Node cat = catElement.getChildNodes()
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(xmlQuery);
+			doc.getDocumentElement().normalize();
+	
+			NodeList consList = doc.getElementsByTagName("Consequent");
+			Element consElement = (Element) consList.item(0);
+			NodeList dbas = consElement.getChildNodes();
+			for (int a = 0; a < dbas.getLength(); a++) {
+				Element dba = (Element) dbas.item(a);
+				NodeList dbas2 = dba.getChildNodes();
+				for (int b = 0; b < dbas2.getLength(); b++) {
+					for (int z = 0; z < 2; z++) {
+						Element dba2 = (Element) dbas2.item(b);
+						String connective = dba2.getAttribute("connective")
+								.toString();
+						if (connective.toLowerCase().equals("positive")
+								&& z < 1) {
+							connective = "Negative";
+						} else if (connective.toLowerCase().equals("negative")
+								&& z < 1) {
+							connective = "Positive";
+						}
+						String connect = "";
+						if (z == 1) {
+							connect = " or ";
+						}
+						output += connect + "Consequent/DBA/DBA[@connective=\""
+								+ connective + "\"]";
+	
+						NodeList bbas = dba2.getChildNodes();
+						for (int c = 0; c < bbas.getLength(); c++) {
+							Element bbaElement = (Element) bbas.item(c);
+	
+							NodeList fields = bbaElement.getChildNodes();
+							for (int d = 0; d < fields.getLength(); d++) {
+								Element fieldElement = (Element) fields.item(d);
+								if (fieldElement.getAttribute("dictionary")
+										.toLowerCase()
+										.equals(DICTIONARY.toLowerCase())) {
+									NodeList nameList = fieldElement
+											.getElementsByTagName("Name");
+									NodeList catsList = fieldElement
+											.getElementsByTagName("Category");
+	
+									Element nameElement = (Element) nameList
 											.item(0);
-									String catName = cat.getNodeValue();
-									String catNameCondition = "CatName=\""
-											+ catName + "\"";
-									if (z == 1) {
-										catNameCondition = "CatName!=\""
+									Node name = nameElement.getChildNodes()
+											.item(0);
+									String fieldName = name.getNodeValue();
+									output += "/BBA[";
+									for (int e = 0; e < catsList.getLength(); e++) {
+										Element catElement = (Element) catsList
+												.item(e);
+										Node cat = catElement.getChildNodes()
+												.item(0);
+										String catName = cat.getNodeValue();
+										String catNameCondition = "CatName=\""
 												+ catName + "\"";
+										if (z == 1) {
+											catNameCondition = "CatName!=\""
+													+ catName + "\"";
+										}
+										output += "FieldName=\"" + fieldName
+												+ "\" and " + catNameCondition;
 									}
-									output += "FieldName=\"" + fieldName
-											+ "\" and " + catNameCondition;
+									output += "]";
 								}
-								output += "]";
 							}
 						}
 					}
 				}
 			}
+		} catch (ParserConfigurationException e) {
+			logger.warning("Error occured during getting max results restriction! - Parser configuration exception");
+			return null;
+		} catch (IOException e) {
+			logger.warning("Error occured during getting max results restriction! - IO exception");
+			return null;
+		} catch (SAXException e) {
+			logger.warning("Error occured during getting max results restriction! - SAX exception");
+			return null;
 		}
 		output += "]";
 		return output;

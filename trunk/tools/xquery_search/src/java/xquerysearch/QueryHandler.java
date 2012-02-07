@@ -1,16 +1,20 @@
-package xquery_servlet;
+package xquerysearch;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
+
+import xquerysearch.settings.SettingsManager;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
@@ -23,14 +27,15 @@ import net.sf.saxon.trans.XPathException;
  * @author Tomas Marek
  */
 public class QueryHandler {
-    String queryDir;
+    private SettingsManager settings;
+    private Logger logger = CommunicationManager.logger;
 
     /**
      * Konstruktor instance tridy
-     * @param queryDir slozka obsahujici ulozene query
+     * @param Settings.getQueriesDirectory() slozka obsahujici ulozene query
      */
-    public QueryHandler(String queryDir) {
-        this.queryDir = queryDir;
+    public QueryHandler(SettingsManager settings) {
+        this.settings = settings;
     }
 
     /**
@@ -41,7 +46,7 @@ public class QueryHandler {
      * @throws IOException 
      */
     public String addQuery(String query, String id) throws IOException{
-        File file = new File(queryDir + id + ".txt");
+        File file = new File(settings.getQueriesDirectory() + id + ".txt");
         String output = "";
         if (file.exists()) {
         output = "<error>Query jiz existuje!</error>";
@@ -62,7 +67,7 @@ public class QueryHandler {
      */
     public String getQueriesNames(){
         String output = "";
-        File uploadFolder = new File(queryDir);
+        File uploadFolder = new File(settings.getQueriesDirectory());
         File uploadFiles[] = uploadFolder.listFiles();
 
         for(int i = 0; i < uploadFiles.length; i++){
@@ -88,7 +93,7 @@ public class QueryHandler {
      */
     public String deleteQuery (String id) {
         String output = "";
-        File file = new File(queryDir + id + ".txt");
+        File file = new File(settings.getQueriesDirectory() + id + ".txt");
 
         if (file.exists()) {
                 file.delete();
@@ -101,33 +106,37 @@ public class QueryHandler {
     }
 
     /**
-     * Metoda pro ziskani ulozene XQuery
-     * @param id ID ulozene XQuery
-     * @return vracena XQuery/Zprava - nenalezena
-     * @throws IOException 
+     * 
+     * @param id id of query to get
+     * @return query found by given id, <code>null</code> if error occurs
      */
-    public String[] getQuery(String id) throws IOException{
+    public String getQuery(String id) {
         FileReader rdr = null;
         BufferedReader out = null;
-        File file = new File(queryDir + id + ".txt");
-        String output[] = new String[2];
-        output[1] = "";
+        File file = new File(settings.getQueriesDirectory() + id + ".txt");
         if (file.exists()) {
-                rdr = new FileReader(file);
+            try {
+            	String query = "";
+        		rdr = new FileReader(file);
                 out = new BufferedReader(rdr);
                 String radek = out.readLine();
                 while (radek != null){
-                        output[1] += radek + "\n";
+                        query += radek + "\n";
                         radek = out.readLine();
                 }
-                output[0] = "0";
                 out.close();
+                return query;
+            } catch (FileNotFoundException e) {
+            	logger.warning("Getting query with id \"" + id + "\" failed! - File not found");
+            	return null;
+            } catch (IOException e) {
+            	logger.warning("Getting query with id \"" + id + "\" failed! - IO exception");
+            	return null;
+            }
         }
         else {
-                output[1] = "<error>Query neexistuje!</error>";
-                output[0] = "1";
+                return null;
         }
-        return output;
     }
 
     /**
@@ -162,7 +171,7 @@ public class QueryHandler {
      * @return query v novem formatu
      * @throws XPathException 
      */
-    public ByteArrayOutputStream queryPrepare(String request) throws XPathException{
+    public ByteArrayOutputStream queryPrepare(String request) {
         String query =
                 "declare function local:processRequest($request as node()) {"
                     + "\n let $generalSet := $request/ARQuery/GeneralSetting"
@@ -219,15 +228,21 @@ public class QueryHandler {
                         + "\n <Field dictionary=\"{distinct-values($fieldTrans[1]/@dictionary)}\"><Name>{distinct-values($fieldTrans[1]/@name/string())}</Name><Type>{$coeff/Type/text()}</Type>{$category}</Field> else ()};"
                 + "\n let $vstup := " + deleteDeclaration(request)
                 + "\n return local:processRequest($vstup)";
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Configuration config = new Configuration();
-        StaticQueryContext sqc = config.newStaticQueryContext();
-        XQueryExpression xqe = sqc.compileQuery(query);
-        DynamicQueryContext dqc = new DynamicQueryContext(config);
-        Properties props = new Properties();
-        props.setProperty(OutputKeys.METHOD, "html");
-        props.setProperty(OutputKeys.INDENT, "no");
-        xqe.run(dqc, new StreamResult(baos), props);
-        return baos;
+        
+        try {
+        	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		    Configuration config = new Configuration();
+		    StaticQueryContext sqc = config.newStaticQueryContext();
+		    XQueryExpression xqe = sqc.compileQuery(query);
+		    DynamicQueryContext dqc = new DynamicQueryContext(config);
+		    Properties props = new Properties();
+		    props.setProperty(OutputKeys.METHOD, "html");
+		    props.setProperty(OutputKeys.INDENT, "no");
+		    xqe.run(dqc, new StreamResult(baos), props);
+		    return baos;
+        } catch (XPathException e) {
+        	logger.warning("Query preparation failed! - XPath exception");
+        	return null;
+        }
     }
 }

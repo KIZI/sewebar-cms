@@ -1,15 +1,5 @@
-package xquery_servlet;
+package xquerysearch;
 
-import com.sleepycat.dbxml.XmlContainer;
-import com.sleepycat.dbxml.XmlDocument;
-import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlIndexDeclaration;
-import com.sleepycat.dbxml.XmlIndexSpecification;
-import com.sleepycat.dbxml.XmlManager;
-import com.sleepycat.dbxml.XmlQueryContext;
-import com.sleepycat.dbxml.XmlResults;
-import com.sleepycat.dbxml.XmlTransaction;
-import com.sleepycat.dbxml.XmlValue;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -24,41 +14,58 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
 import net.sf.saxon.query.StaticQueryContext;
 import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.trans.XPathException;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import xquerysearch.db.DbConnectionManager;
+import xquerysearch.settings.SettingsManager;
+
+import com.sleepycat.dbxml.XmlContainer;
+import com.sleepycat.dbxml.XmlDocument;
+import com.sleepycat.dbxml.XmlException;
+import com.sleepycat.dbxml.XmlIndexDeclaration;
+import com.sleepycat.dbxml.XmlIndexSpecification;
+import com.sleepycat.dbxml.XmlManager;
+import com.sleepycat.dbxml.XmlQueryContext;
+import com.sleepycat.dbxml.XmlResults;
+import com.sleepycat.dbxml.XmlTransaction;
+import com.sleepycat.dbxml.XmlValue;
 
 /**
  * Trida pro ovladani a komunikaci s Berkeley XML DB
  * @author Tomas Marek
  */
 public class BDBXMLHandler {
-	QueryMaker qm;
-	XmlManager mgr;
-    QueryHandler qh;
-    SchemaChecker sc;
-    String containerName;
-    String useTransformation;
-    String xsltPathPMML;
-    String xsltPathBKEF;
-    Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\',?ˇ´<>¨;¤×÷§]");
-    String replaceBy = "_";
+	private Logger logger = CommunicationManager.logger;
+	private DbConnectionManager dcm;
+	private QueryMaker qm;
+	private XmlManager mgr;
+	private QueryHandler qh;
+    private SettingsManager settings;
+    private String containerName;
+    boolean useTransformation;
+    private String xsltPathPMML;
+    private String xsltPathBKEF;
+    private Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\',?ˇ´<>¨;¤×÷§]");
+    private String replaceBy = "_";
+    
     
     /**
      * Konstruktor
@@ -68,15 +75,15 @@ public class BDBXMLHandler {
      * @param useTransformation pouzit transformaci - true/false
      * @param xsltPath cesta k souboru s xslt transformaci
      */
-    public BDBXMLHandler(XmlManager mgr, QueryHandler qh, SchemaChecker sc, String containerName, String useTransformation, String xsltPathPMML, String xsltPathBKEF) {
-        this.mgr = mgr;
-        this.qh = qh;
-        this.sc = sc;
-        this.containerName = containerName;
-        this.useTransformation = useTransformation;
-        this.xsltPathPMML = xsltPathPMML;
-        this.xsltPathBKEF = xsltPathBKEF;
-        qm = new QueryMaker(containerName);
+    public BDBXMLHandler(SettingsManager settings) {
+    	this.dcm = new DbConnectionManager(settings);
+    	this.settings = settings;
+    	this.containerName = settings.getContainerName();
+    	this.useTransformation = settings.isUseTransformation();
+    	this.xsltPathPMML = settings.getPmmlTransformationPath();
+    	this.xsltPathBKEF = settings.getBkefTransformationPath();
+    	this.qm = new QueryMaker(settings);
+    	this.qh = new QueryHandler(settings);
     }
 
     /**
@@ -101,65 +108,32 @@ public class BDBXMLHandler {
         return output;
     }
 
-    /*public String removeAllDocuments(){
-        String output = "";
-        try {
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
-            XmlResults allDocs = cont.getAllDocuments(XmlDocumentConfig.DEFAULT);
-            int pocitadlo = 0;
-            while (allDocs.hasNext()) {
-                if (!allDocs.next().isNull()) {
-                    XmlDocument doc = allDocs.next().asDocument();
-                    output += "<doc id=\""+ pocitadlo +"\">" + doc.getName().toString() + "</doc>";
-                    pocitadlo++;
-                }
-            }
-            txn.commit();
-            closeContainer(cont);
-        } catch (XmlException ex) {
-            output += "<error>" + ex.toString() + "</error>";
-        }
-        return output;
-    }*/
-    
     /**
      * Metoda pro zobrazeni dokumentu z XML DB
      * @param id ID dokumentu v DB
      * @return Zobrazeni dokumentu/chyba
-     * @throws XmlException 
      */
-    public String getDocument(String id) throws XmlException{
-        String output = "";
-        XmlContainer cont = mgr.openContainer(containerName);
-        XmlTransaction txn = mgr.createTransaction();
-
-        if (cont.getDocument(id) != null) {
-            XmlDocument doc = cont.getDocument(id);
-            output += doc.getContentAsString();
-        } else {
-            output += "<error>Dokument nenalezen!</error>";
-        }
-        txn.commit();
-        closeContainer(cont);
-        return output;
+    public String getDocument(String id) {
+    	XmlDocument doc = dcm.getDocumentById(id);
+    	if (doc != null) {
+    		try {
+				return doc.getContentAsString();
+			} catch (XmlException e) {
+				return "<error>Error occured when finding the document with id \"" + id + "\"</error>";
+			}
+    	} else {
+    		return "<error>Cannot find the document with id \"" + id + "\"</error>";
+    	}
     }
 
     /**
      * Cyklycke dotazovani - 10x za sebou stejny dotaz na XML DB (pouzito pri testovani)
      * @param search XQuery dotaz
      * @return cas a vysledky dotazovani 
-     * @throws XPathException 
-     * @throws XPathExpressionException 
-     * @throws XmlException 
-     * @throws IOException 
-     * @throws SAXException 
-     * @throws ParserConfigurationException 
      */
-    public String query_10(String search) throws XmlException, XPathExpressionException, XPathException, IOException, ParserConfigurationException, SAXException {
+    public String query_10(String search) {
         String output = "";
         String output_temp = "";
-        QueryMaker qm = new QueryMaker(containerName);
         InputStream query = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
         InputStream query2 = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
         String xpath = qm.makeXPath(query)[0];
@@ -184,46 +158,36 @@ public class BDBXMLHandler {
      * @param search vstupni dotaz pro XQuery
      * @param type typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
      * @return vysledek vyhledavani
-     * @throws XmlException 
-     * @throws IOException 
     */
-    public String query(String id, String search, int type) throws XmlException, IOException{
-        String output = "";
-        int chyba = 0;
-        XmlContainer cont = mgr.openContainer(containerName);
+    public String query(String id, String search, int type) {
         String query = "";
         if (type == 0) {
             query = search;
         } else {
-                if (qh.getQuery(id)[0].toString().equals("1")) {
-                    output = qh.getQuery(id)[1].toString();
-                    chyba = 1;
-                } else {
-                    query = qh.getQuery(id)[1].toString();
-                    query += "\nlet $zadani := " + search
-                            + "\nreturn local:mainFunction($zadani)";
-                }
+        	query = qh.getQuery(id);	
+        	if (query != null) {
+        		query += "\nlet $zadani := " + search
+        		+ "\nreturn local:mainFunction($zadani)";
+        	}
         }
-        if (chyba != 1) {
-        	query = qh.deleteDeclaration(query);
-            XmlQueryContext qc = mgr.createQueryContext();
-            XmlTransaction txn = mgr.createTransaction();
-            XmlResults res = mgr.query(query, qc);
+    	query = qh.deleteDeclaration(query);
+        
+    	XmlResults res = dcm.query(query) ;
 
-            if (res != null) {
-            // Process results -- just print them
-                    XmlValue value = new XmlValue();
-                    while ((value = res.next()) != null) {
-                        output += (value.asString());
-                    }
-            } else {
-                output = "<error>Zadny vysledek</error>";
+        if (res != null) {
+            String result = "";
+        	try {    
+            	XmlValue value = new XmlValue();
+                while ((value = res.next()) != null) {
+                    result += (value.asString());
+                }
+                return result;
+            } catch (XmlException e) {
+            	return "<error>Querying database failed! - XML exception</error>";
             }
-            txn.commit();
-            res.delete();
-            closeContainer(cont);
+        } else {
+            return "<error>No results found</error>";
         }
-        return output;
     }
 
     /**
@@ -260,25 +224,20 @@ public class BDBXMLHandler {
      * @throws XmlException 
      */
     public String getDocsNames() throws XmlException{
-        String output = "";
-        String query = "let $docs := for $x in collection(\""+containerName+"\") return $x"
+        String query = "let $docs := for $x in collection(\"" + containerName + "\") return $x"
                 + "\nreturn"
                 + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
                 + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
                 + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
-        XmlContainer cont = mgr.openContainer(containerName);
-        XmlQueryContext qc = mgr.createQueryContext();
-        XmlTransaction txn = mgr.createTransaction();
-        XmlResults res = mgr.query(query, qc);
+        XmlResults res = dcm.query(query);
 
+        String results = "";
         XmlValue value = new XmlValue();
         while ((value = res.next()) != null) {
-            output += value.asString();
+            results += value.asString();
         }
-        txn.commit();
-        closeContainer(cont);
-        return output;
+        return results;
     }
 
     /**
@@ -293,16 +252,15 @@ public class BDBXMLHandler {
      * @throws SAXException 
      * @throws TransformerException 
      */
-    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) throws IOException, XmlException, SAXException, TransformerException{
-        String output = "";
+    public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) {
         String xml_doc = "";
-        String validation[] = null;
+        boolean isValid = false;
         File xsltFile;
-            if (useTransformation.equals("true")) {
+            if (useTransformation) {
                 if (document.contains("sourceType=\"BKEF\"")) {
                     xsltFile = new File(xsltPathBKEF);
                 } else {
-                    validation = sc.validate(document);
+                    isValid = DocumentValidator.validate(document, settings.getValidationSchemaPath());
                     xsltFile = new File(xsltPathPMML);
                 }
                 XSLTTransformer xslt = new XSLTTransformer();
@@ -310,21 +268,19 @@ public class BDBXMLHandler {
             } else {
                 xml_doc = document;
             }
-        if(validation == null || (validation != null && validation[0].equals("1"))){        
-            XmlContainer cont = mgr.openContainer(containerName);
-            XmlTransaction txn = mgr.createTransaction();
-
+        if (isValid){        
             docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 
-            cont.putDocument(docName, xml_doc);
-            output += "<message>Dokument " + docName + " vlozen</message>";
+            boolean saved = dcm.insertDocument(docName, xml_doc);
 
-            txn.commit();
-            closeContainer(cont);
+            if (saved) {
+            	return "<message>Document " + docName + " inserted</message>";
+            } else {
+            	return "<error>Error occured during document saving occured</error>";
+            }
         } else {
-            output += "<error>"+validation[1]+"</error>";
+            return "<error>Document validation failed</error>";
         }
-        return output;
     }
 
     /**
@@ -339,42 +295,42 @@ public class BDBXMLHandler {
      * @throws TransformerException 
      * @throws SAXException 
      */
-    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) throws FileNotFoundException, IOException, XmlException, TransformerException, SAXException{
+    public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) {
         String xml_doc = "";
         String output = "";
         long act_time_long = System.currentTimeMillis();
 
         FileReader rdr = null;
         BufferedReader out = null;
-        rdr = new FileReader(document);
-        out = new BufferedReader(rdr);
-        String radek = out.readLine();
-        while (radek != null){
-            xml_doc += radek + "\n";
-            radek = out.readLine();
+        try {
+	        rdr = new FileReader(document);
+	        out = new BufferedReader(rdr);
+	        String radek = out.readLine();
+	        while (radek != null){
+	            xml_doc += radek + "\n";
+	            radek = out.readLine();
+	        }
+        } catch (FileNotFoundException e) {
+        	return "<error></error>";
+        } catch (IOException e) {
+        	return "<error></error>";
         }
-
-        String validation[] = sc.validate(xml_doc);
-        if(validation[0].equals("1")){
-	        if (useTransformation.equals("true")) {
+        boolean isValid = DocumentValidator.validate(xml_doc, settings.getValidationSchemaPath());
+        if(isValid){
+	        if (useTransformation) {
 	            File xsltFile = new File(xsltPathPMML);
 	            XSLTTransformer xslt = new XSLTTransformer();
 	            xml_doc = xslt.xsltTransformation(xml_doc, xsltFile, docID, creationTime, reportUri);
 	            output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
 	       }
 	
-	        XmlContainer cont = mgr.openContainer(containerName);
-	        XmlTransaction txn = mgr.createTransaction();
-	
 	        docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 	
-	        cont.putDocument(docName, xml_doc);
-	        output += "<message>Dokument " + docName + " vlozen</message>";
+	        dcm.insertDocument(docName, xml_doc);
+	        output += "<message>Document " + docName + " inserted</message>";
 	        output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
-	        txn.commit();
-	        closeContainer(cont);
         } else {
-            output += "<error>"+validation[1]+"</error>";
+        	return "<error>Document validation failed</error>";
         }
         return output;
     }
@@ -387,9 +343,9 @@ public class BDBXMLHandler {
      * @throws SAXException 
      * @throws TransformerException 
      */
-    public String indexDocumentMultiple (String folder) throws FileNotFoundException, IOException, XmlException, TransformerException, SAXException {
+    public String indexDocumentMultiple (String folder) {
         String output = "";
-        File uploadFolder = new File(folder);
+    	File uploadFolder = new File(folder);
         File uploadFiles[] = uploadFolder.listFiles();
         
         for(int i = 0; i < uploadFiles.length; i++){
@@ -631,28 +587,25 @@ public class BDBXMLHandler {
         return output;
     }
     
-    private String selectByXPath(String xpath, String document) throws XPathExpressionException {
-    	String output = "";
-    	InputSource bais = new InputSource(new ByteArrayInputStream(document.getBytes()));
-	    XPathFactory factory = XPathFactory.newInstance();
-	    XPath xp = factory.newXPath();
-		XPathExpression expr = xp.compile(xpath);
-		output = expr.evaluate(bais);
-    	return output;
+    private String selectByXPath(String xpath, String document) {
+    	try {
+    		InputSource bais = new InputSource(new ByteArrayInputStream(document.getBytes()));
+		    XPathFactory factory = XPathFactory.newInstance();
+		    XPath xp = factory.newXPath();
+			XPathExpression expr = xp.compile(xpath);
+			return expr.evaluate(bais);
+    	} catch (XPathExpressionException e) {
+    		logger.warning("Error occured during getting max results restriction! - XPath expression exception");
+    		return null;
+    	}
     }
 
     /**
      * Metoda pro dotazovani pomoci vytvoreneho XPath dotazu
      * @param XPathRequest XPath dotaz
      * @return vysledky hledani v SearchResult formatu
-     * @throws XmlException 
-     * @throws XPathExpressionException 
-     * @throws XPathException 
-     * @throws IOException 
-     * @throws SAXException 
-     * @throws ParserConfigurationException 
      */
-    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults, InputStream xmlQuery) throws XmlException, XPathExpressionException, XPathException, IOException, ParserConfigurationException, SAXException{
+    public String queryShortened(String XPathRequest, boolean restructure, boolean exception, int maxResults, InputStream xmlQuery) {
         long startTime = System.currentTimeMillis();
         String output = "";
         String schema = "";
@@ -698,8 +651,7 @@ public class BDBXMLHandler {
     }
     
     
-    private String dataDescriptionPrepare(String queryOutput) throws XPathException, UnsupportedEncodingException {
-        String output = "";
+    private String dataDescriptionPrepare(String queryOutput) {
         String ddPrepareQuery = "declare function local:descriptionTransform($inputData) {"
                 + "\nlet $dataDictOutput := <Dictionary sourceDictType=\"DataDictionary\" sourceFormat=\"PMML\" default=\"true\" completeness=\"ReferencedFromPatterns\" id=\"DataDictionary\">"
                 + "\n            { for $bbaName in distinct-values($inputData/DataDictionary/FieldName)"
@@ -739,27 +691,31 @@ public class BDBXMLHandler {
                 + "\n};"
                 + "\nlet $dd := " + queryOutput
                 + "\nreturn local:descriptionTransform($dd//BBA)";
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Configuration config = new Configuration();
-        StaticQueryContext sqc = config.newStaticQueryContext();
-        XQueryExpression xqe = sqc.compileQuery(ddPrepareQuery);
-        DynamicQueryContext dqc = new DynamicQueryContext(config);
-        Properties props = new Properties();
-        props.setProperty(OutputKeys.METHOD, "html");
-        props.setProperty(OutputKeys.INDENT, "no");
-        xqe.run(dqc, new StreamResult(baos), props);
-        output += baos.toString("UTF-8");
-        return output;
+        try {
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        Configuration config = new Configuration();
+	        StaticQueryContext sqc = config.newStaticQueryContext();
+	        XQueryExpression xqe = sqc.compileQuery(ddPrepareQuery);
+	        DynamicQueryContext dqc = new DynamicQueryContext(config);
+	        Properties props = new Properties();
+	        props.setProperty(OutputKeys.METHOD, "html");
+	        props.setProperty(OutputKeys.INDENT, "no");
+	        xqe.run(dqc, new StreamResult(baos), props);
+	        return baos.toString("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        	logger.warning("Error occured during data description preparation! - Unsupported encoding exception");
+        	return null;
+		} catch (XPathException e) {
+			logger.warning("Error occured during data description preparation! - XPath expression exception");
+			return null;
+		}
     }
     /**
      * Metoda pro zmenu struktury vystupu query
      * @param queryOutput puvodni vystup query
      * @return restrukturovana hodnota
-     * @throws XPathException 
-     * @throws UnsupportedEncodingException 
      */
-    private String restructureOutput (String queryOutput) throws XPathException, UnsupportedEncodingException {
-        String output = "";
+    private String restructureOutput (String queryOutput) {
         String restructureQuery = 
                 "declare function local:restructure($queryOutput) {"
                 + "\nlet $BBAs := for $bba in $queryOutput//BBA let $fieldRef := $bba/TransformationDictionary/FieldName/string() let $catName := $bba/TransformationDictionary/CatName/string() return <BBA id=\"{$bba/@id}\"><Text>{concat($fieldRef, \"(\", $catName, \")\")}</Text><FieldRef>{$fieldRef}</FieldRef><CatRef>{$catName}</CatRef></BBA>"
@@ -805,17 +761,24 @@ public class BDBXMLHandler {
                     + "\nreturn $dba3Output};"
                 + "\nlet $queryOutput := " + queryOutput + "\n"
                 + "\nreturn local:restructure($queryOutput)";
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Configuration config = new Configuration();
-        StaticQueryContext sqc = config.newStaticQueryContext();
-        XQueryExpression xqe = sqc.compileQuery(restructureQuery);
-        DynamicQueryContext dqc = new DynamicQueryContext(config);
-        Properties props = new Properties();
-        props.setProperty(OutputKeys.METHOD, "html");
-        props.setProperty(OutputKeys.INDENT, "no");
-        xqe.run(dqc, new StreamResult(baos), props);
-        output += baos.toString("UTF-8");
-        return output;
+        try {
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        Configuration config = new Configuration();
+	        StaticQueryContext sqc = config.newStaticQueryContext();
+	        XQueryExpression xqe = sqc.compileQuery(restructureQuery);
+	        DynamicQueryContext dqc = new DynamicQueryContext(config);
+	        Properties props = new Properties();
+	        props.setProperty(OutputKeys.METHOD, "html");
+	        props.setProperty(OutputKeys.INDENT, "no");
+	        xqe.run(dqc, new StreamResult(baos), props);
+	        return baos.toString("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        	logger.warning("Error occured during restructuring output! - Unsupported encoding exception");
+        	return null;
+		} catch (XPathException e) {
+			logger.warning("Error occured during restructuring output! - XPath expression exception");
+			return null;
+		}
     }
     /**
      * Metoda zajistujici uzavreni pouzivaneho kontejneru

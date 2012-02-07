@@ -1,4 +1,4 @@
-package xquery_servlet;
+package xquerysearch;
 
 import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlManager;
@@ -73,7 +73,7 @@ public class Tester {
                     "<err>" + settingsError + "</err>" +
                 "</settings>";
             output += "<addQuery>" + qh.addQuery("Pokusná query určená k testu", "pokusTest") + "</addQuery>";
-            output += "<getQuery>" + qh.getQuery("pokusTest")[1] + "</getQuery>";
+            output += "<getQuery>" + qh.getQuery("pokusTest") + "</getQuery>";
             output += "<deleteQuery>" + qh.deleteQuery("pokusTest") + "</deleteQuery>";
             output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokus1", "pokusTest", "", "") + "</indexDocument>";
             output += "<getDocument>" + bh.getDocument("pokusTest") + "</getDocument>";
