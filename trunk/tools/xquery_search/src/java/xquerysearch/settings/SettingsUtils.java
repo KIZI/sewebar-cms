@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,22 +24,31 @@ import xquerysearch.CommunicationManager;
  */
 public class SettingsUtils {
 
+	private static Logger logger = CommunicationManager.logger;
+	
     /**
      * Method for reading settings
      * @param xmlFile XML settings file
      * @return settings manager
-     * @throws ParserConfigurationException 
-     * @throws IOException 
-     * @throws SAXException 
      */
-    public SettingsManager readSettings(File xmlFile) throws ParserConfigurationException, SAXException, IOException{
+    public SettingsManager readSettings(File xmlFile) {
         
     		SettingsManager setMan = new SettingsManager(); 
     	
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(xmlFile);
-            doc.getDocumentElement().normalize();
+    		Document doc = null;
+    		
+    		try {
+	            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	            DocumentBuilder db = dbf.newDocumentBuilder();
+	            doc = db.parse(xmlFile);
+	            doc.getDocumentElement().normalize();
+    		} catch (ParserConfigurationException e) {
+    			logger.warning("Settings reading failed! - Parser configuration exception");
+    		} catch (IOException e) {
+    			logger.warning("Settings reading failed! - IO exception");
+    		} catch (SAXException e) {
+    			logger.warning("Settings reading failed! - SAX exception");
+    		}
 
             setMan.setEnvironmentDirectory(getSettingNode("envDir", doc));
             setMan.setQueriesDirectory(getSettingNode("queryDir", doc));
@@ -57,9 +67,8 @@ public class SettingsUtils {
      * Method for writing settings into XML file 
      * @param xmlFile settings file
      * @param settings settings
-     * @throws IOException 
      */
-    public static void writeSettings(File xmlFile, SettingsManager setMan) throws IOException{
+    public static void writeSettings(File xmlFile, SettingsManager setMan) {
         String output = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "\n<settings>"
                 + "\n\t<envDir>" + setMan.getEnvironmentDirectory() + "</envDir>"
@@ -71,12 +80,16 @@ public class SettingsUtils {
                 + "\n\t<tempDir>" + setMan.getTemporaryDirectory() + "</tempDir>"
                 + "\n\t<schemaPath>" + setMan.getBkefTransformationPath() + "</schemaPath>"
             + "\n</settings>";
-        FileOutputStream fos = new FileOutputStream(xmlFile);
-        OutputStreamWriter osw = new OutputStreamWriter(fos);
-        osw.write(output);
-        osw.close();
-        fos.close();
-        CommunicationManager.logger.info("Settings successfully saved!");
+        try {
+	        FileOutputStream fos = new FileOutputStream(xmlFile);
+	        OutputStreamWriter osw = new OutputStreamWriter(fos);
+	        osw.write(output);
+	        osw.close();
+	        fos.close();
+	        logger.info("Settings successfully saved!");
+        } catch (IOException e) {
+        	
+        }
     }
     
     /**

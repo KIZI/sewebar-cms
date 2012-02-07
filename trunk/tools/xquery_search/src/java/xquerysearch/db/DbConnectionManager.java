@@ -99,6 +99,21 @@ public class DbConnectionManager {
 		}			
 	}
 	
+	/**
+	 * Removes document from DB
+	 * @param docId document identification
+	 * @return if successful returns <code>true</code>, else <code>false</code>
+	 */
+	public boolean removeDocument(String docId) {
+		XmlContainer cont = openConnecion();
+		try {
+			cont.deleteDocument(docId);
+			return true;
+		} catch (XmlException e) {
+			logger.warning("Removing document with id \"" + docId + "\" failed!");
+			return false;
+		}
+	}
 	
 	/**
 	 * 

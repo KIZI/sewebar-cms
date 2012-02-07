@@ -156,7 +156,7 @@ public class SettingsManager {
 	 * @param request prijaty http request
 	 * @throws IOException 
 	 */
-	public SettingsManager changeSettings(File settingsFile, HttpServletRequest request) throws IOException{
+	public SettingsManager changeSettings(File settingsFile, HttpServletRequest request) {
 		this.setEnvironmentDirectory(request.getParameter("envDir"));
 		this.setQueriesDirectory(request.getParameter("queryDir"));
 		this.setContainerName(request.getParameter("containerName"));

@@ -239,9 +239,7 @@ public class CommunicationManager extends HttpServlet {
 			output += "<error><![CDATA[Neni zadan parametr ID!]]></error>";
 		} else {
 			switch (mappedAction) {
-			case 0:
-				output += "<error><![CDATA[Zadana akce neexistuje]]></error>";
-				break;
+			case 0: output += "<error><![CDATA[Action does not exist!]]></error>"; break;
 			case 1:
 				if (content.equals("")) {
 					output += "<error><![CDATA[Neni zadan obsah query]]></error>";
@@ -288,15 +286,9 @@ public class CommunicationManager extends HttpServlet {
 			case 5:
 				output += "<query><![CDATA[" + qh.getQuery(docId) + "]]></query>";
 				break;
-			case 6:
-				output += qh.deleteQuery(docId);
-				break;
-			case 7:
-				output += qh.getQueriesNames();
-				break;
-			case 8:
-				output += bh.getDocsNames();
-				break;
+			case 6: output += qh.deleteQuery(docId); break;
+			case 7: output += qh.getQueriesNames(); break;
+			case 8: output += bh.getDocsNames(); break;
 			case 9:
 				if (content.equals("")) {
 					output += "<error><![CDATA[Neni zadan obsah dokumentu]]></error>";
@@ -339,9 +331,7 @@ public class CommunicationManager extends HttpServlet {
 					output += bh.getDocument(docId);
 				}
 				break;
-			case 12:
-				output += bh.removeDocument(docId);
-				break;
+			case 12: output += bh.removeDocument(docId); break;
 			case 13:
 				if (content.equals("")) {
 					output += "<error><![CDATA[Index nebyl zadan!]]></error>";
@@ -350,14 +340,9 @@ public class CommunicationManager extends HttpServlet {
 					output += bh.addIndex(dotaz);
 				}
 				break;
-			case 14:
-//				output += tester.runTest();
-				break;
-			case 15:
-				break; // output += eh.test(content); break;
-			case 16:
-				output += bh.listIndex();
-				break;
+			case 14: break; // output += tester.runTest();
+			case 15: break; // output += eh.test(content); break;
+			case 16: output += bh.listIndex(); break;
 			case 17:
 				if (content.equals("")) {
 					output += "<error><![CDATA[Index nebyl zadan!]]></error>";
@@ -366,12 +351,8 @@ public class CommunicationManager extends HttpServlet {
 					output += bh.delIndex(dotaz);
 				}
 				break;
-			case 18:
-				output += bh.getDataDescriptionCache();
-				break;
-			case 19:
-				output += /* bh.removeAllDocuments(); */"<not implemented yet/>";
-				break;
+			case 18: output += bh.getDataDescriptionCache(); break;
+			case 19: output += /* bh.removeAllDocuments(); */"<not implemented yet/>"; break;
 			case 20: /*
 					 * if (content.equals("")) { output +=
 					 * "<error><![CDATA[Nebyl zadan dotaz!]]></error>"; } else {
@@ -381,12 +362,8 @@ public class CommunicationManager extends HttpServlet {
 					 * bh.queryShortened(qm.makeXPath(is)); }
 					 */
 				break;
-			case 21:
-				output += bh.actualizeDataDescriptionCache();
-				break;
-			default:
-				output += "<error><![CDATA[Zadana akce neexistuje]]></error>";
-				break;
+			case 21: output += bh.actualizeDataDescriptionCache(); break;
+			default: output += "<error><![CDATA[Action does not exist!]]></error>"; break;
 			}
 		}
 		return (output);
