@@ -43,29 +43,30 @@ public class QueryHandler {
      * @param query ukladana query
      * @param id nazev ukladane query
      * @return zprava o ulozeni / chybe
-     * @throws IOException 
      */
-    public String addQuery(String query, String id) throws IOException{
+    public String addQuery(String query, String id) {
         File file = new File(settings.getQueriesDirectory() + id + ".txt");
-        String output = "";
         if (file.exists()) {
-        output = "<error>Query jiz existuje!</error>";
+        	return "<error>Query jiz existuje!</error>";
+        } else {
+        	try {
+	            FileOutputStream fos = new FileOutputStream(file);
+	            OutputStreamWriter osw = new OutputStreamWriter(fos);
+	            osw.write(query);
+	            osw.close();
+	            return "<message>New query with id \"" + id + "\" added!</message>";
+        	} catch (IOException e) {
+        		logger.warning("Adding new query failed! - IO exception");
+        		return "<error>Adding new query failed!</error>";
+			}
         }
-        else {
-                FileOutputStream fos = new FileOutputStream(file);
-                OutputStreamWriter osw = new OutputStreamWriter(fos);
-                osw.write(query);
-                osw.close();
-        output = "<message>Query " + id + " ulozena!</message>";
-        }
-        return output;
     }
 
     /**
      * Metoda pro ziskani nazvu ulozenych XQuery
      * @return seznam ulozenych XQuery
      */
-    public String getQueriesNames(){
+    public String getQueriesNames() {
         String output = "";
         File uploadFolder = new File(settings.getQueriesDirectory());
         File uploadFiles[] = uploadFolder.listFiles();
@@ -92,17 +93,14 @@ public class QueryHandler {
      * @return zprava - vymazana/nenalezena
      */
     public String deleteQuery (String id) {
-        String output = "";
         File file = new File(settings.getQueriesDirectory() + id + ".txt");
 
         if (file.exists()) {
                 file.delete();
-                output = "<message>Query " + id + " smazana!</message>";
+                return "<message>Query " + id + " smazana!</message>";
+        } else {
+                return "<error>Query neexistuje!</error>";
         }
-        else {
-                output = "<error>Query neexistuje!</error>";
-        }
-        return output;
     }
 
     /**
@@ -169,7 +167,6 @@ public class QueryHandler {
      * Metoda prevadi query ze vstupniho ARBuilder formatu do formatu pro dalsi zpracovani
      * @param request vstupni dotaz (ve formatu ARBuilder)
      * @return query v novem formatu
-     * @throws XPathException 
      */
     public ByteArrayOutputStream queryPrepare(String request) {
         String query =

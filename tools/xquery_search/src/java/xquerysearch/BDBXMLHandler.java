@@ -87,31 +87,22 @@ public class BDBXMLHandler {
     }
 
     /**
-     * Metoda pro vymazani dokumentu z XML DB
-     * @param id ID dokumentu v DB
-     * @return Zprava - splneno/chyba
-     * @throws XmlException 
+     * Removes document
+     * @param id document id
+     * @return message
      */
-    public String removeDocument (String id) throws XmlException{
-        String output = "";
-        XmlContainer cont = mgr.openContainer(containerName);
-        XmlTransaction txn = mgr.createTransaction();
-
-        if (cont.getDocument(id) != null) {
-            cont.deleteDocument(id);
-            output += "<message>Dokument " + id + " smazan!</message>";
+    public String removeDocument (String id) {
+        if (dcm.removeDocument(id)) {
+        	return "<message>Document with id \"" + id + "\" removed!</message>";
         } else {
-            output += "<error>Dokument nenalezen!</error>";
+            return "<error>Removing document with id \"" + id + "\" failed!</error>";
         }
-        txn.commit();
-        closeContainer(cont);
-        return output;
     }
 
     /**
-     * Metoda pro zobrazeni dokumentu z XML DB
-     * @param id ID dokumentu v DB
-     * @return Zobrazeni dokumentu/chyba
+     * Gets the document by id
+     * @param id document ID
+     * @return document as string or message when error occurs
      */
     public String getDocument(String id) {
     	XmlDocument doc = dcm.getDocumentById(id);
