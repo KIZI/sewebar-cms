@@ -13,13 +13,16 @@
     <xsl:variable name="arText">
       <xsl:apply-templates select="." mode="ruleBody"/>
     </xsl:variable>
+    <xsl:variable name="arDebug">
+      <xsl:apply-templates select="." mode="debug"/>
+    </xsl:variable>
     <xsl:variable name="query">
       <xsl:apply-templates select="." mode="createQueryMain"/>
     </xsl:variable>
     <xsl:variable name="rulePos" select="position()"/>
 
     <div id="sect5-rule{$rulePos}">
-      <h3><xsl:copy-of select="keg:translate('Rule',12)"/> <xsl:value-of select="$rulePos"/></h3>
+      <h3 title="{$arDebug}"><xsl:copy-of select="keg:translate('Rule',12)"/> <xsl:value-of select="$rulePos"/></h3>
       <p>
         <!-- Rule has format: Antecedent => Consequent
         -->
@@ -255,6 +258,25 @@
 
   </xsl:template>
 
+<!-- Debug: Rule parts overview -->
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="debug">
+    antecedent=<xsl:value-of select="@antecedent" />
+    consequent=<xsl:value-of select="@consequent | @succedent"/>
+    condition=<xsl:value-of select="@condition"/>
+    
+    firstSet=<xsl:value-of select="FirstSet/@set | FirstSet/@FirstSet"/>
+    secondSet=<xsl:value-of select="SecondSet/@set | SecondSet/@SecondSet"/>
+    
+    antecedentVarBefore=<xsl:value-of select="StateBefore/@antecedentVarBefore"/>
+    antecedentVarAfter=<xsl:value-of select="StateAfter/@antecedentVarAfter"/>
+    
+    consequentVarBefore=<xsl:value-of select="StateBefore/@consequentVarBefore"/>
+    consequentVarAfter=<xsl:value-of select="StateAfter/@consequentVarAfter"/>
+  </xsl:template>
+
+  <!--
+  RULE BODY
+  -->
   <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="ruleBody">
     <xsl:param name="arrowOnly"/>
     <xsl:variable name="ante" select="@antecedent"/>

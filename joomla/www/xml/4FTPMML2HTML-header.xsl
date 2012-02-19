@@ -44,7 +44,7 @@
               <td><xsl:value-of select="p:Extension[@name='NormalizationDictionary']/@value"/></td>
           </tr>
           <tr>
-              <td align="right"><xsl:copy-of select="keg:translate('Export template version',850)"/>: </td>
+              <td align="right"><xsl:copy-of select="keg:translate('Export template version',835)"/>: </td>
               <td><xsl:value-of select="p:Extension[@name='version']/@value"/></td>
           </tr>
       </table>
