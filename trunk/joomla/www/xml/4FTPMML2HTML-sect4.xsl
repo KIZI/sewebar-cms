@@ -56,7 +56,19 @@
     <!-- association rules -->
     <xsl:comment><xsl:value-of select="keg:getContentBlockTag('SoughtRulePattern','','start')"/></xsl:comment>
     <div class="idiv">
-      <h3><xsl:copy-of select="keg:translate('Sought type of association rules',460)"/></h3>
+      <h3>
+        <xsl:choose>
+          <xsl:when test="/p:PMML/guha:SD4ftModel">
+            <xsl:copy-of select="keg:translate('Sought type of pairs of association rules',980)"/>
+          </xsl:when>
+          <xsl:when test="/p:PMML/guha:Ac4ftModel">
+            <xsl:copy-of select="keg:translate('Sought type of action rules',900)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="keg:translate('Sought type of association rules',460)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </h3>
       <p>
         <xsl:copy-of select="keg:translate('The basic building blocks of the task setting is the basic Boolean attributes setting...',770)"/>
       </p>

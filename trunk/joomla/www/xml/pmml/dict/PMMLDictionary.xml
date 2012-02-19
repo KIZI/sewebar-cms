@@ -344,12 +344,12 @@
     <Entry id="660">
         <str lang="en">This part of the analytical report lists all the created attributes and
             their characteristics:</str>
-        <str lang="cs">Tato část analytické zprávy zobrazuje vytvořené atributuy a jejich
+        <str lang="cs">Tato část analytické zprávy zobrazuje vytvořené atributy a jejich
         charakteristiky. </str>
     </Entry>
     <Entry id="670">
         <str lang="en">Column from which the attribute was derived</str>
-        <str lang="cs">Sloupcec, ze kterého je atribut vytvořen</str>
+        <str lang="cs">Sloupec, ze kterého je atribut vytvořen</str>
     </Entry>
     <Entry id="680">
         <str lang="en">Attribute type (categorical, ordinal, continuous)</str>
@@ -361,7 +361,7 @@
             attribute contains more categories than
         </str>
         <str lang="cs">Frekvenční analýza - histogram intervalů nebo enumerací atributu.
-         Histogramy jsou setřízené podle nejvíce frekventovaných hodnot. Pokud obsahuje
+         Histogramy jsou setříděné podle nejvíce frekventovaných hodnot. Pokud obsahuje
         atribut více kategorií než</str>
     </Entry>
     <Entry id="700">
@@ -436,8 +436,8 @@
             contingency table. The following paragraph complies with the PMML standard and shows, which
             attributes occur in the discovered association rules. Also, number of discovered rules is
             stated.</str>
-        <str lang="cs">V seznamu jsou výpsány všechny nalezená asociační pravidla.
-        Každé asociační pravidlo obashuje jméno, hodnoty měr zajímavosti (hodnoty kvantifikátorů)
+        <str lang="cs">V seznamu jsou vypsána všechna nalezená asociační pravidla.
+        Každé asociační pravidlo obsahuje jméno, hodnoty měr zajímavosti (hodnoty kvantifikátorů)
         a čtyřpolní kontingenční tabulku. Následující odstavec určuje kvůli kompatibilitě
         s PMML standardem atributy, které se vyskytují v nalezených asociačních pravidlech. Poté
         je uveden počet nalezených pravidel.
@@ -461,12 +461,121 @@
         <str lang="en">Normalization Dictionary Version</str>
         <str lang="cs">Verze normalizačního slovníku</str>
     </Entry>
+    <Entry id="835">
+        <str lang="en">Export template version</str>
+        <str lang="cs">Verze exportní šablony</str>
+    </Entry>
     <Entry id="840">
         <str lang="en">Interest measure values</str>
         <str lang="cs">Tabulka hodnot měr zajímavosti</str>
     </Entry>
+
     <Entry id="850">
-        <str lang="en">Export template version</str>
-        <str lang="cs">Verze exportní šablony</str>
-    </Entry>
+         <str lang="en">This document contains automatically generated report of a data mining task. It is a task that
+             finds action rules between Boolean characteristics of groups of attributes.
+             The algorithm used is not the most well known APRIORI algorithm, we use the Ac4ft-Miner procedure
+             of the GUHA method instead. The report has been automatically generated from the PMML
+             format for storage of association rules.</str>
+         <str lang="cs">Tento dokument obsahuje automaticky vytvořený popis běhu úlohy dolování znalostí z databází. Cílem úlohy bylo nalézt akční pravidla mezi booleovskými charakteristikami skupin atributů. Použita byla procedura Ac4ft-Miner metody GUHA. Tento dokument byl automaticky vygenerován na základě PMML specifikace vytvořené programem pro dolování asociačních pravidel.</str>
+      </Entry>
+     <Entry id="860">
+         <str lang="en">Set of quantifiers as interest measures for the output action rules</str>
+         <str lang="cs">Množiny kvantifikátorů, které slouží jako míry zajímavosti výstupních akčních pravidel</str>
+     </Entry>
+     <Entry id="870">
+         <str lang="en">Set of Derived Boolean attribute settings for the antecedent stable part and antecedent variable part</str>
+         <str lang="cs">Množiny nastavení odvozených Booleovských atributů pro stabilní a variabilní složku antecedentu</str>
+     </Entry>
+     <Entry id="880">
+         <str lang="en">Set of Derived Boolean attribute settings for the consequent stable part and consequent variable part</str>
+         <str lang="cs">Množiny nastavení odvozených Booleovských atributů pro stabilní a variabilní složku konsekventu</str>
+     </Entry>
+     <Entry id="890">
+         <str lang="en">Below, all the interest measures for the output action rules are
+             stated. The table contains name of the quantifier (interest measure) and also
+             minimal values of the quantifier threshold(s).</str>
+         <str lang="cs">V následující tabulce jsou zahrnuty všechny míry zajímavosti pro
+         výstupní akční pravidla. Tabulka obsahuje jméno kvantifikátoru (míry zajímavosti)
+         a také minimální hodnoty pro prahy kvantifikátoru.</str>
+     </Entry>
+     <Entry id="900">
+         <str lang="en">Sought type of action rules</str>
+         <str lang="cs">Tvar hledaných akčních pravidel</str>
+     </Entry>
+     <Entry id="910">
+         <str lang="en">Discovered Action Rules</str>
+         <str lang="cs">Nalezená akční pravidla</str>
+     </Entry>
+     <Entry id="920">
+         <str lang="en">Below, all the discovered patterns (action rules) are listed. Each
+             association rule contains name, values of the interest measure (quantifier) and a four-fold
+             contingency table for the initial and the final state. The following paragraph complies with the PMML standard and shows, which
+             attributes occur in the discovered action rules. Also, number of discovered rules is
+             stated.</str>
+         <str lang="cs">V seznamu jsou vypsány všechna nalezená asociační pravidla.
+         Každé akční pravidlo obsahuje jméno, hodnoty měr zajímavosti (hodnoty kvantifikátorů)
+         a čtyřpolní kontingenční tabulku pro stav před a stav po provedené změně. Následující odstavec určuje kvůli kompatibilitě
+         s PMML standardem atributy, které se vyskytují v nalezených akčních pravidlech. Poté
+         je uveden počet nalezených pravidel.
+         </str>
+     </Entry>
+     <Entry id="930">
+         <str lang="en">This document contains automatically generated report of a data mining task. It is a task that 
+              finds such association rules between Boolean characteristics of groups of attributes, which significantly differs in their interest measures between two sets defined by Boolean attributes.  
+             The algorithm used is not the most well known APRIORI algorithm, we use the SD4ft-Miner procedure 
+             of the GUHA method instead. The report has been automatically generated from the PMML 
+             format for storage of association rules.</str>
+         <str lang="cs">Tento dokument obsahuje automaticky vytvořený popis běhu úlohy dolování znalostí z databází. Cílem úlohy bylo nalézt taková asociační pravidla mezi booleovskými charakteristikami skupin atributů, která se významně liší svojí mírou zajímavosti u dvou podskupin daných dvojicí boolovských atributů. Použita byla procedura SD4ft-Miner metody GUHA. Tento dokument byl automaticky vygenerován na základě PMML specifikace vytvořené programem pro dolování asociačních pravidel.</str>
+     </Entry>
+      <Entry id="940">
+         <str lang="en">Set of quantifiers as interest measures for the output pairs of association rules</str>
+         <str lang="cs">Množiny kvantifikátorů, které slouží jako míry zajímavosti výstupních dvojic asociačních pravidel</str>
+     </Entry>
+     <Entry id="950">
+         <str lang="en">Set of Derived Boolean attribute settings for the definition of the first set</str>
+         <str lang="cs">Množiny nastavení odvozených Booleovských atributů pro definici první množiny</str>
+     </Entry>
+     <Entry id="960">
+         <str lang="en">Set of Derived Boolean attribute settings for the definition of the second set</str>
+         <str lang="cs">Množiny nastavení odvozených Booleovských atributů pro definici druhé množiny</str>
+     </Entry>
+     <Entry id="970">
+         <str lang="en">Below, all the interest measures for the output pairs of association rules are 
+             stated. The table contains name of the quantifier (interest measure) and also 
+             minimal values of the quantifier threshold(s).</str>
+         <str lang="cs">V následující tabulce jsou zahrnuty všechny míry zajímavosti pro 
+         výstupní dvojice asociačních pravidel. Tabulka obsahuje jméno kvantifikátoru (míry zajímavosti)
+         a také minimální hodnoty pro prahy kvantifikátoru.</str>
+     </Entry>
+     <Entry id="980">
+         <str lang="en">Sought type of pairs of association rules</str>
+         <str lang="cs">Tvar hledaných dvojic asociačních pravidel</str>
+     </Entry>
+     <Entry id="990">
+         <str lang="en">Discovered pairs of Association Rules</str>
+         <str lang="cs">Nalezená dvojice asociačních pravidel</str>
+     </Entry>
+     <Entry id="1000">
+         <str lang="en">Below, all the discovered patterns (pairs of association rules) are listed. Each 
+             pair of association rules contains name, values of the interest measure (quantifier) and a four-fold
+             contingency table for each of the rules. The following paragraph complies with the PMML standard and shows, which 
+             attributes occur in the discovered association rules. Also, number of discovered rules is 
+             stated.</str>
+         <str lang="cs">V seznamu jsou vypsány všechny nalezené dvojice asociačních pravidel.
+         Každá dvojice asociačních pravidel obsahuje jméno, hodnoty měr zajímavosti (hodnoty kvantifikátorů)
+         a čtyřpolní kontingenční tabulku pro obě pravidla. Následující odstavec určuje kvůli kompatibilitě
+         s PMML standardem atributy, které se vyskytují v nalezených asociačních pravidlech. Poté
+         je uveden počet nalezených pravidel. 
+         </str>
+     </Entry>
+     <Entry id="1010">
+         <str lang="en">This part of the analytical report describes the SD4ft procedure setting.
+             The setting consists of</str>
+         <str lang="cs">Tato část analytické zprávy popisuje zadání procedury SD4ft. Ta se zkládá z</str>
+     </Entry>
+     <Entry id="1020">
+         <str lang="en">This part of the analytical report describes the Ac4ft procedure setting.
+             The setting consists of</str>
+         <str lang="cs">Tato část analytické zprávy popisuje zadání procedury Ac4ft. Ta se zkládá z</str>
+     </Entry>
 </Dictionary>
