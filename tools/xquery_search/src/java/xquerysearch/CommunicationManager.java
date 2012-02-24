@@ -31,6 +31,15 @@ import com.sleepycat.dbxml.XmlException;
  * @version 1.21 (5.1.2012)
  */
 public class CommunicationManager extends HttpServlet {
+	private final String ID_MISSING_ERROR = "<error><![CDATA[ID is missing!]]></error>";
+	private final String QUERY_MISSING_ERROR = "<error><![CDATA[Query content is missing!]]></error>";
+	private final String DOCUMENT_CONTENT_MISSING_ERROR = "<error><![CDATA[Document content is missing!]]></error>";
+	private final String DOCUMENT_NAME_MISSING_ERROR = "<error><![CDATA[Document name is missing!]]></error>";
+	private final String DOCUMENT_CREATIONTIME_MISSING_ERROR = "<error><![CDATA[Document creation time is missing!]]></error>";
+	private final String ACTION_NOT_EXISTS_ERROR = "<error><![CDATA[Action does not exist!]]></error>";
+	private final String INDEX_NOT_SPECIFIED_ERROR = "<error><![CDATA[Index is not specified!]]></error>";
+	private final String FOLDER_PATH_MISSING_ERROR = "<error><![CDATA[Folder path is missing!]]></error>";
+	
 	
 	public static final Logger logger = Logger.getLogger("xquery_search");
 	public static final String SETTINGS_FILE_NAME = "xquery_search_settings.xml";
@@ -236,13 +245,13 @@ public class CommunicationManager extends HttpServlet {
 		}
 
 		if (except_bool == false && docId.isEmpty()) {
-			output += "<error><![CDATA[Neni zadan parametr ID!]]></error>";
+			output += ID_MISSING_ERROR;
 		} else {
 			switch (mappedAction) {
-			case 0: output += "<error><![CDATA[Action does not exist!]]></error>"; break;
+			case 0: output += ACTION_NOT_EXISTS_ERROR; break;
 			case 1:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Neni zadan obsah query]]></error>";
+					output += QUERY_MISSING_ERROR;
 				} else {
 					boolean restructure = false;
 					if (request.getParameter("restructure") != null) {
@@ -260,7 +269,7 @@ public class CommunicationManager extends HttpServlet {
 				break;
 			case 2:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Query nebyla zadana!]]></error>";
+					output += QUERY_MISSING_ERROR;
 				} else {
 					String dotaz = content.toString();
 					output += bh.query("", dotaz, 0);
@@ -268,7 +277,7 @@ public class CommunicationManager extends HttpServlet {
 				break;
 			case 3:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Query nebyla zadana!]]></error>";
+					output += QUERY_MISSING_ERROR;
 				} else {
 					String dotaz = content.toString();
 					String message = bh.query_10(dotaz);
@@ -277,7 +286,7 @@ public class CommunicationManager extends HttpServlet {
 				break;
 			case 4:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Neni zadan obsah query]]></error>";
+					output += QUERY_MISSING_ERROR;
 				} else {
 					content = content.toString();
 					output += qh.addQuery(content, docId);
@@ -291,7 +300,7 @@ public class CommunicationManager extends HttpServlet {
 			case 8: output += bh.getDocsNames(); break;
 			case 9:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Neni zadan obsah dokumentu]]></error>";
+					output += DOCUMENT_CONTENT_MISSING_ERROR;
 				} else {
 					String docName = "";
 					String creationTime = "";
@@ -307,9 +316,9 @@ public class CommunicationManager extends HttpServlet {
 						reportUri = request.getParameter("reportUri").toString();
 					}
 					if (docName.equals("")) {
-						output += "<error><![CDATA[Neni zadan nazev dokumentu]]></error>";
+						output += DOCUMENT_NAME_MISSING_ERROR;
 					} else if (creationTime.equals("")) {
-						output += "<error><![CDATA[Neni zadan datum vytvoreni dokumentu]]></error>";
+						output += DOCUMENT_CREATIONTIME_MISSING_ERROR;
 					} else {
 						content = content.toString();
 						output += bh.indexDocument(content, docId, docName, creationTime, reportUri);
@@ -318,7 +327,7 @@ public class CommunicationManager extends HttpServlet {
 				break;
 			case 10:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Neni zadano umisteni slozky!]]></error>";
+					output += FOLDER_PATH_MISSING_ERROR;
 				} else {
 					output += bh.indexDocumentMultiple(content);
 					break;
@@ -326,7 +335,7 @@ public class CommunicationManager extends HttpServlet {
 				break;
 			case 11:
 				if (docId == null) {
-					output += "<error><![CDATA[Neni zadan nazev dokumentu]]></error>";
+					output += DOCUMENT_NAME_MISSING_ERROR;
 				} else {
 					output += bh.getDocument(docId);
 				}
@@ -334,7 +343,7 @@ public class CommunicationManager extends HttpServlet {
 			case 12: output += bh.removeDocument(docId); break;
 			case 13:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Index nebyl zadan!]]></error>";
+					output += INDEX_NOT_SPECIFIED_ERROR;
 				} else {
 					String dotaz = content.toString();
 					output += bh.addIndex(dotaz);
@@ -345,10 +354,10 @@ public class CommunicationManager extends HttpServlet {
 			case 16: output += bh.listIndex(); break;
 			case 17:
 				if (content.equals("")) {
-					output += "<error><![CDATA[Index nebyl zadan!]]></error>";
+					output += INDEX_NOT_SPECIFIED_ERROR;
 				} else {
 					String dotaz = content.toString();
-					output += bh.delIndex(dotaz);
+					output += bh.removeIndex(dotaz);
 				}
 				break;
 			case 18: output += bh.getDataDescriptionCache(); break;
@@ -363,7 +372,7 @@ public class CommunicationManager extends HttpServlet {
 					 */
 				break;
 			case 21: output += bh.actualizeDataDescriptionCache(); break;
-			default: output += "<error><![CDATA[Action does not exist!]]></error>"; break;
+			default: output += ACTION_NOT_EXISTS_ERROR; break;
 			}
 		}
 		return (output);
