@@ -14,6 +14,8 @@ import com.sleepycat.db.LockDetectMode;
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
+import com.sleepycat.dbxml.XmlIndexDeclaration;
+import com.sleepycat.dbxml.XmlIndexSpecification;
 import com.sleepycat.dbxml.XmlManager;
 import com.sleepycat.dbxml.XmlManagerConfig;
 import com.sleepycat.dbxml.XmlQueryContext;
@@ -116,6 +118,87 @@ public class DbConnectionManager {
 	}
 	
 	/**
+	 * Adds index into DB
+	 * @param index index to add
+	 * @return <code>true</code> when successful, otherwise <code>false</code>
+	 */
+	public boolean addIndex(String index) {
+        XmlContainer cont = openConnecion();
+		String[] indexSplit = index.split(";");
+		XmlIndexSpecification indexSpec = null;
+		try {
+			if (indexSplit.length == 3) {
+                indexSpec = cont.getIndexSpecification();
+                indexSpec.addIndex(indexSplit[0], indexSplit[1], indexSplit[2]);
+                cont.setIndexSpecification(indexSpec);
+                return true;
+			} else {
+				logger.warning("Adding index \"" + index + "\" failed! - Not 3 params");
+				return false;
+			}
+    	} catch (XmlException e) {
+    		logger.warning("Adding index \"" + index + "\" failed! - Xml exception");
+    		return false;
+    	} finally {
+    		indexSpec.delete();
+    		closeConnection(cont);
+    	}
+	}
+	
+	public boolean removeIndex(String index) {
+		XmlContainer cont = openConnecion();
+        String[] indexSplit = index.split(";");
+        XmlIndexSpecification indexSpec = null;
+        try {
+            if (indexSplit.length == 3) {
+        		indexSpec = cont.getIndexSpecification();
+                indexSpec.deleteIndex(indexSplit[0], indexSplit[1], indexSplit[2]);
+                cont.setIndexSpecification(indexSpec);
+                return true;
+            } else {
+            	logger.warning("Removing index \"" + index + "\" failed! - Not 3 params");
+            	return false;
+            }
+        } catch (XmlException e) {
+        	logger.warning("Removing index \"" + index + "\" failed! - Xml exception");
+        	return false;
+        } finally {
+        	indexSpec.delete();
+        	closeConnection(cont);
+        }
+	}
+	
+	/**
+	 * Lists indexes used in DB
+	 * @return if error occurs <code>null</code> else list of indexes 
+	 */
+	public String listIndexes() {
+		XmlContainer cont = openConnecion();
+		XmlIndexSpecification indexSpec = null;
+		try {
+            indexSpec = cont.getIndexSpecification();
+            String indexes = "";
+            
+            int count = 0;
+            XmlIndexDeclaration indexDeclaration = null;
+            while ((indexDeclaration = (indexSpec.next())) != null) {
+                indexes += "<index>"
+                                + "<nodeName>" + indexDeclaration.name + "</nodeName>"
+                                + "<indexType>" + indexDeclaration.index + "</indexType>"
+                            + "</index>";
+                count++;
+            }
+            String indexesCount = "<indexCount>" + count + "</indexCount>";
+            return indexesCount + indexes;
+		} catch (XmlException e) {
+			logger.warning("Listing indexes failed! - Xml exeption");
+			return null;
+		} finally {
+			indexSpec.delete();
+			closeConnection(cont);
+		}
+	}
+	/**
 	 * 
 	 * @return created environment or <code>null</code> when error occurs
 	 */
@@ -165,7 +248,8 @@ public class DbConnectionManager {
 	}
 	
 	/**
-	 * 
+	 * Closes the DBXML connection, deletes xml container
+	 * @param xmlContainer xml container to delete
 	 */
 	private void closeConnection(XmlContainer xmlContainer) {
 		commit();
@@ -177,6 +261,9 @@ public class DbConnectionManager {
 		}
 	}
 	
+	/**
+	 * Commits changes into XML DB
+	 */
 	private void commit() {
 		try {
 			xmlTransaction.commit();

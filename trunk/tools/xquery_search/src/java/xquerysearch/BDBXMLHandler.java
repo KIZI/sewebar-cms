@@ -40,8 +40,6 @@ import xquerysearch.settings.SettingsManager;
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlIndexDeclaration;
-import com.sleepycat.dbxml.XmlIndexSpecification;
 import com.sleepycat.dbxml.XmlManager;
 import com.sleepycat.dbxml.XmlQueryContext;
 import com.sleepycat.dbxml.XmlResults;
@@ -330,9 +328,6 @@ public class BDBXMLHandler {
      * Metoda pro nahrani vice dokumentu ze slozky
      * @param folder slozka, ze ktere se maji soubory nahrat
      * @return zprava o ulozeni / chyba
-     * @throws XmlException 
-     * @throws SAXException 
-     * @throws TransformerException 
      */
     public String indexDocumentMultiple (String folder) {
         String output = "";
@@ -346,85 +341,44 @@ public class BDBXMLHandler {
     }
 
     /**
-     * Metoda pro pridani indexu XML DB
-     * @param index zadani indexu - namespace;node;index type
-     * @return zprava o pridani indexu / chybe
-     * @throws XmlException 
+     * Adds index into DB
+     * @param index index specified like namespace;node;index type
+     * @return message for success/failure
      */
-    public String addIndex(String index) throws XmlException {
-        String output = "";
-
-        XmlContainer cont = mgr.openContainer(containerName);
-
-        XmlTransaction txn = mgr.createTransaction();
-        String[] indexPole = index.split(";");
-        if (indexPole.length == 3) {
-            XmlIndexSpecification indexSpec = cont.getIndexSpecification();
-            indexSpec.addIndex(indexPole[0], indexPole[1], indexPole[2]);
-            cont.setIndexSpecification(indexSpec);
-            output = "<message>Index " + index + " pridan</message>";
-
-            txn.commit();
-            indexSpec.delete();
-            closeContainer(cont);
+    public String addIndex(String index) {
+        boolean saved = dcm.addIndex(index);
+        if (saved) {
+        	return "<message>Index \"" + index + "\" added!</message>";
         } else {
-            output = "<error>Spatne zadany index</error>";
+        	return "<error>Index malspecified: " + index + "!</error>";
         }
-        return output;
     }
 
     /**
-     * Metoda zajistujici smazani indexu
-     * @param index zadani indexu - namespace;node;index type
-     * @return zprava o smazani indexu / chybe
-     * @throws XmlException 
+     * Removes index from DB
+     * @param index index specified like namespace;node;index type
+     * @return message for success/failure
      */
-    public String delIndex (String index) throws XmlException{
-        String output = "";
-
-        XmlContainer cont = mgr.openContainer(containerName);
-        XmlTransaction txn = mgr.createTransaction();
-        String[] indexPole = index.split(";");
-
-        if (indexPole.length == 3) {
-            XmlIndexSpecification indexSpec = cont.getIndexSpecification();
-            indexSpec.deleteIndex(indexPole[0], indexPole[1], indexPole[2]);
-            cont.setIndexSpecification(indexSpec);
-            output = "<message>Index " + index + " odebran</message>";
-
-            txn.commit();
-            indexSpec.delete();
-            closeContainer(cont);
+    public String removeIndex (String index){
+    	boolean removed = dcm.removeIndex(index);
+    	if (removed) {
+    		return "<message>Index \"" + index + "\" removed!</message>";
         } else {
-            output = "<error>Spatne zadany index</error>";
+        	return "<error>Index malspecified: " + index + "!</error>";
         }
-        return output;
     }
 
     /**
-     * Metoda pro zobrazeni indexu v XML DB
-     * @return vypis pouzivanych indexu v XML DB
-     * @throws XmlException 
+     * 
+     * @return list of indexes or error message
      */
-    public String listIndex() throws XmlException {
-        String output = "";
-        String outputEnd = "";
-        XmlContainer cont = mgr.openContainer(containerName);
-        XmlIndexSpecification indexSpec = cont.getIndexSpecification();
-
-        int count = 0;
-        XmlIndexDeclaration indexDecl = null;
-        while ((indexDecl = (indexSpec.next())) != null) {
-            outputEnd += "<index>"
-                        + "<nodeName>" + indexDecl.name + "</nodeName>"
-                        + "<indexType>" + indexDecl.index + "</indexType>"
-                    + "</index>";
-            count++;
+    public String listIndex() {
+    	String indexes = dcm.listIndexes();
+        if (indexes != null) {
+        	return indexes;
+        } else {
+        	return "<error>Error occured when listing indexes!</error>";
         }
-        output += "<indexCount>" + count + "</indexCount>" + outputEnd;
-        indexSpec.delete();
-        closeContainer(cont);
-        return output;
     }
     
     /**
