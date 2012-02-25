@@ -34,7 +34,7 @@
   <ItemGroup>
     <Reference Include="Sewebar, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\Server\Sewebar.dll</HintPath>
+      <HintPath>..\Sewebar\bin\Debug\Sewebar.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
