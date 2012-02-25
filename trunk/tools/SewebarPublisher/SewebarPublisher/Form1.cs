@@ -23,12 +23,14 @@ namespace SewebarPublisher
         /// hosts including the URL of the XMLRPC server side service,
         /// full path to the service (including the directories)
         /// </summary>
-        static string[] hosts = new string[5] { 
+        static string[] hosts = new string[7] { 
+            "http://zt.vse.cz/sewebar/xmlrpc/",
             "http://sewebar.vse.cz/xmlrpc/",
             "http://sewebar.vse.cz/cardio/xmlrpc/",
             "http://sewebar.vse.cz/adamek/xmlrpc/",
             "http://sewebar-dev.vse.cz/xmlrpc/", 
-            "http://sewebar.vse.cz/tinnitus/xmlrpc/"
+            "http://sewebar.vse.cz/tinnitus/xmlrpc/",
+            "http://sewebar-dev2.vse.cz/xmlrpc/"
         };
 
         /// <summary>
@@ -39,6 +41,11 @@ namespace SewebarPublisher
             "Create a new article",
             "Update article (select from list)"
         };
+
+        /// <summary>
+        /// The string representing the PMML article
+        /// </summary>
+        string pmml = string.Empty;
 
         #endregion
 
@@ -74,6 +81,12 @@ namespace SewebarPublisher
 
             this.ResumeLayout(false);
             this.PerformLayout();
+
+            //copying the pmml text from the clipboard
+            if (Clipboard.ContainsText())
+            {
+                pmml = Clipboard.GetText();
+            }
         }
 
         /// <summary>
@@ -118,12 +131,15 @@ namespace SewebarPublisher
         /// <param name="e">Event arguments</param>
         private void BPublish_Click(object sender, EventArgs e)
         {
-            if (!Clipboard.ContainsText())
+            if (pmml == string.Empty)
             {
-                MessageBox.Show("The system clipboard does not contain text","Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
-                return;
+                if (!Clipboard.ContainsText())
+                {
+                    MessageBox.Show("The system clipboard does not contain text", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                pmml = Clipboard.GetText();
             }
-            string pmml = Clipboard.GetText();
 
             string articleTitle;
             int articleID = -1;
