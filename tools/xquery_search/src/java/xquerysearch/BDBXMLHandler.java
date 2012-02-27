@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
@@ -32,7 +31,6 @@ import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.trans.XPathException;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import xquerysearch.db.DbConnectionManager;
 import xquerysearch.settings.SettingsManager;
@@ -47,7 +45,7 @@ import com.sleepycat.dbxml.XmlTransaction;
 import com.sleepycat.dbxml.XmlValue;
 
 /**
- * Trida pro ovladani a komunikaci s Berkeley XML DB
+ * 
  * @author Tomas Marek
  */
 public class BDBXMLHandler {
@@ -65,14 +63,6 @@ public class BDBXMLHandler {
     private String replaceBy = "_";
     
     
-    /**
-     * Konstruktor
-     * @param mgr instance XmlManager
-     * @param qh instance tridy QueryHandler
-     * @param containerName nazev pouzivaneho kontejneru
-     * @param useTransformation pouzit transformaci - true/false
-     * @param xsltPath cesta k souboru s xslt transformaci
-     */
     public BDBXMLHandler(SettingsManager settings) {
     	this.dcm = new DbConnectionManager(settings);
     	this.settings = settings;
@@ -116,9 +106,9 @@ public class BDBXMLHandler {
     }
 
     /**
-     * Cyklycke dotazovani - 10x za sebou stejny dotaz na XML DB (pouzito pri testovani)
-     * @param search XQuery dotaz
-     * @return cas a vysledky dotazovani 
+     * Cyclic querying (10 times)
+     * @param search query content
+     * @return time spent and results
      */
     public String query_10(String search) {
         String output = "";
@@ -141,16 +131,15 @@ public class BDBXMLHandler {
     }
 
    /**
-     * Metoda slouzici k vyhledavani v BDB XML pomoci XQuery
-     * Moznosti zadani - prima XQuery/pouziti ulozene XQuery a pridani vstupniho dotazu
-     * @param id ID ulozene XQuery
-     * @param search vstupni dotaz pro XQuery
-     * @param type typ pouzite XQuery - 0 pro primou, 1 pro ulozenou
-     * @return vysledek vyhledavani
+    * Method for querying repository 
+    * @param id query id (of saved query)
+    * @param search (query content)
+    * @param directQuery use query directly
+    * @return
     */
-    public String query(String id, String search, int type) {
+    public String query(String id, String search, boolean directQuery) {
         String query = "";
-        if (type == 0) {
+        if (directQuery) {
             query = search;
         } else {
         	query = qh.getQuery(id);	
@@ -180,39 +169,10 @@ public class BDBXMLHandler {
     }
 
     /**
-     * !!! NEPOUZITO !!!
-     * Metoda pro vlozeni vice dokumentu najednou,
-     * dokumenty rozdeleny sekvenci znaku ;;;NEXTPMML;;;
-     * @param docs vsechny tela vkladanych dokumentu oddelene danou sekvenci znaku
-     * @param names vsechny ID vkladanych dokumentu oddelene danou sekvenci znaku
-     * @return Zprava pro kazdy dokument - vlozeno/chyba
+     * Gets documents names saved in repository
+     * @return documents names list / error message
      */
-
-    /*public String[] moreDocuments(String docs, String names){
-    String output[] = new String[2];
-        output[1] = "";
-        long cas_zacatek = System.currentTimeMillis();
-        long cas_konec = 0;
-        String[] dokumenty = docs.split(";;;NEXTPMML;;;");
-        String[] jmena = names.split(";;;NEXTPMML;;;");
-        if (dokumenty.length != jmena.length){
-                output[1] = "<error>Nastala chyba!!!</error>";
-        } else {
-                for (int i = 0; i < dokumenty.length; i++){
-                    output[1] += "\n" + indexDocument(dokumenty[i], jmena[i], mgr);
-                }
-        cas_konec = System.currentTimeMillis();
-        output[0] = "" + ((cas_konec - cas_zacatek)/1000);
-        }
-        return output;
-    }*/
-
-    /**
-     * Metoda pro ziskani nazvu dokumentu ulozenych v XML DB
-     * @return seznam ulozenych dokumentu
-     * @throws XmlException 
-     */
-    public String getDocsNames() throws XmlException{
+    public String getDocsNames() {
         String query = "let $docs := for $x in collection(\"" + containerName + "\") return $x"
                 + "\nreturn"
                 + "\n<docs count=\"{count($docs)}\">{for $a in $docs"
@@ -222,24 +182,25 @@ public class BDBXMLHandler {
         XmlResults res = dcm.query(query);
 
         String results = "";
-        XmlValue value = new XmlValue();
-        while ((value = res.next()) != null) {
-            results += value.asString();
+        try {
+            XmlValue value = new XmlValue();
+            while ((value = res.next()) != null) {
+                results += value.asString();
+            }
+            return results;
+        } catch (XmlException e) {
+        	return "<error>Documents names retrieval failed!</error>";
         }
-        return results;
     }
 
     /**
-     * Metoda pro vlozeni dokumentu do XML DB
-     * @param document telo dokumentu (String)
-     * @param docID id dokumentu (joomlaID)
-     * @param docName nazev doumentu (pro ulozeni v XMLDB)
-     * @param creationTime datum a cas vytvoreni dokumentu
-     * @param reportUri url adresa reportu
-     * @return informace o ulozeni/chybe
-     * @throws XmlException 
-     * @throws SAXException 
-     * @throws TransformerException 
+     * Saves document into repository
+     * @param document document content
+     * @param docID document id (is injected into document)
+     * @param docName document name (by this name is saved into repository)
+     * @param creationTime
+     * @param reportUri URI of the report
+     * @return message - success/failure
      */
     public String indexDocument(String document, String docID, String docName, String creationTime, String reportUri) {
         String xml_doc = "";
@@ -273,16 +234,13 @@ public class BDBXMLHandler {
     }
 
     /**
-     * Metoda pro vlozeni dokumentu do XML DB
-     * @param document telo dokumentu (File)
-     * @param docID id dokumentu (joomlaID)
-     * @param docName nazev doumentu (pro ulozeni v XMLDB)
-     * @param creationTime datum a cas vytvoreni dokumentu
-     * @param reportUri url adresa reportu
-     * @return zprava - ulozeno/chyba
-     * @throws XmlException 
-     * @throws TransformerException 
-     * @throws SAXException 
+     * Saves document into repository
+     * @param document document content
+     * @param docID document id (is injected into document)
+     * @param docName document name (by this name is saved into repository)
+     * @param creationTime
+     * @param reportUri URI of the report
+     * @return message - success/failure
      */
     public String indexDocument(File document, String docID, String docName, String creationTime, String reportUri) {
         String xml_doc = "";
@@ -341,7 +299,7 @@ public class BDBXMLHandler {
     }
 
     /**
-     * Adds index into DB
+     * Adds index into repository
      * @param index index specified like namespace;node;index type
      * @return message for success/failure
      */
@@ -355,7 +313,7 @@ public class BDBXMLHandler {
     }
 
     /**
-     * Removes index from DB
+     * Removes index from repository
      * @param index index specified like namespace;node;index type
      * @return message for success/failure
      */
@@ -377,43 +335,34 @@ public class BDBXMLHandler {
         if (indexes != null) {
         	return indexes;
         } else {
-        	return "<error>Error occured when listing indexes!</error>";
+        	return "<error>Error occured during listing indexes!</error>";
         }
     }
     
     /**
-     * Metoda pro ziskani cachovaneho DataDescription
+     * Method for retrieve saved data description from repository
      * @return DataDescription / chyba
-     * @throws XmlException 
      */
-    public String getDataDescriptionCache() throws XmlException {
-        String output = "";
-        XmlContainer cont = mgr.openContainer("__DataDescriptionCacheContainer");
-        XmlTransaction txn = mgr.createTransaction();
-        XmlDocument doc = cont.getDocument("__DataDescriptionCacheDocument");
-        output += doc.getContentAsString();
-        txn.commit();
-        closeContainer(cont);
-        return output;
+    public String getDataDescriptionCache() {
+        String dataDescription = dcm.getDataDescirption();
+        if (dataDescription != null) {
+        	return dataDescription;
+        } else {
+        	return "<error>Getting data description failed!</error>";
+        }
     }
     
     /**
-     * Metoda pro ulozeni aktualniho DataDescription do cache
-     * @return Provedeno / chyba
-     * @throws XmlException 
+     * Saves data description into repository - caching
+     * @return message - success/failure
      */
-    public String actualizeDataDescriptionCache() throws XmlException {
-        String output = "";
-        XmlContainer cont = null;
-        cont = mgr.openContainer("__DataDescriptionCacheContainer");
-        XmlTransaction txn = mgr.createTransaction();
-        String dataDescription = getDataDescription();
-        cont.putDocument("__DataDescriptionCacheDocument", dataDescription);
-        output += "<message>DataDescription cache aktualizovan</message>";
-        
-        txn.commit();
-        closeContainer(cont);
-        return output;
+    public String actualizeDataDescriptionCache() {
+       boolean saved = dcm.saveDataDescription(getDataDescription());
+       if (saved) {
+    	   return "<message>Data description successfully saved!</message>";
+       } else {
+    	   return "<error>Error occured during data description save!</error>";
+       }
     }
     
     /**
@@ -421,7 +370,7 @@ public class BDBXMLHandler {
      * @return DataDescription
      * @throws XmlException 
      */
-    public String getDataDescription() throws XmlException{
+    public String getDataDescription() {
         String output = "";
 
         String query = "let $distinctNamesCategorical :="
@@ -516,19 +465,23 @@ public class BDBXMLHandler {
                 + "\n<Field name=\"{$field}\">"
                 + "\n{$values union $ints}"
                 + "\n</Field>}</Dictionary></DataDescription>";*/
-
-        XmlContainer cont = mgr.openContainer(containerName);
-        XmlQueryContext qc = mgr.createQueryContext();
-        XmlTransaction txn = mgr.createTransaction();
-        XmlResults res = mgr.query(query, qc);
-
-        XmlValue value = new XmlValue();
-        while ((value = res.next()) != null) {
-            output += value.asString();
+        
+        try {
+            XmlContainer cont = mgr.openContainer(containerName);
+            XmlQueryContext qc = mgr.createQueryContext();
+            XmlTransaction txn = mgr.createTransaction();
+            XmlResults res = mgr.query(query, qc);
+    
+            XmlValue value = new XmlValue();
+            while ((value = res.next()) != null) {
+                output += value.asString();
+            }
+            txn.commit();
+            res.delete();
+            closeContainer(cont);
+        } catch (XmlException e) {
+        	logger.warning("Data description retrieval failed!");
         }
-        txn.commit();
-        res.delete();
-        closeContainer(cont);
         return output;
     }
     
@@ -565,7 +518,7 @@ public class BDBXMLHandler {
                 + "\n {$ar/Text}"
                 + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
             + "\n </Hit>";
-        String queryResult = query("", query, 0);
+        String queryResult = query("", query, true);
         if (exception && !queryResult.isEmpty()) {
         	String xpath = qm.getExceptionPath(xmlQuery);
         	queryResult = selectByXPath(xpath, queryResult);
@@ -579,8 +532,8 @@ public class BDBXMLHandler {
                 + "</Metadata>"
                 + "<Statistics>"
                     + "<ExecutionTime>" + (System.currentTimeMillis() - startTime) + "</ExecutionTime>"
-                    + "<DocumentsSearched>" + query("", "count(collection(\""+ containerName +"\")/PMML)", 0) + "</DocumentsSearched>"
-                    + "<RulesSearched>" + query("", "count(collection(\""+ containerName +"\")/PMML/AssociationRule)", 0) + "</RulesSearched>"
+                    + "<DocumentsSearched>" + query("", "count(collection(\""+ containerName +"\")/PMML)", true) + "</DocumentsSearched>"
+                    + "<RulesSearched>" + query("", "count(collection(\""+ containerName +"\")/PMML/AssociationRule)", true) + "</RulesSearched>"
                 + "</Statistics>";
         if (restructure) {
             output += "<DataDescription>" + dataDescriptionPrepare("<Hits>" + queryResult + "</Hits>") + "</DataDescription>";

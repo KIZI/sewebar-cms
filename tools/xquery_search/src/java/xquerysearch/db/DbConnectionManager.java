@@ -37,6 +37,8 @@ public class DbConnectionManager {
 	private XmlManager xmlManager;
 	private static final long CACHE_SIZE_MB = 128 * 1024 * 1024;
 	private static final boolean RECOVER = false;
+	private final String DATA_DESCRIPTION_CONTAINER = "__DataDescriptionCacheContainer";
+	private final String DATA_DESCRIPTION_DOCUMENT = "__DataDescriptionCacheDocument";
 	
 	/**
 	 * Constructor
@@ -54,7 +56,7 @@ public class DbConnectionManager {
 	 * @return results or <code>null</code> when error occurs
 	 */
 	public XmlResults query(String query) {
-		openConnecion();
+		openConnecion(settings.getContainerName());
 		try {
 			XmlQueryContext queryContext = xmlManager.createQueryContext();
 			return xmlManager.query(query, queryContext);
@@ -72,7 +74,7 @@ public class DbConnectionManager {
 	 * @return xml document or <code>null</code> when error occurs
 	 */
 	public XmlDocument getDocumentById(String id) {
-		XmlContainer cont = openConnecion();
+		XmlContainer cont = openConnecion(settings.getContainerName());
 		try {
 			return cont.getDocument(id);
 		} catch (XmlException e) {
@@ -90,7 +92,7 @@ public class DbConnectionManager {
 	 * @return if document is saved successfully returns <code>true</code> else returns <code>false</code>
 	 */
 	public boolean insertDocument(String document, String name) {
-		XmlContainer cont = openConnecion();
+		XmlContainer cont = openConnecion(settings.getContainerName());
 		try {
 			cont.putDocument(name, document);
 			return true;
@@ -107,7 +109,7 @@ public class DbConnectionManager {
 	 * @return if successful returns <code>true</code>, else <code>false</code>
 	 */
 	public boolean removeDocument(String docId) {
-		XmlContainer cont = openConnecion();
+		XmlContainer cont = openConnecion(settings.getContainerName());
 		try {
 			cont.deleteDocument(docId);
 			return true;
@@ -123,7 +125,7 @@ public class DbConnectionManager {
 	 * @return <code>true</code> when successful, otherwise <code>false</code>
 	 */
 	public boolean addIndex(String index) {
-        XmlContainer cont = openConnecion();
+        XmlContainer cont = openConnecion(settings.getContainerName());
 		String[] indexSplit = index.split(";");
 		XmlIndexSpecification indexSpec = null;
 		try {
@@ -145,8 +147,13 @@ public class DbConnectionManager {
     	}
 	}
 	
+	/**
+	 * Removes index entry form DB
+	 * @param index index to remove
+	 * @return <code>true</code> when successfully removed, <code>false</code> otherwise 
+	 */
 	public boolean removeIndex(String index) {
-		XmlContainer cont = openConnecion();
+		XmlContainer cont = openConnecion(settings.getContainerName());
         String[] indexSplit = index.split(";");
         XmlIndexSpecification indexSpec = null;
         try {
@@ -173,7 +180,7 @@ public class DbConnectionManager {
 	 * @return if error occurs <code>null</code> else list of indexes 
 	 */
 	public String listIndexes() {
-		XmlContainer cont = openConnecion();
+		XmlContainer cont = openConnecion(settings.getContainerName());
 		XmlIndexSpecification indexSpec = null;
 		try {
             indexSpec = cont.getIndexSpecification();
@@ -198,6 +205,42 @@ public class DbConnectionManager {
 			closeConnection(cont);
 		}
 	}
+	
+	/**
+	 * Gets data description from DB
+	 * @return data description or <code>null</code> when error occurs
+	 */
+	public String getDataDescirption() {
+		XmlContainer cont = openConnecion(DATA_DESCRIPTION_CONTAINER);
+		try {
+    		XmlDocument doc = cont.getDocument(DATA_DESCRIPTION_DOCUMENT);
+    		return doc.getContentAsString();
+		} catch (XmlException e) {
+			logger.warning("Getting data description failed!");
+			return null;
+		} finally {
+			closeConnection(cont);
+		}
+	}
+	
+	/**
+	 * Saves data description into DB
+	 * @param dataDescription data description to save
+	 * @return <code>true</code> when successful, <code>false</code> when error occurs
+	 */
+	public boolean saveDataDescription(String dataDescription) {
+		XmlContainer cont = openConnecion(DATA_DESCRIPTION_CONTAINER);
+		try {
+			cont.putDocument(DATA_DESCRIPTION_DOCUMENT, dataDescription);
+			return true;
+		} catch (XmlException e) {
+			logger.warning("Saving data description failed!");
+			return false;
+		} finally {
+			closeConnection(cont);
+		}
+	}
+	
 	/**
 	 * 
 	 * @return created environment or <code>null</code> when error occurs
@@ -232,14 +275,14 @@ public class DbConnectionManager {
 	 * Creates connection with Berkeley XML DB
 	 * @return created <code>XmlContainer</code> or <code>null</code> when error occurs
 	 */
-	private XmlContainer openConnecion() {
+	private XmlContainer openConnecion(String containerName) {
 		try {
 			environment = createEnvironment();
 			xmlManagerConfig = new XmlManagerConfig();
 			//xmlManagerConfig.setAllowExternalAccess(true);
 			xmlManager = new XmlManager(environment, xmlManagerConfig);
 			xmlTransaction = xmlManager.createTransaction();
-			XmlContainer xmlContainer = xmlManager.openContainer(settings.getContainerName());
+			XmlContainer xmlContainer = xmlManager.openContainer(containerName);
 			return xmlContainer;
 		} catch (XmlException e) {
 			logger.severe("Connection with DB cannot be created!");
