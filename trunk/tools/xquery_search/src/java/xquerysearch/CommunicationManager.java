@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
 
@@ -21,8 +19,6 @@ import xquerysearch.settings.SettingsFileUtils;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.settings.SettingsPageController;
 import xquerysearch.settings.SettingsUtils;
-
-import com.sleepycat.dbxml.XmlException;
 
 /**
  * Class for main communication to the outside world
@@ -59,7 +55,7 @@ public class CommunicationManager extends HttpServlet {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParserConfigurationException, SAXException {
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
@@ -131,13 +127,7 @@ public class CommunicationManager extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			processRequest(request, response);
-		} catch (ParserConfigurationException e) {
-			logger.severe(e.toString());
-		} catch (SAXException e) {
-			logger.severe(e.toString());
-		}
+		processRequest(request, response);
 	}
 
 	/**
@@ -203,29 +193,11 @@ public class CommunicationManager extends HttpServlet {
 	}
 
 	/**
-	 * Metoda provadejici rozbor vstupnich promennych, nasledne vola jednotlive
-	 * metody
 	 * 
-	 * @param action nazev akce, ktera se ma provest
-	 * @param id vetsinou ID (dokumentu/XQuery)
-	 * @param docName nazev dokumentu pro ulozeni v XMLDB
-	 * @param creationTime cas a datum vytvoreni dokumentu
-	 * @param reportUri URI adresa daneho dokumentu 
-	 * @param restructure boolean hodnota urcujici, zda se ma provest restrukturalizace vysledku query
-	 * @param content vetsinou telo (dokumentu, XQuery, index)
-	 * @param mgr XmlManager instance XMLManager
-	 * @param qh instance tridy QueryHandler
-	 * @param bh instance tridy BDBXMLHandler
-	 * @param tester instance tridy Tester
-	 * @return predpripraveny vystup
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
-	 * @throws XPathExpressionException 
-	 * @throws XmlException 
-	 * @throws TransformerException 
+	 * @return
 	 */
-	private String processRequest(String action) throws IOException, ParserConfigurationException, SAXException, XmlException, XPathExpressionException, TransformerException {
-		// Namapovani akce na cisla
+	private String processRequest(String action) {
+		// actions -> codes mapping
 		int mappedAction = mapAction(action);
 		
 		BDBXMLHandler bh = new BDBXMLHandler(settings);
@@ -233,8 +205,7 @@ public class CommunicationManager extends HttpServlet {
 		QueryMaker qm = new QueryMaker(settings);
 		
 		String output = "";
-		// Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup
-		// content
+		// Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content
 		int except[] = { 2, 3, 7, 8, 10, 13, 14, 16, 17, 18, 19, 20, 21 };
 
 		Boolean except_bool = false;
@@ -272,7 +243,7 @@ public class CommunicationManager extends HttpServlet {
 					output += QUERY_MISSING_ERROR;
 				} else {
 					String dotaz = content.toString();
-					output += bh.query("", dotaz, 0);
+					output += bh.query("", dotaz, true);
 				}
 				break;
 			case 3:
