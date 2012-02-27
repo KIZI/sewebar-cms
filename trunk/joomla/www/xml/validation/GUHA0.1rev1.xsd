@@ -351,6 +351,7 @@
     <xs:simpleType name="InterestMeasure">
         <xs:restriction base="xs:string">
             <xs:enumeration value="a-frequency"/>
+            <xs:enumeration value="SUPP"/>
             <xs:enumeration value="BASE"/>
             <!-- workaround for SDxx and AC4ft Miner, where BASE and a frequency is  merged into this one value. Unlike a frequency, a (BASE) can act as a test criterion -->
             <xs:enumeration value="a (BASE)"/>
