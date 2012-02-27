@@ -2,6 +2,31 @@
 <?xml-model href="http://sewebar.vse.cz/schemas/InterestMeasureDictionary.rnc" type="application/relax-ng-compact-syntax"?>
 <InterestMeasures dictionaryVersion="0.1">       
     <InterestMeasure>
+        <str lang="MasterName">SUPP</str>        
+        <str lang="pmml" software="Ferda">Support</str>
+        <str lang="pmml" software="LISp-Miner">SUPP</str>            
+        <str lang="en">Support</str>
+        <str lang="cs">Podpora</str>        
+        <TestCriteria>
+            <TestCriterion  type="Functional">
+                <ThresholdType>% of all</ThresholdType>
+                <ThresholdType>Abs</ThresholdType>
+                <CompareType>Greater than or equal</CompareType>
+                <Threshold>Yes</Threshold>
+                <SignificanceLevel>No</SignificanceLevel>
+                <str lang="MasterName">SUPP</str>
+                <str lang="pmml" software="LISp-Miner">SUPP</str>
+                <str lang="pmml" software="Ferda">Support</str>
+                <str lang="en">Support</str>
+                <str lang="cs">Podpora</str>                        
+            </TestCriterion>
+        </TestCriteria>
+        <Symbol>⇑</Symbol>
+    </InterestMeasure>
+
+
+
+    <InterestMeasure>
         <str lang="MasterName">BASE</str>        
         <str lang="pmml" software="Ferda">Base</str>
         <str lang="pmml" software="LISp-Miner">BASE</str>            
