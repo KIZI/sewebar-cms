@@ -371,7 +371,7 @@
     <Entry id="710">
         <str lang="en">This part of the analytical report describes the ASSOC procedure setting.
             The setting consists of </str>
-        <str lang="cs">Tato část analytické zprávy popisuje zadání procedury ASSOC. Ta se zkládá z</str>
+        <str lang="cs">Tato část analytické zprávy popisuje zadání procedury ASSOC. Ta se skládá z</str>
     </Entry>
     <Entry id="720">
         <str lang="en">Set of quantifiers as interest measures for the output association rules</str>
@@ -571,11 +571,11 @@
      <Entry id="1010">
          <str lang="en">This part of the analytical report describes the SD4ft procedure setting.
              The setting consists of</str>
-         <str lang="cs">Tato část analytické zprávy popisuje zadání procedury SD4ft. Ta se zkládá z</str>
+         <str lang="cs">Tato část analytické zprávy popisuje zadání procedury SD4ft. Ta se skládá z</str>
      </Entry>
      <Entry id="1020">
          <str lang="en">This part of the analytical report describes the Ac4ft procedure setting.
              The setting consists of</str>
-         <str lang="cs">Tato část analytické zprávy popisuje zadání procedury Ac4ft. Ta se zkládá z</str>
+         <str lang="cs">Tato část analytické zprávy popisuje zadání procedury Ac4ft. Ta se skládá z</str>
      </Entry>
 </Dictionary>
