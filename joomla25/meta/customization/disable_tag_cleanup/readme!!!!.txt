@@ -1,0 +1,1 @@
+moved (copied) to joomla/www/libraries/joomla/filter/filterinput.php

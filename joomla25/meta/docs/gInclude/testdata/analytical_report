@@ -1,0 +1,427 @@
+&amp;xaxis
+<h1>Asociační pravidla popisující vztahy mezi skupinami atributů měr pacientů a hodnotami laboratoře GKM v datech z ambulance A1</h1>
+<h2>1. Řešení úlohy</h2>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 15px; margin-left: 0px; outline-width: 0px; outline-style: initial; outline-color: initial; font-size: 12px; vertical-align: baseline; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: transparent; background-position: initial initial; background-repeat: initial initial; padding: 0px; border: 0px initial initial;">&nbsp;&nbsp;Úloha řešila následující zadání: "<em>Jaké zajímavé vztahy platí mezi skupinou atributů popisujících míry pacientů a skupinou atributů popisujících hodnoty naměřené laboratoří GKM".&nbsp;</em></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 15px; margin-left: 0px; outline-width: 0px; outline-style: initial; outline-color: initial; font-size: 12px; vertical-align: baseline; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: transparent; background-position: initial initial; background-repeat: initial initial; padding: 0px; border: 0px initial initial;"><em><span style="font-style: normal;">&nbsp;&nbsp;Za tímto účelem byly provedeny dvě dotazové aplikace procedury 4ft-Miner. &nbsp;Nejprve byl použit kvantifikátor fundované implikace, následně AA kvantifikátor nadprůměrného vzájemného souvisení. S dalšími kvantifikátory se náš tým měl pouze seznámit, ale jejich použití nebylo součástí zadání.&nbsp;V&nbsp;obou aplikacích byl antecedent pravidel vytvářen z&nbsp;atributů popisující míry pacientů a sukcedent z&nbsp;atributů popisujících hodnoty naměřené laboratoří GKM. V souladu s&nbsp;doporučením byly míry pacientů rozšířeny o atribut pohlaví.</span></em></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 15px; margin-left: 0px; outline-width: 0px; outline-style: initial; outline-color: initial; font-size: 12px; vertical-align: baseline; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: transparent; background-position: initial initial; background-repeat: initial initial; padding: 0px; border: 0px initial initial;"><em><span style="font-style: normal;">Stručný obsah:</span></em></p>
+<ul>
+<li>kapitola 2&gt; Atributy antecedentu</li>
+<li>kapitola 3&gt; Atributy sukcedentu</li>
+<li>kapitola 4&gt; Množina relevantních antecedentů</li>
+<li>kapitola 5&gt; Množina relevantních sukcedentů</li>
+<li>kapitola 6&gt; Vztahy nalezené fundovanou implikací</li>
+<li>kapitola 7&gt; Vztahy nalezené nadprůměrným souvisením</li>
+<li>kapitola 8&gt; Další poznatky o hledaných vztazích</li>
+</ul>
+<h2><strong>2. Míry pacientů</strong></h2>
+<p>&nbsp;&nbsp; Míry pacientů byly zpracovány dvěma způsoby "a" (Pohlaví) a "b" (BMI a WHR).</p>
+<p>&nbsp;&nbsp; &nbsp;a&gt; Hodnoty způsobu zpracování "a" byly zpracovány do kategorií odpovídají přesně naměřeným hodnotám bez dalších modifikací. U každé hodnoty je uvedena jeho frekvence</p>
+<p>&nbsp;&nbsp; &nbsp;b&gt; Hodnoty způsobu zpracování "b" byly zpracovány do kategorií, které odpovídali stejné dlouhým intervalům. Následně krajní kategori byly sloučeny dle zadání. U každé kategorie je uvedena jeho frekvence.</p>
+<strong><em> </em>
+<div><em>&nbsp;</em></div>
+<div class="gincludeDiv"><!-- gLink{"article":"68","part":"attributecategoryfrequency_pohl","title":"T2D_A1_MRY_GKM_AA"}-->
+<div class="gincludeTitleDiv" style="font-size: 10px; padding: 0px;">Source article: T2D_A1_MRY_GKM_AA, created: 06.04.10 09:00</div>
+<div class="idiv"><span id="oddil3-Pohl"> 
+<table summary="Tabulka 10: atribut Pohl" class="itable">
+<tbody>
+<tr>
+<th>Kategorie </th><th>Výčet hodnot </th><th>Frekvence </th>
+</tr>
+<tr>
+<td>muž</td>
+<td>muž</td>
+<td>287</td>
+</tr>
+<tr>
+<td>žena</td>
+<td>žena</td>
+<td>424</td>
+</tr>
+</tbody>
+</table>
+</span></div>
+Histogram nejčastějších hodnot  <br /> <img alt="Pohl" src="xml/libraries/phpgraphlib/genBarChart.php?title=Pohl&amp;xaxis=Frequency&amp;yaxis=Values&amp;val=287@@424&amp;lab=muĹľ@@Ĺľena" /><!-- gLink{}--></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div class="gincludeDiv"><!-- gLink{"article":"68","part":"attributecategoryfrequency_bmi","title":"T2D_A1_MRY_GKM_AA"}-->
+<div class="gincludeTitleDiv" style="font-size: 10px; padding: 0px;">Source article: T2D_A1_MRY_GKM_AA, created: 06.04.10 09:00</div>
+<div class="idiv"><span id="oddil3-BMI"> 
+<table summary="Tabulka 7: atribut BMI" class="itable">
+<tbody>
+<tr>
+<th>Kategorie </th><th>Interval </th><th>Frekvence </th>
+</tr>
+<tr>
+<td>Join: (16;17&gt;, (17;18&gt;, (18;19&gt;</td>
+<td>&lt;16;19&gt;</td>
+<td>14</td>
+</tr>
+<tr>
+<td>(19;20&gt;</td>
+<td>&lt;19;20&gt;</td>
+<td>14</td>
+</tr>
+<tr>
+<td>(20;21&gt;</td>
+<td>&lt;20;21&gt;</td>
+<td>34</td>
+</tr>
+<tr>
+<td>(21;22&gt;</td>
+<td>&lt;21;22&gt;</td>
+<td>40</td>
+</tr>
+<tr>
+<td>(22;23&gt;</td>
+<td>&lt;22;23&gt;</td>
+<td>53</td>
+</tr>
+<tr>
+<td>(23;24&gt;</td>
+<td>&lt;23;24&gt;</td>
+<td>73</td>
+</tr>
+<tr>
+<td>(24;25&gt;</td>
+<td>&lt;24;25&gt;</td>
+<td>77</td>
+</tr>
+<tr>
+<td>(25;26&gt;</td>
+<td>&lt;25;26&gt;</td>
+<td>62</td>
+</tr>
+<tr>
+<td>(26;27&gt;</td>
+<td>&lt;26;27&gt;</td>
+<td>45</td>
+</tr>
+<tr>
+<td>(27;28&gt;</td>
+<td>&lt;27;28&gt;</td>
+<td>53</td>
+</tr>
+<tr>
+<td>(28;29&gt;</td>
+<td>&lt;28;29&gt;</td>
+<td>56</td>
+</tr>
+<tr>
+<td>(29;30&gt;</td>
+<td>&lt;29;30&gt;</td>
+<td>44</td>
+</tr>
+<tr>
+<td>(30;31&gt;</td>
+<td>&lt;30;31&gt;</td>
+<td>31</td>
+</tr>
+<tr>
+<td>(31;32&gt;</td>
+<td>&lt;31;32&gt;</td>
+<td>17</td>
+</tr>
+<tr>
+<td>(32;33&gt;</td>
+<td>&lt;32;33&gt;</td>
+<td>22</td>
+</tr>
+<tr>
+<td>(33;34&gt;</td>
+<td>&lt;33;34&gt;</td>
+<td>17</td>
+</tr>
+<tr>
+<td>(34;35&gt;</td>
+<td>&lt;34;35&gt;</td>
+<td>16</td>
+</tr>
+<tr>
+<td>(35;36&gt;</td>
+<td>&lt;35;36&gt;</td>
+<td>9</td>
+</tr>
+<tr>
+<td>(36;37&gt;</td>
+<td>&lt;36;37&gt;</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Join: (37;38&gt;, (38;39&gt;, Join: (39;40&gt;, (40;41&gt;, (4</td>
+<td>&lt;37;45&gt;</td>
+<td>17</td>
+</tr>
+</tbody>
+</table>
+</span></div>
+Histogram nejčastějších hodnot  <br /> <img alt="BMI" src="xml/libraries/phpgraphlib/genBarChart.php?title=BMI&amp;xaxis=Frequency&amp;yaxis=Values&amp;val=14@@14@@34@@40@@53@@73@@0&amp;lab=(16;19&gt;@@(19;20&gt;@@(20;21&gt;@@(21;22&gt;@@(22;23&gt;@@(23;24&gt;@@Ostatní" /><!-- gLink{}--></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div class="gincludeDiv"><!-- gLink{"article":"68","part":"attributecategoryfrequency_whr","title":"T2D_A1_MRY_GKM_AA"}-->
+<div class="gincludeTitleDiv" style="font-size: 10px; padding: 0px;">Source article: T2D_A1_MRY_GKM_AA, created: 06.04.10 09:00</div>
+<div class="idiv"><span id="oddil3-WHR"> 
+<table summary="Tabulka 11: atribut WHR" class="itable">
+<tbody>
+<tr>
+<th>Kategorie </th><th>Interval </th><th>Frekvence </th>
+</tr>
+<tr>
+<td>Join: (0.45;0.5&gt;, (0.5;0.55&gt;, (0.55;0.6&gt;, (0.6;0.6</td>
+<td>&lt;0.45;0.7&gt;</td>
+<td>11</td>
+</tr>
+<tr>
+<td>(0.7;0.75&gt;</td>
+<td>&lt;0.7;0.75&gt;</td>
+<td>57</td>
+</tr>
+<tr>
+<td>(0.75;0.8&gt;</td>
+<td>&lt;0.75;0.8&gt;</td>
+<td>117</td>
+</tr>
+<tr>
+<td>(0.8;0.85&gt;</td>
+<td>&lt;0.8;0.85&gt;</td>
+<td>151</td>
+</tr>
+<tr>
+<td>(0.85;0.9&gt;</td>
+<td>&lt;0.85;0.9&gt;</td>
+<td>136</td>
+</tr>
+<tr>
+<td>(0.9;0.95&gt;</td>
+<td>&lt;0.9;0.95&gt;</td>
+<td>97</td>
+</tr>
+<tr>
+<td>(0.95;1&gt;</td>
+<td>&lt;0.95;1&gt;</td>
+<td>80</td>
+</tr>
+<tr>
+<td>(1;1.05&gt;</td>
+<td>&lt;1;1.05&gt;</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Join: (1.05;1.1&gt;, (1.1;1.15&gt;, (1.15;1.2&gt;, (1.2;1.2</td>
+<td>&lt;1.05;1.3&gt;</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</span></div>
+Histogram nejčastějších hodnot  <br /> <img alt="WHR" src="xml/libraries/phpgraphlib/genBarChart.php?title=WHR&amp;xaxis=Frequency&amp;yaxis=Values&amp;val=11@@57@@117@@151@@136@@97@@0&amp;lab=(0.45;0.7&gt;@@(0.7;0.75&gt;@@(0.75;0.8&gt;@@(0.8;0.85&gt;@@(0.85;0.9&gt;@@(0.9;0.95&gt;@@Ostatní" /><!-- gLink{}--></div>
+<div>&nbsp;</div>
+</strong>
+<h2><strong>3. Hodnoty laboratoře GKM</strong></h2>
+<p>&nbsp;&nbsp;<span style="font-size: small;">Hodnoty naměřené laboratoří GKM byly zpracovány do kategorií, které odpovídali stejné dlouhým intervalům. Následně krajní kategori byly sloučeny dle zadání. U každé kategorie je uvedena jeho frekvence.</span></p>
+<p><span style="font-size: small;">&nbsp;</span></p>
+<div class="gincludeDiv"><!-- gLink{"article":"68","part":"attributecategoryfrequency_glyk","title":"T2D_A1_MRY_GKM_AA"}-->
+<div class="gincludeTitleDiv" style="font-size: 10px; padding: 0px;">Source article: T2D_A1_MRY_GKM_AA, created: 06.04.10 09:00</div>
+<div class="idiv"><span id="oddil3-Glyk"> 
+<table summary="Tabulka 8: atribut Glyk" class="itable">
+<tbody>
+<tr>
+<th>Kategorie </th><th>Interval </th><th>Frekvence </th>
+</tr>
+<tr>
+<td>Join: (2.5;2.75&gt;, (2.75;3&gt;, (3;3.25&gt;, (3.25;3.5&gt;</td>
+<td>&lt;2.5;3.5&gt;</td>
+<td>10</td>
+</tr>
+<tr>
+<td>(3.5;3.75&gt;</td>
+<td>&lt;3.5;3.75&gt;</td>
+<td>15</td>
+</tr>
+<tr>
+<td>(3.75;4&gt;</td>
+<td>&lt;3.75;4&gt;</td>
+<td>47</td>
+</tr>
+<tr>
+<td>(4;4.25&gt;</td>
+<td>&lt;4;4.25&gt;</td>
+<td>39</td>
+</tr>
+<tr>
+<td>(4.25;4.5&gt;</td>
+<td>&lt;4.25;4.5&gt;</td>
+<td>85</td>
+</tr>
+<tr>
+<td>(4.5;4.75&gt;</td>
+<td>&lt;4.5;4.75&gt;</td>
+<td>75</td>
+</tr>
+<tr>
+<td>(4.75;5&gt;</td>
+<td>&lt;4.75;5&gt;</td>
+<td>96</td>
+</tr>
+<tr>
+<td>(5;5.25&gt;</td>
+<td>&lt;5;5.25&gt;</td>
+<td>44</td>
+</tr>
+<tr>
+<td>(5.25;5.5&gt;</td>
+<td>&lt;5.25;5.5&gt;</td>
+<td>43</td>
+</tr>
+<tr>
+<td>(5.5;5.75&gt;</td>
+<td>&lt;5.5;5.75&gt;</td>
+<td>24</td>
+</tr>
+<tr>
+<td>(5.75;6&gt;</td>
+<td>&lt;5.75;6&gt;</td>
+<td>23</td>
+</tr>
+<tr>
+<td>(6;6.25&gt;</td>
+<td>&lt;6;6.25&gt;</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Join: (6.25;6.5&gt;, (6.5;6.75&gt;, (6.75;7&gt;, (7;7.25&gt;,</td>
+<td>&lt;6.25;13.25&gt;</td>
+<td>18</td>
+</tr>
+</tbody>
+</table>
+</span></div>
+Histogram nejčastějších hodnot  <br /> <img alt="Glyk" src="xml/libraries/phpgraphlib/genBarChart.php?title=Glyk=Frequency&amp;yaxis=Values&amp;val=10@@15@@47@@39@@85@@75@@0&amp;lab=(2.5;3.5&gt;@@(3.5;3.75&gt;@@(3.75;4&gt;@@(4;4.25&gt;@@(4.25;4.5&gt;@@(4.5;4.75&gt;@@Ostatní" /><!-- gLink{}--></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div class="gincludeDiv"><!-- gLink{"article":"68","part":"attributecategoryfrequency_kmoc","title":"T2D_A1_MRY_GKM_AA"}-->
+<div class="gincludeTitleDiv" style="font-size: 10px; padding: 0px;">Source article: T2D_A1_MRY_GKM_AA, created: 06.04.10 09:00</div>
+<div class="idiv"><span id="oddil3-Kmoc"> 
+<table summary="Tabulka 9: atribut Kmoc" class="itable">
+<tbody>
+<tr>
+<th>Kategorie </th><th>Interval </th><th>Frekvence </th>
+</tr>
+<tr>
+<td>Join: (104;129&gt;, (129;154&gt;</td>
+<td>&lt;104;154&gt;</td>
+<td>12</td>
+</tr>
+<tr>
+<td>(154;179&gt;</td>
+<td>&lt;154;179&gt;</td>
+<td>18</td>
+</tr>
+<tr>
+<td>(179;204&gt;</td>
+<td>&lt;179;204&gt;</td>
+<td>26</td>
+</tr>
+<tr>
+<td>(204;229&gt;</td>
+<td>&lt;204;229&gt;</td>
+<td>47</td>
+</tr>
+<tr>
+<td>(229;254&gt;</td>
+<td>&lt;229;254&gt;</td>
+<td>48</td>
+</tr>
+<tr>
+<td>(254;279&gt;</td>
+<td>&lt;254;279&gt;</td>
+<td>61</td>
+</tr>
+<tr>
+<td>(279;304&gt;</td>
+<td>&lt;279;304&gt;</td>
+<td>45</td>
+</tr>
+<tr>
+<td>(304;329&gt;</td>
+<td>&lt;304;329&gt;</td>
+<td>40</td>
+</tr>
+<tr>
+<td>(329;354&gt;</td>
+<td>&lt;329;354&gt;</td>
+<td>29</td>
+</tr>
+<tr>
+<td>(354;379&gt;</td>
+<td>&lt;354;379&gt;</td>
+<td>30</td>
+</tr>
+<tr>
+<td>(379;404&gt;</td>
+<td>&lt;379;404&gt;</td>
+<td>17</td>
+</tr>
+<tr>
+<td>(404;429&gt;</td>
+<td>&lt;404;429&gt;</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Join: (429;454&gt;, (454;479&gt;, (479;504&gt;, (504;529&gt;</td>
+<td>&lt;429;529&gt;</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+</span></div>
+Histogram nejčastějších hodnot  <br /> <img alt="Kmoc" src="xml/libraries/phpgraphlib/genBarChart.php?title=Kmoc&amp;xaxis=Frequency&amp;yaxis=Values&amp;val=12@@18@@26@@47@@48@@61@@0&amp;lab=(104;154&gt;@@(154;179&gt;@@(179;204&gt;@@(204;229&gt;@@(229;254&gt;@@(254;279&gt;@@Ostatní" /><!-- gLink{}--></div>
+<div>&nbsp;</div>
+<h2>4. Množina relevantních antecedentů</h2>
+<p>&nbsp;&nbsp;Pro obě úlohy byla zadána množina relevantních antecendetů stejným způsobem, vybraných z atributů popsaných v kapitole 2.</p>
+<p><strong>Úloha s fundovanou implikací:&nbsp;</strong></p>
+<p><span style="font-size: small;">Pohlaví: Generovaly se booleovské atributy Pohlaví(muž) a Pohlaví(ženy).</span></p>
+<p>BMI: Generovaly se boolovské atributy jako intervaly kategorií délky 1 až 7.</p>
+<p>WHR: Generovaly se boolovské atributy jako intervaly kategorií délky 1 až 3.</p>
+<p><strong>Úloha s AA kvantifikátorem nadprůměrného vzájemného souvisení</strong><strong>:&nbsp;</strong></p>
+<p>Pohlaví: Generovaly se booleovské atributy Pohlaví(muž) a Pohlaví(ženy).</p>
+<p>BMI: Generovaly se boolovské atributy jako řezy kategorií délky 1 až 7.</p>
+<p>WHR: Generovaly se boolovské atributy jako řezy kategorií délky 1 až 3.</p>
+<p><span style="font-size: small;">Z takto vytvořených booleovských atributů se generovaly konjunkce délky 1 až 2.</span></p>
+<h2>5. Množina relevantních sukcedentů</h2>
+<p>&nbsp;&nbsp;Pro obě úlohy byla zadána množina relevantních antecendetů stejným způsobem, vybraných z atributů v popsaných v kapitole 3.</p>
+<p><strong>Úloha s fundovanou implikací:&nbsp;</strong></p>
+<p>Glyk: Generovaly se boolovské atributy jako intervaly kategorií délky 1 až 4.</p>
+<p>Kmoc: Generovaly se boolovské atributy jako intervaly kategorií délky 1 až 4.</p>
+<p><strong><strong>Úloha s AA kvantifikátorem nadprůměrného vzájemného souvisení</strong><strong>:&nbsp;</strong></strong></p>
+<p>Glyk: Generovaly se boolovské atributy jako řezy kategorií délky 1 až 4.</p>
+<p>Kmoc: Generovaly se boolovské atributy jako řezy kategorií délky 1 až 4.</p>
+<p>Z takto vytvořených booleovských atributů se generovaly konjunkce délky 1 až 2.</p>
+<h2>6. Fundovaná implikace</h2>
+<p>&nbsp;&nbsp;Po delším zkoušení kvantifikátoru fundované aplikace s výše uvedenými relevantními antecedenty a sukcedenety byl tento kvantifikátor využit pouze pro jednu aplikaci procedury 4ft-Miner. Parametry fundovaného kvantifikátoru byly nastaveny následovně. Parametr p = 0.83 a parametr Base = 20.0. Těmto parametrům odpovídá 6 pravidel. Pro zvýšení počtu získaných pravidel bychom museli snížit parametr p, což nám ale přislo jako velmi nevýhodné z hlediska důležitosti nalezených nových pravidel.</p>
+<h2>7. Nadprůměrné souvisení</h2>
+<h2>8. Nalezené poznatky o vztazích měr a výsledků laboratoře GKM pacientů</h2>
+<h2></h2>
+<p style="padding-left: 30px;">Nebyly nalezeny žádné konkrétní poznatky popisující vztahy mezi BMI a WHR indexy a na druhé straně kyselinou močovou a glekémií v krvi pacienta. Byly však nalezeny následující relevantní informace. Pro jejich velké množství nalezené skrze systém PROQUEST a omezený čas vypracování jsou uvedeny pouze některé.&nbsp;</p>
+<p><strong>1)Na stránce <a href="http://is.muni.cz/th/80795/lf_m/FINITO_DILPOMKA_3.txt">http://is.muni.cz/th/80795/lf_m/FINITO_DILPOMKA_3.txt</a>&nbsp;byly nalezeny následující informace <span style="font-weight: normal; font-size: small;">&nbsp;:</span></strong></p>
+Hypotéza č.6 (index WHR bude korelovat s hodnotou BMI) se potvrdila. Jak vyplývá z recentních studií, je korelace mezi WHR indexem a hodnotou BMI v běžné populaci velmi významná (2, 21). Taktéž v mé diplomové práci se prokázala signifikantní závislost (hladina statistické významnosti p = 0,0000) WHR indexu a hodnot BMI. Autoři čínské studie zjistili, že pacienti v nejvyšším kvartilu WHR měli trojnásobně zvýšené riziko vzniku karcinomu prostaty, zatímco spojitost mezi BMI a karcinomem prostaty nebyla významná (21). Tento fakt podporuje důležitost sledování viscerální obezity, a nejen pouhé spoléhání se na BMI.
+<p><strong>2) Systémem PROQUEST bylo nalezeno velké množství relevantních článků, uvádíme pouze citace z dvou vybraných</strong></p>
+<span style="font-size: small;"> 
+<ul>
+<li>&nbsp;    
+<ul>
+<li>&nbsp;    
+<ul>
+<li><strong>Type 2 Diabetes; Data on type 2 diabetes detailed by researchers at Shanghai JiaoTong University, Department of Endocrinology</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</span>
+<p><em><span style="font-size: 8pt;">Anonymous</span></em><span style="font-size: 8pt;">.&nbsp;</span><strong><a href="http://proquest.umi.com.ezproxy.vse.cz/pqdweb?RQT=318&amp;pmid=67444&amp;TS=1274035363&amp;clientId=45149&amp;VInst=PROD&amp;VName=PQD&amp;VType=PQD"><span style="font-size: 8pt;">Disease Risk Factor Week</span></a></strong><span style="font-size: 8pt;">.&nbsp;Atlanta:&nbsp;</span><a href="http://proquest.umi.com.ezproxy.vse.cz/pqdweb?RQT=572&amp;VType=PQD&amp;VName=PQD&amp;VInst=PROD&amp;pmid=67444&amp;pcid=52101161&amp;SrchMode=3"><span style="font-size: 8pt;">May 23, 2010</span></a><span style="font-size: 8pt;">.&nbsp;pg. 24</span></p>
+<p><span style="font-size: small;">Compared with subjects of healthy control group, the subjects with type 2 diabetes had significantly higher levels of body mass index (<em><strong>BMI</strong></em>), waist-to-hip ratio (<em><strong>WHR</strong></em>), systolic blood pressure, triglyceride, total cholesterol, low density lipoprotein cholesterol (LDL-C), fasting plasma glucose (FPG), 120 min postchallenge glucose (PG120), hemoglobin A1c (HbA[subscript]1c) and IMT (p &lt;or=0.01) and relatively lower levels of high density lipoprotein cholesterol (HDL-C) (p &lt;or=0.05).</span></p>
+<ul>
+<li><span style="font-size: small;"><strong>Metabolism; New metabolism research from Ludwig-Maximilians University discussed</strong></span></li>
+</ul>
+<p><em><span style="font-size: 8pt;">Anonymous</span></em><span style="font-size: 8pt;">.&nbsp;</span><strong><a href="http://proquest.umi.com.ezproxy.vse.cz/pqdweb?RQT=318&amp;pmid=51264&amp;TS=1274035629&amp;clientId=45149&amp;VInst=PROD&amp;VName=PQD&amp;VType=PQD"><span style="font-size: 8pt;">Heart Disease Weekly</span></a></strong><span style="font-size: 8pt;">.&nbsp;Atlanta:&nbsp;</span><a href="http://proquest.umi.com.ezproxy.vse.cz/pqdweb?RQT=572&amp;VType=PQD&amp;VName=PQD&amp;VInst=PROD&amp;pmid=51264&amp;pcid=52100561&amp;SrchMode=3"><span style="font-size: 8pt;">May 23, 2010</span></a><span style="font-size: 8pt;">.&nbsp;pg. 200</span></p>
+<p>&nbsp;<span style="font-size: small;">"We analyzed two German cohort studies, the DETECT study and SHIP, including primary care and general population. A total of 6355 (mean follow-up, 3.3 yr) and 4297 (mean follow-up, 8.5 yr) individuals participated in DETECT and SHIP, respectively. We measured body mass index (BMI), waist circumference (WC), waist-to-height ratio (WHtR), and waist-to-hip ratio (WHR) and assessed cardiovascular and all-cause mortality and the composite endpoint of incident stroke, myocardial infarction, or cardiovascular death. In both studies, we found a positive association of the composite endpoint with WHtR but not with BMI. There was no heterogeneity among studies. The relative risks in the highest versus the lowest sex-and age-specific quartile of WHtR, WC, WHR, and BMI after adjustment for multiple confounders were as follows in the pooled data: cardiovascular mortality, 2.75 (95% confidence interval, 1.31-5.77), 1.74 (0.84-3.6), 1.71 (0.91-3.22), and 0.74 (0.35-1.57), respectively; all-cause mortality, 1.86 (1.25-2.76), 1.62 (1.22-2.38), 1.36 (0.93-1.69), and 0.77 (0.53-1.13), respectively; and composite endpoint, 2.16 (1.39-3.35), 1.59 (1.04-2.44), 1.49 (1.07-2.07), and 0.57 (0.37-0.89), respectively. Separate analyses of sex and age groups yielded comparable results...</span></p>

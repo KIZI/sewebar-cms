@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="PMML">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Header"/>
+        <xs:element ref="fieldValuesSet"/>
+        <xs:element ref="AssociationModel"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Annotation"/>
+      </xs:sequence>
+      <xs:attribute name="copyright" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Annotation" type="xs:string"/>
+  <xs:element name="fieldValuesSet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="field"/>
+      </xs:sequence>
+      <xs:attribute name="fieldCount" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="fieldValue"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fieldValue">
+    <xs:complexType>
+      <xs:attribute name="frequency" use="required"/>
+      <xs:attribute name="value" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AssociationModel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="modelInfo"/>
+        <xs:element maxOccurs="unbounded" ref="AssociationRule"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="modelInfo">
+    <xs:complexType>
+      <xs:attribute name="base" use="required" type="xs:decimal"/>
+      <xs:attribute name="functionName" use="required" type="xs:NCName"/>
+      <xs:attribute name="minimumConfidence" use="required" type="xs:integer"/>
+      <xs:attribute name="modelName" use="required"/>
+      <xs:attribute name="numberOfRules" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AssociationRule">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="item"/>
+        <xs:element ref="quantifier"/>
+      </xs:choice>
+      <xs:attribute name="confidence" use="required" type="xs:decimal"/>
+      <xs:attribute name="support" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="item">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="value"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value" type="xs:NMTOKEN"/>
+  <xs:element name="quantifier">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="value" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
