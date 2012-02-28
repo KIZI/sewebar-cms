@@ -285,27 +285,28 @@
     <!-- Rule has format: Antecedent => Consequent [/Condition]
       - condition is optional
     -->
+	<!-- antecendent (stable) -->
     <xsl:choose>
       <xsl:when test="(count(../DBA[@id=$ante]/BARef) + count(../BBA[@id=$ante])) > 0">
         <xsl:call-template name="cedent">
           <xsl:with-param name="cedentID" select="$ante"/>
         </xsl:call-template>
       </xsl:when>
-      <!-- antecedent for StateBefore/StateAfter of Ac4ftRule -->
-      <xsl:when test="StateBefore/@antecedentVarBefore and StateAfter/@antecedentVarAfter">
-        [ <xsl:call-template name="cedent">
-          <xsl:with-param name="cedentID" select="StateBefore/@antecedentVarBefore"/>
-        </xsl:call-template> -&gt;
-        <xsl:call-template name="cedent">
-          <xsl:with-param name="cedentID" select="StateAfter/@antecedentVarAfter"/>
-        </xsl:call-template>
-        ]
-      </xsl:when>
       <!-- antecedent exists, but doesn't refer any other items -->
-      <xsl:otherwise>
+      <xsl:when test="not(StateBefore/@antecedentVarBefore and StateAfter/@antecedentVarAfter)">
         [[ <xsl:copy-of select="keg:translate('No restriction',221)"/>]]
-      </xsl:otherwise>
+      </xsl:when>
     </xsl:choose>
+    <!-- antecedent for StateBefore/StateAfter of Ac4ftRule -->
+    <xsl:if test="StateBefore/@antecedentVarBefore and StateAfter/@antecedentVarAfter">
+      [ <xsl:call-template name="cedent">
+        <xsl:with-param name="cedentID" select="StateBefore/@antecedentVarBefore"/>
+      </xsl:call-template> -&gt;
+      <xsl:call-template name="cedent">
+        <xsl:with-param name="cedentID" select="StateAfter/@antecedentVarAfter"/>
+      </xsl:call-template>
+      ]
+    </xsl:if>
     <!-- arrow symbol: from quantifier_transformations.xsl -->
     <xsl:copy-of select="$contentsQuantifier"/>
     <!-- consequent -->
