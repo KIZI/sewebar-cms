@@ -1,4 +1,4 @@
-package xquerysearch;
+package xquerysearch.validation;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -14,13 +14,15 @@ import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
 
+import xquerysearch.controllers.CommunicationManager;
+
 /**
  * 
  * @author Tomas Marek
  */
 public class DocumentValidator {
    
-	private static Logger logger = CommunicationManager.logger;
+	private static Logger logger = CommunicationManager.getLogger();
 	
     /**
      * Validates given document

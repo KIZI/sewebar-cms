@@ -11,13 +11,15 @@ import java.util.logging.Logger;
 
 import javax.xml.transform.TransformerException;
 
+import xquerysearch.controllers.CommunicationManager;
+
 /**
  * Trida XSLT transformace
  * @author Tomas Marek
  */
 public class XSLTTransformer {
 	
-	Logger logger = CommunicationManager.logger;
+	Logger logger = CommunicationManager.getLogger();
     
 	
 	/**

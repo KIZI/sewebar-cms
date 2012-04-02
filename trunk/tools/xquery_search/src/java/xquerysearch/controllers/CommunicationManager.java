@@ -1,4 +1,4 @@
-package xquerysearch;
+package xquerysearch.controllers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,10 +11,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.SAXException;
-
+import xquerysearch.BDBXMLHandler;
+import xquerysearch.query.QueryHandler;
+import xquerysearch.query.QueryMaker;
 import xquerysearch.settings.SettingsFileUtils;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.settings.SettingsPageController;
@@ -26,34 +26,60 @@ import xquerysearch.settings.SettingsUtils;
  * @author Tomas Marek
  * @version 1.21 (5.1.2012)
  */
+
 public class CommunicationManager extends HttpServlet {
-	private final String ID_MISSING_ERROR = "<error><![CDATA[ID is missing!]]></error>";
-	private final String QUERY_MISSING_ERROR = "<error><![CDATA[Query content is missing!]]></error>";
-	private final String DOCUMENT_CONTENT_MISSING_ERROR = "<error><![CDATA[Document content is missing!]]></error>";
-	private final String DOCUMENT_NAME_MISSING_ERROR = "<error><![CDATA[Document name is missing!]]></error>";
-	private final String DOCUMENT_CREATIONTIME_MISSING_ERROR = "<error><![CDATA[Document creation time is missing!]]></error>";
-	private final String ACTION_NOT_EXISTS_ERROR = "<error><![CDATA[Action does not exist!]]></error>";
-	private final String INDEX_NOT_SPECIFIED_ERROR = "<error><![CDATA[Index is not specified!]]></error>";
-	private final String FOLDER_PATH_MISSING_ERROR = "<error><![CDATA[Folder path is missing!]]></error>";
+	private static final String ID_MISSING_ERROR = "<error><![CDATA[ID is missing!]]></error>";
+	private static final String QUERY_MISSING_ERROR = "<error><![CDATA[Query content is missing!]]></error>";
+	private static final String DOCUMENT_CONTENT_MISSING_ERROR = "<error><![CDATA[Document content is missing!]]></error>";
+	private static final String DOCUMENT_NAME_MISSING_ERROR = "<error><![CDATA[Document name is missing!]]></error>";
+	private static final String DOCUMENT_CREATIONTIME_MISSING_ERROR = "<error><![CDATA[Document creation time is missing!]]></error>";
+	private static final String ACTION_NOT_EXISTS_ERROR = "<error><![CDATA[Action does not exist!]]></error>";
+	private static final String INDEX_NOT_SPECIFIED_ERROR = "<error><![CDATA[Index is not specified!]]></error>";
+	private static final String FOLDER_PATH_MISSING_ERROR = "<error><![CDATA[Folder path is missing!]]></error>";
 	
 	
-	public static final Logger logger = Logger.getLogger("xquery_search");
-	public static final String SETTINGS_FILE_NAME = "xquery_search_settings.xml";
+	private static final Logger logger = Logger.getLogger("xquery_search");
+	private static final String SETTINGS_FILE_NAME = "xquery_search_settings.xml";
 	private SettingsManager settings;
 	private String action;
 	private String content;
 	private String docId;
 	private HttpServletRequest request;
 
+	
 	/**
-	 * Method managing requests and responses. Supports <code>GET</code> a <code>POST</code>.
+	 * Only calls method {@link #processRequest(HttpServletRequest, HttpServletResponse)}.
+	 * For <code>GET</code> requests.
+	 * @param req
+	 * @param resp
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		processRequest(req, resp);
+	}
+
+	/**
+	 * Only calls method {@link #processRequest(HttpServletRequest, HttpServletResponse)}.
+	 * For <code>POST</code> requests. 
+	 * @param req
+	 * @param resp
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		processRequest(req, resp);
+	}
+
+	/**
+	 * Method managing requests and responses. Supports <code>GET</code> and <code>POST</code>.
 	 * 
 	 * @param request 
 	 * @param response 
 	 * @throws ServletException 
 	 * @throws IOException
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -86,7 +112,7 @@ public class CommunicationManager extends HttpServlet {
 						docId = request.getParameter("id").toString();
 						content = request.getParameter("content").toString();
 						
-						output += processRequest(action);
+						output += resolveRequest(action);
 					}
 				}
 			} catch (Throwable ex) {
@@ -117,22 +143,10 @@ public class CommunicationManager extends HttpServlet {
 			}
 		}
 	}
-
+	
 	/**
-	 * Metoda zpracovavajici HTTP <code>POST</code> metodu.
-	 * @param request dotaz na servlet
-	 * @param response odpoved servletu
-	 * @throws ServletException chyby tykajici se servletu
-	 * @throws IOException I/O chyby
-	 */
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
-	}
-
-	/**
-	 * Metoda vraci kratky popis servletu
-	 * @return String s popisem servletu
+	 * 
+	 * @return short servlet description
 	 */
 	@Override
 	public String getServletInfo() {
@@ -196,7 +210,7 @@ public class CommunicationManager extends HttpServlet {
 	 * 
 	 * @return
 	 */
-	private String processRequest(String action) {
+	private String resolveRequest(String action) {
 		// actions -> codes mapping
 		int mappedAction = mapAction(action);
 		
@@ -348,4 +362,21 @@ public class CommunicationManager extends HttpServlet {
 		}
 		return (output);
 	}
+
+	/**
+	 * 
+	 * @return logger
+	 */
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	/**
+	 * 
+	 * @return settings file name
+	 */
+	public static String getSettingsFileName() {
+		return SETTINGS_FILE_NAME;
+	}
+	
 }

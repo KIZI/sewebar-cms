@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
-import xquerysearch.CommunicationManager;
+import xquerysearch.controllers.CommunicationManager;
 import xquerysearch.settings.SettingsManager;
 
 import com.sleepycat.db.DatabaseException;
@@ -45,7 +45,7 @@ public class DbConnectionManager {
 	 * @param settings 
 	 */
 	public DbConnectionManager(SettingsManager settings) {
-		logger = CommunicationManager.logger;
+		logger = CommunicationManager.getLogger();
 		this.settings = settings;
 	}
 	
@@ -311,7 +311,7 @@ public class DbConnectionManager {
 		try {
 			xmlTransaction.commit();
 		} catch (XmlException e) {
-			CommunicationManager.logger.severe("DB commit failed!");
+			logger.severe("DB commit failed!");
 		}
 	}
 }

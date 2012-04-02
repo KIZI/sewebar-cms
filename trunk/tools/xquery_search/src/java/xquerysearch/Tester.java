@@ -8,6 +8,8 @@ import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
+import xquerysearch.query.QueryHandler;
+
 /**
  * Trida provadi vypis nastaveni a otestovani funkci aplikace
  * @author Tomas Marek
