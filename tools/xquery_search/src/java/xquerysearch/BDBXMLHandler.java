@@ -32,8 +32,12 @@ import net.sf.saxon.trans.XPathException;
 
 import org.xml.sax.InputSource;
 
+import xquerysearch.controllers.CommunicationManager;
 import xquerysearch.db.DbConnectionManager;
+import xquerysearch.query.QueryHandler;
+import xquerysearch.query.QueryMaker;
 import xquerysearch.settings.SettingsManager;
+import xquerysearch.validation.DocumentValidator;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
@@ -49,7 +53,7 @@ import com.sleepycat.dbxml.XmlValue;
  * @author Tomas Marek
  */
 public class BDBXMLHandler {
-	private Logger logger = CommunicationManager.logger;
+	private Logger logger = CommunicationManager.getLogger();
 	private DbConnectionManager dcm;
 	private QueryMaker qm;
 	private XmlManager mgr;

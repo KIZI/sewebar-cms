@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import xquerysearch.CommunicationManager;
+import xquerysearch.controllers.CommunicationManager;
 
 /**
  * Class for reading application settings stored in XML
@@ -24,7 +24,7 @@ import xquerysearch.CommunicationManager;
  */
 public class SettingsUtils {
 
-	private static Logger logger = CommunicationManager.logger;
+	private static Logger logger = CommunicationManager.getLogger();
 	
     /**
      * Method for reading settings
@@ -59,7 +59,7 @@ public class SettingsUtils {
             setMan.setTemporaryDirectory(getSettingNode("tempDir", doc));
             setMan.setValidationSchemaPath(getSettingNode("schemaPath", doc));
             
-            CommunicationManager.logger.info("Settings reading done");
+            logger.info("Settings reading done");
             return setMan;
     }
 
@@ -108,7 +108,7 @@ public class SettingsUtils {
 //        	CommunicationManager.logger.info("Setting " + nodeName + " reading successful!");
         	return (node.getNodeValue());
         } catch (NullPointerException e) {
-        	CommunicationManager.logger.info("Setting " + nodeName + " reading FAILED!");
+        	logger.info("Setting " + nodeName + " reading FAILED!");
         	return null;
         }
             

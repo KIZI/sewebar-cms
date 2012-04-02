@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.logging.Logger;
 
-import xquerysearch.CommunicationManager;
+import xquerysearch.controllers.CommunicationManager;
 
 /**
  * 
@@ -14,14 +14,14 @@ import xquerysearch.CommunicationManager;
  */
 public class SettingsFileUtils {
 	
-	private static Logger logger = CommunicationManager.logger;
+	private static Logger logger = CommunicationManager.getLogger();
 	
 	/**
      * 
 	 * @return settings file, if not found or error occured then <code>null</code>
 	 */
 	public static File getSettingsFile() {
-		File settingsFile = new File(CommunicationManager.SETTINGS_FILE_NAME);
+		File settingsFile = new File(CommunicationManager.getSettingsFileName());
 		if (!settingsFile.exists()) {
 			return createSettingsFile();
 		}			
@@ -30,7 +30,7 @@ public class SettingsFileUtils {
 	
 	private static File createSettingsFile() {
 		try {
-			File settingFile = new File(CommunicationManager.SETTINGS_FILE_NAME);
+			File settingFile = new File(CommunicationManager.getSettingsFileName());
 			settingFile.createNewFile();
 			String newFileOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "\n<settings>"
