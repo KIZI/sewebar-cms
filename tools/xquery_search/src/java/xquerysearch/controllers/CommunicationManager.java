@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import xquerysearch.BDBXMLHandler;
+import xquerysearch.datadescription.DataDescriptionHandler;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
 import xquerysearch.settings.SettingsFileUtils;
@@ -215,6 +216,7 @@ public class CommunicationManager extends HttpServlet {
 		int mappedAction = mapAction(action);
 		
 		BDBXMLHandler bh = new BDBXMLHandler(settings);
+		DataDescriptionHandler ddh = new DataDescriptionHandler(settings);
 		QueryHandler qh = new QueryHandler(settings);
 		QueryMaker qm = new QueryMaker(settings);
 		
@@ -345,7 +347,7 @@ public class CommunicationManager extends HttpServlet {
 					output += bh.removeIndex(dotaz);
 				}
 				break;
-			case 18: output += bh.getDataDescriptionCache(); break;
+			case 18: output += ddh.getDataDescriptionCache(); break;
 			case 19: output += /* bh.removeAllDocuments(); */"<not implemented yet/>"; break;
 			case 20: /*
 					 * if (content.equals("")) { output +=
@@ -356,7 +358,7 @@ public class CommunicationManager extends HttpServlet {
 					 * bh.queryShortened(qm.makeXPath(is)); }
 					 */
 				break;
-			case 21: output += bh.actualizeDataDescriptionCache(); break;
+			case 21: output += ddh.actualizeDataDescriptionCache(); break;
 			default: output += ACTION_NOT_EXISTS_ERROR; break;
 			}
 		}

@@ -210,7 +210,7 @@ public class DbConnectionManager {
 	 * Gets data description from DB
 	 * @return data description or <code>null</code> when error occurs
 	 */
-	public String getDataDescirption() {
+	public String getDataDescription() {
 		XmlContainer cont = openConnecion(DATA_DESCRIPTION_CONTAINER);
 		try {
     		XmlDocument doc = cont.getDocument(DATA_DESCRIPTION_DOCUMENT);

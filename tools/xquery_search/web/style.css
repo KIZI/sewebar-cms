@@ -1,5 +1,5 @@
 body{
-	font-family: Arial, sans-serif;
+	font-family: sans-serif;
 	margin: 20px;
 }
 i{
@@ -15,14 +15,17 @@ input, select{
 	border-width: 1px;
 	border-color: black;
 	border-style: solid;
-	font-family: Arial;
+	font-family: sans-serif;
+}
+select {
+	min-width: 300px;
 }
 textarea{
 	padding: 2px 5px 2px 5px;
 	border-width: 1px;
 	border-color: black;
 	border-style: solid;
-	font-family: Monospaced, serif;
+	font-family: Consolas, Monospaced, serif;
 	font-size: 9pt;
 }
 #send_btn{
