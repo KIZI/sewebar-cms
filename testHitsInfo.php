@@ -31,7 +31,7 @@ if(!file_exists($ckfile)) {
 	);
 	
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "http://146.102.66.141/SewebarConnect/Import.ashx");
+	curl_setopt($ch, CURLOPT_URL, "http://lmcloud.vse.cz/SewebarConnect/Import.ashx");
 	curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
 	curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, encodeData($data));
@@ -58,7 +58,7 @@ $data = array(
 );
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "http://146.102.66.141/SewebarConnect/Task.ashx");
+curl_setopt($ch, CURLOPT_URL, "http://lmcloud.vse.cz/SewebarConnect/Task.ashx");
 curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
 curl_setopt($ch, CURLOPT_POSTFIELDS, encodeData($data));
