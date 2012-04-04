@@ -57,6 +57,8 @@ $data = array(
   'content' => $content,
 );
 
+echo $content; die;
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, "http://lmcloud.vse.cz/SewebarConnect/Task.ashx");
 curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
@@ -67,7 +69,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 
 // ziskani vysledku tasku z LISpMiner-a
-echo $response = curl_exec($ch); die;
+$response = curl_exec($ch);
 $info = curl_getinfo($ch);
 curl_close($ch);
 
