@@ -52,7 +52,7 @@ $toSolve = isset($_POST['data']) ? $_POST['data'] : $_GET['data'];
 $toSolve = str_replace("\\\"", "\"", $toSolve);
 $sr = new SerializeRulesTaskSetting();
 $content = $sr->serializeRules($toSolve);
-
+echo $content; die;
 $data = array(
   'content' => $content,
 );
