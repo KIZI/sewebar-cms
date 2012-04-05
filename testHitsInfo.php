@@ -52,7 +52,7 @@ $toSolve = isset($_POST['data']) ? $_POST['data'] : $_GET['data'];
 $toSolve = str_replace("\\\"", "\"", $toSolve);
 $sr = new SerializeRulesTaskSetting();
 $content = $sr->serializeRules($toSolve);
-echo $content; die;
+
 $data = array(
   'content' => $content,
 );
@@ -67,7 +67,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 
 // ziskani vysledku tasku z LISpMiner-a
-$response = curl_exec($ch);
+$response = curl_exec($ch); echo $response; die;
 $info = curl_getinfo($ch);
 curl_close($ch);
 
