@@ -25,7 +25,7 @@ if(session_id() === '') {
 $ckfile = dirname(__FILE__) . "/cookie_".session_id();
 
 // Pokus session s LISpMiner-em jeste nezacla tak posleme data pro inicializaci
-if(!file_exists($ckfile)) {
+if (true || !file_exists($ckfile)) {
 	$data = array(
 		'content' => file_get_contents('XML/barboraForLMImport.pmml'),
 	);
@@ -67,7 +67,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 
 // ziskani vysledku tasku z LISpMiner-a
-$response = curl_exec($ch);
+echo $response = curl_exec($ch); die;
 $info = curl_getinfo($ch);
 curl_close($ch);
 
