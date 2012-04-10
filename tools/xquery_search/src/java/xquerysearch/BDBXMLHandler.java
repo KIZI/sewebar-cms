@@ -21,8 +21,11 @@ import javax.xml.xpath.XPathFactory;
 
 import org.xml.sax.InputSource;
 
-import xquerysearch.controllers.CommunicationManager;
-import xquerysearch.db.DbConnectionManager;
+import xquerysearch.controllers.MainController;
+import xquerysearch.dao.IndexDao;
+import xquerysearch.dao.PmmlDocumentDao;
+import xquerysearch.dao.bdbxml.BdbxmlIndexDao;
+import xquerysearch.dao.bdbxml.BdbxmlPmmlDocumentDao;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
 import xquerysearch.settings.SettingsManager;
@@ -39,8 +42,9 @@ import com.sleepycat.dbxml.XmlValue;
  * @author Tomas Marek
  */
 public class BDBXMLHandler {
-	private Logger logger = CommunicationManager.getLogger();
-	private DbConnectionManager dcm;
+	private Logger logger = MainController.getLogger();
+	private PmmlDocumentDao pmmlDao;
+	private IndexDao indexDao;
 	private QueryMaker qm;
 	private QueryHandler qh;
     
@@ -55,7 +59,8 @@ public class BDBXMLHandler {
     
     
     public BDBXMLHandler(SettingsManager settings) {
-    	this.dcm = new DbConnectionManager(settings);
+    	this.pmmlDao = new BdbxmlPmmlDocumentDao(settings);
+    	this.indexDao = new BdbxmlIndexDao(settings);
     	this.settings = settings;
     	this.containerName = settings.getContainerName();
     	this.useTransformation = settings.isUseTransformation();
@@ -71,7 +76,7 @@ public class BDBXMLHandler {
      * @return message
      */
     public String removeDocument (String id) {
-        if (dcm.removeDocument(id)) {
+        if (pmmlDao.removeDocument(id)) {
         	return "<message>Document with id \"" + id + "\" removed!</message>";
         } else {
             return "<error>Removing document with id \"" + id + "\" failed!</error>";
@@ -84,7 +89,7 @@ public class BDBXMLHandler {
      * @return document as string or message when error occurs
      */
     public String getDocument(String id) {
-    	XmlDocument doc = dcm.getDocumentById(id);
+    	XmlDocument doc = pmmlDao.getDocumentById(id);
     	if (doc != null) {
     		try {
 				return doc.getContentAsString();
@@ -141,7 +146,7 @@ public class BDBXMLHandler {
         }
     	query = qh.deleteDeclaration(query);
         
-    	XmlResults res = dcm.query(query) ;
+    	XmlResults res = pmmlDao.query(query) ;
 
         if (res != null) {
             String result = "";
@@ -170,7 +175,7 @@ public class BDBXMLHandler {
                 + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
                 + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
-        XmlResults res = dcm.query(query);
+        XmlResults res = pmmlDao.query(query);
 
         String results = "";
         try {
@@ -212,7 +217,7 @@ public class BDBXMLHandler {
         if (isValid){        
             docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 
-            boolean saved = dcm.insertDocument(docName, xml_doc);
+            boolean saved = pmmlDao.insertDocument(docName, xml_doc);
 
             if (saved) {
             	return "<message>Document " + docName + " inserted</message>";
@@ -264,7 +269,7 @@ public class BDBXMLHandler {
 	
 	        docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 	
-	        dcm.insertDocument(docName, xml_doc);
+	        pmmlDao.insertDocument(docName, xml_doc);
 	        output += "<message>Document " + docName + " inserted</message>";
 	        output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
         } else {
@@ -295,7 +300,7 @@ public class BDBXMLHandler {
      * @return message for success/failure
      */
     public String addIndex(String index) {
-        boolean saved = dcm.addIndex(index);
+        boolean saved = indexDao.insertIndex(index);
         if (saved) {
         	return "<message>Index \"" + index + "\" added!</message>";
         } else {
@@ -309,7 +314,7 @@ public class BDBXMLHandler {
      * @return message for success/failure
      */
     public String removeIndex (String index){
-    	boolean removed = dcm.removeIndex(index);
+    	boolean removed = indexDao.removeIndex(index);
     	if (removed) {
     		return "<message>Index \"" + index + "\" removed!</message>";
         } else {
@@ -322,7 +327,7 @@ public class BDBXMLHandler {
      * @return list of indexes or error message
      */
     public String listIndex() {
-    	String indexes = dcm.listIndexes();
+    	String indexes = indexDao.getAllIndexes();
         if (indexes != null) {
         	return indexes;
         } else {

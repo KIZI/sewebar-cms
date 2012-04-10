@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import xquerysearch.controllers.CommunicationManager;
+import xquerysearch.controllers.MainController;
 
 /**
  * Class for reading application settings stored in XML
@@ -24,7 +24,7 @@ import xquerysearch.controllers.CommunicationManager;
  */
 public class SettingsUtils {
 
-	private static Logger logger = CommunicationManager.getLogger();
+	private static Logger logger = MainController.getLogger();
 	
     /**
      * Method for reading settings

@@ -14,7 +14,7 @@ import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
 
-import xquerysearch.controllers.CommunicationManager;
+import xquerysearch.controllers.MainController;
 
 /**
  * 
@@ -22,7 +22,7 @@ import xquerysearch.controllers.CommunicationManager;
  */
 public class DocumentValidator {
    
-	private static Logger logger = CommunicationManager.getLogger();
+	private static Logger logger = MainController.getLogger();
 	
     /**
      * Validates given document
