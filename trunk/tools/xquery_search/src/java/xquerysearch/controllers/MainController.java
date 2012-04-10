@@ -28,7 +28,7 @@ import xquerysearch.settings.SettingsUtils;
  * @version 1.21 (5.1.2012)
  */
 
-public class CommunicationManager extends HttpServlet {
+public class MainController extends HttpServlet {
 	private static final String ID_MISSING_ERROR = "<error><![CDATA[ID is missing!]]></error>";
 	private static final String QUERY_MISSING_ERROR = "<error><![CDATA[Query content is missing!]]></error>";
 	private static final String DOCUMENT_CONTENT_MISSING_ERROR = "<error><![CDATA[Document content is missing!]]></error>";

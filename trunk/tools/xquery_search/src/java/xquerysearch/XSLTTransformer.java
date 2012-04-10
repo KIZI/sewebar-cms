@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import javax.xml.transform.TransformerException;
 
-import xquerysearch.controllers.CommunicationManager;
+import xquerysearch.controllers.MainController;
 
 /**
  * Trida XSLT transformace
@@ -19,7 +19,7 @@ import xquerysearch.controllers.CommunicationManager;
  */
 public class XSLTTransformer {
 	
-	Logger logger = CommunicationManager.getLogger();
+	Logger logger = MainController.getLogger();
     
 	
 	/**

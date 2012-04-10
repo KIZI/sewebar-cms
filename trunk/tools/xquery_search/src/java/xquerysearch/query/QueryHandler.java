@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 
-import xquerysearch.controllers.CommunicationManager;
+import xquerysearch.controllers.MainController;
 import xquerysearch.settings.SettingsManager;
 
 import net.sf.saxon.Configuration;
@@ -29,7 +29,7 @@ import net.sf.saxon.trans.XPathException;
  */
 public class QueryHandler {
     private SettingsManager settings;
-    private Logger logger = CommunicationManager.getLogger();
+    private Logger logger = MainController.getLogger();
 
     /**
      * Konstruktor instance tridy

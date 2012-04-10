@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 
-import xquerysearch.controllers.CommunicationManager;
+import xquerysearch.controllers.MainController;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
@@ -24,7 +24,7 @@ import net.sf.saxon.trans.XPathException;
  */
 public class OutputUtils {
 	
-	private static Logger logger = CommunicationManager.getLogger();
+	private static Logger logger = MainController.getLogger();
 	
 	/**
 	 * Prepares data description for adding into query output. 

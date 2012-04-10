@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import xquerysearch.controllers.CommunicationManager;
+import xquerysearch.controllers.MainController;
 import xquerysearch.settings.SettingsManager;
 
 /**
@@ -24,7 +24,7 @@ import xquerysearch.settings.SettingsManager;
  * @author Tomas Marek
  */
 public class QueryMaker {
-	private Logger logger = CommunicationManager.getLogger();
+	private Logger logger = MainController.getLogger();
 	private final String DICTIONARY = "TransformationDictionary";
 	private String containerName;
 
