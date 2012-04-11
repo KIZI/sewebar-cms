@@ -22,10 +22,11 @@ import javax.xml.xpath.XPathFactory;
 import org.xml.sax.InputSource;
 
 import xquerysearch.controllers.MainController;
+import xquerysearch.dao.DocumentDao;
 import xquerysearch.dao.IndexDao;
-import xquerysearch.dao.PmmlDocumentDao;
 import xquerysearch.dao.bdbxml.BdbxmlIndexDao;
 import xquerysearch.dao.bdbxml.BdbxmlPmmlDocumentDao;
+import xquerysearch.domain.Document;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
 import xquerysearch.settings.SettingsManager;
@@ -43,7 +44,7 @@ import com.sleepycat.dbxml.XmlValue;
  */
 public class BDBXMLHandler {
 	private Logger logger = MainController.getLogger();
-	private PmmlDocumentDao pmmlDao;
+	private DocumentDao documentDao;
 	private IndexDao indexDao;
 	private QueryMaker qm;
 	private QueryHandler qh;
@@ -59,7 +60,7 @@ public class BDBXMLHandler {
     
     
     public BDBXMLHandler(SettingsManager settings) {
-    	this.pmmlDao = new BdbxmlPmmlDocumentDao(settings);
+    	this.documentDao = new BdbxmlPmmlDocumentDao(settings);
     	this.indexDao = new BdbxmlIndexDao(settings);
     	this.settings = settings;
     	this.containerName = settings.getContainerName();
@@ -76,7 +77,7 @@ public class BDBXMLHandler {
      * @return message
      */
     public String removeDocument (String id) {
-        if (pmmlDao.removeDocument(id)) {
+        if (documentDao.removeDocument(id)) {
         	return "<message>Document with id \"" + id + "\" removed!</message>";
         } else {
             return "<error>Removing document with id \"" + id + "\" failed!</error>";
@@ -89,13 +90,9 @@ public class BDBXMLHandler {
      * @return document as string or message when error occurs
      */
     public String getDocument(String id) {
-    	XmlDocument doc = pmmlDao.getDocumentById(id);
+    	Document doc = documentDao.getDocumentById(id);
     	if (doc != null) {
-    		try {
-				return doc.getContentAsString();
-			} catch (XmlException e) {
-				return "<error>Error occured when finding the document with id \"" + id + "\"</error>";
-			}
+    		return doc.getDocBody();
     	} else {
     		return "<error>Cannot find the document with id \"" + id + "\"</error>";
     	}
@@ -146,7 +143,7 @@ public class BDBXMLHandler {
         }
     	query = qh.deleteDeclaration(query);
         
-    	XmlResults res = pmmlDao.query(query) ;
+    	XmlResults res = documentDao.query(query) ;
 
         if (res != null) {
             String result = "";
@@ -175,7 +172,7 @@ public class BDBXMLHandler {
                 + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
                 + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
-        XmlResults res = pmmlDao.query(query);
+        XmlResults res = documentDao.query(query);
 
         String results = "";
         try {
@@ -217,7 +214,7 @@ public class BDBXMLHandler {
         if (isValid){        
             docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 
-            boolean saved = pmmlDao.insertDocument(docName, xml_doc);
+            boolean saved = documentDao.insertDocument(docName, xml_doc);
 
             if (saved) {
             	return "<message>Document " + docName + " inserted</message>";
@@ -269,7 +266,7 @@ public class BDBXMLHandler {
 	
 	        docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 	
-	        pmmlDao.insertDocument(docName, xml_doc);
+	        documentDao.insertDocument(docName, xml_doc);
 	        output += "<message>Document " + docName + " inserted</message>";
 	        output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
         } else {

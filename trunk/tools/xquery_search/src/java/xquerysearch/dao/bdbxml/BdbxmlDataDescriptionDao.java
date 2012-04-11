@@ -1,14 +1,14 @@
 package xquerysearch.dao.bdbxml;
 
+import xquerysearch.dao.DataDescriptionDao;
+import xquerysearch.dao.DocumentDao;
+import xquerysearch.settings.SettingsManager;
+
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlResults;
 import com.sleepycat.dbxml.XmlValue;
-
-import xquerysearch.dao.DataDescriptionDao;
-import xquerysearch.dao.PmmlDocumentDao;
-import xquerysearch.settings.SettingsManager;
 
 /**
  * Implementation of {@link DataDescriptionDao}.
@@ -23,14 +23,14 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	
 	private String containerName;
 	
-	private PmmlDocumentDao pmmlDocumentDao;
+	private DocumentDao documentDao;
 	/**
 	 * 
 	 */
 	public BdbxmlDataDescriptionDao(SettingsManager settings) {
 		this.settings = settings;
 		containerName = settings.getContainerName();
-		pmmlDocumentDao = new BdbxmlPmmlDocumentDao(settings);
+		documentDao = new BdbxmlPmmlDocumentDao(settings);
 	}
 
 	/*
@@ -131,7 +131,7 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
             + "\n{$values union $ints}"
             + "\n</Field>}</Dictionary></DataDescription>";*/
     
-	XmlResults results = pmmlDocumentDao.query(query);
+	XmlResults results = documentDao.query(query);
 	
 	 if (results != null) {
         String result = "";

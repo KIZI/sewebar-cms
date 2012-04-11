@@ -25,13 +25,13 @@ import com.sleepycat.dbxml.XmlTransaction;
  */
 public abstract class ConnectionHelper {
 
-	public SettingsManager settings;
-	public Logger logger = MainController.getLogger();
+	protected Logger logger = MainController.getLogger();
+	protected SettingsManager settings;
 	
-	public Environment environment;
-	public XmlManagerConfig xmlManagerConfig;
-	public XmlTransaction xmlTransaction;
-	public XmlManager xmlManager;
+	protected Environment environment;
+	protected XmlManagerConfig xmlManagerConfig;
+	protected XmlTransaction xmlTransaction;
+	protected XmlManager xmlManager;
 	
 	private static final long CACHE_SIZE_MB = 128 * 1024 * 1024;
 	private static final boolean RECOVER = false;
