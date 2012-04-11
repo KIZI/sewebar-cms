@@ -1,91 +1,45 @@
 package xquerysearch.dao.bdbxml;
 
-import xquerysearch.dao.PmmlDocumentDao;
+import xquerysearch.domain.Document;
+import xquerysearch.domain.PmmlDocument;
 import xquerysearch.settings.SettingsManager;
 
 import com.sleepycat.dbxml.XmlContainer;
-import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlQueryContext;
-import com.sleepycat.dbxml.XmlResults;
 
 /**
- * Implementation of {@link PmmlDocumentDao}.
+ * DAO for {@link PmmlDocument}, extends {@link BdbxmlDocumentDao}.
  * 
  * @author Tomas Marek
  *
  */
-public class BdbxmlPmmlDocumentDao extends ConnectionHelper implements PmmlDocumentDao {
+public class BdbxmlPmmlDocumentDao extends BdbxmlDocumentDao {
 
 	/**
-	 * Constructor
-	 * @param settings 
+	 * @param settings
 	 */
 	public BdbxmlPmmlDocumentDao(SettingsManager settings) {
-		this.settings = settings;
-	}
-	
-	/*
-	 * @{InheritDoc}
-	 */
-	@Override
-	public XmlDocument getDocumentById(String docId) {
-		XmlContainer cont = openConnecion(settings.getContainerName());
-		try {
-			return cont.getDocument(docId);
-		} catch (XmlException e) {
-			logger.warning("Getting the document with id \"" + docId + "\" failed!");
-			return null;
-		} finally {
-			closeConnection(cont);
-		}
+		super(settings);
 	}
 
 	/*
 	 * @{InheritDoc}
 	 */
 	@Override
-	public XmlResults query(String query) {
-		openConnecion(settings.getContainerName());
-		try {
-			XmlQueryContext queryContext = xmlManager.createQueryContext();
-			return xmlManager.query(query, queryContext);
-		} catch (XmlException e) {
-			logger.warning("Query failed!");
-			return null;
-		} finally {
-			closeConnection(null);
+	public boolean insertDocument(Document document) {
+		if ((document instanceof PmmlDocument) == false) {
+			logger.warning("Document with id " + document.getDocId() +" has to be instance of PmmlDocument.");
+			return false;
 		}
-	}
-
-	/*
-	 * @{InheritDoc}
-	 */
-	@Override
-	public boolean insertDocument(String docId, String docBody) {
 		XmlContainer cont = openConnecion(settings.getContainerName());
 		try {
-			cont.putDocument(docId, docBody);
+			cont.putDocument(document.getDocId(), document.getDocBody());
 			return true;
 		} catch (XmlException e) {
+			logger.warning("Inserting of document with id " + document.getDocId() + " failed - xml exception.");
 			return false;
 		} finally {
 			closeConnection(cont);
-		}
-	}
-
-	/*
-	 * @{InheritDoc}
-	 */
-	@Override
-	public boolean removeDocument(String docId) {
-		XmlContainer cont = openConnecion(settings.getContainerName());
-		try {
-			cont.deleteDocument(docId);
-			return true;
-		} catch (XmlException e) {
-			logger.warning("Removing document with id \"" + docId + "\" failed!");
-			return false;
 		}
 	}
 
