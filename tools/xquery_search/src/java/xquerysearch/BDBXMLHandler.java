@@ -24,8 +24,8 @@ import org.xml.sax.InputSource;
 import xquerysearch.controllers.MainController;
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.dao.IndexDao;
+import xquerysearch.dao.bdbxml.BdbxmlDocumentDao;
 import xquerysearch.dao.bdbxml.BdbxmlIndexDao;
-import xquerysearch.dao.bdbxml.BdbxmlPmmlDocumentDao;
 import xquerysearch.domain.Document;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
@@ -33,7 +33,6 @@ import xquerysearch.settings.SettingsManager;
 import xquerysearch.utils.OutputUtils;
 import xquerysearch.validation.DocumentValidator;
 
-import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlResults;
 import com.sleepycat.dbxml.XmlValue;
@@ -60,7 +59,7 @@ public class BDBXMLHandler {
     
     
     public BDBXMLHandler(SettingsManager settings) {
-    	this.documentDao = new BdbxmlPmmlDocumentDao(settings);
+    	this.documentDao = new BdbxmlDocumentDao(settings);
     	this.indexDao = new BdbxmlIndexDao(settings);
     	this.settings = settings;
     	this.containerName = settings.getContainerName();
@@ -214,7 +213,7 @@ public class BDBXMLHandler {
         if (isValid){        
             docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 
-            boolean saved = documentDao.insertDocument(docName, xml_doc);
+            boolean saved = documentDao.insertDocument(new Document(docName, document));
 
             if (saved) {
             	return "<message>Document " + docName + " inserted</message>";
@@ -266,7 +265,7 @@ public class BDBXMLHandler {
 	
 	        docName = docName.replaceAll(replaceMask.toString(), replaceBy);
 	
-	        documentDao.insertDocument(docName, xml_doc);
+//	        documentDao.insertDocument(new PmmlDocument(docName, document));
 	        output += "<message>Document " + docName + " inserted</message>";
 	        output += "<doc_time>" + (System.currentTimeMillis() - act_time_long) + "</doc_time>";
         } else {
