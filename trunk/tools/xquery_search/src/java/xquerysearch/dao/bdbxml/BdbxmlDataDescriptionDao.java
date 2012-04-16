@@ -30,7 +30,7 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	public BdbxmlDataDescriptionDao(SettingsManager settings) {
 		this.settings = settings;
 		containerName = settings.getContainerName();
-		documentDao = new BdbxmlPmmlDocumentDao(settings);
+		documentDao = new BdbxmlDocumentDao(settings);
 	}
 
 	/*

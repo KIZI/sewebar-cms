@@ -1,7 +1,6 @@
 package xquerysearch.dao.bdbxml;
 
 import xquerysearch.dao.DocumentDao;
-import xquerysearch.domain.BkefDocument;
 import xquerysearch.domain.Document;
 import xquerysearch.settings.SettingsManager;
 
@@ -35,7 +34,7 @@ public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
 		XmlContainer cont = openConnecion(settings.getContainerName());
 		try {
 			XmlDocument returnedDocument = cont.getDocument(docId);
-			return new BkefDocument(returnedDocument.getName(), returnedDocument.getContentAsString());
+			return new Document(returnedDocument.getName(), returnedDocument.getContentAsString());
 		} catch (XmlException e) {
 			logger.warning("Getting the document with id \"" + docId + "\" failed!");
 			return null;

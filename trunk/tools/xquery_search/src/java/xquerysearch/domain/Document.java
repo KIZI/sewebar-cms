@@ -6,7 +6,7 @@ package xquerysearch.domain;
  * @author Tomas Marek
  *
  */
-public abstract class Document {
+public class Document {
 	
 	private String docId;
 	private String docBody;

@@ -16,6 +16,7 @@ import xquerysearch.BDBXMLHandler;
 import xquerysearch.datadescription.DataDescriptionHandler;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
+import xquerysearch.service.DocumentService;
 import xquerysearch.settings.SettingsFileUtils;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.settings.SettingsPageController;
@@ -219,6 +220,8 @@ public class MainController extends HttpServlet {
 		DataDescriptionHandler ddh = new DataDescriptionHandler(settings);
 		QueryHandler qh = new QueryHandler(settings);
 		QueryMaker qm = new QueryMaker(settings);
+		
+		DocumentService documentService = new DocumentService();
 		
 		String output = "";
 		// Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content
