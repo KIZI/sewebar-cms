@@ -12,6 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SewebarWeb</RootNamespace>
     <AssemblyName>SewebarWeb</AssemblyName>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -128,6 +129,9 @@
     </Compile>
     <Compile Include="API\ImportResponse.cs" />
     <Compile Include="API\Status.cs" />
+    <Compile Include="TaskPooler.ashx.cs">
+      <DependentUpon>TaskPooler.ashx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Libs\LMWrapper\LMWrapper.csproj">
@@ -144,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <Content Include="TaskPooler.ashx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

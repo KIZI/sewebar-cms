@@ -43,6 +43,7 @@ namespace LMWrapper.LISpMiner
 		private LMSwbImporter _importer;
 		private LMSwbExporter _exporter;
 		private Task4ftGen _task4FtGen;
+		private LMTaskPooler _lmTaskPooler;
 
 		#region Properties
 
@@ -124,6 +125,26 @@ namespace LMWrapper.LISpMiner
 			}
 
 			set { this._task4FtGen = value; }
+		}
+
+		public LMTaskPooler LMTaskPooler
+		{
+			get
+			{
+				if (this._lmTaskPooler == null)
+				{
+					this._lmTaskPooler = new LMTaskPooler()
+					{
+						LMPath = this.LMPath,
+						Dsn = this.Metabase.DSN,
+						LISpMiner = this
+					};
+				}
+
+				return this._lmTaskPooler;
+			}
+
+			set { this._lmTaskPooler = value; }
 		}
 
 		protected Environment Environment { get; set; }
