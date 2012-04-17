@@ -17,6 +17,7 @@ import xquerysearch.datadescription.DataDescriptionHandler;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
 import xquerysearch.service.DocumentService;
+import xquerysearch.service.StoredQueryService;
 import xquerysearch.settings.SettingsFileUtils;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.settings.SettingsPageController;
@@ -218,7 +219,8 @@ public class MainController extends HttpServlet {
 		
 		BDBXMLHandler bh = new BDBXMLHandler(settings);
 		DataDescriptionHandler ddh = new DataDescriptionHandler(settings);
-		QueryHandler qh = new QueryHandler(settings);
+		QueryHandler qh = new QueryHandler();
+		StoredQueryService storedQueryService = new StoredQueryService(settings);
 		QueryMaker qm = new QueryMaker(settings);
 		
 		DocumentService documentService = new DocumentService();
@@ -279,14 +281,14 @@ public class MainController extends HttpServlet {
 					output += QUERY_MISSING_ERROR;
 				} else {
 					content = content.toString();
-					output += qh.addQuery(content, docId);
+					output += storedQueryService.addQuery(content, docId);
 				}
 				break;
 			case 5:
-				output += "<query><![CDATA[" + qh.getQuery(docId) + "]]></query>";
+				output += "<query><![CDATA[" + storedQueryService.getQuery(docId) + "]]></query>";
 				break;
-			case 6: output += qh.deleteQuery(docId); break;
-			case 7: output += qh.getQueriesNames(); break;
+			case 6: output += storedQueryService.deleteQuery(docId); break;
+			case 7: output += storedQueryService.getQueriesNames(); break;
 			case 8: output += bh.getDocsNames(); break;
 			case 9:
 				if (content.equals("")) {
@@ -327,10 +329,10 @@ public class MainController extends HttpServlet {
 				if (docId == null) {
 					output += DOCUMENT_NAME_MISSING_ERROR;
 				} else {
-					output += bh.getDocument(docId);
+					output += documentService.getDocumentById(docId);
 				}
 				break;
-			case 12: output += bh.removeDocument(docId); break;
+			case 12: output += documentService.removeDocument(docId); break;
 			case 13:
 				if (content.equals("")) {
 					output += INDEX_NOT_SPECIFIED_ERROR;

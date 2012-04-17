@@ -29,8 +29,10 @@ import xquerysearch.dao.bdbxml.BdbxmlIndexDao;
 import xquerysearch.domain.Document;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
+import xquerysearch.service.StoredQueryService;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.utils.OutputUtils;
+import xquerysearch.utils.StoredQueryUtils;
 import xquerysearch.validation.DocumentValidator;
 
 import com.sleepycat.dbxml.XmlException;
@@ -57,6 +59,7 @@ public class BDBXMLHandler {
     private Pattern replaceMask = Pattern.compile("[|!@$^* \\//\"\',?ˇ´<>¨;¤×÷§]");
     private String replaceBy = "_";
     
+    private StoredQueryService storedQueryService;
     
     public BDBXMLHandler(SettingsManager settings) {
     	this.documentDao = new BdbxmlDocumentDao(settings);
@@ -67,7 +70,8 @@ public class BDBXMLHandler {
     	this.xsltPathPMML = settings.getPmmlTransformationPath();
     	this.xsltPathBKEF = settings.getBkefTransformationPath();
     	this.qm = new QueryMaker(settings);
-    	this.qh = new QueryHandler(settings);
+    	this.qh = new QueryHandler();
+    	this.storedQueryService = new StoredQueryService(settings);
     }
 
     /**
@@ -134,13 +138,13 @@ public class BDBXMLHandler {
         if (directQuery) {
             query = search;
         } else {
-        	query = qh.getQuery(id);	
+        	query = storedQueryService.getQuery(id);	
         	if (query != null) {
         		query += "\nlet $zadani := " + search
         		+ "\nreturn local:mainFunction($zadani)";
         	}
         }
-    	query = qh.deleteDeclaration(query);
+    	query = StoredQueryUtils.deleteDeclaration(query);
         
     	XmlResults res = documentDao.query(query) ;
 

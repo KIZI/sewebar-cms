@@ -8,7 +8,7 @@ import java.util.List;
  * @author Tomas Marek
  *
  */
-public interface QueryDao {
+public interface StoredQueryDao {
 
 	public String getQueryById(String queryId);
 	
