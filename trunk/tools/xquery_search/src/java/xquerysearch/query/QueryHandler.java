@@ -1,168 +1,26 @@
 package xquerysearch.query;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 
-import xquerysearch.controllers.MainController;
-import xquerysearch.settings.SettingsManager;
-
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
 import net.sf.saxon.query.StaticQueryContext;
 import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.trans.XPathException;
+import xquerysearch.controllers.MainController;
+import xquerysearch.utils.StoredQueryUtils;
 
 /**
  * Trida umoznuje praci s dotazy - ukladani, mazani atd.
  * @author Tomas Marek
  */
 public class QueryHandler {
-    private SettingsManager settings;
     private Logger logger = MainController.getLogger();
-
-    /**
-     * Konstruktor instance tridy
-     * @param Settings.getQueriesDirectory() slozka obsahujici ulozene query
-     */
-    public QueryHandler(SettingsManager settings) {
-        this.settings = settings;
-    }
-
-    /**
-     * Metoda pro ulozeni query
-     * @param query ukladana query
-     * @param id nazev ukladane query
-     * @return zprava o ulozeni / chybe
-     */
-    public String addQuery(String query, String id) {
-        File file = new File(settings.getQueriesDirectory() + id + ".txt");
-        if (file.exists()) {
-        	return "<error>Query jiz existuje!</error>";
-        } else {
-        	try {
-	            FileOutputStream fos = new FileOutputStream(file);
-	            OutputStreamWriter osw = new OutputStreamWriter(fos);
-	            osw.write(query);
-	            osw.close();
-	            return "<message>New query with id \"" + id + "\" added!</message>";
-        	} catch (IOException e) {
-        		logger.warning("Adding new query failed! - IO exception");
-        		return "<error>Adding new query failed!</error>";
-			}
-        }
-    }
-
-    /**
-     * Metoda pro ziskani nazvu ulozenych XQuery
-     * @return seznam ulozenych XQuery
-     */
-    public String getQueriesNames() {
-        String output = "";
-        File uploadFolder = new File(settings.getQueriesDirectory());
-        File uploadFiles[] = uploadFolder.listFiles();
-
-        for(int i = 0; i < uploadFiles.length; i++){
-            if (uploadFiles[i].isFile()) {
-                String fileName = uploadFiles[i].getName();
-                String nameParts[] = fileName.split("\\.");
-                String outputName = "";
-                if (nameParts[nameParts.length-1].toLowerCase().equals("txt")){
-                    for (int a = 0; a < nameParts.length-1; a++){
-                        outputName += nameParts[a];
-                    }
-                    output += "<query>" + outputName + "</query>";
-                }
-            }
-        }
-        return output;
-    }
-
-    /**
-     * Metoda pro vymazani ulozene XQuery
-     * @param id ID ulozene XQuery
-     * @return zprava - vymazana/nenalezena
-     */
-    public String deleteQuery (String id) {
-        File file = new File(settings.getQueriesDirectory() + id + ".txt");
-
-        if (file.exists()) {
-                file.delete();
-                return "<message>Query " + id + " smazana!</message>";
-        } else {
-                return "<error>Query neexistuje!</error>";
-        }
-    }
-
-    /**
-     * 
-     * @param id id of query to get
-     * @return query found by given id, <code>null</code> if error occurs
-     */
-    public String getQuery(String id) {
-        FileReader rdr = null;
-        BufferedReader out = null;
-        File file = new File(settings.getQueriesDirectory() + id + ".txt");
-        if (file.exists()) {
-            try {
-            	String query = "";
-        		rdr = new FileReader(file);
-                out = new BufferedReader(rdr);
-                String radek = out.readLine();
-                while (radek != null){
-                        query += radek + "\n";
-                        radek = out.readLine();
-                }
-                out.close();
-                return query;
-            } catch (FileNotFoundException e) {
-            	logger.warning("Getting query with id \"" + id + "\" failed! - File not found");
-            	return null;
-            } catch (IOException e) {
-            	logger.warning("Getting query with id \"" + id + "\" failed! - IO exception");
-            	return null;
-            }
-        }
-        else {
-                return null;
-        }
-    }
-
-    /**
-     * Metoda zajistujici odstraneni XML deklarace z XQuery dotazu
-     * @param query vstupni XQuery dotaz
-     * @return vraceny dotaz bez XML deklarace / chyba
-     */
-    public String deleteDeclaration(String query) {
-        String output = "";
-        String splitXMLBegin[] = query.split("([<][?][x][m][l])|([<][?][o][x][y][g][e][n])");
-        if (splitXMLBegin.length == 1) {
-            output = query;
-        } else {
-            for (int i = 0; i <= (splitXMLBegin.length - 1); i++) {
-                if (i == 0) {
-                    output += splitXMLBegin[i];
-                } else {
-                    String splitXMLEnd[] = splitXMLBegin[i].split("[?][>]");
-                    if (splitXMLEnd.length > 1) {
-                        String splitXMLBack = splitXMLEnd[1];
-                        output += splitXMLBack;
-                    }
-                }
-            }
-        }
-        return output;
-    }
 
     /**
      * Metoda prevadi query ze vstupniho ARBuilder formatu do formatu pro dalsi zpracovani
@@ -224,7 +82,7 @@ public class QueryHandler {
                             + "\n if ($everyCat/name() = \"Interval\") then <Interval closure=\"{$everyCat/@closure}\" left=\"{$everyCat/@leftMargin}\" right=\"{$everyCat/@rightMargin}\"/> else $everyCat"
                     + "\n return if (count($fieldTrans) > 0) then "
                         + "\n <Field dictionary=\"{distinct-values($fieldTrans[1]/@dictionary)}\"><Name>{distinct-values($fieldTrans[1]/@name/string())}</Name><Type>{$coeff/Type/text()}</Type>{$category}</Field> else ()};"
-                + "\n let $vstup := " + deleteDeclaration(request)
+                + "\n let $vstup := " + StoredQueryUtils.deleteDeclaration(request)
                 + "\n return local:processRequest($vstup)";
         
         try {

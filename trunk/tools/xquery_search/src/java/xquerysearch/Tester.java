@@ -23,7 +23,7 @@ public class Tester {
 	String containerName;
 	String useTransformation;
 	String xsltPathPMML;
-        String xsltPathBKEF;
+    String xsltPathBKEF;
 	String tempDir;
 	String settingsError;
 
@@ -62,25 +62,26 @@ public class Tester {
      * @throws XmlException 
      */
     public String runTest() throws IOException, XmlException, SAXException, TransformerException{
-        String output = "<testOutput>";
-            output +=
-                "<settings>" +
-                    "<envDir>" + envDir + "</envDir>" +
-                    "<queryDir>" + queryDir + "</queryDir>" +
-                    "<contName>" + containerName + "</contName>" +
-                    "<useTrans>" + useTransformation + "</useTrans>" +
-                    "<xsltPathPMML>" + xsltPathPMML + "</xsltPathPMML>" +
-                    "<xsltPathBKEF>" + xsltPathBKEF + "</xsltPathBKEF>" +
-                    "<tempDir>" + tempDir + "</tempDir>" +
-                    "<err>" + settingsError + "</err>" +
-                "</settings>";
-            output += "<addQuery>" + qh.addQuery("Pokusná query určená k testu", "pokusTest") + "</addQuery>";
-            output += "<getQuery>" + qh.getQuery("pokusTest") + "</getQuery>";
-            output += "<deleteQuery>" + qh.deleteQuery("pokusTest") + "</deleteQuery>";
-            output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokus1", "pokusTest", "", "") + "</indexDocument>";
-            output += "<getDocument>" + bh.getDocument("pokusTest") + "</getDocument>";
-            output += "<removeDocument>" + bh.removeDocument("pokusTest") + "</removeDocument>";
-        output += "</testOutput>";
-        return output;
+//        String output = "<testOutput>";
+//            output +=
+//                "<settings>" +
+//                    "<envDir>" + envDir + "</envDir>" +
+//                    "<queryDir>" + queryDir + "</queryDir>" +
+//                    "<contName>" + containerName + "</contName>" +
+//                    "<useTrans>" + useTransformation + "</useTrans>" +
+//                    "<xsltPathPMML>" + xsltPathPMML + "</xsltPathPMML>" +
+//                    "<xsltPathBKEF>" + xsltPathBKEF + "</xsltPathBKEF>" +
+//                    "<tempDir>" + tempDir + "</tempDir>" +
+//                    "<err>" + settingsError + "</err>" +
+//                "</settings>";
+//            output += "<addQuery>" + query.addQuery("Pokusná query určená k testu", "pokusTest") + "</addQuery>";
+//            output += "<getQuery>" + qh.getQuery("pokusTest") + "</getQuery>";
+//            output += "<deleteQuery>" + qh.deleteQuery("pokusTest") + "</deleteQuery>";
+//            output += "<indexDocument>" + bh.indexDocument("<doc>pokusný dokument</doc>", "pokus1", "pokusTest", "", "") + "</indexDocument>";
+//            output += "<getDocument>" + bh.getDocument("pokusTest") + "</getDocument>";
+//            output += "<removeDocument>" + bh.removeDocument("pokusTest") + "</removeDocument>";
+//        output += "</testOutput>";
+//        return output;
+    	return "";
     }
 }

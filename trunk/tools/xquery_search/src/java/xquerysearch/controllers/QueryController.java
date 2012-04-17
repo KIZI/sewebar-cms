@@ -1,9 +1,9 @@
 package xquerysearch.controllers;
 
-import xquerysearch.domain.Query;
+import xquerysearch.domain.StoredQuery;
 
 /**
- * Controller for operations with {@link Query}s.
+ * Controller for operations with {@link StoredQuery}s.
  * 
  * @author Tomas Marek
  *
