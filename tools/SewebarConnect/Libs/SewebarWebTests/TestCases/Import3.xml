@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen SCHSchema="http://sewebar.vse.cz/schemas/GUHARestr0_1.sch"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_0" version="4.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmml="http://www.dmg.org/PMML-4_0"
+    xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://sewebar.vse.cz/schemas/PMML4.0+GUHA0.1.xsd">
+    <Header copyright="Copyright (c) KIZI UEP">
+        <Extension name="dataset" value="Loans"/>
+        <Extension name="author" value="admin"/>
+        <Extension name="subsystem" value="4ft-Miner"/>
+        <Extension name="module" value="ETResult.exe"/>
+        <Extension name="format" value="ETreeMiner.Task"/>
+        <Application name="SEWEBAR-CMS" version="0.00.01 09.04.2012"/>
+        <Annotation/>
+        <Timestamp>09.04.2012 22:16:36</Timestamp>
+    </Header>
+    <DataDictionary/>
+    <guha:ETreeModel xmlns=""
+        xsi:schemaLocation="http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"
+        xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
+        modelName="9741046ed676ec7470cb043db2881a094e36b554" 
+        functionName="explorationTrees"
+        algorithmName="ETree">
+        <TaskSetting>
+            <Extension name="LISp-Miner">
+                <ETTaskParamSplitAttributesMax>1</ETTaskParamSplitAttributesMax>
+                <ETTaskParamTreeDepthMax>2</ETTaskParamTreeDepthMax>
+                <ETTaskParamTreeCountMax>1000</ETTaskParamTreeCountMax>
+                <ETTaskParamFullDepthTreesOnly>Yes</ETTaskParamFullDepthTreesOnly>
+                <HypothesesCountMax>500</HypothesesCountMax>
+                <TaskNotice>Imported task from AR Builder</TaskNotice>
+            </Extension>
+            <Extension name="metabase" value="LM LMBarbora.mdb MB"/>
+            <InputAttributesGroupSettings>
+                <InputAttributesSettings id="1">
+                    <Name>Attributes</Name>
+                    <MinimalLength>1</MinimalLength>
+                    <MaximalLength>1</MaximalLength>
+                    <InputAttributeSetting id="2">
+                        <FieldRef>Age</FieldRef>
+                    </InputAttributeSetting>
+                    <InputAttributeSetting id="3">
+                        <FieldRef>Salary</FieldRef>
+                    </InputAttributeSetting>
+                    <InputAttributeSetting id="4">
+                        <FieldRef>Sex</FieldRef>
+                    </InputAttributeSetting>
+                    <InputAttributeSetting id="10">
+                        <FieldRef>Duration</FieldRef>
+                    </InputAttributeSetting>
+                    <InputAttributeSetting id="11">
+                        <FieldRef>Repayment</FieldRef>
+                    </InputAttributeSetting>
+                    <InputAttributeSetting id="12">
+                        <FieldRef>Amount</FieldRef>
+                    </InputAttributeSetting>
+                </InputAttributesSettings>
+            </InputAttributesGroupSettings>
+            <ClassAttributeSettings>
+                <ClassAttributeSetting id="5">
+                    <FieldRef>Quality</FieldRef>
+                </ClassAttributeSetting>
+            </ClassAttributeSettings>
+            <BBASettings>
+                <BBASetting id="9">
+                    <Text>District</Text>
+                    <Name>District</Name>
+                    <FieldRef>District</FieldRef>
+                    <Coefficient>
+                        <Type>One category</Type>
+                        <Category>Praha</Category>
+                    </Coefficient>
+                </BBASetting>
+            </BBASettings>
+            <DBASettings>
+                <DBASetting type="Literal" id="8">
+                    <BASettingRef>9</BASettingRef>
+                    <LiteralSign>Positive</LiteralSign>
+                </DBASetting>
+                <DBASetting type="Conjunction" id="7">
+                    <BASettingRef>8</BASettingRef>
+                    <MinimalLength>1</MinimalLength>
+                </DBASetting>
+                <DBASetting type="Conjunction" id="6">
+                    <BASettingRef>7</BASettingRef>
+                    <MinimalLength>1</MinimalLength>
+                </DBASetting>
+            </DBASettings>
+            <ConditionSetting>6</ConditionSetting>
+            <InterestMeasureSetting>
+                <NodePurityMin>0.997000</NodePurityMin>
+                <NodeFreqMin>1</NodeFreqMin>
+                <TreeQualityMin>0.917000</TreeQualityMin>
+                <PerformChiSqTest>No</PerformChiSqTest>
+                <SplitSignificanceAlpha>0.025000</SplitSignificanceAlpha>
+            </InterestMeasureSetting>
+        </TaskSetting>
+    </guha:ETreeModel>
+</PMML>
