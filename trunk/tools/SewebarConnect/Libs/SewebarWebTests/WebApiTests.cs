@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
@@ -10,6 +11,7 @@ namespace SewebarWebTests
 	public class WebApiTests
 	{
 		private const string LMcloudServer = "http://localhost/SewebarConnect";
+		private const string TestCasesPath = "TestCases";
 
 		private static WebClient _client;
 
@@ -62,6 +64,26 @@ namespace SewebarWebTests
 				var xml = XElement.Parse(response);
 
 				Assert.IsNotNull(xml.Attribute("id"));
+			}
+			catch (Exception exception)
+			{
+				Assert.Fail(exception.Message);
+			}
+		}
+
+		[Test]
+		public void RunTaskSession()
+		{
+			try
+			{
+				using (var stream = new StreamReader(String.Format("{0}/ETReeMiner.Task52.xml", TestCasesPath)))
+				{
+					string parameters = String.Format("content={0}", System.Web.HttpUtility.UrlEncode(stream.ReadToEnd()));
+
+					_sessionsClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+					string response = _sessionsClient.UploadString(String.Format("{0}/Task.ashx", LMcloudServer), parameters);
+				}
+
 			}
 			catch (Exception exception)
 			{
