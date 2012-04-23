@@ -1,6 +1,5 @@
 package xquerysearch.service;
 
-import java.io.File;
 import java.util.List;
 
 import xquerysearch.dao.StoredQueryDao;
@@ -26,11 +25,11 @@ public class StoredQueryService {
 	}
 	
 	/**
-     * Metoda pro ulozeni query
-     * @param query ukladana query
-     * @param id nazev ukladane query
-     * @return zprava o ulozeni / chybe
-     */
+	 * 
+	 * @param queryBody
+	 * @param queryId
+	 * @return successful/unsuccessful message
+	 */
     public String addQuery(String queryBody, String queryId) {
         boolean added = dao.insertQuery(queryId, queryBody);
         

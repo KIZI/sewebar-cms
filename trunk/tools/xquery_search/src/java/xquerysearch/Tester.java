@@ -1,21 +1,19 @@
 package xquerysearch;
 
-import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlManager;
 import java.io.IOException;
 
 import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
-import xquerysearch.query.QueryHandler;
+import com.sleepycat.dbxml.XmlException;
+import com.sleepycat.dbxml.XmlManager;
 
 /**
  * Trida provadi vypis nastaveni a otestovani funkci aplikace
  * @author Tomas Marek
  */
 public class Tester {
-	QueryHandler qh;
 	BDBXMLHandler bh;
 	XmlManager mgr;
 	String envDir;
@@ -40,8 +38,7 @@ public class Tester {
          * @param tempDir slozka pro docasne soubory
          * @param settingsError chyby pri nacitani nastaveni
 	 */
-    public Tester(QueryHandler qh, BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPathPMML, String xsltPathBKEF, String tempDir, String settingsError) {
-    	this.qh = qh;
+    public Tester(BDBXMLHandler bh, XmlManager mgr, String envDir, String queryDir, String containerName, String useTransformation, String xsltPathPMML, String xsltPathBKEF, String tempDir, String settingsError) {
     	this.bh = bh;
     	this.mgr = mgr;
     	this.envDir = envDir;
