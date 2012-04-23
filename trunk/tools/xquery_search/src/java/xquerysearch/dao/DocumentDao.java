@@ -2,8 +2,6 @@ package xquerysearch.dao;
 
 import xquerysearch.domain.Document;
 
-import com.sleepycat.dbxml.XmlResults;
-
 /**
  * DAO for {@link Document}.
  * 
@@ -19,8 +17,6 @@ public interface DocumentDao {
 	 */
 	public Document getDocumentById(String docId);
 	
-	public XmlResults query(String query);
-
 	/**
 	 * Saves {@link Document} into database;
 	 * @param document {@link Document} to save

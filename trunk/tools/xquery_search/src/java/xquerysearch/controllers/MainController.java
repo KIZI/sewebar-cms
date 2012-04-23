@@ -14,9 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import xquerysearch.BDBXMLHandler;
 import xquerysearch.datadescription.DataDescriptionHandler;
+import xquerysearch.domain.Query;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
 import xquerysearch.service.DocumentService;
+import xquerysearch.service.QueryService;
 import xquerysearch.service.StoredQueryService;
 import xquerysearch.settings.SettingsFileUtils;
 import xquerysearch.settings.SettingsManager;
@@ -224,6 +226,7 @@ public class MainController extends HttpServlet {
 		QueryMaker qm = new QueryMaker(settings);
 		
 		DocumentService documentService = new DocumentService();
+		QueryService queryService = new QueryService();
 		
 		String output = "";
 		// Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content
@@ -263,8 +266,8 @@ public class MainController extends HttpServlet {
 				if (content.equals("")) {
 					output += QUERY_MISSING_ERROR;
 				} else {
-					String dotaz = content.toString();
-					output += bh.query("", dotaz, true);
+					String query = content.toString();
+					output += queryService.getResults(new Query(query));
 				}
 				break;
 			case 3:

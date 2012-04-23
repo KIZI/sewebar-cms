@@ -1,14 +1,16 @@
 package xquerysearch.dao.bdbxml;
 
+import java.util.List;
+
 import xquerysearch.dao.DataDescriptionDao;
-import xquerysearch.dao.DocumentDao;
+import xquerysearch.dao.ResultsDao;
+import xquerysearch.domain.Query;
+import xquerysearch.domain.Result;
 import xquerysearch.settings.SettingsManager;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlResults;
-import com.sleepycat.dbxml.XmlValue;
 
 /**
  * Implementation of {@link DataDescriptionDao}.
@@ -23,14 +25,15 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	
 	private String containerName;
 	
-	private DocumentDao documentDao;
+	private ResultsDao resultsDao;
+	
 	/**
 	 * 
 	 */
 	public BdbxmlDataDescriptionDao(SettingsManager settings) {
 		this.settings = settings;
 		containerName = settings.getContainerName();
-		documentDao = new BdbxmlDocumentDao(settings);
+		resultsDao = new BdbxmlResultsDao();
 	}
 
 	/*
@@ -131,19 +134,14 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
             + "\n{$values union $ints}"
             + "\n</Field>}</Dictionary></DataDescription>";*/
     
-	XmlResults results = documentDao.query(query);
+	List<Result> results = resultsDao.getResultsByQuery(new Query(query)); 
 	
 	 if (results != null) {
-        String result = "";
-     	try {    
-         	XmlValue value = new XmlValue();
-             while ((value = results.next()) != null) {
-                 result += (value.asString());
-             }
-             return result;
-         } catch (XmlException e) {
-         	return "<error>Querying database failed! - XML exception</error>";
-         }
+        String resultsToPrint = "";
+     	for (Result result : results) {
+     		resultsToPrint += result.getResultBody();
+     	}
+     	return resultsToPrint;
      } else {
          return "<error>Data description retrieving failed</error>";
      }
