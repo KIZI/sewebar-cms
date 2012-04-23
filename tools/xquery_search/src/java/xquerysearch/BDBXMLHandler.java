@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -24,9 +25,13 @@ import org.xml.sax.InputSource;
 import xquerysearch.controllers.MainController;
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.dao.IndexDao;
+import xquerysearch.dao.ResultsDao;
 import xquerysearch.dao.bdbxml.BdbxmlDocumentDao;
 import xquerysearch.dao.bdbxml.BdbxmlIndexDao;
+import xquerysearch.dao.bdbxml.BdbxmlResultsDao;
 import xquerysearch.domain.Document;
+import xquerysearch.domain.Query;
+import xquerysearch.domain.Result;
 import xquerysearch.query.QueryHandler;
 import xquerysearch.query.QueryMaker;
 import xquerysearch.service.StoredQueryService;
@@ -35,10 +40,6 @@ import xquerysearch.utils.OutputUtils;
 import xquerysearch.utils.StoredQueryUtils;
 import xquerysearch.validation.DocumentValidator;
 
-import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlResults;
-import com.sleepycat.dbxml.XmlValue;
-
 /**
  * 
  * @author Tomas Marek
@@ -46,6 +47,7 @@ import com.sleepycat.dbxml.XmlValue;
 public class BDBXMLHandler {
 	private Logger logger = MainController.getLogger();
 	private DocumentDao documentDao;
+	private ResultsDao resultsDao;
 	private IndexDao indexDao;
 	private QueryMaker qm;
 	private QueryHandler qh;
@@ -72,6 +74,7 @@ public class BDBXMLHandler {
     	this.qm = new QueryMaker(settings);
     	this.qh = new QueryHandler();
     	this.storedQueryService = new StoredQueryService(settings);
+    	this.resultsDao = new BdbxmlResultsDao();
     }
 
     /**
@@ -146,19 +149,14 @@ public class BDBXMLHandler {
         }
     	query = StoredQueryUtils.deleteDeclaration(query);
         
-    	XmlResults res = documentDao.query(query) ;
+    	List<Result> results = resultsDao.getResultsByQuery(new Query(query));
 
-        if (res != null) {
-            String result = "";
-        	try {    
-            	XmlValue value = new XmlValue();
-                while ((value = res.next()) != null) {
-                    result += (value.asString());
-                }
-                return result;
-            } catch (XmlException e) {
-            	return "<error>Querying database failed! - XML exception</error>";
-            }
+        if (results != null) {
+            String resultsToPrint = "";
+        	for (Result result : results) {
+        		resultsToPrint += result.getResultBody();
+        	}
+            return resultsToPrint;
         } else {
             return "<error>No results found</error>";
         }
@@ -175,18 +173,13 @@ public class BDBXMLHandler {
                 + "\norder by dbxml:metadata(\"dbxml:name\", $a)"
                 + "\nreturn  <doc joomlaID=\"{$a/PMML/@joomlaID}\" timestamp=\"{$a/PMML/@creationTime}\" reportUri=\"{$a/PMML/@reportURI}\" database=\"{$a/PMML/@database}\" table=\"{$a/PMML/@table}\">{dbxml:metadata(\"dbxml:name\", $a)}</doc>}</docs>";
 
-        XmlResults res = documentDao.query(query);
+        List<Result> results = resultsDao.getResultsByQuery(new Query(query));
 
-        String results = "";
-        try {
-            XmlValue value = new XmlValue();
-            while ((value = res.next()) != null) {
-                results += value.asString();
-            }
-            return results;
-        } catch (XmlException e) {
-        	return "<error>Documents names retrieval failed!</error>";
+        String resultsToPrint = "";
+        for (Result result : results) {
+        	resultsToPrint += result.getResultBody();
         }
+        return resultsToPrint;
     }
 
     /**

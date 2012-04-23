@@ -7,8 +7,6 @@ import xquerysearch.settings.SettingsManager;
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlQueryContext;
-import com.sleepycat.dbxml.XmlResults;
 
 /**
  * Implementation of {@link DocumentDao}.
@@ -40,23 +38,6 @@ public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
 			return null;
 		} finally {
 			closeConnection(cont);
-		}
-	}
-
-	/*
-	 * @{InheritDoc}
-	 */
-	@Override
-	public XmlResults query(String query) {
-		openConnecion(settings.getContainerName());
-		try {
-			XmlQueryContext queryContext = xmlManager.createQueryContext();
-			return xmlManager.query(query, queryContext);
-		} catch (XmlException e) {
-			logger.warning("Query failed!");
-			return null;
-		} finally {
-			closeConnection(null);
 		}
 	}
 
