@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import xquerysearch.BDBXMLHandler;
 import xquerysearch.datadescription.DataDescriptionHandler;
 import xquerysearch.domain.Query;
-import xquerysearch.query.QueryHandler;
-import xquerysearch.query.QueryMaker;
 import xquerysearch.service.DocumentService;
 import xquerysearch.service.QueryService;
 import xquerysearch.service.StoredQueryService;
@@ -24,6 +22,7 @@ import xquerysearch.settings.SettingsFileUtils;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.settings.SettingsPageController;
 import xquerysearch.settings.SettingsUtils;
+import xquerysearch.utils.QueryUtils;
 
 /**
  * Class for main communication to the outside world
@@ -221,9 +220,7 @@ public class MainController extends HttpServlet {
 		
 		BDBXMLHandler bh = new BDBXMLHandler(settings);
 		DataDescriptionHandler ddh = new DataDescriptionHandler(settings);
-		QueryHandler qh = new QueryHandler();
 		StoredQueryService storedQueryService = new StoredQueryService(settings);
-		QueryMaker qm = new QueryMaker(settings);
 		
 		DocumentService documentService = new DocumentService();
 		QueryService queryService = new QueryService();
@@ -253,11 +250,11 @@ public class MainController extends HttpServlet {
 						restructure = Boolean.valueOf(request.getParameter("restructure").toString().toLowerCase());
 					}
 				//  String dotaz = content.toString(); output += bh.query(id, dotaz, 1);
-					InputStream is1 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-					InputStream is2 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-					InputStream is3 = new ByteArrayInputStream(qh.queryPrepare(content).toByteArray());
-					String xpath[] = qm.makeXPath(is1);
-					output += bh.queryShortened(xpath[0], restructure, Boolean.parseBoolean(xpath[1]), qm.getMaxResults(is2), is3);
+					InputStream is1 = new ByteArrayInputStream(QueryUtils.queryPrepare(content).toByteArray());
+					InputStream is2 = new ByteArrayInputStream(QueryUtils.queryPrepare(content).toByteArray());
+					InputStream is3 = new ByteArrayInputStream(QueryUtils.queryPrepare(content).toByteArray());
+					String xpath[] = QueryUtils.makeXPath(is1, settings.getContainerName());
+					output += bh.queryShortened(xpath[0], restructure, Boolean.parseBoolean(xpath[1]), QueryUtils.getMaxResults(is2), is3);
 					//output += "<xpath><![CDATA["+ xpath[0]+"]]></xpath><exception>" + xpath[1] + "</exception>";
 					//output += qh.queryPrepare(content).toString();
 				}

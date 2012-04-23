@@ -32,12 +32,10 @@ import xquerysearch.dao.bdbxml.BdbxmlResultsDao;
 import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
-import xquerysearch.query.QueryHandler;
-import xquerysearch.query.QueryMaker;
 import xquerysearch.service.StoredQueryService;
 import xquerysearch.settings.SettingsManager;
 import xquerysearch.utils.OutputUtils;
-import xquerysearch.utils.StoredQueryUtils;
+import xquerysearch.utils.QueryUtils;
 import xquerysearch.validation.DocumentValidator;
 
 /**
@@ -49,9 +47,9 @@ public class BDBXMLHandler {
 	private DocumentDao documentDao;
 	private ResultsDao resultsDao;
 	private IndexDao indexDao;
-	private QueryMaker qm;
-	private QueryHandler qh;
     
+	private QueryUtils queryUtils;
+	
 	private SettingsManager settings;
     private String containerName;
     boolean useTransformation;
@@ -71,8 +69,6 @@ public class BDBXMLHandler {
     	this.useTransformation = settings.isUseTransformation();
     	this.xsltPathPMML = settings.getPmmlTransformationPath();
     	this.xsltPathBKEF = settings.getBkefTransformationPath();
-    	this.qm = new QueryMaker(settings);
-    	this.qh = new QueryHandler();
     	this.storedQueryService = new StoredQueryService(settings);
     	this.resultsDao = new BdbxmlResultsDao();
     }
@@ -112,9 +108,9 @@ public class BDBXMLHandler {
     public String query_10(String search) {
         String output = "";
         String output_temp = "";
-        InputStream query = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
-        InputStream query2 = new ByteArrayInputStream(qh.queryPrepare(search).toByteArray());
-        String xpath = qm.makeXPath(query)[0];
+        InputStream query = new ByteArrayInputStream(QueryUtils.queryPrepare(search).toByteArray());
+        InputStream query2 = new ByteArrayInputStream(QueryUtils.queryPrepare(search).toByteArray());
+        String xpath = QueryUtils.makeXPath(query, containerName)[0];
         for (int i=0; i<10; i++){
             output += "<pokus cislo=\""+ i +"\">";
 			double time_start = System.currentTimeMillis();
@@ -147,7 +143,7 @@ public class BDBXMLHandler {
         		+ "\nreturn local:mainFunction($zadani)";
         	}
         }
-    	query = StoredQueryUtils.deleteDeclaration(query);
+    	query = QueryUtils.deleteDeclaration(query);
         
     	List<Result> results = resultsDao.getResultsByQuery(new Query(query));
 
@@ -363,7 +359,7 @@ public class BDBXMLHandler {
             + "\n </Hit>";
         String queryResult = query("", query, true);
         if (exception && !queryResult.isEmpty()) {
-        	String xpath = qm.getExceptionPath(xmlQuery);
+        	String xpath = queryUtils.getExceptionPath(xmlQuery);
         	queryResult = selectByXPath(xpath, queryResult);
         }
         output += "<SearchResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\""+ schema +"\">"
