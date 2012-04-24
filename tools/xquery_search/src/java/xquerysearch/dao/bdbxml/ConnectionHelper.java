@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
 import xquerysearch.controllers.MainController;
-import xquerysearch.settings.SettingsManager;
+import xquerysearch.domain.Settings;
 
 import com.sleepycat.db.DatabaseException;
 import com.sleepycat.db.Environment;
@@ -26,7 +26,7 @@ import com.sleepycat.dbxml.XmlTransaction;
 public abstract class ConnectionHelper {
 
 	protected Logger logger = MainController.getLogger();
-	protected SettingsManager settings;
+	protected Settings settings;
 	
 	protected Environment environment;
 	protected XmlManagerConfig xmlManagerConfig;
@@ -70,7 +70,7 @@ public abstract class ConnectionHelper {
 	 * Creates connection with Berkeley XML DB
 	 * @return created <code>XmlContainer</code> or <code>null</code> when error occurs
 	 */
-	public XmlContainer openConnecion(String containerName) {
+	public XmlContainer openConnection(String containerName) {
 		try {
 			environment = createEnvironment();
 			xmlManagerConfig = new XmlManagerConfig();

@@ -31,7 +31,7 @@ public class BdbxmlResultsDao extends ConnectionHelper implements ResultsDao {
 	public List<Result> getResultsByQuery(Query query) {
 		List<Result> results = new ArrayList<Result>();
 		
-		openConnecion(settings.getContainerName());
+		openConnection(settings.getContainerName());
 		try {
 			XmlQueryContext queryContext = xmlManager.createQueryContext();
 			XmlResults dbResults = xmlManager.query(query.getQueryBody(), queryContext);

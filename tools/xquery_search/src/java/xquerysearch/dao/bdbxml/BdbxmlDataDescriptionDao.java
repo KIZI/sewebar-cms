@@ -6,7 +6,7 @@ import xquerysearch.dao.DataDescriptionDao;
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
-import xquerysearch.settings.SettingsManager;
+import xquerysearch.domain.Settings;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
@@ -30,7 +30,7 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	/**
 	 * 
 	 */
-	public BdbxmlDataDescriptionDao(SettingsManager settings) {
+	public BdbxmlDataDescriptionDao(Settings settings) {
 		this.settings = settings;
 		containerName = settings.getContainerName();
 		resultsDao = new BdbxmlResultsDao();
@@ -152,7 +152,7 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	 */
 	@Override
 	public String getDataDescriptionFromCache() {
-		XmlContainer cont = openConnecion(DATA_DESCRIPTION_CONTAINER);
+		XmlContainer cont = openConnection(DATA_DESCRIPTION_CONTAINER);
 		try {
     		XmlDocument doc = cont.getDocument(DATA_DESCRIPTION_DOCUMENT);
     		return doc.getContentAsString();
@@ -169,7 +169,7 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	 */
 	@Override
 	public boolean saveDataDescriptionIntoCache(String dataDescription) {
-		XmlContainer cont = openConnecion(DATA_DESCRIPTION_CONTAINER);
+		XmlContainer cont = openConnection(DATA_DESCRIPTION_CONTAINER);
 		try {
 			cont.putDocument(DATA_DESCRIPTION_DOCUMENT, dataDescription);
 			return true;

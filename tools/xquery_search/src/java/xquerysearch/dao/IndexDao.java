@@ -8,8 +8,6 @@ package xquerysearch.dao;
  */
 public interface IndexDao {
 	
-	public String getAllIndexes();
-	
 	public boolean insertIndex(String index);
 
 	public boolean removeIndex(String index);

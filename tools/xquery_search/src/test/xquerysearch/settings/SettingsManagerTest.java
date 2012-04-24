@@ -5,13 +5,15 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import xquerysearch.domain.Settings;
+
 public class SettingsManagerTest {
 	
-	SettingsManager setMan;
+	Settings setMan;
 	
 	@Before
 	public void fillSettingsManager() {
-		setMan = new SettingsManager();
+		setMan = new Settings();
 		setMan.setQueriesDirectory("/directory/queries");
 		setMan.setTemporaryDirectory("/directory/temporary");
 		setMan.setEnvironmentDirectory("/directory/environment");
@@ -36,7 +38,7 @@ public class SettingsManagerTest {
 	
 	@Test
 	public void changeSettingsTest() {
-		SettingsManager setManChng = new SettingsManager();
+		Settings setManChng = new Settings();
 		
 	}
 
