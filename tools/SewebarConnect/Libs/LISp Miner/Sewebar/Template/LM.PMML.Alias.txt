@@ -9,3 +9,5 @@ dataType="Date"	dataType="string"
 leftMargin="-inf"	leftMargin="-INF"
 rightMargin="+inf"	rightMargin="INF"
 IMValue name="Conf"	IMValue name="Confidence"
+&quot;State before&quot;	State-before
+&quot;State after&quot;	State-after
