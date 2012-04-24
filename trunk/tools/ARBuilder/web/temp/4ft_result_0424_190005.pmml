@@ -1,0 +1,1601 @@
+<?xml version="1.0"?>
+<?oxygen SCHSchema="http://sewebar.vse.cz/schemas/GUHARestr0_1.sch"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:pmml="http://www.dmg.org/PMML-4_0"
+    xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://sewebar.vse.cz/schemas/PMML4.0+GUHA0.1.xsd"
+>
+
+<!-- 4ftMiner.Task.PMML.Template, for version see below -->
+
+  <Header copyright="Copyright (c) KIZI UEP">
+    <Extension name="metabase" value="LM Barbora.mdb MB"/>
+    <Extension name="dataset" value="Loans"/>
+    <Extension name="author" value="PowerUser"/>
+    <Extension name="subsystem" value="LM Sewebar Exporter"/>
+    <Extension name="module" value="LMSwbExporter.exe"/>
+    <Extension name="format" value="4ftMiner.Task"/>    
+    <Extension name="version" value="2012-02-24"/>
+    <Application name="LISp-Miner" version="18.13.00 of 19 Apr 2012"/>
+    <Annotation>-</Annotation>
+    <Timestamp>24.4.2012 18:59:59</Timestamp>
+  </Header>
+
+<!-- Table -->
+
+  <!-- Include Template: Source.DatabaseDictionary.Task.Include.Template -->
+  <!-- Version: 2012-02-19 -->
+
+  <MiningBuildTask>
+    <Extension name="DatabaseDictionary">
+      <Table name="Loans">
+        <Columns>
+          <Column name="amount" dataType="integer"/>
+          <Column name="birth_number" dataType="integer"/>
+          <Column name="District" dataType="string"/>
+          <Column name="duration" dataType="integer"/>
+          <Column name="loan_id" dataType="integer"/>
+          <Column name="payments" dataType="integer"/>
+          <Column name="Salary" dataType="integer"/>
+          <Column name="status" dataType="string"/>
+        </Columns>
+        <DerivedColumns>
+          <DerivedColumn name="Age" dataType="integer"
+                attributeType="Derived"
+                formula="2002 - (1900 + CLng(birth_number/10000))"
+                MCPosition="0"
+                MCLength="0"
+                MCDelimiter=""
+          />
+          <DerivedColumn name="Sex" dataType="string"
+                attributeType="Derived"
+                formula="Mid(Str(birth_number),4,1) In (5,6)"
+                MCPosition="0"
+                MCLength="0"
+                MCDelimiter=""
+          />
+        </DerivedColumns>
+        <PrimaryKey>
+          <Column name="loan_id" primaryKeyPosition="0"/>
+        </PrimaryKey>
+      </Table>
+    </Extension>
+  </MiningBuildTask>
+
+<!-- Matrix -->
+
+  <!-- Include Template: Source.DataDictionary.Task.Include.Template -->
+  <!-- Version: 2012-01-04 -->
+
+  <DataDictionary numberOfFields="2">
+    <DataField 
+      name="District" 
+      optype="categorical" 
+      dataType="string"
+    >
+      <Extension name="maxItems" value="1000"/>
+        <Value value="Benesov">
+          <Extension name="Frequency" value="63" extender="Benesov"/>
+        </Value>
+        <Value value="Beroun">
+          <Extension name="Frequency" value="63" extender="Beroun"/>
+        </Value>
+        <Value value="Blansko">
+          <Extension name="Frequency" value="63" extender="Blansko"/>
+        </Value>
+        <Value value="Breclav">
+          <Extension name="Frequency" value="54" extender="Breclav"/>
+        </Value>
+        <Value value="Brno">
+          <Extension name="Frequency" value="207" extender="Brno"/>
+        </Value>
+        <Value value="Brno - venkov">
+          <Extension name="Frequency" value="99" extender="Brno - venkov"/>
+        </Value>
+        <Value value="Bruntal">
+          <Extension name="Frequency" value="55" extender="Bruntal"/>
+        </Value>
+        <Value value="Ceska Lipa">
+          <Extension name="Frequency" value="54" extender="Ceska Lipa"/>
+        </Value>
+        <Value value="Ceske Budejovice">
+          <Extension name="Frequency" value="81" extender="Ceske Budejovice"/>
+        </Value>
+        <Value value="Cesky Krumlov">
+          <Extension name="Frequency" value="63" extender="Cesky Krumlov"/>
+        </Value>
+        <Value value="Decin">
+          <Extension name="Frequency" value="45" extender="Decin"/>
+        </Value>
+        <Value value="Domazlice">
+          <Extension name="Frequency" value="18" extender="Domazlice"/>
+        </Value>
+        <Value value="Frydek - Mistek">
+          <Extension name="Frequency" value="135" extender="Frydek - Mistek"/>
+        </Value>
+        <Value value="Havlickuv Brod">
+          <Extension name="Frequency" value="86" extender="Havlickuv Brod"/>
+        </Value>
+        <Value value="Hodonin">
+          <Extension name="Frequency" value="72" extender="Hodonin"/>
+        </Value>
+        <Value value="Hradec Kralove">
+          <Extension name="Frequency" value="54" extender="Hradec Kralove"/>
+        </Value>
+        <Value value="Cheb">
+          <Extension name="Frequency" value="36" extender="Cheb"/>
+        </Value>
+        <Value value="Chomutov">
+          <Extension name="Frequency" value="72" extender="Chomutov"/>
+        </Value>
+        <Value value="Chrudim">
+          <Extension name="Frequency" value="63" extender="Chrudim"/>
+        </Value>
+        <Value value="Jablonec n. Nisou">
+          <Extension name="Frequency" value="18" extender="Jablonec n. Nisou"/>
+        </Value>
+        <Value value="Jesenik">
+          <Extension name="Frequency" value="72" extender="Jesenik"/>
+        </Value>
+        <Value value="Jicin">
+          <Extension name="Frequency" value="63" extender="Jicin"/>
+        </Value>
+        <Value value="Jihlava">
+          <Extension name="Frequency" value="54" extender="Jihlava"/>
+        </Value>
+        <Value value="Jindrichuv Hradec">
+          <Extension name="Frequency" value="99" extender="Jindrichuv Hradec"/>
+        </Value>
+        <Value value="Karlovy Vary">
+          <Extension name="Frequency" value="54" extender="Karlovy Vary"/>
+        </Value>
+        <Value value="Karvina">
+          <Extension name="Frequency" value="225" extender="Karvina"/>
+        </Value>
+        <Value value="Kladno">
+          <Extension name="Frequency" value="54" extender="Kladno"/>
+        </Value>
+        <Value value="Klatovy">
+          <Extension name="Frequency" value="18" extender="Klatovy"/>
+        </Value>
+        <Value value="Kolin">
+          <Extension name="Frequency" value="99" extender="Kolin"/>
+        </Value>
+        <Value value="Kromeriz">
+          <Extension name="Frequency" value="99" extender="Kromeriz"/>
+        </Value>
+        <Value value="Kutna Hora">
+          <Extension name="Frequency" value="72" extender="Kutna Hora"/>
+        </Value>
+        <Value value="Liberec">
+          <Extension name="Frequency" value="63" extender="Liberec"/>
+        </Value>
+        <Value value="Litomerice">
+          <Extension name="Frequency" value="63" extender="Litomerice"/>
+        </Value>
+        <Value value="Louny">
+          <Extension name="Frequency" value="117" extender="Louny"/>
+        </Value>
+        <Value value="Melnik">
+          <Extension name="Frequency" value="45" extender="Melnik"/>
+        </Value>
+        <Value value="Mlada Boleslav">
+          <Extension name="Frequency" value="45" extender="Mlada Boleslav"/>
+        </Value>
+        <Value value="Most">
+          <Extension name="Frequency" value="61" extender="Most"/>
+        </Value>
+        <Value value="Nachod">
+          <Extension name="Frequency" value="72" extender="Nachod"/>
+        </Value>
+        <Value value="Novy Jicin">
+          <Extension name="Frequency" value="45" extender="Novy Jicin"/>
+        </Value>
+        <Value value="Nymburk">
+          <Extension name="Frequency" value="81" extender="Nymburk"/>
+        </Value>
+        <Value value="Olomouc">
+          <Extension name="Frequency" value="135" extender="Olomouc"/>
+        </Value>
+        <Value value="Opava">
+          <Extension name="Frequency" value="72" extender="Opava"/>
+        </Value>
+        <Value value="Ostrava - mesto">
+          <Extension name="Frequency" value="180" extender="Ostrava - mesto"/>
+        </Value>
+        <Value value="Pardubice">
+          <Extension name="Frequency" value="90" extender="Pardubice"/>
+        </Value>
+        <Value value="Pelhrimov">
+          <Extension name="Frequency" value="54" extender="Pelhrimov"/>
+        </Value>
+        <Value value="Pisek">
+          <Extension name="Frequency" value="27" extender="Pisek"/>
+        </Value>
+        <Value value="Plzen">
+          <Extension name="Frequency" value="54" extender="Plzen"/>
+        </Value>
+        <Value value="Plzen - jih">
+          <Extension name="Frequency" value="81" extender="Plzen - jih"/>
+        </Value>
+        <Value value="Plzen - sever">
+          <Extension name="Frequency" value="63" extender="Plzen - sever"/>
+        </Value>
+        <Value value="Praha">
+          <Extension name="Frequency" value="711" extender="Praha"/>
+        </Value>
+        <Value value="Praha - vychod">
+          <Extension name="Frequency" value="45" extender="Praha - vychod"/>
+        </Value>
+        <Value value="Praha - zapad">
+          <Extension name="Frequency" value="90" extender="Praha - zapad"/>
+        </Value>
+        <Value value="Prachatice">
+          <Extension name="Frequency" value="108" extender="Prachatice"/>
+        </Value>
+        <Value value="Prerov">
+          <Extension name="Frequency" value="27" extender="Prerov"/>
+        </Value>
+        <Value value="Pribram">
+          <Extension name="Frequency" value="45" extender="Pribram"/>
+        </Value>
+        <Value value="Prostejov">
+          <Extension name="Frequency" value="81" extender="Prostejov"/>
+        </Value>
+        <Value value="Rakovnik">
+          <Extension name="Frequency" value="81" extender="Rakovnik"/>
+        </Value>
+        <Value value="Rokycany">
+          <Extension name="Frequency" value="72" extender="Rokycany"/>
+        </Value>
+        <Value value="Rychnov nad Kneznou">
+          <Extension name="Frequency" value="45" extender="Rychnov nad Kneznou"/>
+        </Value>
+        <Value value="Semily">
+          <Extension name="Frequency" value="27" extender="Semily"/>
+        </Value>
+        <Value value="Sokolov">
+          <Extension name="Frequency" value="12" extender="Sokolov"/>
+        </Value>
+        <Value value="Strakonice">
+          <Extension name="Frequency" value="45" extender="Strakonice"/>
+        </Value>
+        <Value value="Sumperk">
+          <Extension name="Frequency" value="54" extender="Sumperk"/>
+        </Value>
+        <Value value="Svitavy">
+          <Extension name="Frequency" value="108" extender="Svitavy"/>
+        </Value>
+        <Value value="Tabor">
+          <Extension name="Frequency" value="72" extender="Tabor"/>
+        </Value>
+        <Value value="Tachov">
+          <Extension name="Frequency" value="99" extender="Tachov"/>
+        </Value>
+        <Value value="Teplice">
+          <Extension name="Frequency" value="45" extender="Teplice"/>
+        </Value>
+        <Value value="Trebic">
+          <Extension name="Frequency" value="54" extender="Trebic"/>
+        </Value>
+        <Value value="Trutnov">
+          <Extension name="Frequency" value="63" extender="Trutnov"/>
+        </Value>
+        <Value value="Uherske Hradiste">
+          <Extension name="Frequency" value="81" extender="Uherske Hradiste"/>
+        </Value>
+        <Value value="Usti nad Labem">
+          <Extension name="Frequency" value="27" extender="Usti nad Labem"/>
+        </Value>
+        <Value value="Usti nad Orlici">
+          <Extension name="Frequency" value="135" extender="Usti nad Orlici"/>
+        </Value>
+        <Value value="Vsetin">
+          <Extension name="Frequency" value="63" extender="Vsetin"/>
+        </Value>
+        <Value value="Vyskov">
+          <Extension name="Frequency" value="72" extender="Vyskov"/>
+        </Value>
+        <Value value="Zdar nad Sazavou">
+          <Extension name="Frequency" value="63" extender="Zdar nad Sazavou"/>
+        </Value>
+        <Value value="Zlin">
+          <Extension name="Frequency" value="144" extender="Zlin"/>
+        </Value>
+        <Value value="Znojmo">
+          <Extension name="Frequency" value="54" extender="Znojmo"/>
+        </Value>
+    </DataField>
+    <DataField 
+      name="status" 
+      optype="categorical" 
+      dataType="string"
+    >
+      <Extension name="maxItems" value="1000"/>
+        <Value value="A">
+          <Extension name="Frequency" value="1827" extender="A"/>
+        </Value>
+        <Value value="B">
+          <Extension name="Frequency" value="289" extender="B"/>
+        </Value>
+        <Value value="C">
+          <Extension name="Frequency" value="3627" extender="C"/>
+        </Value>
+        <Value value="D">
+          <Extension name="Frequency" value="438" extender="D"/>
+        </Value>
+    </DataField>
+  </DataDictionary>
+
+<!-- Attributes -->
+
+  <!-- Include Template: Source.TrasnformationDictionary.Task.Include.Template -->
+  <!-- Version: 2012-01-04 -->
+
+  <TransformationDictionary>
+    <DerivedField 
+      name= "District"
+      dataType="string" 
+      optype="ordinal"
+    >
+      <MapValues outputColumn="District"
+      >
+        <FieldColumnPair column="District" field="District"/>
+        <InlineTable>
+          <Extension name="Frequency" value="63" extender="Benesov"/>
+          <Extension name="Frequency" value="63" extender="Beroun"/>
+          <Extension name="Frequency" value="63" extender="Blansko"/>
+          <Extension name="Frequency" value="54" extender="Breclav"/>
+          <Extension name="Frequency" value="207" extender="Brno"/>
+          <Extension name="Frequency" value="99" extender="Brno - venkov"/>
+          <Extension name="Frequency" value="55" extender="Bruntal"/>
+          <Extension name="Frequency" value="54" extender="Ceska Lipa"/>
+          <Extension name="Frequency" value="81" extender="Ceske Budejovice"/>
+          <Extension name="Frequency" value="63" extender="Cesky Krumlov"/>
+          <Extension name="Frequency" value="45" extender="Decin"/>
+          <Extension name="Frequency" value="18" extender="Domazlice"/>
+          <Extension name="Frequency" value="135" extender="Frydek - Mistek"/>
+          <Extension name="Frequency" value="86" extender="Havlickuv Brod"/>
+          <Extension name="Frequency" value="72" extender="Hodonin"/>
+          <Extension name="Frequency" value="54" extender="Hradec Kralove"/>
+          <Extension name="Frequency" value="36" extender="Cheb"/>
+          <Extension name="Frequency" value="72" extender="Chomutov"/>
+          <Extension name="Frequency" value="63" extender="Chrudim"/>
+          <Extension name="Frequency" value="18" extender="Jablonec n. Nisou"/>
+          <Extension name="Frequency" value="72" extender="Jesenik"/>
+          <Extension name="Frequency" value="63" extender="Jicin"/>
+          <Extension name="Frequency" value="54" extender="Jihlava"/>
+          <Extension name="Frequency" value="99" extender="Jindrichuv Hradec"/>
+          <Extension name="Frequency" value="54" extender="Karlovy Vary"/>
+          <Extension name="Frequency" value="225" extender="Karvina"/>
+          <Extension name="Frequency" value="54" extender="Kladno"/>
+          <Extension name="Frequency" value="18" extender="Klatovy"/>
+          <Extension name="Frequency" value="99" extender="Kolin"/>
+          <Extension name="Frequency" value="99" extender="Kromeriz"/>
+          <Extension name="Frequency" value="72" extender="Kutna Hora"/>
+          <Extension name="Frequency" value="63" extender="Liberec"/>
+          <Extension name="Frequency" value="63" extender="Litomerice"/>
+          <Extension name="Frequency" value="117" extender="Louny"/>
+          <Extension name="Frequency" value="45" extender="Melnik"/>
+          <Extension name="Frequency" value="45" extender="Mlada Boleslav"/>
+          <Extension name="Frequency" value="61" extender="Most"/>
+          <Extension name="Frequency" value="72" extender="Nachod"/>
+          <Extension name="Frequency" value="45" extender="Novy Jicin"/>
+          <Extension name="Frequency" value="81" extender="Nymburk"/>
+          <Extension name="Frequency" value="135" extender="Olomouc"/>
+          <Extension name="Frequency" value="72" extender="Opava"/>
+          <Extension name="Frequency" value="180" extender="Ostrava - mesto"/>
+          <Extension name="Frequency" value="90" extender="Pardubice"/>
+          <Extension name="Frequency" value="54" extender="Pelhrimov"/>
+          <Extension name="Frequency" value="27" extender="Pisek"/>
+          <Extension name="Frequency" value="54" extender="Plzen"/>
+          <Extension name="Frequency" value="81" extender="Plzen - jih"/>
+          <Extension name="Frequency" value="63" extender="Plzen - sever"/>
+          <Extension name="Frequency" value="711" extender="Praha"/>
+          <Extension name="Frequency" value="45" extender="Praha - vychod"/>
+          <Extension name="Frequency" value="90" extender="Praha - zapad"/>
+          <Extension name="Frequency" value="108" extender="Prachatice"/>
+          <Extension name="Frequency" value="27" extender="Prerov"/>
+          <Extension name="Frequency" value="45" extender="Pribram"/>
+          <Extension name="Frequency" value="81" extender="Prostejov"/>
+          <Extension name="Frequency" value="81" extender="Rakovnik"/>
+          <Extension name="Frequency" value="72" extender="Rokycany"/>
+          <Extension name="Frequency" value="45" extender="Rychnov nad Kneznou"/>
+          <Extension name="Frequency" value="27" extender="Semily"/>
+          <Extension name="Frequency" value="12" extender="Sokolov"/>
+          <Extension name="Frequency" value="45" extender="Strakonice"/>
+          <Extension name="Frequency" value="54" extender="Sumperk"/>
+          <Extension name="Frequency" value="108" extender="Svitavy"/>
+          <Extension name="Frequency" value="72" extender="Tabor"/>
+          <Extension name="Frequency" value="99" extender="Tachov"/>
+          <Extension name="Frequency" value="45" extender="Teplice"/>
+          <Extension name="Frequency" value="54" extender="Trebic"/>
+          <Extension name="Frequency" value="63" extender="Trutnov"/>
+          <Extension name="Frequency" value="81" extender="Uherske Hradiste"/>
+          <Extension name="Frequency" value="27" extender="Usti nad Labem"/>
+          <Extension name="Frequency" value="135" extender="Usti nad Orlici"/>
+          <Extension name="Frequency" value="63" extender="Vsetin"/>
+          <Extension name="Frequency" value="72" extender="Vyskov"/>
+          <Extension name="Frequency" value="63" extender="Zdar nad Sazavou"/>
+          <Extension name="Frequency" value="144" extender="Zlin"/>
+          <Extension name="Frequency" value="54" extender="Znojmo"/>
+          <row>
+            <column>Benesov</column>
+            <field>Benesov</field>
+          </row>
+          <row>
+            <column>Beroun</column>
+            <field>Beroun</field>
+          </row>
+          <row>
+            <column>Blansko</column>
+            <field>Blansko</field>
+          </row>
+          <row>
+            <column>Breclav</column>
+            <field>Breclav</field>
+          </row>
+          <row>
+            <column>Brno</column>
+            <field>Brno</field>
+          </row>
+          <row>
+            <column>Brno - venkov</column>
+            <field>Brno - venkov</field>
+          </row>
+          <row>
+            <column>Bruntal</column>
+            <field>Bruntal</field>
+          </row>
+          <row>
+            <column>Ceska Lipa</column>
+            <field>Ceska Lipa</field>
+          </row>
+          <row>
+            <column>Ceske Budejovice</column>
+            <field>Ceske Budejovice</field>
+          </row>
+          <row>
+            <column>Cesky Krumlov</column>
+            <field>Cesky Krumlov</field>
+          </row>
+          <row>
+            <column>Decin</column>
+            <field>Decin</field>
+          </row>
+          <row>
+            <column>Domazlice</column>
+            <field>Domazlice</field>
+          </row>
+          <row>
+            <column>Frydek - Mistek</column>
+            <field>Frydek - Mistek</field>
+          </row>
+          <row>
+            <column>Havlickuv Brod</column>
+            <field>Havlickuv Brod</field>
+          </row>
+          <row>
+            <column>Hodonin</column>
+            <field>Hodonin</field>
+          </row>
+          <row>
+            <column>Hradec Kralove</column>
+            <field>Hradec Kralove</field>
+          </row>
+          <row>
+            <column>Cheb</column>
+            <field>Cheb</field>
+          </row>
+          <row>
+            <column>Chomutov</column>
+            <field>Chomutov</field>
+          </row>
+          <row>
+            <column>Chrudim</column>
+            <field>Chrudim</field>
+          </row>
+          <row>
+            <column>Jablonec n. Nisou</column>
+            <field>Jablonec n. Nisou</field>
+          </row>
+          <row>
+            <column>Jesenik</column>
+            <field>Jesenik</field>
+          </row>
+          <row>
+            <column>Jicin</column>
+            <field>Jicin</field>
+          </row>
+          <row>
+            <column>Jihlava</column>
+            <field>Jihlava</field>
+          </row>
+          <row>
+            <column>Jindrichuv Hradec</column>
+            <field>Jindrichuv Hradec</field>
+          </row>
+          <row>
+            <column>Karlovy Vary</column>
+            <field>Karlovy Vary</field>
+          </row>
+          <row>
+            <column>Karvina</column>
+            <field>Karvina</field>
+          </row>
+          <row>
+            <column>Kladno</column>
+            <field>Kladno</field>
+          </row>
+          <row>
+            <column>Klatovy</column>
+            <field>Klatovy</field>
+          </row>
+          <row>
+            <column>Kolin</column>
+            <field>Kolin</field>
+          </row>
+          <row>
+            <column>Kromeriz</column>
+            <field>Kromeriz</field>
+          </row>
+          <row>
+            <column>Kutna Hora</column>
+            <field>Kutna Hora</field>
+          </row>
+          <row>
+            <column>Liberec</column>
+            <field>Liberec</field>
+          </row>
+          <row>
+            <column>Litomerice</column>
+            <field>Litomerice</field>
+          </row>
+          <row>
+            <column>Louny</column>
+            <field>Louny</field>
+          </row>
+          <row>
+            <column>Melnik</column>
+            <field>Melnik</field>
+          </row>
+          <row>
+            <column>Mlada Boleslav</column>
+            <field>Mlada Boleslav</field>
+          </row>
+          <row>
+            <column>Most</column>
+            <field>Most</field>
+          </row>
+          <row>
+            <column>Nachod</column>
+            <field>Nachod</field>
+          </row>
+          <row>
+            <column>Novy Jicin</column>
+            <field>Novy Jicin</field>
+          </row>
+          <row>
+            <column>Nymburk</column>
+            <field>Nymburk</field>
+          </row>
+          <row>
+            <column>Olomouc</column>
+            <field>Olomouc</field>
+          </row>
+          <row>
+            <column>Opava</column>
+            <field>Opava</field>
+          </row>
+          <row>
+            <column>Ostrava - mesto</column>
+            <field>Ostrava - mesto</field>
+          </row>
+          <row>
+            <column>Pardubice</column>
+            <field>Pardubice</field>
+          </row>
+          <row>
+            <column>Pelhrimov</column>
+            <field>Pelhrimov</field>
+          </row>
+          <row>
+            <column>Pisek</column>
+            <field>Pisek</field>
+          </row>
+          <row>
+            <column>Plzen</column>
+            <field>Plzen</field>
+          </row>
+          <row>
+            <column>Plzen - jih</column>
+            <field>Plzen - jih</field>
+          </row>
+          <row>
+            <column>Plzen - sever</column>
+            <field>Plzen - sever</field>
+          </row>
+          <row>
+            <column>Praha</column>
+            <field>Praha</field>
+          </row>
+          <row>
+            <column>Praha - vychod</column>
+            <field>Praha - vychod</field>
+          </row>
+          <row>
+            <column>Praha - zapad</column>
+            <field>Praha - zapad</field>
+          </row>
+          <row>
+            <column>Prachatice</column>
+            <field>Prachatice</field>
+          </row>
+          <row>
+            <column>Prerov</column>
+            <field>Prerov</field>
+          </row>
+          <row>
+            <column>Pribram</column>
+            <field>Pribram</field>
+          </row>
+          <row>
+            <column>Prostejov</column>
+            <field>Prostejov</field>
+          </row>
+          <row>
+            <column>Rakovnik</column>
+            <field>Rakovnik</field>
+          </row>
+          <row>
+            <column>Rokycany</column>
+            <field>Rokycany</field>
+          </row>
+          <row>
+            <column>Rychnov nad Kneznou</column>
+            <field>Rychnov nad Kneznou</field>
+          </row>
+          <row>
+            <column>Semily</column>
+            <field>Semily</field>
+          </row>
+          <row>
+            <column>Sokolov</column>
+            <field>Sokolov</field>
+          </row>
+          <row>
+            <column>Strakonice</column>
+            <field>Strakonice</field>
+          </row>
+          <row>
+            <column>Sumperk</column>
+            <field>Sumperk</field>
+          </row>
+          <row>
+            <column>Svitavy</column>
+            <field>Svitavy</field>
+          </row>
+          <row>
+            <column>Tabor</column>
+            <field>Tabor</field>
+          </row>
+          <row>
+            <column>Tachov</column>
+            <field>Tachov</field>
+          </row>
+          <row>
+            <column>Teplice</column>
+            <field>Teplice</field>
+          </row>
+          <row>
+            <column>Trebic</column>
+            <field>Trebic</field>
+          </row>
+          <row>
+            <column>Trutnov</column>
+            <field>Trutnov</field>
+          </row>
+          <row>
+            <column>Uherske Hradiste</column>
+            <field>Uherske Hradiste</field>
+          </row>
+          <row>
+            <column>Usti nad Labem</column>
+            <field>Usti nad Labem</field>
+          </row>
+          <row>
+            <column>Usti nad Orlici</column>
+            <field>Usti nad Orlici</field>
+          </row>
+          <row>
+            <column>Vsetin</column>
+            <field>Vsetin</field>
+          </row>
+          <row>
+            <column>Vyskov</column>
+            <field>Vyskov</field>
+          </row>
+          <row>
+            <column>Zdar nad Sazavou</column>
+            <field>Zdar nad Sazavou</field>
+          </row>
+          <row>
+            <column>Zlin</column>
+            <field>Zlin</field>
+          </row>
+          <row>
+            <column>Znojmo</column>
+            <field>Znojmo</field>
+          </row>
+        </InlineTable>
+      </MapValues>
+    </DerivedField>
+    <DerivedField 
+      name= "Quality"
+      dataType="string" 
+      optype="ordinal"
+    >
+      <MapValues outputColumn="Quality"
+      >
+        <FieldColumnPair column="status" field="Quality"/>
+        <InlineTable>
+          <Extension name="Frequency" value="5454" extender="good"/>
+          <Extension name="Frequency" value="727" extender="bad"/>
+          <row>
+            <column>A</column>
+            <field>good</field>
+          </row>
+          <row>
+            <column>C</column>
+            <field>good</field>
+          </row>
+          <row>
+            <column>B</column>
+            <field>bad</field>
+          </row>
+          <row>
+            <column>D</column>
+            <field>bad</field>
+          </row>
+        </InlineTable>
+      </MapValues>
+    </DerivedField>
+  </TransformationDictionary>
+
+<!-- Task -->
+
+  <guha:AssociationModel  xmlns="" xsi:schemaLocation="http://keg.vse.cz/ns/GUHA0.1rev1 http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"
+        xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
+        modelName="24. 04. 2012 18:59:58" 
+        functionName="associationRules" 
+        algorithmName="4ft" 
+        numberOfTransactions="6181" 
+        numberOfCategories="79" 
+        numberOfRules="10"
+  >
+
+    <!-- Include Template: 4ftMiner.TaskSetting.Include.Template -->
+    <!-- Version: 2012-01-04 -->
+
+    <TaskSetting>
+      <Extension name="LISp-Miner">
+        <TaskGroup>Default task-group</TaskGroup>
+        <TaskState>Interrupted</TaskState>
+        <NumberOfVerifications>22</NumberOfVerifications>
+        <TaskStartTime>24.4.2012 18:59:59</TaskStartTime>
+        <TaskDuration>0h 0m 0s</TaskDuration>
+        <FTMissingsType>Delete</FTMissingsType>
+        <FTTaskParamProlong100AFlag>Yes</FTTaskParamProlong100AFlag>
+        <FTTaskParamProlong100SFlag>Yes</FTTaskParamProlong100SFlag>
+        <FTTaskParamPrimeCheckMinLen>Yes</FTTaskParamPrimeCheckMinLen>
+        <FTTaskParamPrimeCheck>No</FTTaskParamPrimeCheck>
+        <FTTaskParamIncludeSymetricFlag>Yes</FTTaskParamIncludeSymetricFlag>
+        <HypothesesCountMax>10</HypothesesCountMax>
+        <TaskNotice>-</TaskNotice>
+      </Extension>
+
+      <!-- Include Template: Task.FTCedentD.Include.Template -->
+      <!-- Version: 2012-01-04 -->
+
+      <BBASettings>
+        <BBASetting 
+           id="Basic_FTLiteralD_626">         
+          <Name>District (subset), 1 - 1</Name>
+          <FieldRef>District</FieldRef>
+          <Coefficient>
+            <Type>Subset</Type>
+            <MinimalLength>1</MinimalLength>
+            <MaximalLength>1</MaximalLength>
+          </Coefficient>
+        </BBASetting>
+        <BBASetting 
+           id="Basic_FTLiteralD_627">         
+          <Name>Quality( good)</Name>
+          <FieldRef>Quality</FieldRef>
+          <Coefficient>
+            <Type>One category</Type>
+            <Category>good</Category>
+          </Coefficient>
+        </BBASetting>
+      </BBASettings>
+
+      <DBASettings>
+
+        <DBASetting id="Derived_FTLiteralD_Sign_626" 
+          type="Literal"
+        >
+          <Name>District (subset), 1 - 1</Name>
+          <BASettingRef>Basic_FTLiteralD_626</BASettingRef>
+          <LiteralSign>Positive</LiteralSign>
+          <LiteralType>Basic</LiteralType>
+          <EquivalenceClass>NULL</EquivalenceClass>           
+        </DBASetting>
+        <DBASetting id="Derived_FTLiteralD_Sign_627" 
+          type="Literal"
+        >
+          <Name>Quality( good)</Name>
+          <BASettingRef>Basic_FTLiteralD_627</BASettingRef>
+          <LiteralSign>Positive</LiteralSign>
+          <LiteralType>Basic</LiteralType>
+          <EquivalenceClass>NULL</EquivalenceClass>           
+        </DBASetting>
+        <DBASetting id="Derived_FTCedentD_1191"
+          type="Conjunction"
+        >
+          <Name></Name>
+          <BASettingRef>Derived_FTLiteralD_Sign_626</BASettingRef>
+          <MinimalLength>1</MinimalLength>
+          <MaximalLength>99</MaximalLength>
+        </DBASetting>
+        <DBASetting id="Derived_FTCedentD_1192"
+          type="Conjunction"
+        >
+          <Name></Name>
+          <BASettingRef>Derived_FTLiteralD_Sign_627</BASettingRef>
+          <MinimalLength>1</MinimalLength>
+          <MaximalLength>99</MaximalLength>
+        </DBASetting>
+        <DBASetting id="Derived_FTCedentBagD_1192" 
+          type="Conjunction"
+        >
+          <Name>Antecedent</Name>
+          <BASettingRef>Derived_FTCedentD_1191</BASettingRef>
+          <MinimalLength>1</MinimalLength>
+          <MaximalLength>99</MaximalLength>
+        </DBASetting>
+        <DBASetting id="Derived_FTCedentBagD_1193" 
+          type="Conjunction"
+        >
+          <Name>Succedent</Name>
+          <BASettingRef>Derived_FTCedentD_1192</BASettingRef>
+          <MinimalLength>1</MinimalLength>
+          <MaximalLength>99</MaximalLength>
+        </DBASetting>
+      </DBASettings>
+
+      <AntecedentSetting>Derived_FTCedentBagD_1192</AntecedentSetting>
+      <ConsequentSetting>Derived_FTCedentBagD_1193</ConsequentSetting>
+      <InterestMeasureSetting>
+        <InterestMeasureThreshold id="200">
+          <Extension name="LongName">Founded Implication</Extension>
+          <Extension name="Description">a/(a+b) &gt;= p ... at least 100*p [%] of objects satisfying A satisfy also S</Extension>
+          <Extension name="Order">0</Extension>
+          <InterestMeasure>FUI</InterestMeasure>
+          <CompareType>Greater than or equal</CompareType>
+          <Threshold type="Abs">0.900000</Threshold>
+        </InterestMeasureThreshold>    
+      </InterestMeasureSetting>
+
+    </TaskSetting>
+
+  <!-- MiningSchema -->
+
+    <pmml:MiningSchema>
+      <pmml:MiningField name="District"/>
+      <pmml:MiningField name="status"/>
+    </pmml:MiningSchema>
+
+    <AssociationRules>
+
+      <!-- Include Template: Task.FTCedentI.Include.Template -->
+      <!-- Version: 2012-02-06 -->
+      <!-- Item: LiteralI -->  
+      <BBA id="BBA_FTLiteralI_1634" literal="false">
+        <Text>District(Benesov)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Benesov</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1635" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1636" literal="false">
+        <Text>District(Brno - venkov)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Brno - venkov</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1637" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1638" literal="false">
+        <Text>District(Ceska Lipa)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Ceska Lipa</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1639" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1640" literal="false">
+        <Text>District(Decin)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Decin</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1641" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1642" literal="false">
+        <Text>District(Frydek - Mistek)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Frydek - Mistek</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1643" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1644" literal="false">
+        <Text>District(Hodonin)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Hodonin</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1645" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1646" literal="false">
+        <Text>District(Cheb)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Cheb</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1647" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1648" literal="false">
+        <Text>District(Chomutov)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Chomutov</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1649" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1650" literal="false">
+        <Text>District(Jablonec n. Nisou)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Jablonec n. Nisou</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1651" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1652" literal="false">
+        <Text>District(Jicin)</Text>
+        <FieldRef>District</FieldRef>
+        <CatRef>Jicin</CatRef>
+      </BBA>
+      <BBA id="BBA_FTLiteralI_1653" literal="false">
+        <Text>Quality(good)</Text>
+        <FieldRef>Quality</FieldRef>
+        <CatRef>good</CatRef>
+      </BBA>
+      <!-- DBA: Sign (Gace) -->  
+      <DBA id="DBA_FTLiteralI_Sign_1634" connective="Conjunction" literal="true">
+        <Text>District(Benesov)</Text>
+        <BARef>BBA_FTLiteralI_1634</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1635" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1635</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1636" connective="Conjunction" literal="true">
+        <Text>District(Brno - venkov)</Text>
+        <BARef>BBA_FTLiteralI_1636</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1637" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1637</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1638" connective="Conjunction" literal="true">
+        <Text>District(Ceska Lipa)</Text>
+        <BARef>BBA_FTLiteralI_1638</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1639" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1639</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1640" connective="Conjunction" literal="true">
+        <Text>District(Decin)</Text>
+        <BARef>BBA_FTLiteralI_1640</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1641" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1641</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1642" connective="Conjunction" literal="true">
+        <Text>District(Frydek - Mistek)</Text>
+        <BARef>BBA_FTLiteralI_1642</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1643" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1643</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1644" connective="Conjunction" literal="true">
+        <Text>District(Hodonin)</Text>
+        <BARef>BBA_FTLiteralI_1644</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1645" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1645</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1646" connective="Conjunction" literal="true">
+        <Text>District(Cheb)</Text>
+        <BARef>BBA_FTLiteralI_1646</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1647" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1647</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1648" connective="Conjunction" literal="true">
+        <Text>District(Chomutov)</Text>
+        <BARef>BBA_FTLiteralI_1648</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1649" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1649</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1650" connective="Conjunction" literal="true">
+        <Text>District(Jablonec n. Nisou)</Text>
+        <BARef>BBA_FTLiteralI_1650</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1651" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1651</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1652" connective="Conjunction" literal="true">
+        <Text>District(Jicin)</Text>
+        <BARef>BBA_FTLiteralI_1652</BARef>
+      </DBA>
+      <DBA id="DBA_FTLiteralI_Sign_1653" connective="Conjunction" literal="true">
+        <Text>Quality(good)</Text>
+        <BARef>BBA_FTLiteralI_1653</BARef>
+      </DBA>
+      <!-- DBA: CedentI -->  
+      <DBA id="DBA_FTCedentI_1555" connective="Conjunction">
+        <Text>District(Benesov)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1634</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1556" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1635</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1557" connective="Conjunction">
+        <Text>District(Brno - venkov)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1636</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1558" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1637</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1559" connective="Conjunction">
+        <Text>District(Ceska Lipa)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1638</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1560" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1639</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1561" connective="Conjunction">
+        <Text>District(Decin)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1640</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1562" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1641</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1563" connective="Conjunction">
+        <Text>District(Frydek - Mistek)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1642</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1564" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1643</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1565" connective="Conjunction">
+        <Text>District(Hodonin)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1644</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1566" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1645</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1567" connective="Conjunction">
+        <Text>District(Cheb)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1646</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1568" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1647</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1569" connective="Conjunction">
+        <Text>District(Chomutov)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1648</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1570" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1649</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1571" connective="Conjunction">
+        <Text>District(Jablonec n. Nisou)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1650</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1572" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1651</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1573" connective="Conjunction">
+        <Text>District(Jicin)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1652</BARef>
+      </DBA>
+      <DBA id="DBA_FTCedentI_1574" connective="Conjunction">
+        <Text>Quality(good)</Text>
+        <BARef>DBA_FTLiteralI_Sign_1653</BARef>
+      </DBA>
+      <!-- DBA: CedentBag -->  
+        <DBA id="DBA_Antecedent_948" connective="Conjunction">
+          <Text>District(Benesov)</Text>
+          <BARef>DBA_FTCedentI_1555</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_948" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1556</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_949" connective="Conjunction">
+          <Text>District(Brno - venkov)</Text>
+          <BARef>DBA_FTCedentI_1557</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_949" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1558</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_950" connective="Conjunction">
+          <Text>District(Ceska Lipa)</Text>
+          <BARef>DBA_FTCedentI_1559</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_950" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1560</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_951" connective="Conjunction">
+          <Text>District(Decin)</Text>
+          <BARef>DBA_FTCedentI_1561</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_951" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1562</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_952" connective="Conjunction">
+          <Text>District(Frydek - Mistek)</Text>
+          <BARef>DBA_FTCedentI_1563</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_952" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1564</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_953" connective="Conjunction">
+          <Text>District(Hodonin)</Text>
+          <BARef>DBA_FTCedentI_1565</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_953" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1566</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_954" connective="Conjunction">
+          <Text>District(Cheb)</Text>
+          <BARef>DBA_FTCedentI_1567</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_954" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1568</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_955" connective="Conjunction">
+          <Text>District(Chomutov)</Text>
+          <BARef>DBA_FTCedentI_1569</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_955" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1570</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_956" connective="Conjunction">
+          <Text>District(Jablonec n. Nisou)</Text>
+          <BARef>DBA_FTCedentI_1571</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_956" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1572</BARef>
+        </DBA>
+        <DBA id="DBA_Antecedent_957" connective="Conjunction">
+          <Text>District(Jicin)</Text>
+          <BARef>DBA_FTCedentI_1573</BARef>
+        </DBA>
+        <DBA id="DBA_Succedent_957" connective="Conjunction">
+          <Text>Quality(good)</Text>
+          <BARef>DBA_FTCedentI_1574</BARef>
+        </DBA>
+
+  <!-- Hypothesis -->
+
+      <AssociationRule id="948"
+        antecedent="DBA_Antecedent_948"
+        consequent="DBA_Succedent_948"
+      >
+        <Text>District(Benesov) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">63</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5391</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">63</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0115511551</IMValue>
+        <IMValue name="EConf">0.1278110338</IMValue>
+        <IMValue name="Supp">0.0101925255</IMValue>
+        <IMValue name="Cmplt">0.0115511551</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0013100205</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0003613504</IMValue>
+        <IMValue name="Chi-Sq">8.4841648352</IMValue>
+        <IMValue name="bMean">0.9846153846</IMValue>
+        <IMValue name="bVAR">0.9846153846</IMValue>
+        <IMValue name="bStDev">0.015149722</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9991564713</IMValue>
+        <IMValue name="P(&gt;=95%)">0.962556367</IMValue>
+        <FourFtTable a="63" b="0" c="5391" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="949"
+        antecedent="DBA_Antecedent_949"
+        consequent="DBA_Succedent_949"
+      >
+        <Text>District(Brno - venkov) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">0.9090909091</IMValue>
+        <IMValue name="a">90</IMValue>
+        <IMValue name="b">9</IMValue>
+        <IMValue name="c">5364</IMValue>
+        <IMValue name="d">718</IMValue>
+        <IMValue name="r">99</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">0.9090909091</IMValue>
+        <IMValue name="DConf">0.0164744646</IMValue>
+        <IMValue name="EConf">0.130723184</IMValue>
+        <IMValue name="Supp">0.0145607507</IMValue>
+        <IMValue name="Cmplt">0.0165016502</IMValue>
+        <IMValue name="AvgDf">0.0302696936</IMValue>
+        <IMValue name="LBound">0.4644767001</IMValue>
+        <IMValue name="UBound">0.6673886467</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.2570473483</IMValue>
+        <IMValue name="Chi-Sq">0.6915829789</IMValue>
+        <IMValue name="bMean">0.900990099</IMValue>
+        <IMValue name="bVAR">0.900990099</IMValue>
+        <IMValue name="bStDev">0.0295732624</IMValue>
+        <IMValue name="P(&gt;=90%)">0.5486988449</IMValue>
+        <IMValue name="P(&gt;=95%)">0.0281942328</IMValue>
+        <FourFtTable a="90" b="9" c="5364" d="718"/>
+       </AssociationRule>
+  
+      <AssociationRule id="950"
+        antecedent="DBA_Antecedent_950"
+        consequent="DBA_Succedent_950"
+      >
+        <Text>District(Ceska Lipa) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">54</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5400</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">54</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0099009901</IMValue>
+        <IMValue name="EConf">0.1263549587</IMValue>
+        <IMValue name="Supp">0.0087364504</IMValue>
+        <IMValue name="Cmplt">0.0099009901</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0033813919</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0011270924</IMValue>
+        <IMValue name="Chi-Sq">7.26145918</IMValue>
+        <IMValue name="bMean">0.9821428571</IMValue>
+        <IMValue name="bVAR">0.9821428571</IMValue>
+        <IMValue name="bStDev">0.0175410623</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9972033061</IMValue>
+        <IMValue name="P(&gt;=95%)">0.9405192373</IMValue>
+        <FourFtTable a="54" b="0" c="5400" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="951"
+        antecedent="DBA_Antecedent_951"
+        consequent="DBA_Succedent_951"
+      >
+        <Text>District(Decin) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">45</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5409</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">45</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0082508251</IMValue>
+        <IMValue name="EConf">0.1248988837</IMValue>
+        <IMValue name="Supp">0.0072803753</IMValue>
+        <IMValue name="Cmplt">0.0082508251</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0087279636</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0035092771</IMValue>
+        <IMValue name="Chi-Sq">6.0423403406</IMValue>
+        <IMValue name="bMean">0.9787234043</IMValue>
+        <IMValue name="bVAR">0.9787234043</IMValue>
+        <IMValue name="bStDev">0.0208286172</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9923156546</IMValue>
+        <IMValue name="P(&gt;=95%)">0.9055703665</IMValue>
+        <FourFtTable a="45" b="0" c="5409" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="952"
+        antecedent="DBA_Antecedent_952"
+        consequent="DBA_Succedent_952"
+      >
+        <Text>District(Frydek - Mistek) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">0.9333333333</IMValue>
+        <IMValue name="a">126</IMValue>
+        <IMValue name="b">9</IMValue>
+        <IMValue name="c">5328</IMValue>
+        <IMValue name="d">718</IMValue>
+        <IMValue name="r">135</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">0.9333333333</IMValue>
+        <IMValue name="DConf">0.0230642504</IMValue>
+        <IMValue name="EConf">0.1365474842</IMValue>
+        <IMValue name="Supp">0.020385051</IMValue>
+        <IMValue name="Cmplt">0.0231023102</IMValue>
+        <IMValue name="AvgDf">0.0577435521</IMValue>
+        <IMValue name="LBound">0.1221851056</IMValue>
+        <IMValue name="UBound">0.9314532363</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0354522007</IMValue>
+        <IMValue name="Chi-Sq">3.4523282698</IMValue>
+        <IMValue name="bMean">0.9270072993</IMValue>
+        <IMValue name="bVAR">0.9270072993</IMValue>
+        <IMValue name="bStDev">0.0221432697</IMValue>
+        <IMValue name="P(&gt;=90%)">0.883148333</IMValue>
+        <IMValue name="P(&gt;=95%)">0.144390944</IMValue>
+        <FourFtTable a="126" b="9" c="5328" d="718"/>
+       </AssociationRule>
+  
+      <AssociationRule id="953"
+        antecedent="DBA_Antecedent_953"
+        consequent="DBA_Succedent_953"
+      >
+        <Text>District(Hodonin) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">72</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5382</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">72</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0132013201</IMValue>
+        <IMValue name="EConf">0.1292671089</IMValue>
+        <IMValue name="Supp">0.0116486006</IMValue>
+        <IMValue name="Cmplt">0.0132013201</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0005075288</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0001156438</IMValue>
+        <IMValue name="Chi-Sq">9.710473159</IMValue>
+        <IMValue name="bMean">0.9864864865</IMValue>
+        <IMValue name="bVAR">0.9864864865</IMValue>
+        <IMValue name="bStDev">0.0133321158</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9999809408</IMValue>
+        <IMValue name="P(&gt;=95%)">0.9764570618</IMValue>
+        <FourFtTable a="72" b="0" c="5382" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="954"
+        antecedent="DBA_Antecedent_954"
+        consequent="DBA_Succedent_954"
+      >
+        <Text>District(Cheb) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">36</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5418</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">36</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0066006601</IMValue>
+        <IMValue name="EConf">0.1234428086</IMValue>
+        <IMValue name="Supp">0.0058243003</IMValue>
+        <IMValue name="Cmplt">0.0066006601</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0225283995</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0109070016</IMValue>
+        <IMValue name="Chi-Sq">4.8267925572</IMValue>
+        <IMValue name="bMean">0.9736842105</IMValue>
+        <IMValue name="bVAR">0.9736842105</IMValue>
+        <IMValue name="bStDev">0.0256321456</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9798326598</IMValue>
+        <IMValue name="P(&gt;=95%)">0.850132887</IMValue>
+        <FourFtTable a="36" b="0" c="5418" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="955"
+        antecedent="DBA_Antecedent_955"
+        consequent="DBA_Succedent_955"
+      >
+        <Text>District(Chomutov) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">72</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5382</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">72</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0132013201</IMValue>
+        <IMValue name="EConf">0.1292671089</IMValue>
+        <IMValue name="Supp">0.0116486006</IMValue>
+        <IMValue name="Cmplt">0.0132013201</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0005075288</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0001156438</IMValue>
+        <IMValue name="Chi-Sq">9.710473159</IMValue>
+        <IMValue name="bMean">0.9864864865</IMValue>
+        <IMValue name="bVAR">0.9864864865</IMValue>
+        <IMValue name="bStDev">0.0133321158</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9999809408</IMValue>
+        <IMValue name="P(&gt;=95%)">0.9764570618</IMValue>
+        <FourFtTable a="72" b="0" c="5382" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="956"
+        antecedent="DBA_Antecedent_956"
+        consequent="DBA_Succedent_956"
+      >
+        <Text>District(Jablonec n. Nisou) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">18</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5436</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">18</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.00330033</IMValue>
+        <IMValue name="EConf">0.1205306585</IMValue>
+        <IMValue name="Supp">0.0029121501</IMValue>
+        <IMValue name="Cmplt">0.00330033</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.1500946353</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.1048043144</IMValue>
+        <IMValue name="Chi-Sq">2.4063475794</IMValue>
+        <IMValue name="bMean">0.95</IMValue>
+        <IMValue name="bVAR">0.95</IMValue>
+        <IMValue name="bStDev">0.0475594866</IMValue>
+        <IMValue name="P(&gt;=90%)">0.8649385751</IMValue>
+        <IMValue name="P(&gt;=95%)">0.6226505434</IMValue>
+        <FourFtTable a="18" b="0" c="5436" d="727"/>
+       </AssociationRule>
+  
+      <AssociationRule id="957"
+        antecedent="DBA_Antecedent_957"
+        consequent="DBA_Succedent_957"
+      >
+        <Text>District(Jicin) ::: Quality(good)</Text>
+  
+        <IMValue imSettingRef="200" name="FUI" type="Abs">1</IMValue>
+        <IMValue name="a">63</IMValue>
+        <IMValue name="b">0</IMValue>
+        <IMValue name="c">5391</IMValue>
+        <IMValue name="d">727</IMValue>
+        <IMValue name="r">63</IMValue>
+        <IMValue name="n">6181</IMValue>
+        <IMValue name="Confidence">1</IMValue>
+        <IMValue name="DConf">0.0115511551</IMValue>
+        <IMValue name="EConf">0.1278110338</IMValue>
+        <IMValue name="Supp">0.0101925255</IMValue>
+        <IMValue name="Cmplt">0.0115511551</IMValue>
+        <IMValue name="AvgDf">0.133296663</IMValue>
+        <IMValue name="LBound">0.0013100205</IMValue>
+        <IMValue name="UBound">1</IMValue>
+        <IMValue name="ELBound">1</IMValue>
+        <IMValue name="EUBound">0</IMValue>
+        <IMValue name="DLBound">1</IMValue>
+        <IMValue name="DUBound">0</IMValue>
+        <IMValue name="Fisher">0.0003613504</IMValue>
+        <IMValue name="Chi-Sq">8.4841648352</IMValue>
+        <IMValue name="bMean">0.9846153846</IMValue>
+        <IMValue name="bVAR">0.9846153846</IMValue>
+        <IMValue name="bStDev">0.015149722</IMValue>
+        <IMValue name="P(&gt;=90%)">0.9991564713</IMValue>
+        <IMValue name="P(&gt;=95%)">0.962556367</IMValue>
+        <FourFtTable a="63" b="0" c="5391" d="727"/>
+       </AssociationRule>
+  
+    </AssociationRules>
+  </guha:AssociationModel>
+</PMML>
