@@ -9,7 +9,7 @@ var UIColorizer = new Class({
 	},
 	
 	cedentDragLeave: function (cedent) {
-		cedent.tween('background-color', '#EEE');
+		cedent.tween('background-color', '#FFF');
 	},
 	
 	cedentDragDrop: function (cedent) {
