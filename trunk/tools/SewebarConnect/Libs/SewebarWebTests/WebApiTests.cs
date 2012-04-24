@@ -83,7 +83,6 @@ namespace SewebarWebTests
 					_sessionsClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 					string response = _sessionsClient.UploadString(String.Format("{0}/Task.ashx", LMcloudServer), parameters);
 				}
-
 			}
 			catch (Exception exception)
 			{
