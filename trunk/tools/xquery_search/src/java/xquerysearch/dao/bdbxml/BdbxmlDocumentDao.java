@@ -2,7 +2,7 @@ package xquerysearch.dao.bdbxml;
 
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.domain.Document;
-import xquerysearch.settings.SettingsManager;
+import xquerysearch.domain.Settings;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
@@ -20,7 +20,7 @@ public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
 	 * Constructor
 	 * @param settings 
 	 */
-	public BdbxmlDocumentDao(SettingsManager settings) {
+	public BdbxmlDocumentDao(Settings settings) {
 		this.settings = settings;
 	}
 
@@ -29,7 +29,7 @@ public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
 	 */
 	@Override
 	public Document getDocumentById(String docId) {
-		XmlContainer cont = openConnecion(settings.getContainerName());
+		XmlContainer cont = openConnection(settings.getContainerName());
 		try {
 			XmlDocument returnedDocument = cont.getDocument(docId);
 			return new Document(returnedDocument.getName(), returnedDocument.getContentAsString());
@@ -46,7 +46,7 @@ public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
 	 */
 	@Override
 	public boolean insertDocument(Document document) {
-		XmlContainer cont = openConnecion(settings.getContainerName());
+		XmlContainer cont = openConnection(settings.getContainerName());
 		try {
 			cont.putDocument(document.getDocId(), document.getDocBody());
 			return true;
@@ -62,7 +62,7 @@ public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
 	 */
 	@Override
 	public boolean removeDocument(String docId) {
-		XmlContainer cont = openConnecion(settings.getContainerName());
+		XmlContainer cont = openConnection(settings.getContainerName());
 		try {
 			cont.deleteDocument(docId);
 			return true;

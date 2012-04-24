@@ -2,7 +2,7 @@ package xquerysearch.datadescription;
 
 import xquerysearch.dao.DataDescriptionDao;
 import xquerysearch.dao.bdbxml.BdbxmlDataDescriptionDao;
-import xquerysearch.settings.SettingsManager;
+import xquerysearch.domain.Settings;
 
 /**
  * This class is responsible for handling all operations concerning data description.
@@ -17,7 +17,7 @@ public class DataDescriptionHandler {
 	/**
 	 * 
 	 */
-	public DataDescriptionHandler(SettingsManager settings) {
+	public DataDescriptionHandler(Settings settings) {
 		dataDescriptionDao = new BdbxmlDataDescriptionDao(settings);
 	}
     

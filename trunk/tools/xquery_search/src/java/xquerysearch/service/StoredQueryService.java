@@ -4,8 +4,8 @@ import java.util.List;
 
 import xquerysearch.dao.StoredQueryDao;
 import xquerysearch.dao.StoredQueryDaoImpl;
+import xquerysearch.domain.Settings;
 import xquerysearch.domain.StoredQuery;
-import xquerysearch.settings.SettingsManager;
 
 /**
  * Service for operations with {@link StoredQuery}.
@@ -20,7 +20,7 @@ public class StoredQueryService {
 	/**
 	 * 
 	 */
-	public StoredQueryService(SettingsManager settings) {
+	public StoredQueryService(Settings settings) {
 		dao = new StoredQueryDaoImpl(settings);
 	}
 	

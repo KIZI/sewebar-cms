@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import xquerysearch.controllers.MainController;
-import xquerysearch.settings.SettingsManager;
+import xquerysearch.domain.Settings;
 
 /**
  * Default implementation of {@link StoredQueryDao}.
@@ -22,13 +22,13 @@ import xquerysearch.settings.SettingsManager;
  */
 public class StoredQueryDaoImpl implements StoredQueryDao {
 
-	private SettingsManager settings;
+	private Settings settings;
 	private Logger logger = MainController.getLogger();
 	
 	/**
 	 * Constructor for stored query DAO. 
 	 */
-	public StoredQueryDaoImpl(SettingsManager settings) {
+	public StoredQueryDaoImpl(Settings settings) {
 		this.settings = settings;
 	}
 

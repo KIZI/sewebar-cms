@@ -32,8 +32,8 @@ import xquerysearch.dao.bdbxml.BdbxmlResultsDao;
 import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
+import xquerysearch.domain.Settings;
 import xquerysearch.service.StoredQueryService;
-import xquerysearch.settings.SettingsManager;
 import xquerysearch.utils.OutputUtils;
 import xquerysearch.utils.QueryUtils;
 import xquerysearch.validation.DocumentValidator;
@@ -50,7 +50,7 @@ public class BDBXMLHandler {
     
 	private QueryUtils queryUtils;
 	
-	private SettingsManager settings;
+	private Settings settings;
     private String containerName;
     boolean useTransformation;
     private String xsltPathPMML;
@@ -61,7 +61,7 @@ public class BDBXMLHandler {
     
     private StoredQueryService storedQueryService;
     
-    public BDBXMLHandler(SettingsManager settings) {
+    public BDBXMLHandler(Settings settings) {
     	this.documentDao = new BdbxmlDocumentDao(settings);
     	this.indexDao = new BdbxmlIndexDao(settings);
     	this.settings = settings;
@@ -316,12 +316,13 @@ public class BDBXMLHandler {
      * @return list of indexes or error message
      */
     public String listIndex() {
-    	String indexes = indexDao.getAllIndexes();
-        if (indexes != null) {
-        	return indexes;
-        } else {
-        	return "<error>Error occured during listing indexes!</error>";
-        }
+//    	String indexes = indexDao.getAllIndexes();
+//        if (indexes != null) {
+//        	return indexes;
+//        } else {
+//        	return "<error>Error occured during listing indexes!</error>";
+//        }
+    	return null;
     }
     
     private String selectByXPath(String xpath, String document) {

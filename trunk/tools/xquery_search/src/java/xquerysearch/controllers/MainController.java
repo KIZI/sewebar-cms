@@ -14,15 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import xquerysearch.BDBXMLHandler;
 import xquerysearch.datadescription.DataDescriptionHandler;
+import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
+import xquerysearch.domain.Settings;
 import xquerysearch.service.DocumentService;
+import xquerysearch.service.HelperService;
+import xquerysearch.service.IndexService;
 import xquerysearch.service.QueryService;
 import xquerysearch.service.StoredQueryService;
-import xquerysearch.settings.SettingsFileUtils;
-import xquerysearch.settings.SettingsManager;
-import xquerysearch.settings.SettingsPageController;
-import xquerysearch.settings.SettingsUtils;
 import xquerysearch.utils.QueryUtils;
+import xquerysearch.utils.SettingsFileUtils;
+import xquerysearch.utils.SettingsUtils;
 
 /**
  * Class for main communication to the outside world
@@ -44,7 +46,7 @@ public class MainController extends HttpServlet {
 	
 	private static final Logger logger = Logger.getLogger("xquery_search");
 	private static final String SETTINGS_FILE_NAME = "xquery_search_settings.xml";
-	private SettingsManager settings;
+	private Settings settings;
 	private String action;
 	private String content;
 	private String docId;
@@ -218,12 +220,15 @@ public class MainController extends HttpServlet {
 		// actions -> codes mapping
 		int mappedAction = mapAction(action);
 		
-		BDBXMLHandler bh = new BDBXMLHandler(settings);
 		DataDescriptionHandler ddh = new DataDescriptionHandler(settings);
 		StoredQueryService storedQueryService = new StoredQueryService(settings);
 		
 		DocumentService documentService = new DocumentService();
 		QueryService queryService = new QueryService();
+		HelperService helperService = new HelperService();
+		IndexService indexService = new IndexService();
+		
+		BDBXMLHandler bh = new BDBXMLHandler(settings);
 		
 		String output = "";
 		// Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content
@@ -272,8 +277,9 @@ public class MainController extends HttpServlet {
 					output += QUERY_MISSING_ERROR;
 				} else {
 					String dotaz = content.toString();
-					String message = bh.query_10(dotaz);
-					output += message.toString();
+					// TODO: multiple querying - testing purpose
+					//String message = bh.query_10(dotaz);
+					output += ""; // message.toString();
 				}
 				break;
 			case 4:
@@ -289,7 +295,7 @@ public class MainController extends HttpServlet {
 				break;
 			case 6: output += storedQueryService.deleteQuery(docId); break;
 			case 7: output += storedQueryService.getQueriesNames(); break;
-			case 8: output += bh.getDocsNames(); break;
+			case 8: output += helperService.getAllDocumentsNames(); break;
 			case 9:
 				if (content.equals("")) {
 					output += DOCUMENT_CONTENT_MISSING_ERROR;
@@ -313,7 +319,7 @@ public class MainController extends HttpServlet {
 						output += DOCUMENT_CREATIONTIME_MISSING_ERROR;
 					} else {
 						content = content.toString();
-						output += bh.indexDocument(content, docId, docName, creationTime, reportUri);
+						output += documentService.insertDocument(new Document(docId, content, docName, creationTime, reportUri));
 					}
 				}
 				break;
@@ -321,7 +327,7 @@ public class MainController extends HttpServlet {
 				if (content.equals("")) {
 					output += FOLDER_PATH_MISSING_ERROR;
 				} else {
-					output += bh.indexDocumentMultiple(content);
+					//output += bh.indexDocumentMultiple(content);
 					break;
 				}
 				break;
@@ -337,19 +343,19 @@ public class MainController extends HttpServlet {
 				if (content.equals("")) {
 					output += INDEX_NOT_SPECIFIED_ERROR;
 				} else {
-					String dotaz = content.toString();
-					output += bh.addIndex(dotaz);
+					String index = content.toString();
+					output += indexService.insertIndex(index);
 				}
 				break;
 			case 14: break; // output += tester.runTest();
 			case 15: break; // output += eh.test(content); break;
-			case 16: output += bh.listIndex(); break;
+			case 16: output += helperService.getAllIndexes(); break;
 			case 17:
 				if (content.equals("")) {
 					output += INDEX_NOT_SPECIFIED_ERROR;
 				} else {
-					String dotaz = content.toString();
-					output += bh.removeIndex(dotaz);
+					String index = content.toString();
+					output += indexService.removeIndex(index);
 				}
 				break;
 			case 18: output += ddh.getDataDescriptionCache(); break;

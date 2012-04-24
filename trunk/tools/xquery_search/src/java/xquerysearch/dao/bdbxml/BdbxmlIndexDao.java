@@ -1,12 +1,11 @@
 package xquerysearch.dao.bdbxml;
 
+import xquerysearch.dao.IndexDao;
+import xquerysearch.domain.Settings;
+
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
-import com.sleepycat.dbxml.XmlIndexDeclaration;
 import com.sleepycat.dbxml.XmlIndexSpecification;
-
-import xquerysearch.dao.IndexDao;
-import xquerysearch.settings.SettingsManager;
 
 /**
  * Implementation of {@link IndexDao}.
@@ -21,7 +20,7 @@ public class BdbxmlIndexDao extends ConnectionHelper implements IndexDao {
 	 * 
 	 *  @param settings
 	 */
-	public BdbxmlIndexDao(SettingsManager settings) {
+	public BdbxmlIndexDao(Settings settings) {
 		this.settings = settings;
 	}
 	
@@ -29,39 +28,8 @@ public class BdbxmlIndexDao extends ConnectionHelper implements IndexDao {
 	 * @{InheritDoc}
 	 */
 	@Override
-	public String getAllIndexes() {
-		XmlContainer cont = openConnecion(settings.getContainerName());
-		XmlIndexSpecification indexSpec = null;
-		try {
-            indexSpec = cont.getIndexSpecification();
-            String indexes = "";
-            
-            int count = 0;
-            XmlIndexDeclaration indexDeclaration = null;
-            while ((indexDeclaration = (indexSpec.next())) != null) {
-                indexes += "<index>"
-                                + "<nodeName>" + indexDeclaration.name + "</nodeName>"
-                                + "<indexType>" + indexDeclaration.index + "</indexType>"
-                            + "</index>";
-                count++;
-            }
-            String indexesCount = "<indexCount>" + count + "</indexCount>";
-            return indexesCount + indexes;
-		} catch (XmlException e) {
-			logger.warning("Listing indexes failed! - Xml exeption");
-			return null;
-		} finally {
-			indexSpec.delete();
-			closeConnection(cont);
-		}
-	}
-
-	/*
-	 * @{InheritDoc}
-	 */
-	@Override
 	public boolean insertIndex(String index) {
-		 XmlContainer cont = openConnecion(settings.getContainerName());
+		 XmlContainer cont = openConnection(settings.getContainerName());
 			String[] indexSplit = index.split(";");
 			XmlIndexSpecification indexSpec = null;
 			try {
@@ -88,7 +56,7 @@ public class BdbxmlIndexDao extends ConnectionHelper implements IndexDao {
 	 */
 	@Override
 	public boolean removeIndex(String index) {
-		XmlContainer cont = openConnecion(settings.getContainerName());
+		XmlContainer cont = openConnection(settings.getContainerName());
         String[] indexSplit = index.split(";");
         XmlIndexSpecification indexSpec = null;
         try {
