@@ -69,7 +69,8 @@ if (!DEV_MODE) { // SewebarConnect
     */
     
     sleep(3);
-    $response = './temp/etree_result_0424_185756.pmml';
+    echo '{"Repayment":1,"Amount":0.61,"Duration":0.51,"Age":0.5,"Salary":0.19}';
+    die;
 } else { // localhost dev env
     $LM_import_path = './temp/etree_task_'.date('md_His').'.pmml';
     $LM_import = new DOMDocument('1.0', 'UTF-8');
