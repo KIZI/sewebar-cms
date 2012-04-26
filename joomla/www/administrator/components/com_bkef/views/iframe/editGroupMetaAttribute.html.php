@@ -40,7 +40,7 @@ class BkefViewEditMetaAttribute extends JView
           <tr>
             <td><?php echo JText::_('METAATTRIBUTE_NAME');?>&nbsp;</td>
             <td>
-              <input type="text" name="name" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_NAME'); ?>" value="<?php if ($maId>-1) echo @$xml->MetaAttributes[0]->MetaAttribute[$maId]['name']; ?>" style="width:350px;font-weight:bold;"/>
+              <input type="text" name="name" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_NAME'); ?>" value="<?php if ($maId>-1) echo @$xml->MetaAttributes[0]->MetaAttribute[$maId]->Name; ?>" style="width:350px;font-weight:bold;"/>
             </td>
           </tr>
           <tr>
@@ -56,18 +56,24 @@ class BkefViewEditMetaAttribute extends JView
               </select>
             </td>
           </tr>
+      <?php
+        if (!($maId>-1)){
+      ?>   
           <tr>
             <td><?php echo JText::_('ANNOTATION'); ?></td>
             <td>
-              <textarea name="annotation" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_ANNOTATION'); ?>" style="width:350px;height:160px;"><?php if ($maId>-1) echo @$xml->MetaAttributes[0]->MetaAttribute[$maId]->Annotation->Text; ?></textarea>
+              <textarea name="annotation" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_ANNOTATION'); ?>" style="width:350px;height:160px;"></textarea>
             </td>
           </tr>
           <tr>
-            <td>Autor anotace</td>
+            <td><?php echo JText::_('ANNOTATION_AUTHOR'); ?></td>
             <td>
               <input type="text" name="annotationAuthor" value="<?php echo $autor ?>" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_ANNOTATION_AUTHOR'); ?>" style="width:350px;" />
             </td>
           </tr>
+      <?php
+        }
+      ?>
         </table>
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $this->maId; ?>" />

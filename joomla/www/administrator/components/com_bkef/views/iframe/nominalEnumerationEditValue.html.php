@@ -1,12 +1,11 @@
 <?php
 /**
- * HTML View class for the gInclude Component
  *  
- * @package    gInclude
+ * @package    BKEF
  * @license    GNU/GPL
  * @author Stanislav Vojíř - xvojs03
- * @copyright Stanislav Vojíř, 2009
- *   
+ * @copyright Stanislav Vojíř, 2012
+ *  
  */
  
 // no direct access
@@ -14,7 +13,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
            
-class BkefViewDelPreprocessingHint extends JView
+class BkefViewNominalEnumerationEditValue extends JView
 {
   function display($tpl = null)
   {               
@@ -24,27 +23,33 @@ class BkefViewDelPreprocessingHint extends JView
         $doc->addStyleSheet('components/com_bkef/css/component.css');
       }         
       
-      echo '<h1>'.JText::_('DELETING_PREPROCESSING_HINT').'</h1>';
+      echo '<h1>';
+      echo $this->h1;
+      echo '</h1>';
       
       $xml=$this->xml;
       $maId=intval($this->maId);
       $fId=intval($this->fId);
       $phId=intval($this->phId);
-      
-      echo '<div>';
-      
-        echo JText::_('DELETING_PREPROCESSING_HINT_QUESTION').' <strong>';
-        echo (string)$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->Name[0];
-        echo '</strong> ?
-      </div>    <br /><br />';
-      ?>
-      <form action="index.php?option=com_bkef&amp;task=delPreprocessingHint" method="post" target="_parent" >
+      $binId=intval($this->binId);
+      //v pripade editace by bylo nutne vlozit konkretni hodnotu
+      $value='';
+?>
+      <form action="index.php?option=com_bkef&amp;task=nominalEnumeration<?php if ($this->potvrzeni=='add') {echo 'Add';}else{echo 'Edit';}?>Value" method="post" target="_parent" >
+        <table>
+          <tr>
+            <td><?php echo JText::_('VALUE');?></td>
+            <td><input type="text" name="value" value="<?php echo @$value; ?>" title="<?php echo JText::_('TITLE_ADDEDIT_VALUE');?>" /></td>
+          </tr>
+        </table>
+        
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $maId; ?>" />
         <input type="hidden" name="fId" value="<?php echo $fId; ?>" />
         <input type="hidden" name="phId" value="<?php echo $phId; ?>" />
-        <input type="hidden" name="potvrzeni" value="1" id="potvrzeni" />
-        <input type="submit" value="<?php echo JText::_('DELETE');?>..." />
+        <input type="hidden" name="binId" value="<?php echo $binId; ?>" />
+        <input type="hidden" name="potvrzeni" value="<?php echo $this->potvrzeni; ?>" />
+        <input type="submit" value="<?php echo JText::_('SAVE_VALUE');?>" />
       </form>
       <?php
       //parent::display($tpl);

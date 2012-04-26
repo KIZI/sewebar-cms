@@ -36,35 +36,51 @@ class BkefViewFormat extends JView
       /*PATH*/
       echo '<div class="navigationDiv">';
       echo '<a href="index.php?option=com_bkef&amp;task=selArticle&amp;article='.$article.'">'.$xml->Header[0]->Title[0].' ('.$this->articleTitle.')</a>';
-      echo '&nbsp;-&gt;&nbsp;'.JText::_('METAATTRIBUTE').': <a href="index.php?option=com_bkef&amp;task=metaAttribute&amp;article='.$article.'&amp;maId='.$maId.'">'.$xml->MetaAttributes[0]->MetaAttribute[$maId]['name'].'</a>';
-      echo '&nbsp;-&gt;&nbsp;'.JText::_('FORMAT').': <strong>'.$format['name'].'</strong>';
+      echo '&nbsp;-&gt;&nbsp;'.JText::_('METAATTRIBUTE').': <a href="index.php?option=com_bkef&amp;task=metaAttribute&amp;article='.$article.'&amp;maId='.$maId.'">'.$xml->MetaAttributes[0]->MetaAttribute[$maId]->Name[0].'</a>';
+      echo '&nbsp;-&gt;&nbsp;'.JText::_('FORMAT').': <strong>'.$format->Name[0].'</strong>';
       echo '</div>';
       /**/
       
-      echo '<h1>'.JText::_('FORMAT_EDITATION').': '.$format['name'].'(MetaAttribute: '.$xml->MetaAttributes[0]->MetaAttribute[$maId]['name'].')</h1>';
+      echo '<h1>'.JText::_('FORMAT_EDITATION').': '.$format->Name[0].' (MetaAttribute: '.$xml->MetaAttributes[0]->MetaAttribute[$maId]->Name[0].')</h1>';
       echo '<div class="level1Div">';
       echo '<a name="basicInfo"></a>';
       echo '<h2>'.JText::_('BASIC_INFO').'</h2>';
-      echo '<div>'.JText::_('AUTHOR').': <strong>'.$format->Author.'</strong></div>';
-      echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=editFormat&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 200}}" class="modal">'.JText::_('EDIT_BASIC_INFO').'</a></div>';
-      echo '</div>';
-      echo '<div class="level1Div">';
-      echo '<a name="annotations"></a>';
-      echo '<h2>'.JText::_('ANNOTATION').'</h2>';
-      echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=addAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_ANNOTATION').'...</a></div>';
+      echo '<table>
+              <tr>
+                <td>'.JText::_('CREATED').':</td>
+                <td><strong>'.date(JText::_('DATETIMEFORMAT'),strtotime($format->Created[0]->Timestamp)).' ('.$format->Created[0]->Author.')</strong></td>
+              </tr>
+              <tr>  
+                <td>'.JText::_('LAST_MODIFIED').':</td>
+                <td><strong>'.date(JText::_('DATETIMEFORMAT'),strtotime($format->LastModified[0]->Timestamp)).' ('.$format->LastModified[0]->Author.')</strong></td>
+              </tr>
+            </table>';
+      
       if (count(@$format->Annotations[0]->Annotation)>0){
+        echo '<h3>'.JText::_('ANNOTATIONS').'</h3>';
         $anId=0;
-        foreach (@$format->Annotations[0]->Annotation as $annotation) {
-        	echo '<div class="level2Div">';
-        	echo '<strong>'.$annotation->Author[0].'</strong>:&nbsp;'.$annotation->Text[0];
-        	echo '<div class="linksDiv">';
-        	echo '<a href="index.php?option=com_bkef&amp;task=editAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('EDIT_ANNOTATION').'</a>';
-        	echo '&nbsp;|&nbsp;<a href="index.php?option=com_bkef&amp;task=delAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 200}}" class="modal">'.JText::_('DELETE_ANNOTATION').'</a>';
+        foreach ($format->Annotations[0]->Annotation as $annotation) {
+        	echo '<div class="annotation level2Div">';
+        	echo '<strong>'.($annotation->Text[0]!=''?$annotation->Text[0]:'&lt;&lt;???&gt;&gt;').'</strong>';
+          echo '<br />'.JText::_('CREATED').': '.$annotation->Created[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->Created[0]->Timestamp)).')';
+          if ((string)$annotation->Created[0]->Timestamp!=(string)$annotation->LastModified[0]->Timestamp){
+            echo '; '.JText::_('LAST_MODIFIED').': '.$annotation->LastModified[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->LastModified[0]->Timestamp)).')';
+          }
+          echo ' |&nbsp;';
+          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=editFormatAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('EDIT_ANNOTATION').'</a> ';
+          echo ' |&nbsp;';
+          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=deleteFormatAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
           echo '</div>';
-        	echo '</div>';
           $anId++;
         }
-      }
+      }      
+
+        echo '<div class="linksDiv">
+                <a href="index.php?option=com_bkef&amp;task=editFormat&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 200}}" class="modal">'.JText::_('EDIT_BASIC_INFO').'</a>
+                 |&nbsp;
+                <a href="index.php?option=com_bkef&amp;task=addAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_ANNOTATION').'...</a>
+              </div>';
+              
       echo '</div>';
       
       echo '<div class="level1Div">';
@@ -82,67 +98,56 @@ class BkefViewFormat extends JView
       
       echo '<div class="level2Div">';
       echo '<h3>'.JText::_('ALLOWED_RANGE').'</h3>';
-      $allowedRangeExists=false;
-      if (count($format->AllowedRange->Interval)>0){
-        //rozsah je zadan intervalem
-        foreach ($format->AllowedRange->Interval as $interval) {
-        	echo JText::_('INTERVAL').': <strong>';
-        	if ((string)$interval->LeftBound['type']=='closed'){echo '<';}else{echo '(';}
-        	echo $interval->LeftBound['value'].' ; '.$interval->RightBound['value'];
-        	if ((string)$interval->RightBound['type']=='closed'){echo '>';}else{echo ')';}
-          echo '</strong><br />';
+      $allowedRangeEnumerationExists=true;
+      if (isset($format->Range[0]['type'])){
+        //máme nějak zadaný rozsah
+        if (count($format->Range[0]->Interval)>0){
+          //jde o intervaly
+          foreach ($format->Range[0]->Interval as $interval) {
+          	echo JText::_('INTERVAL').': <strong>';
+          	if (($interval['closure']=='openClosed')||($interval['closure']=='openOpen')){echo '(';}else{echo '&lt;';}
+          	echo $interval['leftMargin'].' ; '.$interval['rightMargin'];
+          	if (($interval['closure']=='closedOpen')||($interval['closure']=='openOpen')){echo ')';}else{echo '&gt;';}
+          	echo '</strong><br />';
+          }
+        }elseif(isset($format->Range[0]->Regex[0])){
+          echo JText::_('REGEX').':<strong>'.$format->Range[0]->Regex[0].'</strong>';
+        }elseif(count($format->Range[0]->Value)>0){
+          $valuesArr=array();
+          foreach ($format->Range[0]->Value as $value){
+            $valuesArr[]=$value;
+          }
+          echo JText::_('VALUES').': <strong>{'.implode('; ',$valuesArr).'}</strong>';
+        }else{
+          $allowedRangeEnumerationExists=false;
         }
-        $allowedRangeExists=true;
+      }else{
+        $allowedRangeEnumerationExists=false;
       }
-      $allowedRangeEnumerationExists=false;
-      if (count($format->AllowedRange->Enumeration)>0){
-        foreach ($format->AllowedRange->Enumeration as $enumeration) {
-        	echo JText::_('VALUES_ENUMERATION').': ';
-        	if (count($enumeration->Value)>0)
-        	  foreach ($enumeration->Value as $key=>$value) {
-           	  echo '<strong>'.$value.'</strong>; ';
-            }
-          echo '<br />';
-        }
-        $allowedRangeExists=true;
-        $allowedRangeEnumerationExists=true;
-      }      
-      if (!$allowedRangeExists){
+      if (!$allowedRangeEnumerationExists){
         echo '<div class="missing infotext">'.JText::_('ALLOWED_RANGE_NOT_SET_INFO').'</div>';
-      }else {
-        echo '<div class="infotext">';
-        echo JText::_('ALLOWED_RANGE_EDIT_INFO');
-        if ($allowedRangeEnumerationExists){
-          echo '<br />'.JText::_('ALLOWED_RANGE_ENUMERATION_INFO');
-        }
-        echo '</div>';
-      }    
+      }else{
+        echo '<h3>'.JText::_('COLLATION').'</h3>';
+        echo '<table>
+                <tr>
+                  <td>'.JText::_('COLLATION_TYPE').'</td>
+                  <td><strong>'.$format->Collation[0]['type'].'</strong></td>
+                </tr>
+                <tr>
+                  <td>'.JText::_('COLLATION_SENSE').'</td>
+                  <td><strong>'.$format->Collation[0]['sense'].'</strong></td>
+                </tr>
+              </table>';
+        echo '<br /><div class="infotext">'.JText::_('ALLOWED_RANGE_EDIT_INFO').'</div>';      
+      }
+         
       echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=editRange&amp;type=enumeration&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 400}}" class="modal">'.JText::_('SET_ENUMERATION').'</a>';
       echo '&nbsp;|&nbsp;<a href="index.php?option=com_bkef&amp;task=editRange&amp;type=interval&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 400}}" class="modal">'.JText::_('SET_INTERVAL').'</a>';
+      echo '&nbsp;|&nbsp;<a href="index.php?option=com_bkef&amp;task=editRange&amp;type=regex&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 400}}" class="modal">'.JText::_('SET_REGEX').'</a>';
       echo '</div></div>';
       
-      echo '<div class="level2Div">';    
-      echo '<h3>'.JText::_('COLLATION').'</h3>';
-      if ((string)$format->Collation['type']=='Enumeration'){
-        //řazení řešené výčtem
-        echo '<div>'.JText::_('VALUES_COLLATION').': ';
-        if (count($format->Collation->Value)>0)
-        	  foreach ($format->Collation->Value as $key=>$value) {
-           	  echo '<strong>'.$value.'</strong>; ';
-            }
-        echo '</div>';    
-      }elseif ((string)$format->Collation['type']!='') {
-        //řazení řešené automaticky
-        echo '<div>'.JText::_('TYPE').': <strong>'.$format->Collation['type'].'</strong>, sense: <strong>'.$format->Collation['sense'].'</strong></div>';
-      }else {
-        echo '<div class="missing infotext">'.JText::_('SET_COLLATION_INFO').'</div>';
-      }
       
-      echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=editCollation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('SET_COLLATION').'</a>';
-      if ($format->Collation['type']=='Enumeration'){
-              echo '&nbsp;|&nbsp;<a href="index.php?option=com_bkef&amp;task=editCollationEnumeration&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 300}}" class="modal">'.JText::_('EDIT_VALUES_COLLATION').'</a>';
-      }
-      echo '</div></div></div>';
+      echo '</div>';
 
  echo '<div class="level1Div">';
  echo '<a name="preprocessingHints"></a>';
@@ -150,135 +155,171 @@ class BkefViewFormat extends JView
 
       echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=addPreprocessingHint&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('ADD_PREPROCESSING_HINT').'</a></div>';
       $phId=0;
-      if (count($format->PreprocessingHints[0]->PreprocessingHint)>0){
-        foreach ($format->PreprocessingHints[0]->PreprocessingHint as $preprocessingHint) {
+      if (count($format->PreprocessingHints[0]->DiscretizationHint)>0){
+        foreach ($format->PreprocessingHints[0]->DiscretizationHint as $discretizationHint) {
          //zobrazeni jednoho PreprocessingHint
           echo '<div class="level2Div">'; 
-        	echo '<h3>'.$preprocessingHint['name'].'</h3>';
-          echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=delPreprocessingHint&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('DELETE_PREPROCESSING_HINT').'</a>';
-          echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=renamePreprocessingHint&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('RENAME_PREPROCESSING_HINT').'</a></div>';
-        	foreach ($preprocessingHint->DiscretizationHint as $discretizationHint) {
-         	 //zobrazeni jednoho DiscretizationHint
-            if (isset($discretizationHint->ExhaustiveEnumeration[0])){
-              echo '<h4>'.JText::_('TYPE').': '.JText::_('EXHAUSTIVE_ENUMERATION').'</h4>';
-              echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=exhaustiveEnumerationAddBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('ADD_BIN').'</a></div>';
-              $bId=0;
-              foreach ($discretizationHint->ExhaustiveEnumeration[0]->Bin as $bin) {
-                echo '<div class="level3Div">';
-                echo '<h5>'.JText::_('BIN_H5').': '.$bin['name'].'</h5>';
-                echo '<div style="font-style:italic;">'.$bin->Annotation[0]->Text[0];
-                if (@$bin->Annotation[0]->Author[0]){
-                  echo ' ('.$bin->Annotation[0]->Author[0].')';
-                }
-                echo '</div>';
-                echo '<div class="linksDiv">';
-                echo '<a href="index.php?option=com_bkef&amp;task=exhaustiveEnumerationEditBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;bId='.$bId.'" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('EDIT_BIN').'</a>';
-                echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delExhaustiveEnumerationBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;bId='.$bId.'" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('DELETE_BIN').'</a>'; 
-                echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=addExhaustiveEnumerationBinValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;bId='.$bId.'" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('ADD_VALUE').'</a>';
-                echo '</div>';
-                $vId=0;
-                $vCount=0;
-                foreach ($bin->children() as $child) {
-                	if ($child->getName()=='Value'){
-                    echo JText::_('VALUE').': <strong>'.$child.'</strong> &nbsp;&nbsp;';
-                    echo '<a href="index.php?option=com_bkef&amp;task=delExhaustiveEnumerationBinValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;vId='.$vId.'&amp;bId='.$bId.'" >'.JText::_('DELETE').'</a>';
-                    echo '<br />';
-                    $vCount++;
-                  }elseif ($child->getName()=='Interval'){
-                    echo JText::_('INTERVAL').': <strong>';
-                  	if ((string)$child->LeftBound['type']=='closed'){echo '<';}else{echo '(';}
-                  	echo $child->LeftBound['value'].' ; '.$child->RightBound['value'];
-                  	if ((string)$child->RightBound['type']=='closed'){echo '>';}else{echo ')';}
-                    echo '</strong>';
-                    echo ' &nbsp;&nbsp;'.JText::_('DELETE').'<br />';
-                    $vCount++;
-                  }
-                	$vId++;
-                }	
-                if ($vCount==0){
-                  echo '<div class="missing infotext">'.JText::_('EXHAUSTIVE_ENUMERATION_NO_VALUES_INFO').'</div>';
-                }
-                $bId++;
-                echo '</div>';
+        	echo '<h3>'.(string)$discretizationHint->Name.'</h3>';
+          echo '<div class="infoDiv">
+                  <table>
+                    <tr>
+                      <td>'.JText::_('CREATED').':</td>
+                      <td><strong>'.date(JText::_('DATETIMEFORMAT'),strtotime($discretizationHint->Created[0]->Timestamp)).' ('.$format->Created[0]->Author.')</strong></td>
+                    </tr>
+                    <tr>  
+                      <td>'.JText::_('LAST_MODIFIED').':</td>
+                      <td><strong>'.date(JText::_('DATETIMEFORMAT'),strtotime($discretizationHint->LastModified[0]->Timestamp)).' ('.$format->LastModified[0]->Author.')</strong></td>
+                    </tr>
+                  </table>
+                </div>';
+          //pokud jsou anotace, tak je zobrazime
+          if (count(@$discretizationHint->Annotations[0]->Annotation)>0){
+            echo '<h4>'.JText::_('ANNOTATIONS').'</h4>';
+            $dhAnId=0;
+            foreach ($discretizationHint->Annotations[0]->Annotation as $annotation) {
+            	echo '<div class="annotation level3Div">';
+            	echo '<strong>'.($annotation->Text[0]!=''?$annotation->Text[0]:'&lt;&lt;???&gt;&gt;').'</strong>';
+              echo '<br />'.JText::_('CREATED').': '.$annotation->Created[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->Created[0]->Timestamp)).')';
+              if ((string)$annotation->Created[0]->Timestamp!=(string)$annotation->LastModified[0]->Timestamp){
+                echo '; '.JText::_('LAST_MODIFIED').': '.$annotation->LastModified[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->LastModified[0]->Timestamp)).')';
               }
-            }elseif (isset($discretizationHint->IntervalEnumeration[0])){
-              echo '<h4>'.JText::_('TYPE').': '.JText::_('INTERVAL_ENUMERATION').'</h4>';
-              echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=intervalEnumerationAddBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('ADD_INTERVAL_BIN').'</a></div>';
-              /**/
-              $bId=0;
-              foreach ($discretizationHint->IntervalEnumeration[0]->IntervalBin as $bin) {
-                echo '<div class="level3Div">';
-                echo '<h5>'.JText::_('INTEVAL_BIN').': '.$bin['name'].'</h5>';
-                echo '<div style="font-style:italic;">'.$bin->Annotation[0]->Text[0];
-                if (@$bin->Annotation[0]->Author[0]){
-                  echo ' ('.$bin->Annotation[0]->Author[0].')';
-                }
-                echo '</div>';
-                echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=intervalEnumerationEditBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;bId='.$bId.'" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('EDIT_INTERVAL_BIN').'</a>';
-                echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delIntervalEnumerationBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;bId='.$bId.'" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('DELETE_INTERVAL_BIN').'</a>'; 
-                echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=addIntervalEnumerationBinValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;bId='.$bId.'" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('ADD_INTERVAL').'</a></div>';
-                $vId=0;
-                $vCount=0;
-                foreach ($bin->children() as $child) {
-                	if ($child->getName()=='Interval'){
-                    echo JText::_('INTERVAL').': <strong>';
-                  	if ((string)$child->LeftBound['type']=='closed'){echo '<';}else{echo '(';}
-                  	echo $child->LeftBound['value'].' ; '.$child->RightBound['value'];
-                  	if ((string)$child->RightBound['type']=='closed'){echo '>';}else{echo ')';}
-                    echo '</strong>';
-                    echo ' &nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delIntervalEnumerationBinValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component&amp;vId='.$vId.'&amp;bId='.$bId.'" >'.JText::_('DELETE').'</a><br />';
-                    $vCount++;
-                  }
-                	$vId++;
-                }
-                if ($vCount==0){
-                  echo '<div class="missing infotext">'.JText::_('INTERVAL_ENUMERATION_NO_VALUES_INFO').'</div>';
-                }	
-                $bId++;
-                echo '</div>';
-              }
-            }elseif (isset($discretizationHint->Equidistant[0])){
-              /**/
-              echo '<h4>'.JText::_('TYPE').': '.JText::_('EQUIDISTANT').'</h4>';
-              echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=equidistant&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('EDIT_EQUIDISTANT').'</a></div>';
-              echo '<table><tr><td>';
-              $equidistant=$discretizationHint->Equidistant[0];
-              if ((count($equidistant->Start)==0)||(count($equidistant->End)==0)||(count($equidistant->Step)==0)){
-                echo '<div class="missing infotext">'.JText::_('EQUIDISTANT_SET_INTERVAL_STEP_INFO').'</div>';
-              }else {
-                echo JText::_('INTERVAL').':&nbsp;</td><td><strong>';
-                if ((string)$equidistant->Start['type']=='closed'){echo '<';}else{echo '(';}
-                echo $equidistant->Start.' ; '.$equidistant->End;
-                if ((string)$equidistant->End['type']=='closed'){echo '>';}else{echo ')';}
-                echo '</strong></td></tr><tr><td>'.JText::_('STEP').':</td><td><strong>';
-                echo (string)$equidistant->Step[0];
-                echo '</strong>';
-              }
-              echo '</td></tr></table>';
-            }elseif (isset($discretizationHint->EquifrequentInterval[0])){
-              echo '<h4>'.JText::_('TYPE').': '.JText::_('EQUIFREQUENT_INTERVAL').'</h4>';
-              echo '<div class="linksDiv">';
-              //echo '<a href="index.php?option=com_bkef&amp;task=delPreprocessingHint&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('DELETE_PREPROCESSING_HINT').'</a>'; 
-              //echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
-              echo '<a href="index.php?option=com_bkef&amp;task=editEquifrequentInterval&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('EQUIFREQUENT_EDIT_VALUE').'</a>';
+              echo ' |&nbsp;';
+              echo '<a class="modal" href="index.php?option=com_bkef&amp;task=editPreprocessingHintAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;anId='.$dhAnId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('EDIT_ANNOTATION').'</a> ';
+              echo ' |&nbsp;';
+              echo '<a class="modal" href="index.php?option=com_bkef&amp;task=delPreprocessingHintAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;anId='.$dhAnId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
               echo '</div>';
-              /*echo '<div style="font-style:italic;">'.$discretizationHint->EquifrequentInterval[0]->Annotation[0]->Text[0];
-              if (@$discretizationHint->EquifrequentInterval[0]->Annotation[0]->Author[0]){
-                echo ' ('.$discretizationHint->EquifrequentInterval[0]->Annotation[0]->Author[0].')';
-              }
-              echo '</div>';*/
-              echo JText::_('EQUIFREQUENT_COUNT').': <strong>';
-              if (@$discretizationHint->EquifrequentInterval[0]->Count[0]){
-                echo $discretizationHint->EquifrequentInterval[0]->Count[0];
-              }else {
-                echo '<span class="missing infotext">'.JText::_('EQUIFREQUENT_SET_COUNT_INFO').'</span>';
-              }
-              echo '</strong>';
+              $dhAnId++;
             }
-           // 
-           echo '</div>'; 
-          }
+          }   
+          //odkazy pro nastavení PH   
+          echo '<div class="linksDiv">
+                  <a href="index.php?option=com_bkef&amp;task=addPreprocessingHintAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" class="modal">'.JText::_('ADD_ANNOTATION').'</a>
+                  &nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=renamePreprocessingHint&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('RENAME_PREPROCESSING_HINT').'</a>
+                  &nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delPreprocessingHint&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 200}}" class="modal">'.JText::_('DELETE_PREPROCESSING_HINT').'</a>                  
+                </div>';
+          //vypsání konkrétních dat PH
+          if(isset($discretizationHint->EachValueOneBin)){
+            echo '<div class="level3Div">
+                    <h4>'.JText::_('TYPE').': '.JText::_('EACH_VALUE_ONE_BIN').'</h4>
+                  </div>';
+          }elseif(isset($discretizationHint->NominalEnumeration)){
+            echo '<div class="level3Div">
+                    <h4>'.JText::_('TYPE').': '.JText::_('NOMINAL_ENUMERATION').'</h4>';
+                    $binId=0;
+                    if (count($discretizationHint->NominalEnumeration[0]->NominalBin)>0){
+                      foreach ($discretizationHint->NominalEnumeration[0]->NominalBin as $nominalBin){
+                      	echo '<div class="level4Div">'; 
+                        echo '<h4>'.(string)@$nominalBin->Name.'</h4>';
+                        if (count($nominalBin->Value)>0){
+                          $valId=0;
+                          foreach ($nominalBin->Value as $binValue) {
+                          	echo '<div>'.(string)$binValue.' &nbsp;&nbsp;-&nbsp;<a href="index.php?option=com_bkef&amp;task=nominalEnumerationDeleteValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;valId='.$valId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}">'.JText::_('DELETE').'</a></div>';
+                            $valId++;
+                          }
+                        }else{
+                          echo '<div class="missing infotext">'.JText::_('NOMINAL_ENUMERATION_BIN_NO_VALUES_INFO').'</div>';
+                        }  
+                        echo '<div class="linksDiv">
+                                <a href="index.php?option=com_bkef&amp;task=nominalEnumerationAddValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('ADD_VALUE').'</a>
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="index.php?option=com_bkef&amp;task=nominalEnumerationEditBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('EDIT_BIN').'</a>
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="index.php?option=com_bkef&amp;task=nominalEnumerationDeleteBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('DELETE_BIN').'</a>
+                              </div>';      
+                        echo '</div>';
+                        $binId++;
+                      }
+                    }else{
+                      echo '<div class="missing infotext">'.JText::_('NOMINAL_ENUMERATION_NO_BINS_INFO').'</div>';
+                    }
+                    echo '<div class="linksDiv">
+                            <a href="index.php?option=com_bkef&amp;task=nominalEnumerationAddBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('ADD_BIN').'</a>
+                          </div>';
+            echo '</div>';
+          }elseif(isset($discretizationHint->IntervalEnumeration)){
+            echo '<div class="level3Div">
+                    <h4>'.JText::_('TYPE').': '.JText::_('INTERVAL_ENUMERATION').'</h4>';
+                    $binId=0;
+                    if (count($discretizationHint->IntervalEnumeration[0]->IntervalBin)>0){
+                      foreach ($discretizationHint->IntervalEnumeration[0]->IntervalBin as $intervalBin){
+                      	echo '<div class="level4Div">'; 
+                        echo '<h4>'.(string)@$intervalBin->Name.'</h4>';
+                        if (count($intervalBin->Interval)>0){
+                          $intId=0;
+                          foreach ($intervalBin->Interval as $interval) {     
+                            //vypsani jednoho konkretniho intervalu - nejdriv vyresime znazorneni hranic a pak ho vypiseme i s odkazem na odstraneni
+                            $closure=(string)$interval['closure'];
+                            if ($closure=='closedClosed'){
+                              $intervalTextStart='&lt;';
+                              $intervalTextEnd='&gt;';
+                            }elseif($closure=='closedOpen'){
+                              $intervalTextStart='&lt;';
+                              $intervalTextEnd=')';
+                            }elseif($closure=='openClosed'){
+                              $intervalTextStart='(';
+                              $intervalTextEnd='&gt;';
+                            }else{
+                              $intervalTextStart='(';
+                              $intervalTextEnd=')';
+                            }
+                            $intervalText=((string)$interval['leftMargin']).' ; '.((string)$interval['rightMargin']); 
+                          	echo '<div>'.$intervalTextStart.$intervalText.$intervalTextEnd.' &nbsp;&nbsp;-&nbsp;<a href="index.php?option=com_bkef&amp;task=intervalEnumerationDeleteInterval&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;intId='.$intId.'&amp;article='.$this->article.'">'.JText::_('DELETE').'</a></div>';
+                            $intId++;
+                          }
+                        }else{
+                          echo '<div class="missing infotext">'.JText::_('INTERVAL_ENUMERATION_BIN_NO_INTERVALS_INFO').'</div>';
+                        }  
+                        echo '<div class="linksDiv">
+                                <a href="index.php?option=com_bkef&amp;task=intervalEnumerationAddInterval&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('ADD_INTERVAL').'</a>
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="index.php?option=com_bkef&amp;task=intervalEnumerationEditBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('EDIT_BIN').'</a>
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="index.php?option=com_bkef&amp;task=intervalEnumerationDeleteBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('DELETE_BIN').'</a>
+                              </div>';      
+                        echo '</div>';
+                        $binId++;
+                      }
+                    }else{
+                      echo '<div class="missing infotext">'.JText::_('NOMINAL_ENUMERATION_NO_BINS_INFO').'</div>';
+                    }
+                    echo '<div class="linksDiv">
+                            <a href="index.php?option=com_bkef&amp;task=intervalEnumerationAddBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('ADD_BIN').'</a>
+                          </div>';
+            echo '</div>';
+          }elseif(isset($discretizationHint->EquidistantInterval)){
+            $equidistantInterval=$discretizationHint->EquidistantInterval[0];
+            echo '<div class="level3Div">
+                    '.JText::_('EQUIDISTANT_INTERVAL').'
+                    <table>
+                      <tr>
+                        <td>'.JText::_('START').'</td>
+                        <td><strong>'.((string)$equidistantInterval->Start).'</strong></td>
+                      </tr>
+                      <tr>
+                        <td>'.JText::_('END').'</td>
+                        <td><strong>'.((string)$equidistantInterval->End).'</strong></td>
+                      </tr>
+                      <tr>
+                        <td>'.JText::_('STEP').'</td>
+                        <td><strong>'.((string)$equidistantInterval->Step).'</strong></td>
+                      </tr>
+                    </table>';
+                    if (((string)$equidistantInterval->Start=='')||((string)$equidistantInterval->End=='')||((string)$equidistantInterval->Step=='')){
+                      echo '<div class="missing infotext">
+                              '.JText::_('EQUIDISTANT_INTERVAL_MISSING_PARAMS_INFO').'
+                            </div>';
+                    }        
+            echo   '<div class="linksDiv">
+                      <a href="index.php?option=com_bkef&amp;task=equidistant&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('EQUIDISTANT_INTERVAL_SET_PARAMS').'</a>
+                    </div>
+                  </div>'; 
+          }else{
+            echo '<div class="level3Div error">
+                    '.JText::_('PLEASE_DELETE_THIS_HINT').'
+                  </div>';
+          }      
          //
+         echo '</div>';
          $phId++;
         }
       }else {
