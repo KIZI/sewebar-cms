@@ -82,14 +82,11 @@ class BkefViewSelectArticle extends JView
   function display($tpl = null)
   {   
     /*Ověření, jestli jde o přístup z administrace nebo front-endu*/
+    require_once(JApplicationHelper::getPath('toolbar_html'));
     if (JPATH_BASE==JPATH_ADMINISTRATOR){
-      require_once(JApplicationHelper::getPath('toolbar_html'));
       TOOLBAR_bkef::_DEFAULT();
     }else{
-      echo '<div class="componentheading">'.JText::_('BKEF').'</div>';
-      $doc = &JFactory::getDocument();
-      $doc->addStyleSheet('components/com_bkef/css/general.css');
-      $doc->addStyleSheet('components/com_bkef/css/component.css');
+      TOOLBAR_bkef::frondend();
     }
     /**/
     

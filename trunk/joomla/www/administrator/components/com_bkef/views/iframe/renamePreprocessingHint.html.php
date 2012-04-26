@@ -35,7 +35,7 @@ class BkefViewRenamePreprocessingHint extends JView
       
       <form action="index.php?option=com_bkef&amp;task=renamePreprocessingHint" method="post" target="_parent" >
         <?php echo JText::_('NAME');?>:<br />
-        <input type="text" name="name" title="<?php echo JText::_('TITLE_RENAME_PREPROCESSING_HINT_NAME');?>" value="<?php echo $xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->PreprocessingHint[$phId]['name']; ?>" /><br />
+        <input type="text" name="name" title="<?php echo JText::_('TITLE_RENAME_PREPROCESSING_HINT_NAME');?>" value="<?php echo (string)$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->Name[0]; ?>" /><br />
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $maId; ?>" />
         <input type="hidden" name="fId" value="<?php echo $fId; ?>" />

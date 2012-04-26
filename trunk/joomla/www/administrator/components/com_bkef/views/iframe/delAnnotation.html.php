@@ -29,7 +29,7 @@ class BkefViewDelAnnotation extends JView
       $xml=$this->xml;
       $maId=$this->maId+0;
       $fId=intval($this->fId);
-      $vdId=intval($this->vdId);
+      $anId=intval($this->anId);
       
       echo '<div>';
         echo JText::_('DELETING_ANNOTATION_QUESTION');

@@ -14,7 +14,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
            
-class BkefViewAddValueDescription extends JView
+class BkefViewEditPreprocessingHintAnnotation extends JView
 {
   function display($tpl = null)
   {               
@@ -24,12 +24,17 @@ class BkefViewAddValueDescription extends JView
         $doc->addStyleSheet('components/com_bkef/css/component.css');
       }         
       
-      echo '<h1>'.JText::_('ADD_VALUE_DESCRIPTION_H1').'</h1>';
+      echo '<h1>'.$this->h1.'</h1>';
       
       $xml=$this->xml;
       $maId=intval($this->maId);
       $fId=intval($this->fId);
-      
+      $phId=intval($this->phId);
+      $anId=intval($this->anId);
+      if ($anId!=-1){
+        $annotation=$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->Annotations[0]->Annotation[$anId];
+      }
+        
       $autor='';
       if (isset($annotation->Author[0])){
         $autor=$annotation->Author[0];
@@ -38,22 +43,9 @@ class BkefViewAddValueDescription extends JView
         $autor=$user->name;
       }
       
-      //$valueDescription=$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->ValueDescriptions[0]->ValueDescription[$vdId];
 ?>
-      <form action="index.php?option=com_bkef&amp;task=addValueDescription" method="post" target="_parent" >
+      <form action="index.php?option=com_bkef&amp;task=<?php echo $this->akce;?>PreprocessingHintAnnotation" method="post" target="_parent" >
         <table>
-          <tr>
-            <td><?php echo JText::_('NEW_VALUE_DESCRIPTION_TYPE'); ?></td>
-            <td>
-              <select name="vdFeature" title="<?php echo JText::_('TITLE_NEW_VALUE_DESCRIPTION_TYPE'); ?>">
-                <option value="Similar">Similar</option>
-                <option value="Outlier">Outlier</option>
-                <option value="Often Missing">Often Missing</option>
-                <option value="Significant">Significant</option>
-                <option value="Suspicious">Suspicious</option>
-              </select>
-            </td>
-          </tr>
           <tr>
             <td><?php echo JText::_('ANNOTATION');?></td>
             <td><textarea name="annotationText" title="<?php echo JText::_('TITLE_EDIT_ANNOTATION_TEXT'); ?>" style="width:380px;height:150px;"><?php echo $annotation->Text[0]; ?></textarea></td>
@@ -64,16 +56,15 @@ class BkefViewAddValueDescription extends JView
               <input type="text" name="annotationAuthor" style="width:380px;" title="<?php echo JText::_('TITLE_EDIT_ANNOTATION_AUTHOR'); ?>" value="<?php echo $autor; ?>" />
             </td>
           </tr>
-        </table>
-        
-        <br />
-        
+        </table> <br />
         
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $maId; ?>" />
         <input type="hidden" name="fId" value="<?php echo $fId; ?>" />
+        <input type="hidden" name="phId" value="<?php echo $phId; ?>" />
+        <input type="hidden" name="anId" value="<?php echo $anId; ?>" />
         <input type="hidden" name="potvrzeni" value="1" id="potvrzeni" />
-        <input type="submit" value="<?php echo JText::_('ADD');?>..." />
+        <input type="submit" value="<?php echo JText::_('SAVE');?>..." />
       </form>
       <?php
       //parent::display($tpl);

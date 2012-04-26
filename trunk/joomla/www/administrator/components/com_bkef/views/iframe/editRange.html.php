@@ -33,44 +33,144 @@ class BkefViewEditRange extends JView
       ?>
       <form action="index.php?option=com_bkef&amp;task=editRange" method="post" target="_parent" >
       <?php
-      if (((@$format->AllowedRange[0]->Enumeration)||($_GET['type']=='enumeration'))&&($_GET['type']!='interval')){
-        echo '<div>'.JText::_('EDIT_RANGE_INFO').'</div>';
-        echo '<textarea name="enumeration" style="width:300px;height:200px;" title="'.JText::_('TITLE_EDIT_RANGE_TEXTAREA').'">';
-        $text='';
-        if (count($format->AllowedRange[0]->Enumeration[0]->Value)>0){
-          foreach ($format->AllowedRange[0]->Enumeration[0]->Value as $value) {
-          	$text.= $value."\n";
-          }
-        }
-        echo trim($text);
-        echo '</textarea><br />';
+      if (($_GET['type']=='enumeration')&&($_GET['type']!='interval')&&($_GET['type']!='regex')){
+        /*ENUMERATION*/
+        echo '<table>';
+        echo '  <tr>
+                  <td colspan="4">
+                    <h3>'.JText::_('ENUMERATION').'</h3>
+                    <div>'.JText::_('EDIT_RANGE_ENUMERAION_INFO').'</div>            
+                  </td>
+                </tr>';
+        echo '  <tr>
+                  <td colspan="4">
+                    <textarea name="enumeration" style="width:300px;height:200px;" title="'.JText::_('TITLE_EDIT_RANGE_TEXTAREA').'">';
+                      $text='';
+                      if (count($format->Range[0]->Value)>0){
+                        foreach ($format->Range[0]->Value as $value) {
+            	            $text.= $value."\n";
+                        }
+                      }
+                      echo trim($text);
+        echo '      </textarea>                  
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <h3>'.JText::_('COLLATION').'</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.JText::_('COLLATION_TYPE').'</td>
+                  <td>
+                    <select name="collation_type">
+                      <option value="Alphabetical" '.($format->Collation['type']=='Alphabetical'?'selected="selected"':'').'>'.JText::_('COLLATION_TYPE_ALPHABETICAL').'</option>
+                      <option value="Enumeration" '.($format->Collation['type']=='Enumeration'?'selected="selected"':'').'>'.JText::_('COLLATION_TYPE_ENUMERATION').'</option>
+                      <option value="Numerical" '.($format->Collation['type']=='Numerical'?'selected="selected"':'').'>'.JText::_('COLLATION_TYPE_NUMERICAL').'</option>
+                    </select>
+                  </td>
+                  <td>'.JText::_('COLLATION_SENSE').'</td>
+                  <td>
+                    <select name="collation_sense">
+                      <option value="Ascending" '.($format->Collation['sense']=='Ascending'?'selected="selected"':'').'>'.JText::_('ASCENDING').'</option>
+                      <option value="Descending" '.($format->Collation['sense']=='Descending'?'selected="selected"':'').'>'.JText::_('DESCENDING').'</option>
+                    </select>
+                  </td>
+                </tr>';        
+                
+        echo '</table>';
+        /*--ENUMERATION*/
         echo '<input type="hidden" name="potvrzeni" value="enumeration" id="potvrzeni" />';
+      }elseif (($_GET['type']=='regex')&&($_GET['type']!='interval')&&($_GET['type']!='enumeration')){
+        /*REGEX*/
+        echo '<table>';
+        echo '  <tr>
+                  <td colspan="4">
+                    <h3>'.JText::_('REGEX').'</h3>
+                    <div>'.JText::_('EDIT_RANGE_REGEX_INFO').'</div>            
+                  </td>
+                </tr>';
+        echo '  <tr>
+                  <td>'.JText::_('REGEX_PATTERN').'</td>
+                  <td colspan="3">
+                    <input type="text" name="regex" style="width:200px;" title="'.JText::_('TITLE_EDIT_RANGE_REGEX').'" value="'.$format->Range[0]->Regex[0].'" />             
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <h3>'.JText::_('COLLATION').'</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.JText::_('COLLATION_TYPE').'</td>
+                  <td>
+                    <select name="collation_type">
+                      <option value="Alphabetical" '.($format->Collation['type']=='Alphabetical'?'selected="selected"':'').'>'.JText::_('COLLATION_TYPE_ALPHABETICAL').'</option>
+                      <option value="Numerical" '.($format->Collation['type']=='Numerical'?'selected="selected"':'').'>'.JText::_('COLLATION_TYPE_NUMERICAL').'</option>
+                    </select>
+                  </td>
+                  <td>'.JText::_('COLLATION_SENSE').'</td>
+                  <td>
+                    <select name="collation_sense">
+                      <option value="Ascending" '.($format->Collation['sense']=='Ascending'?'selected="selected"':'').'>'.JText::_('ASCENDING').'</option>
+                      <option value="Descending" '.($format->Collation['sense']=='Descending'?'selected="selected"':'').'>'.JText::_('DESCENDING').'</option>
+                    </select>
+                  </td>
+                </tr>';        
+        echo '</table>';
+        /*--REGEX*/
+        echo '<input type="hidden" name="potvrzeni" value="regex" id="potvrzeni" />';
       }else {
         echo '<table>';
-        echo '<tr><td>Od:</td><td><select name="leftBoundType" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_LEFTBOUND').'">';
-        echo '<option value="closed" title="closed" ';
-        if (@$format->AllowedRange[0]->Interval[0]->LeftBound[0]['type']=='closed'){
-          echo ' selected="selected" ';
-        }
-        echo '>&lt;</option>';
-        echo '<option value="open" title="open" ';
-        if (@$format->AllowedRange[0]->Interval[0]->LeftBound[0]['type']=='open'){
-          echo ' selected="selected" ';
-        }
-        echo '>(</option>';
-        echo '</select></td><td><input name="leftBoundValue" value="'.$value['value'].'" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_LEFTVALUE').'" /></td></tr>';
-        echo '<tr><td>Do:</td><td><select name="rightBoundType" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_RIGHTBOUND').'">';
-        echo '<option value="closed" title="closed" ';
-        if (@$format->AllowedRange[0]->Interval[0]->RightBound[0]['type']=='closed'){
-          echo ' selected="selected" ';
-        }
-        echo '>&gt;</option>';
-        echo '<option value="open" title="open" ';
-        if (@$format->AllowedRange[0]->Interval[0]->RightBound[0]['type']=='open'){
-          echo ' selected="selected" ';
-        }
-        echo '>)</option>';
-        echo '</select></td><td><input name="rightBoundValue" value="'.$value['value'].'" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_RIGHTVALUE').'" /></td></tr>';
+        echo '  <tr>
+                  <td colspan="4">
+                    <h3>'.JText::_('INTERVAL').'</h3>
+                    <div>'.JText::_('EDIT_RANGE_INTERVAL_INFO').'</div>            
+                  </td>
+                </tr>';
+        //vyreseni hranic intervalu
+        $closure=(string)$format->Range->Interval[0]['closure'];
+        //--vyreseni hranic intervalu        
+        echo   '<tr>
+                  <td>Od:</td>
+                  <td colspan="3">
+                    <select name="leftBoundType" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_LEFTBOUND').'">';                
+                echo '<option value="closed" title="closed" '.((($closure=='closedClosed')||($closure=='closedOpen'))?'selected="selected"':'').'>&lt;</option>';
+                echo '<option value="open" title="open" '.((($closure=='openClosed')||($closure=='openOpen'))?'selected="selected"':'').'>(</option>';
+        echo   '    </select>
+                    <input name="leftBoundValue" value="'.$format->Range->Interval['leftMargin'].'" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_LEFTVALUE').'" />
+                  </td>
+                </tr>';
+        echo '  <tr>
+                  <td>Do:</td>
+                  <td colspan="3">
+                    <input name="rightBoundValue" value="'.$format->Range->Interval['rightMargin'].'" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_RIGHTVALUE').'" />
+                    <select name="rightBoundType" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_RIGHTBOUND').'">';
+                echo '<option value="closed" title="closed" '.((($closure=='closedClosed')||($closure=='openClosed'))?'selected="selected"':'').'>&gt;</option>';
+                echo '<option value="open" title="open" '.((($closure=='closedOpen')||($closure=='openOpen'))?'selected="selected"':'').'>)</option>';
+        echo '      </select>
+                  </td>
+                </tr>';
+        echo '  <tr>
+                  <td colspan="4">
+                    <h3>'.JText::_('COLLATION').'</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.JText::_('COLLATION_TYPE').'</td>
+                  <td>
+                    <select name="collation_type">
+                      <option value="Numerical" '.($format->Collation['type']=='Numerical'?'selected="selected"':'').'>'.JText::_('COLLATION_TYPE_NUMERICAL').'</option>
+                    </select>
+                  </td>
+                  <td>'.JText::_('COLLATION_SENSE').'</td>
+                  <td>
+                    <select name="collation_sense">
+                      <option value="Ascending" '.($format->Collation['sense']=='Ascending'?'selected="selected"':'').'>'.JText::_('ASCENDING').'</option>
+                      <option value="Descending" '.($format->Collation['sense']=='Descending'?'selected="selected"':'').'>'.JText::_('DESCENDING').'</option>
+                    </select>
+                  </td>
+                </tr>';                        
         echo '</table>';
         echo '<input type="hidden" name="potvrzeni" value="interval" id="potvrzeni" />';
       }

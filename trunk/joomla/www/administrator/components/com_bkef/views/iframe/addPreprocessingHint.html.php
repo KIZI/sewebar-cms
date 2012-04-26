@@ -38,10 +38,10 @@ class BkefViewAddPreprocessingHint extends JView
         <input type="text" name="name" title="<?php echo JText::_('TITLE_ADD_PREPROCESSING_HINT_NAME'); ?>" /><br />
         <?php echo JText::_('PREPROCESSING_HINT_NEW_TYPE');?>:<br />
         <select name="type">
-          <option value="ExhaustiveEnumeration"><?php echo JText::_('EXHAUSTIVE_ENUMERATION');?></option>
+          <option value="EachValueOneBin"><?php echo JText::_('EACH_VALUE_ONE_BIN');?></option>
+          <option value="EquidistantInterval"><?php echo JText::_('EQUIDISTANT_INTERVAL');?></option>
           <option value="IntervalEnumeration"><?php echo JText::_('INTERVAL_ENUMERATION');?></option>
-          <option value="EquifrequentInterval"><?php echo JText::_('EQUIFREQUENT_INTERVAL');?></option>
-          <option value="Equidistant"><?php echo JText::_('EQUIDISTANT');?></option>
+          <option value="NominalEnumeration"><?php echo JText::_('NOMINAL_ENUMERATION');?></option>
         </select><br />
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $maId; ?>" />

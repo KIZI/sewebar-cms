@@ -14,7 +14,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
            
-class BkefViewIntervalEnumerationAddBin extends JView
+class BkefViewIntervalEnumerationEditBin extends JView
 {
   function display($tpl = null)
   {               
@@ -36,14 +36,12 @@ class BkefViewIntervalEnumerationAddBin extends JView
       $maId=intval($this->maId);
       $fId=intval($this->fId);
       $phId=intval($this->phId);
-      $bId=intval($this->bId);
-      $autor='';
-      if ($bId>-1){
-        $bin=$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->PreprocessingHint[$phId]->DiscretizationHint[0]->IntervalEnumeration[0]->IntervalBin[$bId];
-        $autor=@$bin->Annotation[0]->Author[0];
-      }else {
-        $user=& JFactory::getUser();
-        $autor=$user->name;
+      $binId=intval($this->binId);
+      
+      if (@$this->binId>-1){
+        $value=(string)@$this->xml->MetaAttributes[0]->MetaAttribute[$this->maId]->Formats[0]->Format[$this->fId]->PreprocessingHints[0]->DiscretizationHint[$this->phId]->IntervalEnumeration[0]->IntervalBin[$this->binId]->Name[0];
+      }else{
+        $value='';
       }
       
 ?>
@@ -51,15 +49,7 @@ class BkefViewIntervalEnumerationAddBin extends JView
         <table>
           <tr>
             <td><?php echo JText::_('NAME');?></td>
-            <td><input type="text" name="name" value="<?php echo @$bin['name']; ?>" title="<?php echo JText::_('TITLE_INTENUM_ADDEDITBIN_NAME');?>" /></td>
-          </tr>
-          <tr>
-            <td><?php echo JText::_('ANNOTATION');?></td>
-            <td><textarea name="annotationText" title="<?php echo JText::_('TITLE_INTENUM_ADDEDITBIN_ANNOTATION');?>" ><?php echo @$bin->Annotation[0]->Text[0]; ?></textarea></td>
-          </tr>
-          <tr>
-            <td><?php echo JText::_('ANNOTATION_AUTHOR');?></td>
-            <td><input type="text" title="<?php echo JText::_('TITLE_INTENUM_ADDEDITBIN_ANNOTATION_AUTHOR');?>" name="annotationAuthor" value="<?php echo $autor; ?>" /></td>
+            <td><input type="text" name="name" value="<?php echo $value; ?>" title="<?php echo JText::_('TITLE_INTENUM_ADDEDITBIN_NAME');?>" /></td>
           </tr>
         </table>
         
@@ -67,7 +57,7 @@ class BkefViewIntervalEnumerationAddBin extends JView
         <input type="hidden" name="maId" value="<?php echo $maId; ?>" />
         <input type="hidden" name="fId" value="<?php echo $fId; ?>" />
         <input type="hidden" name="phId" value="<?php echo $phId; ?>" />
-        <input type="hidden" name="bId" value="<?php echo $bId; ?>" />
+        <input type="hidden" name="binId" value="<?php echo $binId; ?>" />
         <input type="hidden" name="potvrzeni" value="<?php echo $this->potvrzeni; ?>" />
         <input type="submit" value="<?php echo JText::_('INTENUM_ADDEDITBIN_SUBMIT');?>" />
       </form>
