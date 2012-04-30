@@ -169,9 +169,11 @@ namespace LMWrapper.LISpMiner
 		public LISpMiner(Environment environment, string id, string databasePrototypeFile)
 			: this(environment, id)
 		{
-			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypeFile);
-			var databaseFile = String.Format(@"{0}\LM-{2}-{1}.mdb", this.LMPath, this.Id, databaseName);
-			var databaseDSN = String.Format("LM-{1}-{0}", id, databaseName.Substring(0, 32 - 4 - id.Length));
+			string databaseFile;
+			string databaseDSN;
+
+			this.GetDatabaseNames(databasePrototypeFile, out databaseFile, out databaseDSN);
+
 			this.Database = new AccessConnection(databaseFile, databasePrototypeFile, databaseDSN);
 
 			this.CreateMetabase();
@@ -198,16 +200,75 @@ namespace LMWrapper.LISpMiner
 			this.CreateMetabase();
 		}
 
+		/// <summary>
+		/// Creates instance of LISpMiner for existing location.
+		/// </summary>
+		/// <param name="lmpath">Path to LM folder.</param>
+		public LISpMiner(DirectoryInfo lmpath, Environment env)
+		{
+			if (!lmpath.Exists)
+			{
+				throw new Exception(String.Format("LISpMiner does not exist at location {0}", lmpath.FullName));
+			}
+
+			this.Environment = env;
+			this.Id = lmpath.Name.Substring("LISpMiner_".Length);
+			this.LMPath = lmpath.FullName;
+
+			string metabaseFile;
+			string metabasePrototypeFile;
+			string metabaseDSN;
+			string databaseFile;
+			string databaseDSN;
+
+			this.GetDatabaseNames(string.Empty, out databaseFile, out databaseDSN);
+
+			if (File.Exists(databaseFile))
+			{
+				this.Database = new AccessConnection(databaseFile, string.Empty, databaseDSN);
+			}
+			else
+			{
+				this.Database = new MySQLConnection(databaseDSN);
+			}
+
+
+			this.GetMetabaseNames(out metabaseFile, out metabasePrototypeFile, out metabaseDSN);
+			this.Metabase = new AccessConnection(metabaseFile, string.Empty, metabaseDSN);
+		}
+
 		protected void CreateMetabase()
 		{
-			//TODO: make default connection configurable
-			var metabaseFile = String.Format(@"{0}\LM-metabase-{1}.mdb", this.LMPath, this.Id);
-			var metabasePrototypeFile = String.Format(@"{0}\LM Barbora.mdb", Environment.DataPath);
-			var metabaseDSN = String.Format("LMM-{0}", this.Id);
+			string metabaseFile;
+			string metabasePrototypeFile;
+			string metabaseDSN;
+
+			this.GetMetabaseNames(out metabaseFile, out metabasePrototypeFile, out metabaseDSN);
 
 			this.Metabase = new AccessConnection(metabaseFile, metabasePrototypeFile, metabaseDSN);
 
 			this.Metabase.SetDatabaseDsnToMetabase(this.Database);
+		}
+
+		protected void GetMetabaseNames(out string file, out string protofile, out string dsn)
+		{
+			//TODO: make default connection configurable
+			file = String.Format(@"{0}\LM-metabase-{1}.mdb", this.LMPath, this.Id);
+			protofile = String.Format(@"{0}\LM Barbora.mdb", Environment.DataPath);
+			dsn = String.Format("LMM-{0}", this.Id);
+		}
+
+		protected void GetDatabaseNames(string databasePrototypeFile, out string file, out string dsn)
+		{
+			if (String.IsNullOrEmpty(databasePrototypeFile))
+			{
+				// because it is default to create with
+				databasePrototypeFile = "Barbora.mdb";
+			}
+			
+			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypeFile);
+			file = String.Format(@"{0}\LM-{2}-{1}.mdb", this.LMPath, this.Id, databaseName);
+			dsn = String.Format("LM{0}", this.Id);
 		}
 
 		public void Dispose()

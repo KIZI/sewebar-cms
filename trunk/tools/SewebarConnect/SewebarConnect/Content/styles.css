@@ -1,0 +1,86 @@
+﻿ol.a {
+	list-style: lower-alpha;
+}
+
+li dl {
+	margin-left: 25px;
+}
+
+body
+{
+	font-size: 11px;
+	color: black;
+	font-family: Verdana, Arial;
+}
+
+h1, h2
+{
+	color: #800000;
+	text-decoration: underline;
+}
+
+h1
+{
+	font-size: 20px;
+	text-align: center;
+	text-decoration: underline;
+}
+
+h2
+{
+	font-size: 15px;
+}
+
+p
+{
+	margin-left: 20px;
+}
+
+p.withsymbols
+{
+	line-height: 2em;
+}
+
+h3
+{
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.symbol
+{
+	font-size: 15px;
+	font-weight:bold;
+}
+
+p.image
+{
+	text-align: center;
+}
+
+table
+{
+	margin: auto;
+}
+
+#header span
+{
+	color: #c0c0c0;
+}
+
+#classes
+{
+	margin-left: 10%;
+	line-height: 1.3em;
+}
+
+#references
+{
+	list-style-type: decimal;
+}
+
+#content
+{
+	width: 74%;
+	margin: auto;
+}

@@ -52,18 +52,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SewebarWeb.csproj">
-      <Project>{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}</Project>
-      <Name>SewebarWeb</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestCases\ETReeMiner.Task52.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestCases\Import3.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SewebarWeb\SewebarWeb.csproj">
+      <Project>{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}</Project>
+      <Name>SewebarWeb</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
