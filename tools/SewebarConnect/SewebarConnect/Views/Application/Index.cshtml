@@ -1,22 +1,15 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="SewebarWeb._Default" %>
-<%@ Import Namespace="SewebarWeb" %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1" runat="server">
-	<title>SEWEBAR Connect</title>
-	<link href="styles.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-	<form id="form1" runat="server">
-	<div>
+﻿@using LMWrapper.ODBC
+@using SewebarConnect
+@{
+	ViewBag.Title = "title";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
 	<h1>SEWEBAR Connect</h1>
 	<ol>
 		<li>Create new metabase
 			<ol class="a">
 				<li>
-					<a href="Register.ashx?type=mysqlconnection&amp;server=localhost&amp;database=barbora&amp;username=lisp&amp;password=lisp">Registration</a>
+					<a href="../../../SewebarWeb/Register.ashx?type=mysqlconnection&amp;server=localhost&amp;database=barbora&amp;username=lisp&amp;password=lisp">Registration</a>
 					<ul>
 						<li>Input <em>(Only MySQL supported at this moment)</em>
 							<dl>
@@ -50,7 +43,7 @@
 			</ol>
 		</li>	
 		<li>
-			<a href="Import.ashx">Import DataDictionary</a>
+			<a href="../../../SewebarWeb/Import.ashx">Import DataDictionary</a>
 			<ul>
 				<li>Input
 					<dl>
@@ -68,7 +61,7 @@
 			</ul>
 		</li>
 		<li>
-			<a href="Task.ashx">Run task</a>
+			<a href="../../../SewebarWeb/Task.ashx">Run task</a>
 			<ul>
 				<li>Input
 					<dl>
@@ -88,30 +81,3 @@
 	<code>
 	&lt;response status="failure"&gt;&lt;message&gt;{Exception message}&lt;/message&gt;&lt;/response&gt;
 	</code>
-	<h1>Environment</h1>
-	<dl>
-		<dt>BaseDirectory</dt>
-		<dd><%=System.AppDomain.CurrentDomain.BaseDirectory %></dd>
-		<dt>Session ID</dt>
-		<dd><%=Session.SessionID %></dd>
-	</dl>
-	<% if(Global.Environment.ExistingMiners.Count > 0) { %>
-	<h2>Existing miners</h2>
-	<ol>
-		<% foreach (var miner in Global.Environment.ExistingMiners) { %>
-		<li><%=miner %></li>
-		<% } %>
-	</ol>
-	<% } %>
-	<% if (Global.ExistingSessionMiners.Count > 0) { %>
-	<h2>Active session miners</h2>
-	<ol>
-		<% foreach (var miner in Global.ExistingSessionMiners) { %>
-		<li><%=miner %></li>
-		<% } %>
-	</ol>
-	<% } %>
-	</div>
-	</form>
-</body>
-</html>

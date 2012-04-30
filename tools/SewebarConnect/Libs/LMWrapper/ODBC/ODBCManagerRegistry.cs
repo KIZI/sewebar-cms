@@ -207,7 +207,7 @@ namespace LMWrapper.ODBC
 			const string driverName = "MySQL ODBC 5.1 Driver";
 			var driverKey = Registry.LocalMachine.CreateSubKey(ODBCINST_INI_REG_PATH + driverName);
 
-            if (driverKey == null || driverKey.GetValue("Driver") == null)
+			if (driverKey == null || driverKey.GetValue("Driver") == null)
 			{
 				throw new Exception(
 					string.Format(
@@ -266,10 +266,9 @@ namespace LMWrapper.ODBC
 		///<returns></returns>
 		public static bool DSNExists(string dsnName)
 		{
-			var driversKey = Registry.LocalMachine.CreateSubKey(ODBCINST_INI_REG_PATH + "ODBC Drivers");
-			if (driversKey == null) throw new Exception("ODBC Registry key for drivers does not exist");
+			SortedList existing = GetAllDataSourceNames();
 
-			return driversKey.GetValue(dsnName) != null;
+			return existing.ContainsKey(dsnName);
 		}
 
 		///<summary>

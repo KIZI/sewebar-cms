@@ -43,22 +43,22 @@ namespace LMWrapper.ODBC
 
 		public virtual void SetDatabaseDsnToMetabase(OdbcConnection database)
 		{
-            try
-            {
-                string sql = String.Format("UPDATE tpParamsDB SET strValue='{0}' WHERE Name='DSN'", database.DSN);
+			try
+			{
+				string sql = String.Format("UPDATE tpParamsDB SET strValue='{0}' WHERE Name='DSN'", database.DSN);
 
-                using (var connection = new System.Data.Odbc.OdbcConnection(this.ConnectionString))
-                {
-                    connection.Open();
+				using (var connection = new System.Data.Odbc.OdbcConnection(this.ConnectionString))
+				{
+					connection.Open();
 
-                    var command = new OdbcCommand(sql, connection);
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch(Exception exception)
-            {
-                throw new Exception(String.Format("Could not set database DSN to metabase ({0}).", exception.Message), exception);
-            }
+					var command = new OdbcCommand(sql, connection);
+					command.ExecuteNonQuery();
+				}
+			}
+			catch(Exception exception)
+			{
+				throw new Exception(String.Format("Could not set database DSN to metabase ({0}).", exception.Message), exception);
+			}
 		}
 
 		public override void Destroy()

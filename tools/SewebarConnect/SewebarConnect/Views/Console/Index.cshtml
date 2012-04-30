@@ -1,0 +1,83 @@
+﻿@using LMWrapper.ODBC
+@using SewebarConnect
+@{
+	ViewBag.Title = "Console";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Header{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/console.js")"></script>
+}
+
+<h1>Sewebar Debug Console</h1>
+
+<h2>Registration</h2>
+<form action="#">
+<label for="reg_request">Database connection definition</label>
+<textarea name="reg_request" id="reg_request" rows="10" cols="80">
+{
+	 "type": "MySQLConnection",
+	 "server": "localhost",
+	 "database": "lisp",
+	 "username": "username",
+	 "password": "pass"
+}
+</textarea>
+<button name="reg">Register</button>
+<label for="reg_response">Response</label>
+<textarea name="reg_response" id="reg_response" rows="10" cols="80"></textarea>
+</form>
+
+<h2>Import DataDictionary</h2>
+<form action="#">
+<label for="import_id">ID</label>
+<input type="text" value="" name="import_id" id="import_id" size="32" />
+<label for="import_request">DataDictionary</label>
+<textarea name="import_request" id="import_request" rows="10" cols="80"></textarea>
+<button name="import">Import</button>
+<label for="import_response">Response</label>
+<textarea name="import_response" id="import_response" rows="10" cols="80"></textarea>
+</form>
+
+<h2>Environment</h2>
+<dl>
+	<dt>BaseDirectory</dt>
+	<dd>@System.AppDomain.CurrentDomain.BaseDirectory</dd>
+	<dt>Session ID</dt>
+	<dd>@Session.SessionID</dd>
+</dl>
+
+@if (MvcApplication.Environment.ExistingMiners.Count > 0)
+{
+	<h3>Existing miners</h3>
+	<ol>
+		@foreach (var miner in MvcApplication.Environment.ExistingMiners)
+		{
+			<li>@miner</li>
+		}
+	</ol>
+}
+	
+@if (MvcApplication.ExistingSessionMiners.Count > 0)
+{
+	<h3>Active session miners</h3>
+	<ol>
+		@foreach (var miner in MvcApplication.ExistingSessionMiners)
+		{
+			<li>@miner</li>
+		}
+	</ol>
+}
+
+@if (ODBCManagerRegistry.GetAllDataSourceNames().Count > 0)
+{
+	<h3>ODBC DSNs</h3>
+	<ol>
+		@foreach (var dsn in ODBCManagerRegistry.GetAllDataSourceNames().Keys)
+		{
+
+			<li>@dsn <a href="@Url.Action("RemoveDsn", "Application", new { dsn = dsn })" class="ajax">Remove</a></li>
+		}
+	</ol>
+}

@@ -1,4 +1,6 @@
-﻿namespace LMWrapper.ODBC
+﻿using System;
+
+namespace LMWrapper.ODBC
 {
 	public class MySQLConnection : OdbcConnection
 	{
@@ -13,6 +15,18 @@
 		public string ServerAddress { get; set; }
 
 		#endregion
+
+		public MySQLConnection(string dsn)
+			: base(dsn)
+		{
+			if (!ODBCManagerRegistry.DSNExists(this.DSN))
+			{
+				throw new Exception(
+					String.Format(
+						"DSN with given name does not exists ({0}), therefore it is not possible to create connection without definition",
+						this.DSN));
+			}
+		}
 
 		public MySQLConnection(string dsn, string server, string db, string username, string pass)
 			: base(dsn)

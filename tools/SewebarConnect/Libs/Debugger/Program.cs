@@ -1,6 +1,6 @@
 ﻿using System;
+using System.IO;
 using LMWrapper.LISpMiner;
-using LMWrapper.ODBC;
 
 namespace Debugger
 {
@@ -10,46 +10,27 @@ namespace Debugger
 		{
 			var env = new LMWrapper.Environment
 			{
+				//LMPoolPath = String.Format(@"{0}", @"C:\LMs\"),
+				LMPoolPath = String.Format(@"{0}", @"d:\svn\sewebar-cms\tools\SewebarConnect\Data\LMs"),
 				LMPath = String.Format("{0}/../{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 			};
 
-			
-			/*ODBCManagerRegistry.CreateDSN("Barbora",
-										  "",
-										  "Microsoft Access Driver (*.mdb)",
-										  @"C:\Documents and Settings\Administrator\My Documents\svn\sewebar\trunk\tools\SewebarConnect\build\LISp Miner\Barbora.mdb");*/
-
-			/*ODBCManagerRegistry.CreateDSN("Slot5",
-			                              "",
-										  "Microsoft Access Driver (*.mdb)",
-			                              @"C:\Documents and Settings\Administrator\My Documents\svn\sewebar\trunk\tools\SewebarConnect\build\LISp Miner\LM Barbora.mdb");*/
-
-			var exporter = new LMSwbExporter
+			foreach (var path in Directory.GetDirectories(env.LMPoolPath))
 			{
-				LMPath = env.LMPath,
-				Dsn = "LMEmpty2",
-				//MatrixName = "Loans",
-				Output = String.Format("{0}/results.xml", AppDomain.CurrentDomain.BaseDirectory),
-				//Template = String.Format(@"{0}\Sewebar\Template\LMDataSource.Matrix.PMML.Template.txt", env.LMPath),
-				Template = String.Format(@"{0}\Sewebar\Template\4ftMiner.Task.PMML.ARBuilder.Template.txt", env.LMPath),
-				Alias = String.Format(@"{0}\Sewebar\Template\LM.PMML.Alias.txt", env.LMPath),
-				NoProgress = false,
-				Quiet = false,
-				TaskName = "TaskM"
-			};
+				try
+				{
+					var directory = new DirectoryInfo(path);
+					var lm = new LISpMiner(directory, env);
 
-			exporter.Execute();
+					lm.Dispose();
 
-			var importer = new LMSwbImporter
-			               	{
-			               		LMPath = env.LMPath,
-			               		Dsn = "LMEmpty2",
-								//Input = String.Format("{0}/main-task.pmml", AppDomain.CurrentDomain.BaseDirectory),
-								Input = String.Format("{0}/barbora2_radek.pmml", AppDomain.CurrentDomain.BaseDirectory),
-			               		//Quiet = true,
-			               	};
-
-			//importer.Run();
+					Console.WriteLine(lm.Id);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(String.Format("skipping {0} {1}", path, ex.Message));
+				}
+			}
 
 			Console.WriteLine("Done.");
 

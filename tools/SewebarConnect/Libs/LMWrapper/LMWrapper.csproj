@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LMWrapper</RootNamespace>
     <AssemblyName>LMWrapper</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +52,7 @@
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
     <Compile Include="LISpMiner\LMTaskPooler.cs" />
     <Compile Include="ODBC\AccessConnection.cs" />
+    <Compile Include="ODBC\DbConnection.cs" />
     <Compile Include="ODBC\MySQLConnection.cs" />
     <Compile Include="ODBC\OdbcConnection.cs" />
     <Compile Include="ODBC\OdbcDrivers.cs" />
