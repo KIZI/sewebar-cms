@@ -60,7 +60,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SewebarWeb\SewebarWeb.csproj">
+    <ProjectReference Include="..\SewebarWeb\SewebarWeb.csproj">
       <Project>{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}</Project>
       <Name>SewebarWeb</Name>
     </ProjectReference>
