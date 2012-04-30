@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMWrapper", "Libs\LMWrapper\LMWrapper.csproj", "{98E96392-DCB6-4200-B18D-1891AE9FE604}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMWrapper", "LMWrapper\LMWrapper.csproj", "{98E96392-DCB6-4200-B18D-1891AE9FE604}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Libs\Debugger\Debugger.csproj", "{08C7693C-198D-4F60-9462-2D64A5273020}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Debugger\Debugger.csproj", "{08C7693C-198D-4F60-9462-2D64A5273020}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewebarWebTests", "Libs\SewebarWebTests\SewebarWebTests.csproj", "{6904CB97-0FCB-410A-916F-CD1544B870AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewebarWebTests", "SewebarWebTests\SewebarWebTests.csproj", "{6904CB97-0FCB-410A-916F-CD1544B870AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewebarWeb", "SewebarWeb\SewebarWeb.csproj", "{F87328D4-069F-4E88-A1EA-1CAC4EF3E523}"
 EndProject

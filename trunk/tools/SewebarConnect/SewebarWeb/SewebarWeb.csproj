@@ -131,7 +131,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libs\LMWrapper\LMWrapper.csproj">
+    <ProjectReference Include="..\LMWrapper\LMWrapper.csproj">
       <Project>{98E96392-DCB6-4200-B18D-1891AE9FE604}</Project>
       <Name>LMWrapper</Name>
     </ProjectReference>

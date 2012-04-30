@@ -27,7 +27,7 @@ namespace SewebarConnect
 					{
 						DataPath = GetAppSetting("Sewebar-DataPath", String.Format(@"{0}\..\Data", AppDomain.CurrentDomain.BaseDirectory)),
 						LMPoolPath = GetAppSetting("Sewebar-PoolPath", String.Format(@"{0}\..\Data\LMs", AppDomain.CurrentDomain.BaseDirectory)),
-						LMPath = GetAppSetting("Sewebar-PoolPath",String.Format(@"{0}\..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
+						LMPath = GetAppSetting("Sewebar-LMPath",String.Format(@"{0}\..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
 					};
 				}
 
@@ -64,13 +64,13 @@ namespace SewebarConnect
 
 		protected static string GetAppSetting(string setting, string defaultValue)
 		{
-			Configuration rootWebConfig1 = WebConfigurationManager.OpenWebConfiguration(null);
-			if (rootWebConfig1.AppSettings.Settings.Count > 0)
+			Configuration webconfig = WebConfigurationManager.OpenWebConfiguration(null);
+			if (webconfig.AppSettings.Settings.Count > 0)
 			{
-				KeyValueConfigurationElement customSetting =
-					rootWebConfig1.AppSettings.Settings[setting];
-				if (customSetting != null)
-					return customSetting.Value;
+				KeyValueConfigurationElement s = webconfig.AppSettings.Settings[setting];
+
+				if (s != null && !string.IsNullOrEmpty(s.Value))
+					return s.Value;
 			}
 
 			return defaultValue;
