@@ -10,9 +10,13 @@ The ARD then does not need to "understand" these two elements, it is only requir
 -->
 
 
-<!-- Version 0.4
+<!-- Version 0.5
   
   author: Tomas Kliegr
+  
+  Changes 0.4 to 0.5:
+  - added Validation/Value
+  - added DATATYPE enum
   
   Changes 0.3 to 0.4: 
   - added LocalizedName, Explanation
@@ -31,7 +35,7 @@ Changes  0.1 to 0.2:
 -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified"
-  targetNamespace="http://keg.vse.cz/ns/arfeatures_01" xmlns="http://keg.vse.cz/ns/arfeatures_01"
+  targetNamespace="http://keg.vse.cz/ns/arfeatures_05" xmlns="http://keg.vse.cz/ns/arfeatures_05"
   xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1">
   <xs:import namespace="http://keg.vse.cz/ns/GUHA0.1rev1"
     schemaLocation="http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"/>
@@ -341,13 +345,23 @@ Changes  0.1 to 0.2:
 
     <xs:sequence>
       <xs:element minOccurs="0" name="Required" type="Required"/>
-      <xs:element minOccurs="0" name="MinValue" type="Value"/>
-      <xs:element minOccurs="0" name="MaxValue" type="Value" default="INF"/>
+     <xs:choice>
+      <xs:group ref="NumericTypeFeatures"></xs:group>
+      <!-- minimum one value for enum type, 0 value for string type -->
+      <xs:element name="Value" type="xs:string"  minOccurs="0" maxOccurs="unbounded"/>
+     </xs:choice>
+      
       <xs:element name="Datatype" type="DATATYPE"/>
       <xs:element minOccurs="0" name="Previous" type="Previous"/>
     </xs:sequence>
   </xs:complexType>
-
+<xs:group name="NumericTypeFeatures">
+ <xs:sequence>
+  <xs:element name="MinValue" type="Value"/>
+  <xs:element name="MaxValue" type="Value" default="INF"/>
+   
+ </xs:sequence>
+</xs:group>
 
   <xs:simpleType name="Previous">
     <xs:restriction base="xs:string">
@@ -403,6 +417,7 @@ Changes  0.1 to 0.2:
     <xs:restriction base="xs:string">
       <xs:enumeration value="string"/>
       <xs:enumeration value="listOfFieldValues"/>
+      <xs:enumeration value="enum"/>
       <xs:enumeration value="integer"/>
       <xs:enumeration value="float"/>
       <xs:enumeration value="double"/>
