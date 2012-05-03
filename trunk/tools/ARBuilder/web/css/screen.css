@@ -182,8 +182,8 @@ header h1 span {
 /* main */
 div#wrapper {
 	xbackground: #EDEDED url('../images/bg1.jpg') repeat 0 0;
-	xbackground: #EDEDED url('../images/bg2.jpg') repeat 0 8px;
-	background: transparent url('../images/bg-body.jpg') repeat center -10px;
+	background: #EDEDED url('../images/bg2.jpg') repeat 0 18px;
+	xbackground: transparent url('../images/bg-body.jpg') repeat center -10px;
 	border-bottom: 1px solid #DFDFDF;
 	
 	min-height: 500px;
