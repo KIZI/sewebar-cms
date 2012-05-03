@@ -37,9 +37,6 @@
     <Reference Include="log4net">
       <HintPath>..\Libs\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -70,7 +67,6 @@
     <Compile Include="API\IFileResponse.cs" />
     <Compile Include="API\ImportRequest.cs" />
     <Compile Include="API\ImportResponse.cs" />
-    <Compile Include="API\JsonResult.cs" />
     <Compile Include="API\RegistrationRequest.cs" />
     <Compile Include="API\RegistrationResponse.cs" />
     <Compile Include="API\Request.cs" />

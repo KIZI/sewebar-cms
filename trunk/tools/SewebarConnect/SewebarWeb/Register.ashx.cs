@@ -3,7 +3,6 @@ using System.Web;
 using LMWrapper;
 using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
-using Newtonsoft.Json;
 using SewebarWeb.API;
 using log4net;
 
