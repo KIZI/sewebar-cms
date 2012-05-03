@@ -67,7 +67,8 @@ namespace LMWrapper.LISpMiner
 			        		StartInfo = new ProcessStartInfo
 			        		            	{
 												FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
-			        		            		Arguments = this.Arguments
+			        		            		Arguments = this.Arguments,
+												WorkingDirectory = this.LMPath
 			        		            	}
 			        	};
 

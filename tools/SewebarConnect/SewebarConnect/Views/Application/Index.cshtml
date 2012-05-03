@@ -5,11 +5,12 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 	<h1>SEWEBAR Connect</h1>
+	<p>For testing you can use <a href="@Url.Action("Index", "Console")">testing console</a>.
 	<ol>
 		<li>Create new metabase
 			<ol class="a">
 				<li>
-					<a href="../../../SewebarWeb/Register.ashx?type=mysqlconnection&amp;server=localhost&amp;database=barbora&amp;username=lisp&amp;password=lisp">Registration</a>
+					<a href="@Url.Action("Register")">Registration</a>
 					<ul>
 						<li>Input <em>(Only MySQL supported at this moment)</em>
 							<dl>
@@ -43,7 +44,7 @@
 			</ol>
 		</li>	
 		<li>
-			<a href="../../../SewebarWeb/Import.ashx">Import DataDictionary</a>
+			<a href="@Url.Action("Import", "DataDictionary")">Import DataDictionary</a>
 			<ul>
 				<li>Input
 					<dl>
@@ -61,7 +62,7 @@
 			</ul>
 		</li>
 		<li>
-			<a href="../../../SewebarWeb/Task.ashx">Run task</a>
+			<a href="@Url.Action("Run", "Task")">Run 4ft task</a> or <a href="@Url.Action("Pool", "Task")">Pool task</a>
 			<ul>
 				<li>Input
 					<dl>

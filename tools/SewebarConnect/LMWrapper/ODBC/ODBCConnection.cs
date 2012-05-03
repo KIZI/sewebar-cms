@@ -21,7 +21,7 @@ namespace LMWrapper.ODBC
 					break;
 				case OdbcDrivers.AccessConnection:
 				default:
-					var databaseFile = String.Format(@"{0}\Barbora_{1}.mdb", environment, id);
+					var databaseFile = String.Format(@"{0}\Barbora\Barbora_{1}.mdb", environment.DataPath, id);
 					var databasePrototypeFile = String.Format(@"{0}\Barbora.mdb", environment.DataPath);
 
 					return new AccessConnection(databaseFile, databasePrototypeFile, databaseDSN);

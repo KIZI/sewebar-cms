@@ -25,9 +25,9 @@ namespace SewebarConnect
 				{
 					_env = new LMWrapper.Environment
 					{
-						DataPath = GetAppSetting("Sewebar-DataPath", String.Format(@"{0}\..\Data", AppDomain.CurrentDomain.BaseDirectory)),
-						LMPoolPath = GetAppSetting("Sewebar-PoolPath", String.Format(@"{0}\..\Data\LMs", AppDomain.CurrentDomain.BaseDirectory)),
-						LMPath = GetAppSetting("Sewebar-LMPath",String.Format(@"{0}\..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
+						DataPath = GetAppSetting("Sewebar-DataPath", String.Format(@"{0}..\Data", AppDomain.CurrentDomain.BaseDirectory)),
+						LMPoolPath = GetAppSetting("Sewebar-PoolPath", String.Format(@"{0}..\Data\LMs", AppDomain.CurrentDomain.BaseDirectory)),
+						LMPath = GetAppSetting("Sewebar-LMPath",String.Format(@"{0}..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
 					};
 				}
 

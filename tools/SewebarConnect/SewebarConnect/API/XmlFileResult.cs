@@ -6,13 +6,13 @@ using System.Web.Mvc;
 
 namespace SewebarConnect.API
 {
-	public class XmlResult : ActionResult
+	public class XmlFileResult : ActionResult
 	{
 		public Encoding ContentEncoding { get; set; }
 
 		public string ContentType { get; set; }
 
-		public Response Data { get; set; }
+		public IFileResponse Data { get; set; }
 
 		public override void ExecuteResult(ControllerContext context)
 		{
@@ -39,10 +39,7 @@ namespace SewebarConnect.API
 
 			if (this.Data != null)
 			{
-				using (var w = new StreamWriter(response.OutputStream))
-				{
-					w.Write(this.Data.Write());
-				}
+				response.WriteFile(this.Data.GetFile());
 			}
 		}
 	}
