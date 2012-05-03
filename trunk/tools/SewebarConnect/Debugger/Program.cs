@@ -11,7 +11,7 @@ namespace Debugger
 			var env = new LMWrapper.Environment
 			{
 				//LMPoolPath = String.Format(@"{0}", @"C:\LMs\"),
-				LMPoolPath = String.Format(@"{0}", @"d:\svn\sewebar-cms\tools\SewebarConnect\Data\LMs"),
+				LMPoolPath = String.Format(@"{0}", @"c:\LMs"),
 				LMPath = String.Format("{0}/../{1}", System.AppDomain.CurrentDomain.BaseDirectory, "LISp Miner"),
 			};
 
