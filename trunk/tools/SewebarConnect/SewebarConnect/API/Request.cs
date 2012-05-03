@@ -29,9 +29,13 @@ namespace SewebarConnect.API
 
 		public Request(LISpMiner miner, HttpContextBase httpContext)
 		{
-			this.DataFolder = String.Format("{1}/xml/{0}", miner != null ? miner.Id : String.Empty, AppDomain.CurrentDomain.GetData("DataDirectory"));
+			if (miner != null)
+			{
+				this.DataFolder = String.Format("{0}/xml", miner.LMPath);
 
-			this.LISpMiner = miner;
+				this.LISpMiner = miner;
+			}
+
 			this.HttpContext = httpContext;
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Newtonsoft.Json;
@@ -35,7 +36,7 @@ namespace SewebarConnect.API
 			}
 		}
 
-		public string Write()
+		public virtual string Write()
 		{
 			using (var sw = new StringWriter())
 			{

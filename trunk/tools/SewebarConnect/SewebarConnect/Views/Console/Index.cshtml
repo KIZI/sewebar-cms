@@ -17,11 +17,7 @@
 <label for="reg_request">Database connection definition</label>
 <textarea name="reg_request" id="reg_request" rows="10" cols="80">
 {
-	 "type": "MySQLConnection",
-	 "server": "localhost",
-	 "database": "lisp",
-	 "username": "username",
-	 "password": "pass"
+	 "type": "AccessConnection"
 }
 </textarea>
 <button name="reg">Register</button>
@@ -38,6 +34,18 @@
 <button name="import">Import</button>
 <label for="import_response">Response</label>
 <textarea name="import_response" id="import_response" rows="10" cols="80"></textarea>
+</form>
+
+<h2>Tasks</h2>
+<form action="#">
+<label for="task_id">LM ID</label>
+<input type="text" value="" name="task_id" id="task_id" size="32" />
+<label for="task_request">Task Definition</label>
+<textarea name="task_request" id="task_request" rows="10" cols="80"></textarea>
+<button name="task_4ft">Run task</button>
+<button name="task_pool">Pool task</button>
+<label for="task_response">Response</label>
+<textarea name="task_response" id="task_response" rows="10" cols="80"></textarea>
 </form>
 
 <h2>Environment</h2>

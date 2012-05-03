@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ExceptionResponse.cs" />
+    <Compile Include="API\IFileResponse.cs" />
     <Compile Include="API\ImportRequest.cs" />
     <Compile Include="API\ImportResponse.cs" />
     <Compile Include="API\JsonResult.cs" />
@@ -75,11 +76,15 @@
     <Compile Include="API\Request.cs" />
     <Compile Include="API\Response.cs" />
     <Compile Include="API\Status.cs" />
+    <Compile Include="API\TaskRequest.cs" />
+    <Compile Include="API\TaskResponse.cs" />
+    <Compile Include="API\XmlFileResult.cs" />
     <Compile Include="API\XmlResult.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DataDictionaryController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

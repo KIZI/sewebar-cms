@@ -14,6 +14,7 @@
 
 			if (id) {
 				$('#import_id').val(id);
+				$('#task_id').val(id);
 			}
 		});
 
@@ -32,6 +33,40 @@
 			dataType: 'text'
 		}).done(function (data) {
 			$('#import_response').val(data);
+		});
+
+		return false;
+	});
+
+	// task 4ft
+	$('button[name="task_4ft"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "Task/Run",
+			data: {
+				guid: $('#task_id').val(),
+				content: $('#task_request').val()
+			},
+			dataType: 'text'
+		}).done(function (data) {
+			$('#task_response').val(data);
+		});
+
+		return false;
+	});
+
+	// task pooler
+	$('button[name="task_pool"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "Task/Pool",
+			data: {
+				guid: $('#task_id').val(),
+				content: $('#task_request').val()
+			},
+			dataType: 'text'
+		}).done(function (data) {
+			$('#task_response').val(data);
 		});
 
 		return false;
