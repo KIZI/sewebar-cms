@@ -84,3 +84,53 @@ table
 	width: 74%;
 	margin: auto;
 }
+
+.console
+{
+}
+
+.console fieldset, .console fieldset.output
+{
+	float: left;
+	border: none;
+	margin: 0;
+	padding: 0;
+	width: 49%;
+	padding-bottom: 10px;
+}
+
+.console fieldset.id
+{
+	width: 100%;
+}
+
+.console fieldset.id input
+{
+	border: 1px solid #ccc;
+}
+
+.console fieldset.output
+{
+	padding-left: 2%;
+}
+
+.console fieldset textarea
+{
+	width: 100%;
+	padding: 0;
+	resize: vertical;
+	border: 1px solid #ccc;
+}
+
+.console div.buttons
+{
+	margin: 10px auto;
+	text-align: center;
+	clear: both;
+}
+
+.console div.buttons button
+{
+	border: 1px solid #000;
+	background-color: #ccc;
+}

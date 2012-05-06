@@ -13,39 +13,63 @@
 <h1>Sewebar Debug Console</h1>
 
 <h2>Registration</h2>
-<form action="#">
-<label for="reg_request">Database connection definition</label>
-<textarea name="reg_request" id="reg_request" rows="10" cols="80">
-{
-	 "type": "AccessConnection"
-}
-</textarea>
-<button name="reg">Register</button>
-<label for="reg_response">Response</label>
-<textarea name="reg_response" id="reg_response" rows="10" cols="80"></textarea>
+<form action="#" class="console">
+<fieldset>
+	<legend>Database connection definition</legend>
+	<textarea name="reg_request" id="reg_request" rows="10" cols="80">
+	{
+		 "type": "AccessConnection"
+	}
+	</textarea>
+</fieldset>
+<fieldset class="output">
+	<legend>Response</legend>
+	<textarea name="reg_response" id="reg_response" rows="10" cols="80"></textarea>
+</fieldset>
+<div class="buttons">
+	<button name="reg">Register</button>
+</div>
 </form>
 
 <h2>Import DataDictionary</h2>
-<form action="#">
-<label for="import_id">ID</label>
-<input type="text" value="" name="import_id" id="import_id" size="32" />
-<label for="import_request">DataDictionary</label>
-<textarea name="import_request" id="import_request" rows="10" cols="80"></textarea>
-<button name="import">Import</button>
-<label for="import_response">Response</label>
-<textarea name="import_response" id="import_response" rows="10" cols="80"></textarea>
+<form action="#" class="console">
+<fieldset class="id">
+	<legend>LM ID</legend>
+	<input type="text" value="" name="import_id" id="import_id" size="32" />
+</fieldset>
+<fieldset>
+	<legend>DataDictionary</legend>
+	<textarea name="import_request" id="import_request" rows="20" cols="80"></textarea>
+</fieldset>
+<fieldset class="output">
+	<legend>Response</legend>
+	<textarea name="import_response" id="import_response" rows="20" cols="80"></textarea>
+</fieldset>
+<div class="buttons">
+	<button name="import">Import</button>
+</div>
 </form>
 
 <h2>Tasks</h2>
-<form action="#">
-<label for="task_id">LM ID</label>
-<input type="text" value="" name="task_id" id="task_id" size="32" />
-<label for="task_request">Task Definition</label>
-<textarea name="task_request" id="task_request" rows="10" cols="80"></textarea>
-<button name="task_4ft">Run task</button>
-<button name="task_pool">Pool task</button>
-<label for="task_response">Response</label>
-<textarea name="task_response" id="task_response" rows="10" cols="80"></textarea>
+<form action="#" class="console">
+<fieldset class="id">
+	<legend>LM ID</legend>
+	<input type="text" value="" name="task_id" id="task_id" size="32" />
+</fieldset>
+
+<fieldset>
+	<legend>Task Definition</legend>
+	<textarea name="task_request" id="task_request" rows="20" cols="80"></textarea>
+</fieldset>
+<fieldset class="output">
+	<legend>Response</legend>
+	<textarea name="task_response" id="task_response" rows="20" cols="80"></textarea>
+</fieldset>
+<div class="buttons">
+	<button name="task_4ft">Run task</button>
+	<button name="task_pool">Pool task</button>
+</div>
+
 </form>
 
 <h2>Environment</h2>
