@@ -42,6 +42,22 @@ namespace LMWrapper
 			return miner.Id;
 		}
 
+		/// <summary>
+		/// Registers existing miner.
+		/// </summary>
+		/// <param name="miner">LISpMiner to register.</param>
+		/// <returns>ID of registered LISpMiner.</returns>
+		public void Unregister(LISpMiner.LISpMiner miner)
+		{
+			var m = this.GetMiner(miner.Id);
+
+			if (m != null)
+			{
+				RegisteredMiners.Remove(miner.Id);
+				miner.Dispose();
+			}
+		}
+
 		public bool Exists(string guid)
 		{
 			return this.RegisteredMiners.ContainsKey(guid);
