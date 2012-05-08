@@ -8,7 +8,7 @@
 			me.remove();
 		}).fail(function (data) {
 			alert($('message', data.responseXML).text());
-		}); ;
+		});
 
 		return false;
 	});

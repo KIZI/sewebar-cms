@@ -4,13 +4,24 @@
 		$.ajax({
 			type: "POST",
 			url: "Application/Register",
-			data: jQuery.parseJSON($('textarea[name="reg_request"]').val()),
+			data: {
+				type: $('#reg_type').val(),
+				metabase: $('#reg_metabase').val(),
+				server: $('#reg_server').val(),
+				database: $('#reg_database').val(),
+				username: $('#reg_username').val(),
+				password: $('#reg_password').val()
+			},
 			dataType: 'text'
 		}).done(function (data) {
 			var xml = jQuery.parseXML(data),
-				id = $(xml).contents().attr('id');
+				id = $(xml).contents().attr('id'),
+				textarea = $('textarea[name="reg_response"]'),
+				status = $(xml).contents().attr('status');
 
-			$('textarea[name="reg_response"]').val(data);
+			textarea.removeClass();
+			textarea.addClass(status);
+			textarea.val(data);
 
 			if (id) {
 				$('#import_id').val(id);

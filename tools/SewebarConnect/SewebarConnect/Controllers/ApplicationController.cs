@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using LMWrapper;
 using LMWrapper.LISpMiner;
@@ -27,7 +28,30 @@ namespace SewebarConnect.Controllers
 
 		public ActionResult Miner()
 		{
+			var acceptTypes = this.HttpContext.Request.AcceptTypes;
+
+			if (acceptTypes != null &&
+			    (acceptTypes.Contains("text/xml") ||
+			     acceptTypes.Contains("application/xml")))
+			{
+				return new XmlResult
+				       	{
+				       		Data = new LISpMinerResponse(this.LISpMiner)
+				       	};
+			}
+
 			return View(this.LISpMiner);
+		}
+
+		[ErrorHandler]
+		public ActionResult Remove()
+		{
+			MvcApplication.Environment.Unregister(this.LISpMiner);
+
+			return new XmlResult
+			       	{
+			       		Data = new Response {Status = Status.Success, Message = "LISpMiner removed."}
+			       	};
 		}
 
 		[HttpPost]

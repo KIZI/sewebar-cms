@@ -136,6 +136,16 @@ table
 	border: 1px solid #ccc;
 }
 
+.console fieldset textarea.failure
+{
+	color: red;
+}
+
+.console fieldset textarea.success
+{
+	color: green;
+}
+
 .console div.buttons
 {
 	margin: 10px auto;

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Web.Configuration;
+using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 using LMWrapper.LISpMiner;
@@ -13,7 +12,6 @@ namespace SewebarConnect
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(MvcApplication));
 		private static LMWrapper.Environment _env;
-		private static Dictionary<string, LISpMiner> _registeredSessionMiners;
 
 		#region Properties
 
@@ -35,45 +33,35 @@ namespace SewebarConnect
 			}
 		}
 
-		protected static Dictionary<string, LISpMiner> RegisteredSessionMiners
-		{
-			get
-			{
-				if (_registeredSessionMiners == null)
-				{
-					_registeredSessionMiners = new Dictionary<string, LISpMiner>();
-				}
-
-				return _registeredSessionMiners;
-			}
-		}
-
-		public static Dictionary<string, LISpMiner>.KeyCollection ExistingSessionMiners
-		{
-			get { return RegisteredSessionMiners.Keys; }
-		}
-
-		public static string RegisterSessionMiner(LISpMiner miner)
-		{
-			RegisteredSessionMiners.Add(miner.Id, miner);
-
-			return miner.Id;
-		}
-
 		#endregion
 
 		protected static string GetAppSetting(string setting, string defaultValue)
 		{
-			Configuration webconfig = WebConfigurationManager.OpenWebConfiguration(null);
-			if (webconfig.AppSettings.Settings.Count > 0)
+			var value = ConfigurationManager.AppSettings[setting];
+			return String.IsNullOrEmpty(value) ? defaultValue : value;
+		}
+
+		protected static void RegisterExisting()
+		{
+			var env = MvcApplication.Environment;
+
+			foreach (var path in Directory.GetDirectories(env.LMPoolPath))
 			{
-				KeyValueConfigurationElement s = webconfig.AppSettings.Settings[setting];
+				try
+				{
+					var directory = new DirectoryInfo(path);
+					var lm = new LISpMiner(directory, env);
 
-				if (s != null && !string.IsNullOrEmpty(s.Value))
-					return s.Value;
+					if (!env.Exists(lm.Id))
+					{
+						env.Register(lm);
+					}
+				}
+				catch
+				{
+					continue;
+				}
 			}
-
-			return defaultValue;
 		}
 
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -99,6 +87,7 @@ namespace SewebarConnect
 
 			RegisterGlobalFilters(GlobalFilters.Filters);
 			RegisterRoutes(RouteTable.Routes);
+			RegisterExisting();
 
 			// Load logging info
 			log4net.Config.XmlConfigurator.Configure();
@@ -107,16 +96,6 @@ namespace SewebarConnect
 		protected void Application_Error(object sender, EventArgs e)
 		{
 			Log.Error(Server.GetLastError());
-		}
-
-		protected void Session_End(object sender, EventArgs e)
-		{
-			if (RegisteredSessionMiners.ContainsKey(Session.SessionID))
-			{
-				RegisteredSessionMiners.Remove(Session.SessionID);
-			}
-
-			//HttpHandlerSession.Clean(Session);
 		}
 	}
 }
