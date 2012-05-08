@@ -109,6 +109,20 @@ table
 	border: 1px solid #ccc;
 }
 
+.console fieldset.reg input,
+.console fieldset.reg select
+{
+	border: 1px solid #ccc;
+	display: block;
+}
+
+.console fieldset.reg label
+{
+	width: 110px;
+	display: block;
+	float: left;
+}
+
 .console fieldset.output
 {
 	padding-left: 2%;

@@ -1,0 +1,51 @@
+﻿@using LMWrapper.ODBC
+@using SewebarConnect
+@model object
+
+@{
+	ViewBag.Title = "title";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Registered LISp Miners</h1>
+<h2>Environment</h2>
+<dl>
+	<dt>BaseDirectory</dt>
+	<dd>@System.AppDomain.CurrentDomain.BaseDirectory</dd>
+	<dt>Session ID</dt>
+	<dd>@Session.SessionID</dd>
+</dl>
+
+@if (MvcApplication.Environment.ExistingMiners.Count > 0)
+{
+	<h3>Existing miners</h3>
+	<ol>
+		@foreach (var miner in MvcApplication.Environment.ExistingMiners)
+		{
+			<li><a href="@Url.Action("Miner", new { guid = miner })">@miner</a></li>
+		}
+	</ol>
+}
+	
+@if (MvcApplication.ExistingSessionMiners.Count > 0)
+{
+	<h3>Active session miners</h3>
+	<ol>
+		@foreach (var miner in MvcApplication.ExistingSessionMiners)
+		{
+			<li>@miner</li>
+		}
+	</ol>
+}
+
+@if (ODBCManagerRegistry.GetAllDataSourceNames().Count > 0)
+{
+	<h3>ODBC DSNs</h3>
+	<ol>
+		@foreach (var dsn in ODBCManagerRegistry.GetAllDataSourceNames().Keys)
+		{
+
+			<li>@dsn <a href="@Url.Action("RemoveDsn", "Application", new { dsn = dsn })" class="ajax">Remove</a></li>
+		}
+	</ol>
+}

@@ -27,7 +27,7 @@ namespace SewebarWeb
 				var id = ShortGuid.NewGuid();
 				var database = OdbcConnection.Create(this.Request.Connection, Global.Environment, id.ToString(),
 				                                     this.Request.Parameters);
-				var miner = new LISpMiner(Global.Environment, id.ToString(), database);
+				var miner = new LISpMiner(Global.Environment, id.ToString(), database, string.Empty);
 
 				Global.Environment.Register(miner);
 

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
 using SewebarConnect.API;
+using SewebarConnect.API.Requests.DataDictionary;
+using SewebarConnect.API.Responses;
+using SewebarConnect.API.Responses.DataDictionary;
 
 namespace SewebarConnect.Controllers
 {
@@ -9,16 +12,16 @@ namespace SewebarConnect.Controllers
 		[ValidateInput(false)]
 		public XmlResult Import()
 		{
-			var request = new API.ImportRequest(this);
+			var request = new ImportRequest(this);
 
-			var response = new API.ImportResponse
+			var response = new ImportResponse
 			               	{
-			               		Id = this.Miner.Id
+			               		Id = this.LISpMiner.Id
 			               	};
 
-			if (this.Miner != null && request.DataDictionary != null)
+			if (this.LISpMiner != null && request.DataDictionary != null)
 			{
-				var importer = this.Miner.Importer;
+				var importer = this.LISpMiner.Importer;
 				importer.Input = request.DataDictionaryPath;
 				importer.Execute();
 

@@ -1,9 +1,8 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Xml.Linq;
 using LMWrapper;
 
-namespace SewebarConnect.API
+namespace SewebarConnect.API.Responses.Application
 {
 	[DataContract(Name = "response")]
 	public class RegistrationResponse : Response

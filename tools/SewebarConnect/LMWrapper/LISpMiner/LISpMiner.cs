@@ -166,7 +166,8 @@ namespace LMWrapper.LISpMiner
 		/// <param name="environment">Environment settings</param>
 		/// <param name="id">Desired ID.</param>
 		/// <param name="databasePrototypeFile">Original database.</param>
-		public LISpMiner(Environment environment, string id, string databasePrototypeFile)
+		/// <param name="metabasePrototypeFile">Name of metabase file to use. Must exist in data folder.</param>
+		public LISpMiner(Environment environment, string id, string databasePrototypeFile, string metabasePrototypeFile)
 			: this(environment, id)
 		{
 			string databaseFile;
@@ -176,7 +177,7 @@ namespace LMWrapper.LISpMiner
 
 			this.Database = new AccessConnection(databaseFile, databasePrototypeFile, databaseDSN);
 
-			this.CreateMetabase();
+			this.CreateMetabase(metabasePrototypeFile);
 		}
 
 		/// <summary>
@@ -185,7 +186,8 @@ namespace LMWrapper.LISpMiner
 		/// <param name="environment">Environment settings</param>
 		/// <param name="id">Desired ID.</param>
 		/// <param name="database">Original database.</param>
-		public LISpMiner(Environment environment, string id, OdbcConnection database)
+		/// <param name="metabasePrototypeFile">Name of metabase file to use. Must exist in data folder.</param>
+		public LISpMiner(Environment environment, string id, OdbcConnection database, string metabasePrototypeFile)
 			: this(environment, id)
 		{
 			if (database != null)
@@ -197,7 +199,7 @@ namespace LMWrapper.LISpMiner
 				throw new NullReferenceException("Database can't be null.");
 			}
 
-			this.CreateMetabase();
+			this.CreateMetabase(metabasePrototypeFile);
 		}
 
 		/// <summary>
@@ -216,7 +218,7 @@ namespace LMWrapper.LISpMiner
 			this.LMPath = lmpath.FullName;
 
 			string metabaseFile;
-			string metabasePrototypeFile;
+			string devNull = string.Empty;
 			string metabaseDSN;
 			string databaseFile;
 			string databaseDSN;
@@ -233,28 +235,32 @@ namespace LMWrapper.LISpMiner
 			}
 
 
-			this.GetMetabaseNames(out metabaseFile, out metabasePrototypeFile, out metabaseDSN);
+			this.GetMetabaseNames(out metabaseFile, ref devNull, out metabaseDSN);
 			this.Metabase = new AccessConnection(metabaseFile, string.Empty, metabaseDSN);
 		}
 
-		protected void CreateMetabase()
+		protected void CreateMetabase(string metabasePrototypeFile)
 		{
 			string metabaseFile;
-			string metabasePrototypeFile;
 			string metabaseDSN;
 
-			this.GetMetabaseNames(out metabaseFile, out metabasePrototypeFile, out metabaseDSN);
+			this.GetMetabaseNames(out metabaseFile, ref metabasePrototypeFile, out metabaseDSN);
 
 			this.Metabase = new AccessConnection(metabaseFile, metabasePrototypeFile, metabaseDSN);
 
 			this.Metabase.SetDatabaseDsnToMetabase(this.Database);
 		}
 
-		protected void GetMetabaseNames(out string file, out string protofile, out string dsn)
+		protected void GetMetabaseNames(out string file, ref string protofile, out string dsn)
 		{
+			if (string.IsNullOrEmpty(protofile))
+			{
+				protofile = "LMEmpty.mdb";
+			}
+
 			//TODO: make default connection configurable
 			file = String.Format(@"{0}\LM-metabase-{1}.mdb", this.LMPath, this.Id);
-			protofile = String.Format(@"{0}\LM Barbora.mdb", Environment.DataPath);
+			protofile = String.Format(@"{0}\{1}", Environment.DataPath, protofile);
 			dsn = String.Format("LMM-{0}", this.Id);
 		}
 

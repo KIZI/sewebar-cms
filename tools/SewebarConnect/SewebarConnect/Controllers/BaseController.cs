@@ -8,11 +8,10 @@ namespace SewebarConnect.Controllers
 	public class BaseController : Controller
 	{
 		private const string PARAMS_GUID = "guid";
-		private const string SESSION_KEY = "LM";
 
 		private LISpMiner _miner;
 
-		public LISpMiner Miner
+		public LISpMiner LISpMiner
 		{
 			get
 			{
@@ -25,39 +24,18 @@ namespace SewebarConnect.Controllers
 					}
 
 					var guid = this.HttpContext.Request.Params[PARAMS_GUID];
-					var sessionMiner = this.HttpContext.Session[SESSION_KEY] as LISpMiner;
 
-					// If request contains guid, try to find registered miner
-					if (guid != null)
+					if (guid == null)
 					{
-						LISpMiner miner = MvcApplication.Environment.GetMiner(guid);
-
-						// Dispose possible existing session miner
-						if (sessionMiner != null && miner != null)
-						{
-							sessionMiner.Dispose();
-						}
-
-						this._miner = miner;
+						throw new Exception(String.Format("Not specified which LISpMiner to work with."));
 					}
 
-					// If no registered miner asked for or found try to use session
-					if (this._miner == null)
+					if (!MvcApplication.Environment.Exists(guid))
 					{
-						if (sessionMiner != null)
-						{
-							this._miner = sessionMiner;
-						}
-						else
-						{
-							var id = HttpContext.Session.SessionID;
-							var db = String.Format(@"{0}\Barbora.mdb", AppDomain.CurrentDomain.GetData("DataDirectory"));
-
-							this._miner = new LISpMiner(MvcApplication.Environment, id, db);
-							MvcApplication.RegisterSessionMiner(this._miner);
-							this.HttpContext.Session[SESSION_KEY] = this._miner;
-						}
+						throw new Exception(String.Format("Requested LISpMiner with ID {0}, does not exists", guid));
 					}
+
+					this._miner = MvcApplication.Environment.GetMiner(guid);
 				}
 
 				return this._miner;
