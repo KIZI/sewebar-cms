@@ -1,0 +1,27 @@
+﻿@using LMWrapper.LISpMiner
+@model LISpMiner
+@{
+	ViewBag.Title = "Miner";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Miner</h1>
+<h2>@Model.Id</h2>
+<dl>
+	<dt>Home path</dt>
+	<dd>@Path.GetFullPath(Model.LMPath)</dd>
+
+	<dt>Version</dt>
+	<dd></dd>
+</dl>
+
+<h2>Tasks</h2>
+
+<h2>DSN</h2>
+<dl>
+	<dt>Database</dt>
+	<dd>@Model.Database.DSN <a href="@Url.Action("RemoveDsn", "Application", new { dsn = Model.Database.DSN })" class="ajax">Remove</a></dd>
+
+	<dt>Metabase</dt>
+	<dd>@Model.Metabase.DSN <a href="@Url.Action("RemoveDsn", "Application", new { dsn = Model.Metabase.DSN })" class="ajax">Remove</a></dd>
+</dl>

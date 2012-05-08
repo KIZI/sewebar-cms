@@ -4,6 +4,9 @@ using LMWrapper;
 using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
 using SewebarConnect.API;
+using SewebarConnect.API.Requests.Application;
+using SewebarConnect.API.Responses;
+using SewebarConnect.API.Responses.Application;
 using log4net;
 
 namespace SewebarConnect.Controllers
@@ -17,6 +20,16 @@ namespace SewebarConnect.Controllers
 			return View();
 		}
 
+		public ActionResult Miners()
+		{
+			return View();
+		}
+
+		public ActionResult Miner()
+		{
+			return View(this.LISpMiner);
+		}
+
 		[HttpPost]
 		public XmlResult Register()
 		{
@@ -25,7 +38,7 @@ namespace SewebarConnect.Controllers
 				var request = new RegistrationRequest(this);
 				var id = ShortGuid.NewGuid();
 				var database = OdbcConnection.Create(MvcApplication.Environment, id.ToString(), request.DbConnection);
-				var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), database);
+				var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), database, request.Metabase);
 
 				MvcApplication.Environment.Register(miner);
 
@@ -45,6 +58,7 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
+		[ErrorHandler]
 		public XmlResult RemoveDsn()
 		{
 			var dsn = this.HttpContext.Request["dsn"];
@@ -60,10 +74,7 @@ namespace SewebarConnect.Controllers
 				       	};
 			}
 
-			return new XmlResult
-			       	{
-			       		Data = new ExceptionResponse(String.Format("Not existing DSN: {0}", dsn))
-			       	};
+			throw new Exception(String.Format("Not existing DSN: {0}", dsn));
 		}
 	}
 }

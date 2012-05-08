@@ -71,13 +71,4 @@
 
 		return false;
 	});
-
-	// ajax links
-	$('.ajax').click(function () {
-		$.ajax({
-			url: $(this).attr('href')
-		});
-
-		return false;
-	});
 });

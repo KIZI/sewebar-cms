@@ -12,8 +12,6 @@ namespace LMWrapper
 
 		public string LMPath { get; set; }
 
-		public bool IsMono { get; set; }
-
 		public Dictionary<string, LISpMiner.LISpMiner>.KeyCollection ExistingMiners
 		{
 			get { return this.RegisteredMiners.Keys; }
@@ -42,6 +40,11 @@ namespace LMWrapper
 			RegisteredMiners.Add(miner.Id, miner);
 
 			return miner.Id;
+		}
+
+		public bool Exists(string guid)
+		{
+			return this.RegisteredMiners.ContainsKey(guid);
 		}
 
 		public LISpMiner.LISpMiner GetMiner(string guid)

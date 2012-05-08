@@ -1,4 +1,4 @@
-﻿namespace SewebarConnect.API
+﻿namespace SewebarConnect.API.Responses.Task
 {
 	public class TaskResponse : Response, IFileResponse
 	{

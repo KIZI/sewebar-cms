@@ -8,6 +8,9 @@ using System.Xml.XPath;
 using LMWrapper;
 using LMWrapper.LISpMiner;
 using SewebarConnect.API;
+using SewebarConnect.API.Requests.Task;
+using SewebarConnect.API.Responses;
+using SewebarConnect.API.Responses.Task;
 using log4net;
 
 namespace SewebarConnect.Controllers
@@ -32,15 +35,15 @@ namespace SewebarConnect.Controllers
 		[ValidateInput(false)]
 		public ActionResult Run()
 		{
-			var request = new SewebarWeb.API.TaskRequest(this);
+			var request = new TaskRequest(this);
 
 			var response = new TaskResponse();
 
-			if (this.Miner != null && request.Task != null)
+			if (this.LISpMiner != null && request.Task != null)
 			{
 				var status = "Not generated";
 
-				var exporter = this.Miner.Exporter;
+				var exporter = this.LISpMiner.Exporter;
 				exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
 												request.TaskFileName, DateTime.Now);
 				exporter.Template = String.Format(@"{0}\Sewebar\Template\ARDExport.LM.Template.txt", exporter.LMPath);
@@ -66,7 +69,7 @@ namespace SewebarConnect.Controllers
 					Log.Debug(ex);
 
 					// import task
-					var importer = this.Miner.Importer;
+					var importer = this.LISpMiner.Importer;
 					importer.Input = request.TaskPath;
 					importer.Alias = String.Format(@"{0}\Sewebar\Template\LM.PMML.Alias.ARD.txt", importer.LMPath);
 					importer.Execute();
@@ -79,9 +82,9 @@ namespace SewebarConnect.Controllers
 					// * Interrupted (přerušena -- buď kvůli time-outu nebo max počtu hypotéz)
 					case "Interrupted":
 						// run task - generate results
-						if (this.Miner.Task4FtGen.Status == ExecutableStatus.Ready)
+						if (this.LISpMiner.Task4FtGen.Status == ExecutableStatus.Ready)
 						{
-							var task4FtGen = this.Miner.Task4FtGen;
+							var task4FtGen = this.LISpMiner.Task4FtGen;
 							task4FtGen.TaskName = request.TaskName;
 							task4FtGen.Execute();
 
@@ -98,7 +101,7 @@ namespace SewebarConnect.Controllers
 					case "Running":
 					// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
 					case "Waiting":
-						this.Miner.Task4FtGen.KeepAlive = 10;
+						this.LISpMiner.Task4FtGen.KeepAlive = 10;
 						break;
 					// * Solved (úspěšně dokončena)
 					case "Solved":
@@ -134,15 +137,15 @@ namespace SewebarConnect.Controllers
 		[ValidateInput(false)]
 		public ActionResult Pool()
 		{
-			var request = new SewebarWeb.API.TaskRequest(this);
+			var request = new TaskRequest(this);
 
 			var response = new TaskResponse();
 
-			if (this.Miner != null && request.Task != null)
+			if (this.LISpMiner != null && request.Task != null)
 			{
 				var status = "Not generated";
 
-				var exporter = this.Miner.Exporter;
+				var exporter = this.LISpMiner.Exporter;
 				exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
 												request.TaskFileName, DateTime.Now);
 				exporter.Template = String.Format(@"{0}\Sewebar\Template\ARDExport.LM.Template.txt", exporter.LMPath);
@@ -168,7 +171,7 @@ namespace SewebarConnect.Controllers
 					Log.Debug(ex);
 
 					// import task
-					var importer = this.Miner.Importer;
+					var importer = this.LISpMiner.Importer;
 					importer.Input = request.TaskPath;
 					importer.Alias = String.Format(@"{0}\Sewebar\Template\LM.PMML.Alias.ARD.txt", importer.LMPath);
 					importer.Execute();
@@ -181,9 +184,9 @@ namespace SewebarConnect.Controllers
 					// * Interrupted (přerušena -- buď kvůli time-outu nebo max počtu hypotéz)
 					case "Interrupted":
 						// run task - generate results
-						if (this.Miner.LMTaskPooler.Status == ExecutableStatus.Ready)
+						if (this.LISpMiner.LMTaskPooler.Status == ExecutableStatus.Ready)
 						{
-							var taskPooler = this.Miner.LMTaskPooler;
+							var taskPooler = this.LISpMiner.LMTaskPooler;
 							taskPooler.TaskName = request.TaskName;
 							taskPooler.Execute();
 
@@ -200,7 +203,7 @@ namespace SewebarConnect.Controllers
 					case "Running":
 					// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
 					case "Waiting":
-						this.Miner.LMTaskPooler.KeepAlive = 10;
+						this.LISpMiner.LMTaskPooler.KeepAlive = 10;
 						break;
 					// * Solved (úspěšně dokončena)
 					case "Solved":

@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Web.Mvc;
 using LMWrapper.ODBC;
-using SewebarConnect.Controllers;
 
-namespace SewebarConnect.API
+namespace SewebarConnect.API.Requests.Application
 {
 	public class RegistrationRequest : Request
 	{
 		private DbConnection _dbConnection;
+
+		public string Metabase
+		{
+			get
+			{
+				string file = this.HttpContext.Request["metabase"];
+				return file ?? string.Empty;
+			}
+		}
 
 		public DbConnection DbConnection
 		{
@@ -36,7 +45,7 @@ namespace SewebarConnect.API
 			}
 		}
 
-		public RegistrationRequest(BaseController controller)
+		public RegistrationRequest(Controller controller)
 			: base(null, controller.HttpContext)
 		{
 

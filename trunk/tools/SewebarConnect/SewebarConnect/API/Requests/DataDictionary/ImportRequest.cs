@@ -2,7 +2,7 @@
 using System.IO;
 using SewebarConnect.Controllers;
 
-namespace SewebarConnect.API
+namespace SewebarConnect.API.Requests.DataDictionary
 {
 	public class ImportRequest : Request
 	{
@@ -39,7 +39,7 @@ namespace SewebarConnect.API
 		}
 
 		public ImportRequest(BaseController controller)
-			: base(controller.Miner, controller.HttpContext)
+			: base(controller.LISpMiner, controller.HttpContext)
 		{
 
 		}

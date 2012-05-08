@@ -3,10 +3,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
-using SewebarConnect.API;
 using SewebarConnect.Controllers;
 
-namespace SewebarWeb.API
+namespace SewebarConnect.API.Requests.Task
 {
 	public class TaskRequest : Request
 	{
@@ -90,7 +89,7 @@ namespace SewebarWeb.API
 		}
 
 		public TaskRequest(BaseController controller)
-			: base(controller.Miner, controller.HttpContext)
+			: base(controller.LISpMiner, controller.HttpContext)
 		{
 		}
 	}
