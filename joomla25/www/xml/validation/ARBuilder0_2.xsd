@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://keg.vse.cz/ns/arbuilder0_2" xmlns:ar="http://keg.vse.cz/ns/arbuilder0_2"
-    xmlns:arf="http://keg.vse.cz/ns/arfeatures_01" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
+    xmlns:arf="http://keg.vse.cz/ns/arfeatures_02" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
     xmlns:data="http://keg.vse.cz/ns/datadescription0_2" xmlns:bkef="http://keg.vse.cz/bkef_patterns" elementFormDefault="unqualified" >
     <xs:annotation>
         <xs:documentation>Version 0.2. 
@@ -14,7 +14,7 @@
         schemaLocation="http://sewebar.vse.cz/schemas/DataDescription0_2.xsd"/>    
     <xs:import namespace="http://keg.vse.cz/bkef_patterns"
         schemaLocation="http://sewebar.vse.cz/schemas/BKEF1_1_Patterns.xsd"/>
-    <xs:import namespace="http://keg.vse.cz/ns/arfeatures_01"
+    <xs:import namespace="http://keg.vse.cz/ns/arfeatures_02"
         schemaLocation="http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"/>  
     <xs:element name="ARBuilder">
         <xs:complexType>
@@ -94,7 +94,7 @@
         <xs:attribute name="weight" type="xs:double"/>
     </xs:complexType>
     <xs:simpleType name="coefList">
-        <xs:restriction base="arf:coefList">
+        <xs:restriction base="guha:coefTypes">
             <xs:enumeration value="Subset"></xs:enumeration>
             <xs:enumeration value="One category"></xs:enumeration>
         </xs:restriction>
