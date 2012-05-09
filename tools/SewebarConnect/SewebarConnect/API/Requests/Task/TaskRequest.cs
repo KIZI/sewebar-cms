@@ -92,5 +92,25 @@ namespace SewebarConnect.API.Requests.Task
 			: base(controller.LISpMiner, controller.HttpContext)
 		{
 		}
+
+		public string GetTemplate(string defaultValue)
+		{
+			var template = this.HttpContext.Request["template"];
+
+			if (string.IsNullOrEmpty(template))
+			{
+				return defaultValue;
+			}
+
+			return template;
+		}
+
+		public string Alias
+		{
+			get
+			{
+				return this.HttpContext.Request["alias"];
+			}
+		}
 	}
 }

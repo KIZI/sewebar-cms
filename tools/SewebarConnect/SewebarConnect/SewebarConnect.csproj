@@ -64,7 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ErrorHandlerAttribute.cs" />
+    <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
     <Compile Include="API\Responses\Application\LISpMinerResponse.cs" />
+    <Compile Include="API\Responses\DataDictionary\ExportResponse.cs" />
     <Compile Include="API\Responses\ExceptionResponse.cs" />
     <Compile Include="API\IFileResponse.cs" />
     <Compile Include="API\Requests\DataDictionary\ImportRequest.cs" />

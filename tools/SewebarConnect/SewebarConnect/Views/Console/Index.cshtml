@@ -67,8 +67,14 @@
 <h2>Tasks</h2>
 <form action="#" class="console">
 <fieldset class="id">
-	<legend>LM ID</legend>
+	<label for="task_id">LM ID</label>
 	<input type="text" value="" name="task_id" id="task_id" size="32" />
+	&nbsp;
+	<label for="task_alias">Alias (used for import task)</label>
+	<input type="text" value="" name="task_alias" id="task_alias" size="32" />
+	&nbsp;
+	<label for="task_template">Template (used for exporting task results)</label>
+	<input type="text" value="" name="task_template" id="task_template" size="32" />
 </fieldset>
 
 <fieldset>
@@ -83,5 +89,29 @@
 	<button name="task_4ft">Run task</button>
 	<button name="task_pool">Pool task</button>
 </div>
+</form>
 
+<h2>Exporter</h2>
+<form action="#" class="console">
+<fieldset class="id">
+	<legend>LM ID</legend>
+	<input type="text" value="" name="export_id" id="export_id" size="32" />
+	&nbsp;
+	<label for="export_template">Matrix (MatrixName to export)</label>
+	<input type="text" value="" name="export_matrix" id="export_matrix" size="32" />
+	&nbsp;
+	<label for="export_template">Template (used for exporting task results)</label>
+	<input type="text" value="" name="export_template" id="export_template" size="64" />
+</fieldset>
+<fieldset>
+	<legend>Task (optional)</legend>
+	<textarea name="export_request" id="export_request" rows="20" cols="80" disabled="disabled"></textarea>
+</fieldset>
+<fieldset class="output">
+	<legend>Response</legend>
+	<textarea name="export_response" id="export_response" rows="20" cols="80"></textarea>
+</fieldset>
+<div class="buttons">
+	<button name="export">Export</button>
+</div>
 </form>

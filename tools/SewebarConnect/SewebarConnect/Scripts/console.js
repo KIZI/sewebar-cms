@@ -19,13 +19,14 @@
 				textarea = $('textarea[name="reg_response"]'),
 				status = $(xml).contents().attr('status');
 
-			textarea.removeClass();
-			textarea.addClass(status);
+			setStatusClass(textarea, status);
+
 			textarea.val(data);
 
 			if (id) {
 				$('#import_id').val(id);
 				$('#task_id').val(id);
+				$('#export_id').val(id);
 			}
 		});
 
@@ -41,9 +42,12 @@
 				guid: $('#import_id').val(),
 				content: $('#import_request').val()
 			},
-			dataType: 'text'
-		}).done(function (data) {
-			$('#import_response').val(data);
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#import_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
 		});
 
 		return false;
@@ -56,11 +60,16 @@
 			url: "Task/Run",
 			data: {
 				guid: $('#task_id').val(),
-				content: $('#task_request').val()
+				content: $('#task_request').val(),
+				alias: $('#task_alias').val(),
+				template: $('#task_template').val()
 			},
-			dataType: 'text'
-		}).done(function (data) {
-			$('#task_response').val(data);
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#task_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
 		});
 
 		return false;
@@ -73,13 +82,45 @@
 			url: "Task/Pool",
 			data: {
 				guid: $('#task_id').val(),
-				content: $('#task_request').val()
+				content: $('#task_request').val(),
+				alias: $('#task_alias').val(),
+				template: $('#task_template').val()
 			},
-			dataType: 'text'
-		}).done(function (data) {
-			$('#task_response').val(data);
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#task_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
+		});
+
+		return false;
+	});
+
+	// Exporter
+	$('button[name="export"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "DataDictionary/Export",
+			data: {
+				guid: $('#export_id').val(),
+				//content: $('#export_request').val(),
+				matrix: $('#export_matrix').val(),
+				template: $('#export_template').val()
+			},
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#export_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
 		});
 
 		return false;
 	});
 });
+
+function setStatusClass(textarea, status) {
+	textarea.removeClass();
+	textarea.addClass(status);
+}

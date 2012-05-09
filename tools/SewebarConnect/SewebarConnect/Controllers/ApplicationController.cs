@@ -14,8 +14,6 @@ namespace SewebarConnect.Controllers
 {
 	public class ApplicationController : BaseController
 	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof (ApplicationController));
-
 		public ActionResult Index()
 		{
 			return View();
@@ -55,31 +53,21 @@ namespace SewebarConnect.Controllers
 		}
 
 		[HttpPost]
+		[ErrorHandler]
 		public XmlResult Register()
 		{
-			try
-			{
-				var request = new RegistrationRequest(this);
-				var id = ShortGuid.NewGuid();
-				var database = OdbcConnection.Create(MvcApplication.Environment, id.ToString(), request.DbConnection);
-				var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), database, request.Metabase);
 
-				MvcApplication.Environment.Register(miner);
+			var request = new RegistrationRequest(this);
+			var id = ShortGuid.NewGuid();
+			var database = OdbcConnection.Create(MvcApplication.Environment, id.ToString(), request.DbConnection);
+			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), database, request.Metabase);
 
-				return new XmlResult
-				       	{
-				       		Data = new RegistrationResponse {Id = id}
-				       	};
-			}
-			catch (Exception ex)
-			{
-				Log.Error(ex);
+			MvcApplication.Environment.Register(miner);
 
-				return new XmlResult
-				       	{
-				       		Data = new ExceptionResponse(ex.Message)
-				       	};
-			}
+			return new XmlResult
+			       	{
+			       		Data = new RegistrationResponse {Id = id}
+			       	};
 		}
 
 		[ErrorHandler]
@@ -89,7 +77,6 @@ namespace SewebarConnect.Controllers
 
 			if (ODBCManagerRegistry.DSNExists(dsn))
 			{
-
 				ODBCManagerRegistry.RemoveDSN(dsn);
 
 				return new XmlResult
