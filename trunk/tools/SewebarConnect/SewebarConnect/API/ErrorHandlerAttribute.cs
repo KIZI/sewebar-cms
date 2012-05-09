@@ -5,11 +5,15 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using SewebarConnect.API.Responses;
+using SewebarConnect.Controllers;
+using log4net;
 
 namespace SewebarConnect.API
 {
 	public class ErrorHandlerAttribute : FilterAttribute, IExceptionFilter
 	{
+		private static readonly ILog Log = LogManager.GetLogger(typeof(ErrorHandlerAttribute));
+
 		private HttpStatusCode _statusCode = HttpStatusCode.InternalServerError;
 
 		public HttpStatusCode StatusCode
@@ -45,6 +49,8 @@ namespace SewebarConnect.API
 			}
 
 			Exception exception = filterContext.Exception;
+
+			Log.Error(exception);
 
 			// If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method), 
 			// ignore it.
