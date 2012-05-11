@@ -57,7 +57,6 @@ var FRManager = new Class({
 			if (!value.hasOwnProperty('value')) { return true; } // if one rule is returned, it does not have id
 			return value.id > maxId;
 		}.bind(this));
-		console.log(rules);
 		
 		return rules;
 	},
