@@ -13,62 +13,62 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>http://sewebar-dev.vse.cz/ardesigner2/createARBuilder.html?id_source=4</td>
+	<td>http://sewebar-dev.vse.cz/arbuilder/web/</td>
 	<td></td>
 </tr>
 <tr>
 	<td>dragAndDropToObject</td>
-	<td>css=#attr1</td>
-	<td>xpath=//div[@class='ARElement'][1]</td>
+	<td>css=li#attribute-nav-district</td>
+	<td>css=#antecedent .cedent</td>
 </tr>
 <tr>
 	<td>select</td>
-	<td>id=topDivAW</td>
-	<td>label=Subset</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=fieldInput</td>
-	<td>1</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>xpath=(//input[@name='fieldInput'])[2]</td>
-	<td>3</td>
+	<td>css=#add-coefficient-category</td>
+	<td>value=Praha</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=saveButton</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
 	<td></td>
-</tr>
-<tr>
-	<td>dragAndDropToObject</td>
-	<td>css=#im5</td>
-	<td>xpath=//div[@class='ARElement'][2]</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=fieldInput</td>
-	<td>0.5</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=saveButton</td>
+	<td>id=add-im</td>
 	<td></td>
-</tr>
-<tr>
-	<td>dragAndDropToObject</td>
-	<td>css=#attr2</td>
-	<td>xpath=//div[@class='ARElement'][3]</td>
 </tr>
 <tr>
 	<td>select</td>
-	<td>name=fieldInput</td>
-	<td>label=bad</td>
+	<td>css=#add-im-select</td>
+	<td>value=FUI</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=#add-im-value</td>
+	<td>0.9</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=saveButton</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>dragAndDropToObject</td>
+	<td>css=li#attribute-nav-quality</td>
+	<td>css=#succedent .cedent</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#mine-rules-confirm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=.found-rule</td>
 	<td></td>
 </tr>
 </tbody></table>
