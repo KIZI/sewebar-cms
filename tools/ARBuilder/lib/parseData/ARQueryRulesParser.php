@@ -28,7 +28,7 @@ class ARQueryRulesParser {
         $BBAP = new BBAParser($this->ER, $this->XPath);
         $BBAP->parseBBAs();
 
-        $DBAP = new DBAPArser($this->ER, $this->XPath, $CP);
+        $DBAP = new DBAParser($this->ER, $this->XPath, $CP);
         $DBAP->parseDBAs();
 
         $ARQR = new ARQueryRule($this->XPath->evaluate('//ARQuery')->item(0), $this->ER, $this->attributes, $this->interestMeasures, $DBAP, $BBAP);
