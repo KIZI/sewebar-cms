@@ -17,6 +17,7 @@ function __autoload($class_name) {
     );
     
     foreach ($paths as $p) {
+        echo $class_name.'<br />';
         $path = APP_PATH.DS.$p.DS.$class_name.'.php';
         if (file_exists($path)) {
             require_once $path;
