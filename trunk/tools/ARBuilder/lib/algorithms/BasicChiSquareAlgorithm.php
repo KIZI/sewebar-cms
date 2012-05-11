@@ -84,7 +84,7 @@ class BasicChiSquareAlgorithm {
     }
     
     protected function normalize($attributes) {
-        $maxVal = 0;
+        $maxVal = 15;
         foreach ($attributes as $val) {
             if ($val > $maxVal) { 
                 $maxVal = $val; 

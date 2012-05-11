@@ -7,6 +7,7 @@
  */
 class SerializeRulesQueryByAR extends AncestorSerializeRules {
 
+  protected $DD;
   private $id = 0;
   private $finalXMLDocument;
   private $antecedent = -1;
@@ -23,7 +24,8 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
   /**
    * It creates instance of this class.
    */
-  function __construct() {
+  function __construct($DD) {
+      $this->DD = $DD;
     parent::__construct();
   }
 
@@ -49,7 +51,7 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
     $this->createXML();
 
     // refactor output to different XML Schema version
-    $this->finalXMLDocument = Utils::refactorXml($this->finalXMLDocument, 'http://keg.vse.cz/ns/arbuilder0_2', 'http://keg.vse.cz/ns/arbuilder0_1');
+    //$this->finalXMLDocument = Utils::refactorXml($this->finalXMLDocument, 'http://keg.vse.cz/ns/arbuilder0_2', 'http://keg.vse.cz/ns/arbuilder0_2');
 
     return $this->finalXMLDocument->saveXML();
   }
@@ -160,10 +162,10 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
     $this->finalXMLDocument = new DomDocument("1.0", "UTF-8");
 
     $ARBuilder = $this->finalXMLDocument->createElement("ar:ARBuilder");
-    $ARBuilder->setAttribute("xmlns:ar", "http://keg.vse.cz/ns/arbuilder0_1");
+    $ARBuilder->setAttribute("xmlns:ar", "http://keg.vse.cz/ns/arbuilder0_2");
     $ARBuilder->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    $ARBuilder->setAttribute("xmlns:dd", "http://keg.vse.cz/ns/datadescription0_1");
-    $ARBuilder->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/arbuilder0_1 http://sewebar.vse.cz/schemas/ARBuilder0_1.xsd");
+    $ARBuilder->setAttribute("xmlns:dd", "http://keg.vse.cz/ns/datadescription0_2");
+    $ARBuilder->setAttribute("xsi:schemaLocation", "http://keg.vse.cz/ns/arbuilder0_2 http://sewebar.vse.cz/schemas/ARBuilder0_2.xsd");
     $ARBuilder->setAttribute("xmlns:guha", "http://keg.vse.cz/ns/GUHA0.1rev1");
     $ARBuilder->setAttribute("mode", "QueryByAssociationRule");
     $root = $this->finalXMLDocument->appendChild($ARBuilder);
@@ -181,14 +183,13 @@ class SerializeRulesQueryByAR extends AncestorSerializeRules {
   private function createDictionary($root) {
     $Dictionary = $this->finalXMLDocument->createElement("DataDescription");
     $this->Dictionary = $root->appendChild($Dictionary);
-    // Get data from Session
-    $domDD1 = $_SESSION["ARBuilder_domDataDescr"];
+
     // load XML
     $domDD = new DomDocument();
-    if (file_exists($domDD1)) {
-      $domDD->load($domDD1);
+    if (file_exists($this->DD)) {
+      $domDD->load($this->DD);
     } else {
-      $domDD->loadXML($domDD1);
+      $domDD->loadXML($this->DD);
     }
     // get <Dictionary>
     $xPath = new DOMXPath($domDD);

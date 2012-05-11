@@ -17,14 +17,14 @@ var InterestMeasureAddSlider = new Class({
 		this.elementSlider = elementSlider;
 		this.IM = IM;
 		
-		if (this.dataType !== 'listOfFieldValues') {
+		if (this.dataType !== 'enum') {
 			this.numberNormalizer = new NumberNormalizer(IM.field.minValue, IM.field.maxValue, this.inversePrecision, 0, 100, this.precision, this.numSteps, IM.field.minValueInclusive, IM.field.maxValueInclusive);
 			this.inverseNumberNormalizer = new NumberNormalizer(0, 100, this.precision, IM.field.minValue, IM.field.maxValue, this.inversePrecision, this.numSteps, IM.field.minValueInclusive, IM.field.maxValueInclusive);
 		}
 		
 		this.parent(this.elementSlider, this.elementSlider.getElement('.knob'), {
-	        range: [0, (this.dataType !== 'listOfFieldValues' ? this.numSteps : (IM.field.values.length - 1))],
-	        initialStep: this.dataType !== 'listOfFieldValues' ? this.numberNormalizer.normalize(this.initialStep) : 0,
+	        range: [0, (this.dataType !== 'enum' ? this.numSteps : (IM.field.values.length - 1))],
+	        initialStep: this.dataType !== 'enum' ? this.numberNormalizer.normalize(this.initialStep) : 0,
 	        
 	        onChange: function(value) {
 	        	this.handleChange(value);
@@ -33,7 +33,7 @@ var InterestMeasureAddSlider = new Class({
 	},
 	
 	handleChange: function (value) {
-		if (this.dataType !== 'listOfFieldValues') {
+		if (this.dataType !== 'enum') {
 	    	var number = this.inverseNumberNormalizer.validate(value);
 	    	number = this.inverseNumberNormalizer.normalize(number);
 	    	var string = this.inverseNumberNormalizer.format(number);

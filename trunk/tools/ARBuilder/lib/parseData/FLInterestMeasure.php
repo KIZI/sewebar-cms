@@ -10,12 +10,16 @@ class FLInterestMeasure {
 
     private $name;
     private $localizedName;
+    private $thresholdType;
+    private $compareType;
     private $explanation;
     private $field;
 
-    public function __construct ($name, $localizedName, $explanation) {
+    public function __construct ($name, $localizedName, $thresholdType, $compareType, $explanation) {
         $this->name = $name;
         $this->localizedName = $localizedName;
+        $this->thresholdType = $thresholdType;
+        $this->compareType = $compareType;
         $this->explanation = $explanation;
         $this->field = array();
     }
@@ -38,9 +42,13 @@ class FLInterestMeasure {
     }
 
     public function toArray () {
-        $array = array($this->name => array('localizedName' => $this->localizedName,
-    		   'explanation' => $this->explanation,
-               'field' => $this->field));
+        $array = array(
+            $this->name => array(
+            	'localizedName' => $this->localizedName,
+                'thresholdType' => $this->thresholdType,
+                'compareType' => $this->compareType,
+				'explanation' => $this->explanation,
+				'field' => $this->field));
 
         return $array;
     }

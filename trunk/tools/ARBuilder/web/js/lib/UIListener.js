@@ -1,10 +1,12 @@
 var UIListener = new Class({
 	
+	ARBuilder: null,
 	ARManager: null,
 	UIColorizer: null,
 	UIPainter: null,
 	
-	initialize: function (ARManager, UIColorizer) {
+	initialize: function (ARBuilder, ARManager, UIColorizer) {
+		this.ARBuilder = ARBuilder;
 		this.ARManager = ARManager;
 		this.UIColorizer = UIColorizer;
 	},
@@ -13,12 +15,71 @@ var UIListener = new Class({
 		this.UIPainter = UIPainter;
 	},
 	
+	registerSettingsEventHandlers: function () {
+		$('settings-open').addEvent('click', function (event) {
+			event.stop();
+			this.ARBuilder.openSettingsWindow();
+		}.bind(this));
+	},
+	
+	registerSettingsWindowEventHandlers: function (ASPossible) {
+		// change FL
+		var elSelect = $('fl-select');
+		elSelect.addEvent('change', function (e) {
+			e.stop();
+			var FLName = elSelect.options[elSelect.selectedIndex].value;
+			this.ARBuilder.updateSettingsWindow(FLName);
+		}.bind(this));
+		
+		// change autoFilter
+		var elAutoFilter = $('autofilter');
+		elAutoFilter.addEvent('click', function (e) {
+			e.stop();
+			this.ARBuilder.changeSettingsAutoFilter(elAutoFilter);
+		}.bind(this));
+		
+		// change attribute suggestion
+		if (ASPossible) {
+			var elAS = $('as');
+			elAS.addEvent('click', function (e) {
+				e.stop();
+				this.ARBuilder.changeSettingsAS(elAS);
+			}.bind(this));
+		}
+		
+		// save
+		var elSubmit = $('settings-form').getElement('input[type=submit]');
+		elSubmit.addEvent('click', function (e) {
+			e.stop();
+			var rulesCnt = $('rules-cnt').value;
+			var elSelect = $('fl-select');
+			var FLName = elSelect.options[elSelect.selectedIndex].value;
+			var autoSearch = $('autofilter').hasClass('autofilter-on');
+			var autoSuggest = $('as').hasClass('autosuggest-on');
+			this.ARBuilder.saveSettings(rulesCnt, FLName, autoSearch, autoSuggest);
+		}.bind(this));
+		
+		// close
+		var elClose = $('settings-close');
+		elClose.addEvent('click', function (e) {
+			this.ARBuilder.closeSettingsWindow();
+			e.stop();
+		}.bind(this));
+	},
+	
 	registerNavigationEventHandlers: function () {
+		var elAttrDropdown = $$('#attributes a.dropdown')[0];
+		elAttrDropdown.addEvent('click', function (event) {
+			event.stop();
+			var elAttrToggle = $$('#attributes > div')[0];
+			elAttrToggle.toggle();
+		}.bind(this));
+		
 		if (this.ARManager.getAttributesByGroup()) {
 			// attributes by list
 			$('attributes-by-list').addEvent('click', function (event) {
-				this.ARManager.displayAttributesByList();
 				event.stop();
+				this.ARManager.displayAttributesByList();
 			}.bind(this));
 		} else {
 			// attributes by group
@@ -304,10 +365,8 @@ var UIListener = new Class({
 		// change coefficient
 		var elementSelect = $('add-coefficient-select');
 		elementSelect.addEvent('change', function (event) {
-			var coefficientName = elementSelect.options[elementSelect.selectedIndex].value;
-			var coefficient = this.ARManager.getBBACoefficient(coefficientName);
-			this.UIPainter.renderAddCoefficientAutocomplete(field, coefficient);
 			event.stop();
+			this.ARManager.updateAddCoefficientAutocomplete(field, elementSelect.options[elementSelect.selectedIndex].value);
 		}.bind(this));
 		
 		// close
@@ -346,10 +405,8 @@ var UIListener = new Class({
 		// change coefficient
 		var elementSelect = $('edit-coefficient-select');
 		elementSelect.addEvent('change', function (event) {
-			var coefficientName = elementSelect.options[elementSelect.selectedIndex].value;
-			var coefficient = this.ARManager.getBBACoefficient(coefficientName);
-			this.UIPainter.renderEditCoefficientAutocomplete(field, coefficient);
 			event.stop();
+			this.ARManager.updateEditCoefficientAutocomplete(field, elementSelect.options[elementSelect.selectedIndex].value)
 		}.bind(this));
 		
 		// close
@@ -460,6 +517,22 @@ var UIListener = new Class({
 		$(rule.getFoundRuleCSSRemoveID()).addEvent('click', function (event) {
 			event.stop();
 			this.ARManager.removeFoundRule(rule);
+		}.bind(this));
+		
+		// clear
+		$('found-rules').getElement('.controls').addEvent('click', function (e) {
+			e.stop();
+			this.ARManager.clearFoundRules();
+		}.bind(this));
+	},
+	
+	registerMarkedRulesEventHandlers: function () {
+		var elDropdown = $$('#marked-rules a.dropdown')[0];
+		elDropdown.addEvent('click', function (event) {
+			event.stop();
+			
+			var elToggle = $$('#marked-rules > div')[0];
+			elToggle.toggle();
 		}.bind(this));
 	}
 	

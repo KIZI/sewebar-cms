@@ -4,7 +4,9 @@ define('DS', DIRECTORY_SEPARATOR);
 define('APP_PATH', realpath(realpath(dirname(__FILE__)).DS.'..'));
 
 $configs = array(array('DDPath' => APP_PATH.DS.'data'.DS.'datadescription_0.2.xml',
-                   'FLPath' => APP_PATH.DS.'data'.DS.'featurelistQueryByAr.xml',
+                   'FLPath' => array (
+                        APP_PATH.DS.'data'.DS.'featurelistQueryByAr_restrict.xml', // array only, first one is default
+                        APP_PATH.DS.'data'.DS.'featurelistQueryByAr_expert.xml'),
                    'FGCPath' => APP_PATH.DS.'data'.DS.'fieldGroupConfig.xml',
                    'ERPath' => null,
                    'ETreePath' => null, 
@@ -15,5 +17,5 @@ $configs = array(array('DDPath' => APP_PATH.DS.'data'.DS.'datadescription_0.2.xm
 $config = $configs[0];
 
 foreach ($config as $k => $c) {
-    define($k, $c);
+    is_array($c) ? define($k, serialize($c)) : define($k, $c);
 }

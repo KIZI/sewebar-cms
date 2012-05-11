@@ -5,13 +5,17 @@ var InterestMeasure = new Class({
 	name: '',
 	localizedName: '',
 	explanation: '',
+	thresholdType: '',
+	compareType: '',
 	field: [],
 	stringHelper: null,
 
-	initialize: function (name, localizedName, explanation, field, stringHelper) {
+	initialize: function (name, localizedName, explanation, thresholdType, compareType, field, stringHelper) {
 		this.name = name;
 		this.localizedName = localizedName;
 		this.explanation = explanation;
+		this.thresholdType = thresholdType;
+		this.compareType = compareType;
 		this.field = field;
 		this.stringHelper = stringHelper;
 	},
@@ -34,6 +38,14 @@ var InterestMeasure = new Class({
 	
 	getExplanation: function () {
 		return this.explanation;
+	},
+	
+	getThresholdType: function () {
+		return this.thresholdType;
+	},
+	
+	getCompareType: function () {
+		return this.compareType;
 	},
 	
 	getField: function () {

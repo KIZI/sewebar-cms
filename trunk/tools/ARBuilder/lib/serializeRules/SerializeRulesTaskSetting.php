@@ -240,7 +240,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     // extension metabase
     $extension = $this->finalXmlDocument->createElement('Extension');
     $extension->setAttribute('name', 'metabase');
-    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[Name='Metabase']/Value")->item(0)->nodeValue);
+    $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[@name='Metabase']")->item(0)->nodeValue);
     $this->arQuery->appendChild($extension);
 
     $bbaSettings = $this->finalXmlDocument->createElement("BBASettings");
@@ -361,9 +361,10 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
     if (stripos($name, 'chi') !== false) {
         $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("SignificanceLevel", $value));  
     }
-    $compareType = $this->finalXmlDocument->createElement("CompareType");
-    $compareType->appendChild($this->finalXmlDocument->createTextNode("Greater than or equal"));
-    $interestMeasureTreshold->appendChild($compareType);
+    
+    $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("ThresholdType", $im->thresholdType));
+    $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("CompareType", $im->compareType));
+    
     $this->interestMeasureSetting->appendChild($interestMeasureTreshold);
   }
 

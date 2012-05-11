@@ -1,6 +1,7 @@
 var RulesParser = new Class({
 	
-	dataContainer: null,
+	DD: null,
+	FL: null,
 	maxCedentID: 0,
 	maxConnectiveID: 0,
 	maxFieldID: 0,
@@ -9,8 +10,13 @@ var RulesParser = new Class({
 	attributes: ['attr'],
 	booleans: ['and', 'or', 'neg'],
 	
-	initialize: function (dataContainer) {
-		this.dataContainer = dataContainer;
+	initialize: function (ARBuilder, DD, FL) {
+		this.DD = DD;
+		this.FL = FL;
+		
+		ARBuilder.addEvent('updateFL', function (FL) {
+			this.FL = FL;
+		}.bind(this));
 	},
 	
 	parse: function (data) {
@@ -40,9 +46,9 @@ var RulesParser = new Class({
 		}
 	    var aToSolve = this.findAttributes(cedent, bracketsInterval); // attributes to solve at this level
 	    
-	    var partialCedent = new Cedent(this.generateCedentID(), depth, this.dataContainer.getDBAConstraint(1), connective, [], []);
+	    var partialCedent = new Cedent(this.generateCedentID(), depth, this.FL.getDBAConstraint(1), connective, [], []);
 	    Array.each(aToSolve, function (attribute) {
-	    	var literalRef = new FieldAR(this.generateFieldID(), this.dataContainer.getAttributeByName(attribute.name), attribute.category, new StringHelper(), attribute.fields[0].value);	
+	    	var literalRef = new FieldAR(this.generateFieldID(), this.DD.getAttributeByName(attribute.name), attribute.category, new StringHelper(), attribute.fields[0].value);	
 	    	partialCedent.addLiteralRef(literalRef);
 		}.bind(this));
 	    
@@ -117,8 +123,8 @@ var RulesParser = new Class({
 	},
 	
 	parseIM: function (IM) {
-		var IMPrototype = this.dataContainer.getIM(IM.name);
-		return new InterestMeasureAR(IM.name, IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getField(), IMPrototype.getStringHelper(), IM.fields.value);
+		var IMPrototype = this.FL.getIM(IM.name);
+		return new InterestMeasureAR(IM.name, IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getThresholdType(), IMPrototype.getCompareType(), IMPrototype.getField(), IMPrototype.getStringHelper(), IM.fields.value);
 	},
 	
 	generateCedentID: function () {
@@ -134,7 +140,7 @@ var RulesParser = new Class({
 	},
 	
 	getIMPrototype: function (name) {
-		return this.dataContainer.getIM(name);
+		return this.FL.getIM(name);
 	}
 	
 });

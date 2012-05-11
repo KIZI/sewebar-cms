@@ -3,12 +3,15 @@
 var UIPainter = new Class({
 	
 	config: null,
-	dataContainer: null,
+	DD: null,
+	FL: null,
+	FGC: null,
 	ARManager: null,
 	ETreeManager: null,
 	miningManager: null,
 	UIColorizer: null,
 	UIListener: null,
+	FRPager: null,
 	
 	rootElement: null,
 	i18n: null,
@@ -18,28 +21,37 @@ var UIPainter = new Class({
 	callbackStack: [],
 
 	// sort attributes
-	sortDuration: 1000,
+	sortDuration: 750,
 	morphDuration: 500,
 	
 	// dispose element
 	disposeDuration: 750,
 	
-	initialize: function (config, dataContainer, ARManager, miningManager, UIColorizer, UIListener) {
+	initialize: function (ARBuilder, config, DD, FL, FGC, ARManager, miningManager, ETreeManager, UIColorizer, UIListener) {
 		this.config = config;
 		this.rootElement = $(this.config.getRootElementID());
 		this.i18n = new i18n(this.config.getLang());
-		this.dataContainer = dataContainer;
+		this.DD = DD;
+		this.FL = FL;
+		this.FGC = FGC;
 		this.ARManager = ARManager;
 		this.miningManager = miningManager;
+		this.ETreeManager = ETreeManager;
 		this.UIColorizer = UIColorizer;
 		this.UIListener = UIListener;
 		this.dateHelper = new DateHelper();
 		this.UITemplateRegistrator = new UITemplateRegistrator();
+		
+		ARBuilder.addEvent('updateFL', function (FL) {
+			this.FL = FL;
+		}.bind(this));
+	},
+	
+	getDisposeDuration: function () {
+		return this.disposeDuration;
 	},
 	
 	createUI: function () {
-		this.UITemplateRegistrator.registerAll();
-		
 		this.renderAll();
 	},
 	
@@ -54,6 +66,7 @@ var UIPainter = new Class({
 		this.rootElement.grab(Mooml.render('headerTemplate', {config: this.config, i18n: this.i18n}));
 		this.rootElement.grab(Mooml.render('mainTemplate', {config: this.config, dateHelper: this.dateHelper, i18n: this.i18n}));
 		this.rootElement.grab(Mooml.render('footerTemplate', {config: this.config, i18n: this.i18n}));
+		this.UIListener.registerSettingsEventHandlers();
 	},
 	
 	renderNavigation: function () {
@@ -68,9 +81,9 @@ var UIPainter = new Class({
 		
 		var attributes = $('attributes');
 		if (attributes) {
-			Mooml.render('attributesStructureTemplate', {i18n: this.i18n, byGroup: this.ARManager.getAttributesByGroup()}).replaces(attributes);
+			Mooml.render('attributesStructureTemplate', {i18n: this.i18n, byGroup: this.ARManager.getAttributesByGroup(), inProgress: this.ETreeManager.getInProgress()}).replaces(attributes);
 		} else {
-			navigation.grab(Mooml.render('attributesStructureTemplate', {i18n: this.i18n, byGroup: this.ARManager.getAttributesByGroup()}));
+			navigation.grab(Mooml.render('attributesStructureTemplate', {i18n: this.i18n, byGroup: this.ARManager.getAttributesByGroup(), inProgress: this.ETreeManager.getInProgress()}));
 		}
 		
 		if (this.ARManager.getAttributesByGroup() === true) {
@@ -89,7 +102,7 @@ var UIPainter = new Class({
 			elementParent.empty();
 		}
 
-		elementParent.grab(this.initFieldGroup(this.dataContainer.getFieldGroupRootConfigID()));
+		elementParent.grab(this.initFieldGroup(this.FGC.getFieldGroupRootConfigID()));
 		while (callback = this.callbackStack.pop()) {
 			callback.func.apply(this.UIListener , callback.args);
 		}
@@ -102,14 +115,14 @@ var UIPainter = new Class({
 			elementParent.empty();
 		}
 		
-		Object.each(this.dataContainer.getAttributes(), function (attribute) {
+		Object.each(this.DD.getAttributes(), function (attribute) {
 			this.renderAttributeByList(attribute, elementParent);
 		}.bind(this));
 	},
 	
 	renderAttributeByList: function (attribute, elementParent) {
 		if (elementParent) { // insert
-			elementParent.grab(Mooml.render('attributeByListTemplate', {ARManager: this.ARManager, attribute: attribute}));
+			elementParent.grab(Mooml.render('attributeByListTemplate', {isUsed: this.ARManager.getActiveRule().isAttributeUsed(attribute), attribute: attribute}));
 			this.UIListener.registerAttributeEventHandler(attribute);
 		} else { // re-render
 			var element = $(attribute.getCSSID());
@@ -124,7 +137,7 @@ var UIPainter = new Class({
 					'background-image': 'url(images/icon-rec2.png',
 					'background-repeat': 'no-repeat',
 					'color': '#434343'});
-			} else if (this.ARManager.isAttributeUsed(attribute)) {
+			} else if (this.ARManager.getActiveRule().isAttributeUsed(attribute)) {
 				element.morph({
 					'background-image': 'none',
 					'color': '#AAA'});
@@ -136,19 +149,21 @@ var UIPainter = new Class({
 		}
 	},
 	
-	sortAttributes: function (attributes, positions) {
-		var sorter = new Fx.Sort($$('#attributes > ul > li'), {
+	sortAttributes: function (positions) {
+		var sorter = new Fx.Sort($$('#attributes > div > ul > li'), {
 			transition: Fx.Transitions.Cubic.easeInOut,
 			duration: this.sortDuration
 		});
-		sorter.sort(positions); //a specific order
 		
-		Array.each(attributes, function (attribute) {
-			this.renderAttributeByList.delay(this.sortDuration + this.morphDuration, this, attribute);
+		sorter.sort(positions).chain(function () {
+			sorter.rearrangeDOM();
+			
+			Array.each(this.DD.getAttributes(), function (attribute) {
+				this.renderAttributeByList(attribute);
+			}.bind(this));
+			
+			this.renderAttributes.delay((this.sortDuration + this.morphDuration) * 1.5, this);
 		}.bind(this));
-		
-		//sorter.rearrangeDOM.delay((this.sortDuration + this.morphDuration) * 2.1, sorter);
-		this.renderAttributes.delay((this.sortDuration + this.morphDuration) * 2.2, this);
 	},
 	
 	renderMarkedRulesBox: function () {
@@ -158,6 +173,8 @@ var UIPainter = new Class({
 		var elementMarkedRules = Mooml.render('markedRulesStructureTemplate', {i18n: this.i18n});
 		main.grab(elementMarkedRules);
 		this.renderMarkedRules(elementMarkedRules.getElement('ul'));
+		
+		this.UIListener.registerMarkedRulesEventHandlers();
 	},
 	
 	renderMarkedRules: function (elementParent) {
@@ -185,7 +202,7 @@ var UIPainter = new Class({
 	},
 	
 	initFieldGroup: function (id) { // recursive
-		var FG = this.dataContainer.fieldGroups[id];
+		var FG = this.FGC.getFieldGroup(id);
 
 		var returnEl = new Element('li', {id: 'fg-' + id + '-name', 'class': 'field-group-drag', html: '<span>' + FG.getLocalizedName() + '</span>', title: FG.getExplanation()});
 		var FGEl = new Element('ul', {id: 'fg-' + id, 'class': 'field-group'}).inject(returnEl);
@@ -333,21 +350,21 @@ var UIPainter = new Class({
 	renderAddCoefficientWindow: function (field) {
 		var overlay = this.showOverlay();
 		overlay.grab(Mooml.render('addCoefficientWindowTemplate', {i18n: this.i18n}));
-		var selectedCoefficient = this.dataContainer.getBBACoefficients()[Object.keys(this.dataContainer.getBBACoefficients())[0]];
+		var selectedCoefficient = this.FL.getDefaultBBACoef();
 		this.renderAddCoefficientAutocomplete(field, selectedCoefficient);
 	},
 	
 	renderEditCoefficientWindow: function (field) {
 		var overlay = this.showOverlay();
 		overlay.grab(Mooml.render('editCoefficientWindowTemplate', {i18n: this.i18n}));
-		var selectedCoefficient = this.dataContainer.getBBACoefficient(field.getType());
+		var selectedCoefficient = this.FL.getBBACoefficient(field.getType());
 		this.renderEditCoefficientAutocomplete(field, selectedCoefficient);
 	},
 	
 	renderAddCoefficientAutocomplete: function(field, selectedCoefficient) { 
 		Mooml.render('addCoefficientWindowAutocompleteTemplate', {i18n: this.i18n, selectedCoefficient: selectedCoefficient}).replaces($('add-coefficient-autocomplete'));
 		
-		Object.each(this.dataContainer.getBBACoefficients(), function (BBACoefficient) {
+		Object.each(this.FL.getBBACoefficients(), function (BBACoefficient) {
 			var isSelected = (BBACoefficient.getName() === selectedCoefficient.getName());
 			$('add-coefficient-select').grab(Mooml.render('addCoefficientWindowSelectOptionTemplate', {coefficient: BBACoefficient, isSelected: isSelected}));
 		}.bind(this));
@@ -368,7 +385,7 @@ var UIPainter = new Class({
 	renderEditCoefficientAutocomplete: function(field, selectedCoefficient) { 
 		Mooml.render('editCoefficientWindowAutocompleteTemplate', {field: field, i18n: this.i18n, selectedCoefficient: selectedCoefficient}).replaces($('edit-coefficient-autocomplete'));
 		
-		Object.each(this.dataContainer.getBBACoefficients(), function (BBACoefficient) {
+		Object.each(this.FL.getBBACoefficients(), function (BBACoefficient) {
 			var isSelected = (BBACoefficient.getName() === selectedCoefficient.getName());
 			$('edit-coefficient-select').grab(Mooml.render('editCoefficientWindowSelectOptionTemplate', {coefficient: BBACoefficient, isSelected: isSelected}));
 		}.bind(this));
@@ -403,16 +420,100 @@ var UIPainter = new Class({
 	
 	/* found rules */
 	renderFoundRules: function (rules) {
+		elPaging = $('fr-paging');
+		this.morph(elPaging, {'display': 'block', 'opacity': '1'});
+		
+		elPager = $('fr-pager');
+		this.morph(elPager, {'display': 'block', 'opacity': '1'});
+		
+		elCtr = $$('#found-rules a.controls')[0];
+		elCtr.show();
+		
 		elementFoundRules = $$('#found-rules ul')[0];
 		elementFoundRules.empty();
-		Array.each(rules, function (rule) {
-			elementFoundRules.grab(Mooml.render('foundRuleTemplate', {rule: rule, i18n: this.i18n}));
+		Array.each(rules, function (rule, key) {
+			elementFoundRules.grab(Mooml.render('foundRuleTemplate', {key: key + 1, rule: rule, i18n: this.i18n}));
 			this.UIListener.registerFoundRuleEventHandlers(rule);
 		}.bind(this));
+		
+		if (!this.FRPager) {
+			this.FRPager = new Pager('fr-pager', 'fr-paging');
+		} else {
+			this.FRPager = new Pager('fr-pager', 'fr-paging');
+//			this.FRPager.createActuators();
+		}
+		
+		if (rules.length === 0) {
+			elPaging.value = 'xxx';
+			elPaging.text = 'yyy';
+		}
 	},
 	
+	resetFoundRules: function () {
+		// TODO odprasit
+		//this.morph($('fr-paging'), {'display': 'none', 'opacity': '0'});
+		this.morph($('fr-pager'), {'display': 'none', 'opacity': '0'});
+		this.morph($$('#found-rules a.controls')[0], {'display': 'none', 'opacity': '0'});
+	},
+	
+	updateFoundRule: function (FR) {
+		var elFR = $(FR.getRule().getFoundRuleCSSID());
+		if (!FR.getInteresting()) {
+			elFR.set('morph', {duration: this.morphDuration});
+			elFR.morph({
+				'opacity': '0.3'
+			});
+		}
+		
+		var elLoading = elFR.getElement('.loading');
+		elLoading.set('morph', {duration: this.morphDuration});
+		elLoading.morph({
+			'opacity': '0.0'
+		});
+	},
+	
+	showFRLoading: function (FR) {
+		var elLoading = $(FR.getRule().getFoundRuleCSSID()).getElement('.loading');
+		elLoading.set('morph', {duration: this.morphDuration});
+		elLoading.morph({
+			'opacity': '1',
+			'visibility': 'visible'
+		});
+	},
+		
 	clearCedentInfo: function (cedent) {
 		$(cedent.getCSSInfoID()).empty();
+	},
+	
+	updatePaging: function () {
+		this.FRPager.updateActuators();
+	},
+	
+	showMiningProgress: function () {
+		var el = $('mining-in-progress');
+		el.toggle();
+		el.set('morph', {duration: this.disposeDuration});
+		el.morph({
+			'opacity': '1'
+		});
+	},
+	
+	hideMiningProgress: function () {
+//		var el = $('mining-in-progress');
+//		el.set('morph', {duration: this.disposeDuration});
+//		el.morph({
+//			'opacity': '0'
+//		});
+//		el.toggle.delay(this.disposeDuration, el);
+		$('mining-in-progress').toggle();
+	},
+
+	showClearRules: function () {
+		this.showElement($('found-rules').getElement('.controls'));
+	},
+	
+	hideClearRules: function () {
+		this.hideElement($('found-rules').getElement('.controls'));
 	},
 	
 	/* navigation */
@@ -441,34 +542,20 @@ var UIPainter = new Class({
 	},
 	
 	/* misc */
-	showElement: function (el, cls) {
-		el.set('morph', {duration: this.disposeDuration});
-		if (!cls) {
-			el.morph({
-				'opacity': '1',
-				'display': 'block'
-			});	
-		} else {
-			el.morph(cls);
-		}
+	showElement: function (el) {
+		var options = {'opacity': '1'};
+		this.morph(el, options);
 	},
 	
-	showMiningProgress: function () {
-		var el = $('mining-in-progress');
-		el.toggle();
-		el.set('morph', {duration: this.disposeDuration});
-		el.morph({
-			'opacity': '1'
-		});
+	hideElement: function (el) {
+		var options = {'opacity': '0'};
+		this.morph(el, options);
 	},
 	
-	hideMiningProgress: function () {
-		var el = $('mining-in-progress');
-		el.set('morph', {duration: this.disposeDuration});
-		el.morph({
-			'opacity': '0'
-		});
-		el.toggle.delay(this.disposeDuration, el);
+	morph: function (el, options, duration) {
+		duration = duration || this.morphDuration;
+		el.set('morph', {duration: duration});
+		el.morph(options);
 	},
 	
 	disposeFoundRules: function () {
@@ -481,13 +568,42 @@ var UIPainter = new Class({
 	},
 	
 	disposeElement: function (el) {
-		el.set('morph', {duration: this.disposeDuration});
-		el.morph({
+		var clone = el.clone().setStyles(el.getCoordinates()).setStyles({
+			opacity: 0.7,
+			position: 'absolute'
+	    }).inject(document.body);
+		el.destroy();
+		
+		clone.set('morph', {duration: this.disposeDuration});
+		clone.morph({
 			'opacity': '0',
 			'height': '0'
 		});
-
-		el.destroy.delay(this.disposeDuration, el);
+		clone.destroy.delay(this.disposeDuration, clone);
+	},
+	
+	destroyElement: function (el) {
+		el.destroy();
+	},
+	
+	/* settings */
+	renderSettingsWindow: function (FLs, selectedFL, autoSuggest, reset, settings) {
+		var settings = Mooml.render('settingsTemplate', {autoSuggestPossible: (autoSuggest.length > 0), i18n: this.i18n, reset: reset, settings: settings});
+		var elWindow = $('settings-window');
+		if (elWindow) { // re-render (autocomplete)
+			settings.getElement('.autocomplete').replaces(elWindow.getElement('.autocomplete'));
+			this.UIListener.registerSettingsWindowEventHandlers(autoSuggestPossible);
+		} else {
+			var overlay = this.showOverlay();
+			overlay.grab(settings);
+			this.UIListener.registerSettingsWindowEventHandlers(autoSuggestPossible);
+		}
+		
+		var elSelect = $('fl-select');
+		Object.each(FLs, function (FL) {
+			var isSelected = (FL.getName() === selectedFL.getName());
+			elSelect.grab(Mooml.render('flOptionTemplate', {FL: FL, isSelected: isSelected}));
+		}.bind(this));
 	}
 	
 });

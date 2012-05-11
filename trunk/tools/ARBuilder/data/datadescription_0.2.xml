@@ -4,10 +4,7 @@
     xmlns:data="http://keg.vse.cz/ns/datadescription0_2">
     <Dictionary sourceDictType="TransformationDictionary" sourceFormat="PMML" default="true"
         completeness="All" id="bkef" sourceName="Loans">
-        <Identifier>
-            <Name>Metabase</Name>
-            <Value>LM LMBarbora.mdb MB</Value>
-        </Identifier>
+        <Identifier name="Metabase">LM LMBarbora.mdb MB</Identifier>
         <Field dataType="string">
             <Name>Age</Name>
             <Interval closure="closedOpen" leftMargin="21" rightMargin="31" />

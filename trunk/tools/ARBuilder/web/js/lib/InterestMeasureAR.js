@@ -6,8 +6,8 @@ var InterestMeasureAR = new Class({
 	value: 0,
 	displayPrecision: 3,
 	
-	initialize: function (name, localizedName, explanation, field, stringHelper, value) {
-		this.parent(name, localizedName, explanation, field, stringHelper);
+	initialize: function (name, localizedName, explanation, thresholdType, compareType, field, stringHelper, value) {
+		this.parent(name, localizedName, explanation, thresholdType, compareType, field, stringHelper);
 		this.value = value;
 	},
 	
@@ -22,6 +22,8 @@ var InterestMeasureAR = new Class({
 	serialize: function () {
 		return {name: this.name, 
 				type: 'oper',
+				thresholdType: this.thresholdType,
+				compareType: this.compareType,
 				fields: [{
 					name: 'prahovaHodnota',
 					value: this.value}]};
