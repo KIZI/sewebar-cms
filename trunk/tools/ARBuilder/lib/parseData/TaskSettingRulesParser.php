@@ -28,7 +28,7 @@ class TaskSettingRulesParser {
         $BBAP = new BBAParser($this->ER, $this->XPath);
         $BBAP->parseBBAs();
 
-        $DBAP = new DBAPArser($this->ER, $this->XPath, $CP);
+        $DBAP = new DBAParser($this->ER, $this->XPath, $CP);
         $DBAP->parseDBAs();
 
         $TSR = new TaskSettingRule($this->XPath->evaluate('//TaskSetting')->item(0), $this->ER, $this->attributes, $this->interestMeasures, $DBAP, $BBAP);

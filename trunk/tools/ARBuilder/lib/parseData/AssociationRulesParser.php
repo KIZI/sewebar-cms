@@ -28,7 +28,7 @@ class AssociationRulesParser {
         $BBAP = new BBAParser($this->ER, $this->XPath);
         $BBAP->parseBBAs();
 
-        $DBAP = new DBAPArser($this->ER, $this->XPath, $CP);
+        $DBAP = new DBAParser($this->ER, $this->XPath, $CP);
         $DBAP->parseDBAs();
 
         foreach ($this->XPath->evaluate('//AssociationRule') as $iAR) {
