@@ -27,6 +27,12 @@ a {
 	color: #126499;
 }
 
+input[type='text'].shortnr {
+    text-align: right;
+ 	padding: 0 2px;
+    width: 30px;
+}
+
 /* overlay */
 section#overlay {
     width: 100%; height: 100%;
@@ -50,7 +56,9 @@ section#overlay > div {
 #add-coefficient-window,
 #edit-coefficient-window,
 #add-im-window,
-#edit-im-window {
+#edit-im-window,
+#edit-connective-window,
+#settings-window {
 	width: 365px;
 }
 
@@ -64,7 +72,7 @@ section#overlay h2 {
 }
 
 #overlay form {
-	line-height: 35px;
+	line-height: 36px;
 }
 
 #overlay label {
@@ -79,7 +87,6 @@ section#overlay h2 {
 #overlay select {
 	border: 1px solid #AAA;
 	color: #434343;	
-	
 	margin-right: 70px;
 }
 
@@ -106,7 +113,7 @@ input[type='text']#add-im-value	 {
 	border: none;
 	font-weight: bold;
 	
-	width: 30px;
+	width: 40px;
 }
 
 #add-coefficient-autocomplete table,
@@ -124,7 +131,8 @@ input[type='text']#add-im-value	 {
 #add-coefficient-close,
 #edit-coefficient-close,
 #add-im-close,
-#edit-im-close {
+#edit-im-close,
+#settings-close {
 	background: transparent url('../images/icon-close.png') 0 0 no-repeat;
 	padding-left: 20px;
 	color: #126499;
@@ -136,7 +144,7 @@ input[type='text']#add-im-value	 {
 /* header */
 header {
 	height: 135px;
-	width: 1000px;
+	width: 1050px;
 	margin: 0 auto;
 }
 
@@ -182,15 +190,15 @@ header h1 span {
 /* main */
 div#wrapper {
 	xbackground: #EDEDED url('../images/bg1.jpg') repeat 0 0;
-	background: #EDEDED url('../images/bg2.jpg') repeat 0 18px;
-	xbackground: transparent url('../images/bg-body.jpg') repeat center -10px;
+	xbackground: #EDEDED url('../images/bg2.jpg') repeat 0 8px;
+	background: transparent url('../images/bg-body.jpg') repeat center -10px;
 	border-bottom: 1px solid #DFDFDF;
 	
 	min-height: 500px;
 }
 
 section#main {
-	width: 1000px;
+	width: 1050px;
 	margin: 0 auto; padding-bottom: 30px;
 }
 
@@ -202,9 +210,9 @@ section#content {
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 	
 	float: left;
-	width: 750px;
+	width: 800px;
 	margin-top: 30px;
-	padding: 10px 20px;
+	padding: 10px 20px 10px;
 }
 
 section#content h2 {
@@ -504,9 +512,17 @@ section#active-rule .im-slider .knob {
 section#found-rules {
 	clear: left;
 	line-height: 20px;
+	
+	padding-top: 20px;
+}
+
+#found-rules ul {
+	width: 100%;
+	float: left;
 }
 
 #found-rules li {
+	width: 100%;
 	float: left; clear: left;
 }
 
@@ -546,7 +562,7 @@ section#found-rules {
 	background: transparent url('../images/icon-mark-rule.png') 0 0 no-repeat;
 	
 	display: block; float: left; width: 16px; height: 16px;
-	position: relative; top: 2px;
+	position: relative; top: 5px;
 	margin-left: 10px;
 	visibility: hidden;
 }
@@ -559,7 +575,7 @@ section#found-rules {
 	background: transparent url('../images/icon-remove.png') 0 0 no-repeat;
 	
 	display: block; float: left; width: 16px; height: 16px;
-	position: relative; top: 3px;
+	position: relative; top: 6px;
 	margin-left: 10px;
 	visibility: hidden;
 }
@@ -567,6 +583,29 @@ section#found-rules {
 #found-rules li:hover > .clear {
 	visibility: visible;	
 }
+
+#found-rules a.controls {
+    color: #126499;
+	background: transparent url('../images/icon-clear.png') 0 5px no-repeat;
+	display: none; width: 100px; height: 24px;
+	margin: 5px 0 0 480px; padding: 9px 0 0 30px;
+}
+
+.found-rule .id {
+	font-size: 0.8em; color: #434343;
+    text-align: right;
+    display: block; float: left;
+    width: 25px;
+    margin-right: 3px;
+}
+
+.found-rule .loading {
+	background: transparent url('../images/icon-loading.gif') 0 7px no-repeat;
+	opacity: 0; visibility: hidden;
+	float: right;
+	width: 20px; height: 29px;	
+}
+	
 
 /* navigation */
 nav {
@@ -611,7 +650,7 @@ a#attributes-by-group {
     position: relative; left: 1px; top: 5px;
 }
 
-#attributes > ul {
+#attributes > div > ul {
 	margin: 0; padding: 0;
 }
 
@@ -635,24 +674,24 @@ ul#attributes-by-group {
     position: relative; left: 3px; top: -1px;
 }
 
-#attributes > ul > li {
+#attributes > div > ul > li {
 	cursor: pointer;
 	padding-left: 20px;
 }
 
-#attributes > ul > li:hover {
+#attributes > div > ul > li:hover {
 	color: #000 !important;
 }
 
-#attributes > ul > li.rec1 {
+#attributes > div > ul > li.rec1 {
 	background: transparent url('../images/icon-rec1.png') 0 2px no-repeat;
 }
 
-#attributes > ul > li.rec2 {
+#attributes > div > ul > li.rec2 {
 	background: transparent url('../images/icon-rec2.png') 0 2px no-repeat;
 }
 
-#attributes > ul > li.used {
+#attributes > div > ul > li.used {
 	color: #AAA;
 }
 
@@ -665,7 +704,7 @@ ul#attributes-by-group {
 	background: transparent url('../images/icon-loading.gif') 0 0 no-repeat;
 }
 
-#attributes div {
+#attributes > div > div {
 	line-height: 10px;
 	text-align: right;
 }
@@ -678,7 +717,7 @@ ul#attributes-by-group {
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 	line-height: 20px;
     
-    width: 500px;
+    width: 650px;
     margin-top: 25px; padding: 10px 20px;
 }
 
@@ -714,6 +753,13 @@ ul#attributes-by-group {
     top: -1px;
 }
 
+#marked-rules .connective {
+	color: #336600;
+	font-size: 14px;
+	
+	margin: 0 3px 0 6px;
+}
+
 #marked-rules .ims {
     font-size: 12px;
     margin-left: 12px;
@@ -739,6 +785,69 @@ ul#attributes-by-group {
 	visibility: visible;	
 }
 
+/* settings */
+form#settings-form {
+	line-height: 2em;
+}
+
+#settings-form > div {
+	clear: left;
+}
+
+#settings-form .category {
+	color: #925213;
+}
+
+#settings-form br.clearfix {
+	clear: left;
+	margin-top: 1em;
+}
+
+#settings-form label.thin {
+	line-height: 1.3em;
+}
+
+#settings-form .info {
+	background: transparent url('../images/icon-help.png') 0 0 no-repeat;
+	display: block; float: right;
+	position: relative; top: 6px; 
+	width: 24px; height: 24px;
+}
+
+#settings-form > div > div > .warning {
+	background: transparent url('../images/icon-warning.png') 0 0 no-repeat;
+	display: block; float: left;
+	position: relative; top: 6px; left: 5px;
+	width: 24px; height: 24px;
+}
+
+#settings-form #fl-select {
+	float: left;
+	position: relative; top: 8px;
+	margin-right: 0;
+}
+
+#settings-form .autocomplete {
+	margin-bottom: 90px;
+}
+
+a.autosuggest-on,
+a.autofilter-on {
+	color: #434343;
+	background: transparent url('../images/icon-switch-on.png') 0 11px no-repeat;
+	text-decoration: none;
+	display: block; float: left;
+	padding-left: 15px;
+}
+
+a.autosuggest-off,
+a.autofilter-off {
+	color: #434343;
+	background: transparent url('../images/icon-switch-off.png') 0 11px no-repeat;
+	text-decoration: none;
+	display: block; float: left;
+	padding-left: 15px;
+}
 
 /* footer */
 footer {

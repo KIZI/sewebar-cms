@@ -1,39 +1,25 @@
 var MiningManager = new Class({
 	
 	config: null,
-	rulesParser: null,
-	UIPainter: null,
+	FRManager: null,
+	
 	requests: [],
-	limitRules: 10,
-	foundRules: [],
-	numFoundRules: 0,
 	inProgress: false,
 	finishedStates: ['Solved', 'Interrupted'],
 	
-	initialize: function (config, rulesParser) {
+	initialize: function (config, FRManager) {
 		this.config = config;
-		this.rulesParser = rulesParser;
+		this.FRManager = FRManager;
 	},
 	
-	setUIPainter: function (UIPainter) {
-		this.UIPainter = UIPainter;
-	},
-	
-	getLimitHits: function () {
-		return this.limitHits;
-	},
-	
-	mineRules: function (rule) {
-		this.UIPainter.showElement($$('#found-rules h2')[0]);
-		this.UIPainter.showMiningProgress();
-		this.UIPainter.disposeFoundRules();
-		
+	mineRules: function (rule, limitHits) {
 		this.inProgress = true;
+		this.FRManager.handleInProgress();
+		
 		var requestData = {
-				limitHits: this.limitRules,
+				limitHits: limitHits,
 				rule0: rule.serialize(),
 				rules: 1};
-		
 		this.makeRequest(JSON.encode(requestData));
 	},
 	
@@ -64,7 +50,7 @@ var MiningManager = new Class({
 	        
 	        onTimeout: function () {
 	        	this.handleErrorRequest();
-	        }.bind(this),
+	        }.bind(this)
 
 		}).post({'data': data});
 	        
@@ -72,34 +58,39 @@ var MiningManager = new Class({
 	},
 	
 	handleSuccessRequest: function (data, responseJSON) {
-		this.UIPainter.hideMiningProgress();
-		
-		this.numFoundRules = responseJSON.hasOwnProperty('rules') ? Object.getLength(responseJSON.rules) : 0;
-		if (this.numFoundRules) {
-			this.foundRules = this.rulesParser.parse(responseJSON.rules);
-			this.UIPainter.renderFoundRules(this.foundRules);
-		}
-		
-		if (this.finishedStates.contains(responseJSON.taskState)) { // task is finished
+		var state = responseJSON.taskState;
+		if (this.finishedStates.contains(state)) { // task is finished
 			this.inProgress = false;
-			this.UIPainter.renderActiveRule();
 		} else { // task is still running
 			this.makeRequest(data);
 		}
+		
+		var rules = responseJSON.rules;
+		var numRules = responseJSON.hasOwnProperty('rules') ? Object.getLength(responseJSON.rules) : 0;
+		this.FRManager.renderRules(rules, numRules, this.inProgress);
 	},
 	
 	handleErrorRequest: function () {
-		this.UIPainter.hideMiningProgress();
-		
 		this.inProgress = false;
-		this.UIPainter.renderActiveRule();
-		
-		// TODO handle AJAX request error
-		console.log('AJAX request error!');
+		this.stopAllRequests();
+		this.clearAllRequests();
+		this.FRManager.handleError();
 	},
 	
 	addRequest: function (request) {
 		this.requests.push(request);
+	},
+	
+	stopAllRequests: function () {
+		Array.each(this.requests, function (req, key) {
+			if (req.running) {
+				req.cancel();
+			}
+		}.bind(this));
+	},
+	
+	clearAllRequests: function () {
+		this.requests = [];
 	},
 	
 	getInProgress: function () {

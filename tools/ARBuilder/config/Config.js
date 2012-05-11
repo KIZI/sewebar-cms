@@ -12,10 +12,11 @@ var Config = new Class({
 	
 	// URL settings
 	params: '',
+	BKGetURL: 'getBK.php',
 	dataGetURL: 'getData.php',
 	dataSetURL: 'setData.php',
-	rulesGetURL: 'getRules.php',
 	ETreeGetURL: 'getEtree.php',
+	rulesGetURL: 'getRules.php',
 		
 	// root element
 	rootElementID: 'ARBuilder',
@@ -50,8 +51,16 @@ var Config = new Class({
 		this.params = params;
 	},
 	
+	getBKGetURL: function () {
+		return this.BKGetURL;
+	},
+	
 	getDataGetURL: function () {
 		return this.dataGetURL;
+	},
+	
+	setDataGetURL: function (url) {
+		this.dataGetURL = url;
 	},
 	
 	getDataSetURL: function () {

@@ -20,9 +20,9 @@ class DataDescriptionParser {
     }
 
     public function parseData() {
-        $this->data['attributes'] = array();
+        $this->data['DD'] = array();
         foreach ($this->parseAttributes() as $a) {
-            $this->data['attributes'] = array_merge_recursive($this->data['attributes'], $a->toArray());
+            $this->data['DD'] = array_merge_recursive($this->data['DD'], $a->toArray());
         }
 
         return $this->data;

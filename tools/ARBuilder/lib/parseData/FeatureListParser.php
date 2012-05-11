@@ -39,7 +39,24 @@ class FeatureListParser {
     }
 
     protected function parseUserInterface() {
-        $array['miningMode'] = ($this->XPath->evaluate('UserInterface/AllowMultipleRules')->item(0)->nodeValue === 'false');
+        $array = array(
+        	'priority' => (int) $this->XPath->evaluate('UserInterface/@priority')->item(0)->nodeValue,
+            'miningMode' => ($this->XPath->evaluate('UserInterface/AllowMultipleRules')->item(0)->nodeValue === 'false'),
+            'name' => $this->XPath->evaluate('UserInterface/Name')->item(0)->nodeValue,
+        	'localizedName' => $this->XPath->evaluate('UserInterface/LocalizedName[@lang="'.$this->lang.'"]')->item(0)->nodeValue,
+        	'explanation' => $this->XPath->evaluate('UserInterface/Explanation[@lang="'.$this->lang.'"]')->item(0)->nodeValue,
+            'autoSuggest' => array()
+        );
+        
+        foreach ($this->XPath->evaluate('UserInterface/AutoSuggest/Option') as $elO) {
+            $o = array(
+                'name' => $this->XPath->evaluate('Name', $elO)->item(0)->nodeValue,
+            	'localizedName' => $this->XPath->evaluate('LocalizedName[@lang="'.$this->lang.'"]', $elO)->item(0)->nodeValue,
+            	'explanation' => $this->XPath->evaluate('Explanation[@lang="'.$this->lang.'"]', $elO)->item(0)->nodeValue
+            );
+            
+            array_push($array['autoSuggest'], $o);
+        }
 
         return $array;
     }
@@ -74,20 +91,22 @@ class FeatureListParser {
             if ($LN = $this->XPath->evaluate('LocalizedName[@lang="'.$this->lang.'"]', $t)->item(0)) {
                 $localizedName = $LN->nodeValue;
             }
+            $thresholdType = $this->XPath->evaluate('ThresholdType', $t)->item(0)->nodeValue;
+            $compareType = $this->XPath->evaluate('CompareType', $t)->item(0)->nodeValue;
             $explanation = '';
             if ($EX = $this->XPath->evaluate('Explanation[@lang="'.$this->lang.'"]', $t)->item(0)) {
                 $explanation = $EX->nodeValue;
             }
-            $IM = new FLInterestMeasure($name, $localizedName, $explanation);
+            $IM = new FLInterestMeasure($name, $localizedName, $thresholdType, $compareType, $explanation);
 
             $f = $this->XPath->evaluate('Field', $t)->item(0);
             $name = $this->XPath->evaluate('Name', $f)->item(0)->nodeValue;
             $localizedName = $this->XPath->evaluate('LocalizedName[@lang="'.$this->lang.'"]', $f)->item(0)->nodeValue;
             $dataType = $this->XPath->evaluate('Validation/Datatype', $f)->item(0)->nodeValue;
             
-            if ($dataType === 'listOfFieldValues') { // enumeration
+            if ($dataType === 'enum') { // enumeration
                 $vals = array();
-                foreach($this->XPath->evaluate('Validation/FieldValue', $f) as $fv) {
+                foreach($this->XPath->evaluate('Validation/Value', $f) as $fv) {
                     array_push($vals, $fv->nodeValue);
                 }
                 sort($vals);

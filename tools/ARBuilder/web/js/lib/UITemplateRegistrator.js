@@ -2,7 +2,9 @@
 
 var UITemplateRegistrator = new Class({
 	
-	initialize: function () {},
+	initialize: function () {
+		this.registerAll();
+	},
 	
 	registerAll: function () {
 		this.registerStructure();		
@@ -13,6 +15,7 @@ var UITemplateRegistrator = new Class({
 		this.registerEditConnectiveWindow();
 		this.registerFoundRule();
 		this.registerMarkedRules();
+		this.registerSettingsWindow();
 	},
 	
 	registerStructure: function () {
@@ -25,7 +28,7 @@ var UITemplateRegistrator = new Class({
 			config = data.config;
 			
 			header(div({id: 'settings'},
-				a({href: '#'}, i18n.translate('Settings'))),	
+				a({href: '#', id: 'settings-open'}, i18n.translate('Settings'))),	
 				h1(config.getName() + '<sup>' + config.getVersion() + '</sup><span>' + config.getSlogan() + '</span>'))
 		});
 		
@@ -39,9 +42,15 @@ var UITemplateRegistrator = new Class({
 					section({id: 'content'},
 						section({id: 'active-rule'}),
 						section({id: 'found-rules'}, 
-							h2({styles: {'opacity': '0'}}, i18n.translate('Found rules')),
+							h2(i18n.translate('Found rules')),
 							span({id: 'mining-in-progress'}, i18n.translate('Mining is in progress, it may take a while to get the results.')),
-							ul())),
+							//div({id: 'fr-filter'}, 'Quick filter'),
+							div({id: 'fr-paging'}, i18n.translate('No found rules yet. Create an association rule and start mining first.')),
+							//div({id: 'fr-sort'}, 'Sort by order / IM'),
+							//div({id: 'fr-per-page'}, 'Items per page?'),
+							div({id: 'fr-pager'},
+								ul({'class': 'scroller'})),
+							a({'class': 'controls', href: '#'}, i18n.translate('Clear rules')))),
 					nav({id: 'navigation'}),
 					div({'class': 'clearfix'})));
 		});
@@ -57,33 +66,36 @@ var UITemplateRegistrator = new Class({
 	registerNavigation: function () {
 		Mooml.register('attributesStructureTemplate', function (data) {
 			byGroup = data.byGroup;
+			inProgress = data.inProgress;
 			i18n = data.i18n;
 			
 			if (byGroup) {
 				section({id: 'attributes'}, 
 					h2(i18n.translate('Attributes'), a({href: '#', 'class': 'dropdown'}, '')),
-					ul(),
-					span({id: 'etree-progress', styles: {'visibility': 'hidden'}}, i18n.translate('Sort in progress.')),
-					div(a({id: 'attributes-by-list', href: '#'}, i18n.translate('attributes'))));
+					div(
+						ul(),
+						span({id: 'etree-progress', styles: {'visibility': inProgress ? 'visible' : 'hidden'}}, i18n.translate('Sort in progress.')),
+						div(a({id: 'attributes-by-list', href: '#'}, i18n.translate('attributes')))));
 			} else {
 				section({id: 'attributes'}, 
 					h2(i18n.translate('Attributes'), a({href: '#', 'class': 'dropdown'}, '')),
-					ul(),
-					span({id: 'etree-progress', styles: {'visibility': 'hidden'}}, i18n.translate('Sort in progress.')),
-					div(a({id: 'attributes-by-group', href: '#'}, i18n.translate('predefined attributes'))));	
+					div(
+						ul(),
+						span({id: 'etree-progress', styles: {'visibility': inProgress ? 'visible' : 'hidden'}}, i18n.translate('Sort in progress.')),
+						div(a({id: 'attributes-by-group', href: '#'}, i18n.translate('predefined attributes')))));	
 			}
 		});
 		
 		Mooml.register('attributeByListTemplate', function (data) {
 			attribute = data.attribute;
-			ARManager = data.ARManager;
+			isUsed = data.isUsed;
 			
 			var className = '';
 			if (attribute.isRecommended()) {
 				className = 'rec1';
 			} else if (attribute.isPartiallyRecommended()) {
 				className = 'rec2';
-			} else if (ARManager.isAttributeUsed(attribute)) {
+			} else if (isUsed) {
 				className = 'used';
 			}
 			
@@ -100,7 +112,7 @@ var UITemplateRegistrator = new Class({
 			displayAddIM = data.displayAddIM;
 			
 			if (taskBox) {
-				var taskText = i18n.translate('The pattern has been changed. Do you want to');
+				var taskText = i18n.translate('Do you want to');
 				if (rules && attributes) {
 					taskText += ' <a href="#" id="mine-rules-confirm">' + i18n.translate('mine rules') + '</a> ' + i18n.translate('or') + ' <a href="#" id="recommend-attributes-confirm">' + i18n.translate('recommend next attribute') + '</a>' + '?';
 				} else if (rules) {
@@ -227,11 +239,13 @@ var UITemplateRegistrator = new Class({
 			i18n = data.i18n;
 			
 			span({id: 'add-im-autocomplete'},
-				select({name: 'add-im-select', id: 'add-im-select'}),
-				label({'for': 'add-im-value'}, i18n.translate('Threshold value:')),
-				input({type: 'text', name: 'add-im-value', id: 'add-im-value', 'readonly': 'readonly'}),
-				div({id: 'add-im-slider'},
-					div({'class': 'knob'})),
+				div(
+					select({name: 'add-im-select', id: 'add-im-select'}),
+					label({'for': 'add-im-value'}, i18n.translate('Threshold value:'))),
+				div(
+					input({type: 'text', name: 'add-im-value', id: 'add-im-value', 'readonly': 'readonly'}),
+					div({id: 'add-im-slider'},
+						div({'class': 'knob'}))),
 				input({type: 'submit', value: i18n.translate('Add')}));
 		});
 		
@@ -422,13 +436,15 @@ var UITemplateRegistrator = new Class({
 	
 	registerFoundRule: function () {
 		Mooml.register('foundRuleTemplate', function (data) {
+			key = data.key;
 			rule = data.rule;
 			i18n = data.i18n;
 			
 			li({id: rule.getFoundRuleCSSID(), 'class': 'found-rule'}, 
-				span({'class': 'rule'}, rule.getIdent()),
+				span({'class': 'rule'}, '<span class="id">' + key + '.</span>' + rule.getIdent()),
 				a({id: rule.getFoundRuleCSSMarkID(), href: '#', 'class': 'mark', 'title': i18n.translate('Mark rule')}),
-				a({id: rule.getFoundRuleCSSRemoveID(),href: '#', 'class': 'clear', 'title': i18n.translate('Clear rule')})
+				a({id: rule.getFoundRuleCSSRemoveID(),href: '#', 'class': 'clear', 'title': i18n.translate('Clear rule')}),
+				div({'class': 'loading'}, '')
 			);
 		});
 	},
@@ -439,8 +455,9 @@ var UITemplateRegistrator = new Class({
 			
 			section({id: 'marked-rules'}, 
 					h2(i18n.translate('Marked rules'), a({href: '#', 'class': 'dropdown'}, '')),
-					ul(),
-					div({'class': 'clearfix'}));
+					div(
+						ul(),
+						div({'class': 'clearfix'})));
 		});
 		
 		Mooml.register('markedRuleTemplate', function (data) {
@@ -450,6 +467,71 @@ var UITemplateRegistrator = new Class({
 			li({id: rule.getMarkedRuleCSSID()},
 				span({'class': 'rule'}, rule.getIdent()), 
 				a({id: rule.getMarkedRuleCSSRemoveID(), href: '#', 'class': 'clear', 'title': i18n.translate('Remove')}));
+		});
+	},
+	
+	registerSettingsWindow: function () {
+		Mooml.register('settingsTemplate', function (data) {
+			autoSuggestPossible = data.autoSuggestPossible;
+			i18n = data.i18n;
+			reset = data.reset;
+			settings = data.settings;
+			
+			div({id: 'settings-window'},
+				a({id: 'settings-close', href: '#'}, i18n.translate('Close')),
+				h2(i18n.translate('Settings')),
+				form({action: '#', method: 'POST', id: 'settings-form'},
+					div(
+						span({'class': 'category'}, i18n.translate('Association rule pattern restrictions'))),
+					div({'class': 'autocomplete'},
+						div(
+							label({'for': 'fl-select'}, i18n.translate('Restrictions') + ':'),
+							select({name: 'fl-select', id: 'fl-select'}),
+							reset ? span({'class': 'tooltip warning'},
+								span({'class': 'warning'},
+									img({src: './images/icon-tooltip-warning.png'}),
+									em(i18n.translate('Association rule pattern reset')),
+									i18n.translate('Association rule pattern has to be reset due to new restrictions.'))) : '',	
+									span({'class': 'tooltip info'},
+										span({'class': 'help'},
+											img({src: './images/icon-tooltip-help.png'}),
+											em(i18n.translate('Restrictions')),
+											i18n.translate('These are predefined association rule pattern restrictions, which do not depend on analysed data. The more expert the looser they are.')))),
+											div(
+												label({'for': 'as-select', 'class': 'thin'}, i18n.translate('Attribute<br>suggestion') + ':'),
+												autoSuggestPossible ? a({id: 'as', 'href': '#', 'class': settings.getRecEnabled() ? 'autosuggest-on' : 'autosuggest-off'}, i18n.translate(settings.getRecEnabled() ? 'On': 'Off')) : span({'class': 'autosuggest-off'}, i18n.translate(settings.getRecEnabled() ? 'On': 'Off')),
+												span({id: 'as-select'}))),
+					div(
+						span({'class': 'category'}, i18n.translate('Found rules'))),
+					div(
+						label({'for': 'rulesCnt'}, i18n.translate('Limit') + ':'),
+						input({id: 'rules-cnt', 'type': 'text', 'class': 'shortnr', value: settings.getRulesCnt()}),
+						span({'class': 'tooltip info'},
+								span({'class': 'help'},
+										img({src: './images/icon-tooltip-help.png'}),
+										em(i18n.translate('Limit')),
+										i18n.translate('Maximal number of association rules to be searched for. If the limit is reached and there are more rules to find, an option to search for the remaining rules pops up.')))),
+					div(
+						label({'for': 'as-select'}, i18n.translate('Auto filter') + ':'),
+						a({id: 'autofilter', 'href': '#', 'class': settings.getBKAutoSearch() ? 'autofilter-on' : 'autofilter-off'}, i18n.translate(settings.getBKAutoSearch() ? 'On': 'Off')),
+						span({'class': 'tooltip info'},
+								span({'class': 'help'},
+										img({src: './images/icon-tooltip-help.png'}),
+										em(i18n.translate('Auto filter')),
+										i18n.translate('Association rules are automaticaly filtered according to expert background knowledge. This guarantees that only interesting association rules are left.')))),
+					br({'class': 'clearfix'}),
+					input({type: 'submit', value: i18n.translate('Save')})));
+		});
+		
+		Mooml.register('flOptionTemplate', function (data) {
+			FL = data.FL;
+			isSelected = data.isSelected;
+
+			if (isSelected === true) {
+				option({'value': FL.getName(), 'selected': 'selected'}, FL.getLocalizedName());
+			} else {
+				option({'value': FL.getName()}, FL.getLocalizedName());
+			}
 		});
 	}
 	

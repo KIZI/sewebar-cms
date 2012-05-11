@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+#fr-pager {
+    width: 600px;
+    height: 292px; display: none;
+    border: 1px solid #cac7bd;
+    line-height: 1.7em;
+    opacity: 0;
+}
+
+#fr-paging .pager-actuator, .pager-prev, .pager-next {
+    color: #c0c0c0;
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+#fr-paging {
+	height: 20px;
+}
+
+#fr-paging .active {
+    color: #000;
+}

@@ -2,14 +2,14 @@ var ETreeManager = new Class({
 	
 	ARManager: null,
 	config: null,
-	dataContainer: null,
+	DD: null,
 	inProgress: false,
 	requests: [],
 	UIPainter: null,
 	
-	initialize: function (config, dataContainer) {
+	initialize: function (config, DD) {
 		this.config = config;
-		this.dataContainer = dataContainer;
+		this.DD = DD;
 	},
 	
 	setARManager: function (ARManager) {
@@ -22,6 +22,7 @@ var ETreeManager = new Class({
 	
 	recommendAttributes: function (rule) {
 		this.setInProgress(true);
+		this.UIPainter.renderAttributes();
 		var attributes = this.getRemainingAttributes(rule.getLiterals());
 		var requestData = {
 				attributes: attributes,
@@ -41,7 +42,7 @@ var ETreeManager = new Class({
 	
 	getRemainingAttributes: function (usedLiterals) {
 		var attributes = [];
-		Object.each(this.dataContainer.getAttributes(), function(attribute) {
+		Object.each(this.DD.getAttributes(), function(attribute) {
 			attributes.include(attribute.getName());
 		}.bind(this));
 		
@@ -81,7 +82,7 @@ var ETreeManager = new Class({
 	        
 	        onTimeout: function () {
 	        	this.handleErrorRequest();
-	        }.bind(this),
+	        }.bind(this)
 
 		}).post({'data': data});
 	        
@@ -90,15 +91,20 @@ var ETreeManager = new Class({
 	
 	sortAttributes: function (data, responseJSON) {
 		this.setInProgress(false);
-		var attributes = this.dataContainer.getAttributes();
-		var attributeSorter = new AttributeSorter(this.ARManager, this.UIPainter);
-		attributeSorter.sort(attributes, responseJSON);
+		var attributeSorter = new AttributeSorter(this.DD, this.ARManager.getActiveRule());
+		var positions = attributeSorter.sort(this.DD.getAttributes(), responseJSON);
+		this.DD.sortAttributes(positions);
+		
+		// repaint attributes
+		this.UIPainter.sortAttributes(positions);
 	},
 	
 	handleErrorRequest: function () {
 		this.setInProgress(false);
 		
-		console.log('AJAX request error!');
+		if (window.console && console.log) {
+			console.log('AJAX request error!');
+		}
 	},
 	
 	addRequest: function (request) {

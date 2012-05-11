@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_01 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
-    xmlns:arf="http://keg.vse.cz/ns/arfeatures_01" mode="AssociationRules" procedure="4ft">
-    <UserInterface>
+    xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_05 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+    xmlns:arf="http://keg.vse.cz/ns/arfeatures_05" mode="AssociationRules" procedure="4ft">
+    <UserInterface priority="1">
         <AllowMultipleRules>false</AllowMultipleRules>
+        <Name>expert</Name>
+        <LocalizedName lang="en">Expert user</LocalizedName>
+        <Explanation lang="en">Restrictions for expert user or domain expert.</Explanation>
+        <AutoSuggest>
+            <Option>
+                <Name>no</Name>
+                <LocalizedName lang="en">Do not recommend</LocalizedName>
+                <Explanation lang="en">Do not recommend any attributes for association rule extension.</Explanation>
+            </Option>
+            <Option>
+                <Name>heuristic</Name>
+                <LocalizedName lang="en">Heuristic</LocalizedName>
+                <Explanation lang="en">Attributes for association rule extension are recommended according to heuristic metrics (strongest attribute is preferred).</Explanation>
+            </Option>
+            <Option default="true">
+                <Name>exact</Name>
+                <LocalizedName lang="en">Exact</LocalizedName>
+                <Explanation lang="en">Attributes for association rule extension are recommended according to exact metrics (strongest rule is preferred).</Explanation>
+            </Option>
+        </AutoSuggest>
     </UserInterface>
 
     <RulePattern>
@@ -20,6 +40,8 @@
                     <Name>SUPP</Name>
                     <LocalizedName lang="en">Support</LocalizedName>
                     <LocalizedName lang="cs">Podpora</LocalizedName>
+                    <ThresholdType>% of all</ThresholdType>
+                    <CompareType>Greater than or equal</CompareType>
                     <Explanation lang="en">Relative support of the rule</Explanation>
                     <Explanation lang="cs">Relativní podpora pravidla</Explanation>
                     <Field>
@@ -37,6 +59,8 @@
                     <Name>FUI</Name>
                     <LocalizedName lang="en">Confidence</LocalizedName>
                     <LocalizedName lang="cs">Spolehlivost</LocalizedName>
+                    <ThresholdType>% of all</ThresholdType>
+                    <CompareType>Greater than or equal</CompareType>
                     <Field>
                         <Name>prahovaHodnota</Name>
                         <LocalizedName lang="en">threshold value</LocalizedName>
@@ -52,15 +76,18 @@
                     <Name>CHI</Name>
                     <LocalizedName lang="en">Chi-Square</LocalizedName>
                     <LocalizedName lang="cs">Chí-kvadrát</LocalizedName>
+                    <ThresholdType>% of all</ThresholdType>
+                    <CompareType>Greater than or equal</CompareType>
+                    
                     <Field>
                         <Name>prahovaHodnota</Name>
                         <LocalizedName lang="en">threshold value</LocalizedName>
                         <LocalizedName lang="cs">prahová hodnota</LocalizedName>
                         <Validation>
-                            <FieldValue>0.025</FieldValue>
-                            <FieldValue>0.01</FieldValue>
-                            <FieldValue>0.05</FieldValue>
-                            <Datatype>listOfFieldValues</Datatype>
+                            <Value>0.01</Value>
+                            <Value>0.025</Value>
+                            <Value>0.05</Value>
+                            <Datatype>enum</Datatype>
                         </Validation>
                     </Field>
                 </Type>
@@ -110,7 +137,7 @@
                             <Datatype>integer</Datatype>
                         </Validation>
                     </Field>
-
+                    
                     <Field>
                         <Name>maxLength</Name>
                         <LocalizedName lang="en">Maximum length</LocalizedName>

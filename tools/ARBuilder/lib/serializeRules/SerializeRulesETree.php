@@ -259,7 +259,7 @@ class SerializeRulesETree extends AncestorSerializeRules {
         // extension metabase
         $extension = $this->finalXmlDocument->createElement('Extension');
         $extension->setAttribute('name', 'metabase');
-        $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[Name='Metabase']/Value")->item(0)->nodeValue);
+        $extension->setAttribute('value', $this->ddXpath->query("//dd:DataDescription/Dictionary[@default='true']/Identifier[@name='Metabase']")->item(0)->nodeValue);
         $this->arQuery->appendChild($extension);
 
         $this->inputAttributesGroupSettings = $this->arQuery->appendChild($this->finalXmlDocument->createElement("InputAttributesGroupSettings"));

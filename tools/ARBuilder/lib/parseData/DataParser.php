@@ -10,8 +10,8 @@ class DataParser {
 
     private $DDPath;
     private $DD;
-    private $FLPath;
-    private $FL;
+    private $FLPaths;
+    private $FLs;
     private $FGC;
     private $FGCPath;
     private $ERPath;
@@ -23,7 +23,8 @@ class DataParser {
 
     function __construct($DDPath, $FLPath, $FGCPath, $ERPath, $ETreePath, $lang) {
         $this->DDPath = $DDPath;
-        $this->FLPath = $FLPath;
+        $this->FLPaths = is_array($FLPath) ? $FLPath : array($FLPath);
+        $this->FLs = array ();
         $this->FGCPath = $FGCPath;
         $this->ERPath = $ERPath;
         $this->ETreePath = $ETreePath;
@@ -40,13 +41,17 @@ class DataParser {
             @$this->DD->loadXML($this->DDPath, LIBXML_NOBLANKS); // throws notice due to the PI declaration
         }
 
-        $this->FL = new DOMDocument('1.0', 'UTF-8');
-        if (file_exists($this->FLPath)) {
-            $this->FL->load($this->FLPath, LIBXML_NOBLANKS);
-        } else {
-            $this->FL->loadXML($this->FLPath, LIBXML_NOBLANKS);
+        foreach ($this->FLPaths as $FLPath) {
+            $FL = new DOMDocument('1.0', 'UTF-8');
+            if (file_exists($FLPath)) {
+                $FL->load($FLPath, LIBXML_NOBLANKS);
+            } else {
+                $FL->loadXML($FLPath, LIBXML_NOBLANKS);
+            }
+            
+            array_push($this->FLs, $FL);
         }
-
+        
         $this->FGC = new DOMDocument('1.0', 'UTF-8');
         if ($this->FGCPath !== null) {
             if (file_exists($this->FGCPath)) {
@@ -79,21 +84,33 @@ class DataParser {
     public function parseData() {
         $DDParser = new DataDescriptionParser($this->DD);
         $this->data = array_merge_recursive($this->data, $DDParser->parseData());
-
-        $FLParser = new FeatureListParser($this->FL, $this->lang);
-        $this->data = array_merge_recursive($this->data, $FLParser->parseData());
         
-        $FGCParser = new FieldGroupConfigParser($this->FGC, $this->data['attributes'], $this->data['BBA']['coefficients'], 
+        $this->data['FLs'] = array();
+        foreach ($this->FLs as $FL) {
+            $FLParser = new FeatureListParser($FL, $this->lang);
+            array_push($this->data['FLs'], $FLParser->parseData());
+        }
+        usort($this->data['FLs'], array('DataParser', 'sortFLs'));
+        
+        $FGCParser = new FieldGroupConfigParser($this->FGC, $this->data['DD'], $this->data['FLs'][0]['BBA']['coefficients'], 
                              $this->lang);
-        $this->data['fieldGroups'] = $FGCParser->parseConfig();
+        $this->data['FGC'] = $FGCParser->parseConfig();
         
-        $ERParser = new ExistingRulesParser($this->ER, $this->data['attributes'], $this->data['interestMeasures']);
+        $ERParser = new ExistingRulesParser($this->ER, $this->data['DD'], $this->data['FLs'][0]['interestMeasures']);
         $this->data = array_merge_recursive($this->data, $ERParser->parseData());
         
         $ETreeParser = new ETreeParser($this->ETree, $this->FA);
         $this->data = array_merge_recursive($this->data, $ETreeParser->parseData());
 
         return $this->toJSON($this->data);
+    }
+    
+    protected static function sortFLs ($a, $b) {
+        if ($a['priority'] === $b['priority']) {
+            return 0;
+        }
+        
+        return ($a['priority'] < $b['priority']) ? 1 : -1;
     }
     
     public function getER() {

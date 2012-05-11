@@ -9,7 +9,7 @@ class BasicETreeSettings {
     
     // ETree extension settings
     private $ETTaskParamSplitAttributesMax = 6;
-    private $ETTaskParamTreeDepthMax = 2;
+    private $ETTaskParamTreeDepthMax = 1;
     private $ETTaskParamTreeCountMax = 500;
     private $ETTaskParamFullDepthTreesOnly = 'Yes';
     private $HypothesesCountMax = 150;

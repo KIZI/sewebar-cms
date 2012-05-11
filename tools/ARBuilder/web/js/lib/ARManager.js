@@ -1,27 +1,37 @@
 var ARManager = new Class({
 	
-	dataContainer: null,
+	DD: null,
+	FL: null,
 	stringHelper: null,
 	miningManager: null,
 	ETreeManager: null,
+	settings: null,
 	UIPainter: null,
+	UITemplateRegistrator: null,
 	
 	activeRule: null,
 	ETreeValidator: null,
 	markedRules: [],
 	maxCedentID: 0,
 	maxFieldID: 0,
-	maxConnectiveID: 0,
 	attributesByGroup: false,
-	defaultConnectiveName: 'Conjunction',
 	
-	initialize: function (dataContaner, stringHelper, miningManager, ETreeManager) {
-		this.dataContainer = dataContaner;
-		this.stringHelper = stringHelper;
+	initialize: function (ARBuilder, DD, FL, miningManager, ETreeManager, settings) {
+		this.DD = DD;
+		this.FL = FL;
+		this.stringHelper = new StringHelper();
 		this.miningManager = miningManager;
 		this.ETreeManager = ETreeManager;
+		this.settings = settings;
 		
 		this.ETreeValidator = new ETreeValidator();
+		
+		this.initARValidator();
+		this.initBlankAR();
+		
+		ARBuilder.addEvent('updateFL', function (FL) {
+			this.FL = FL;
+		}.bind(this));
 	},
 	
 	setUIPainter: function (UIPainter) {
@@ -29,6 +39,9 @@ var ARManager = new Class({
 	},
 	
 	initBlankAR: function () {
+		this.maxCedentID = 0;
+		this.maxFieldID = 0;
+		
 		var AR = new AssociationRule(this.initARValidator());
 
 		// antecedent
@@ -43,51 +56,19 @@ var ARManager = new Class({
 	},
 	
 	initARValidator: function () {
-		return new AssociationRuleValidator(this.dataContainer.getRulePatterns(), this.dataContainer.getIMCombinations());
+		return new AssociationRuleValidator(this.FL.getRulePattern(), this.FL.getIMCombinations());
 	},
 	
 	initCedent: function (level) {
-		return new Cedent(this.generateCedentID(), level, this.dataContainer.getDBAConstraint(level), this.getDefaultConnective(), [], []);
-	},
-	
-	getUsedIMs: function () {
-		return this.activeRule.getIMs();
+		return new Cedent(this.generateCedentID(), level, this.FL.getDBAConstraint(level), this.FL.getDefaultConnective(), [], []);
 	},
 	
 	hasPossibleIMs: function () {
 		return Object.getLength(this.getPossibleIMs()) > 0;
 	},
-	
+
 	getPossibleIMs: function () {
-		var usedIMs = this.getUsedIMs();
-		var possibleIMs = [];
-		
-		if (Object.getLength(usedIMs) === 0) {
-			possibleIMs = this.dataContainer.getIMs();
-		} else {
-			Array.each(this.dataContainer.getIMCombinations(), function (IMCombination) {
-				var applicableCombination = true;
-				Object.each(usedIMs, function (usedIM) {
-					if (!IMCombination.contains(usedIM.getName()) || IMCombination.length === 1) {
-						applicableCombination = false;
-					}
-				}.bind(this));
-				
-				if (applicableCombination === true) {
-					var applicableIMCombination = Array.clone(IMCombination);
-					Object.each(usedIMs, function (usedIM) {
-						applicableIMCombination.erase(usedIM.getName());
-					}.bind(this));
-					
-					Array.each(applicableIMCombination, function (IMName) {
-						var IM = this.getIMPrototype(IMName);
-						possibleIMs[IM.getName()] = IM;
-					}.bind(this));
-				}
-			}.bind(this));
-		}
-		
-		return possibleIMs;
+		return this.FL.getPossibleIMs(this.activeRule.getIMs());
 	},
 	
 	getActiveRule: function () {
@@ -109,7 +90,7 @@ var ARManager = new Class({
 	
 	addIM: function (name, value) {
 		var IMPrototype = this.getIMPrototype(name);
-		var IM = new InterestMeasureAR(name, IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getField(), IMPrototype.getStringHelper(), value);
+		var IM = new InterestMeasureAR(name, IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getThresholdType(), IMPrototype.getCompareType(), IMPrototype.getField(), IMPrototype.getStringHelper(), value);
 		this.activeRule.addIM(IM);
 		
 		this.UIPainter.hideOverlay();
@@ -124,10 +105,6 @@ var ARManager = new Class({
 	removeIM: function (IM) {
 		this.activeRule.removeIM(IM.getName());
 		this.UIPainter.renderActiveRule();
-	},
-	
-	isAttributeUsed: function(attribute) {
-		return this.activeRule.isAttributeUsed(attribute);
 	},
 	
 	addAttribute: function (cedent, attribute) {
@@ -150,7 +127,9 @@ var ARManager = new Class({
 			field.setCoefficient(arguments[1], arguments[2], arguments[3]);
 		}
 
-		this.sortAttributes();
+		if (!this.attributesByGroup) {
+			this.sortAttributes();
+		}
 		this.setActiveRuleChanged();
 		this.UIPainter.renderActiveRule();
 		this.closeAddCoefficientWindow();
@@ -169,8 +148,9 @@ var ARManager = new Class({
 		this.closeEditCoefficientWindow();
 	},
 	
-	getBBACoefficient: function(coefficientName) {
-		return this.dataContainer.getBBACoefficient(coefficientName);
+	updateAddCoefficientAutocomplete: function (field, name) {
+		var coefficient = this.FL.getBBACoefficient(name);
+		this.UIPainter.renderAddCoefficientAutocomplete(field, coefficient);
 	},
 	
 	closeAddCoefficientWindow: function () {
@@ -179,6 +159,11 @@ var ARManager = new Class({
 	
 	openEditCoefficientWindow: function(field) {
 		this.UIPainter.renderEditCoefficientWindow(field);
+	},
+	
+	updateEditCoefficientAutocomplete: function (field, name) {
+		var coefficient = this.FL.getBBACoefficient(name);
+		this.UIPainter.renderEditCoefficientAutocomplete(field, coefficient);
 	},
 	
 	closeEditCoefficientWindow: function () {
@@ -219,9 +204,11 @@ var ARManager = new Class({
 	
 	removeField: function (field) {
 		this.activeRule.removeField(field);
+		
 		if (!this.attributesByGroup) {
 			this.sortAttributes();
 		}
+		this.setActiveRuleChanged();
 		this.UIPainter.renderActiveRule();
 	},
 	
@@ -247,7 +234,7 @@ var ARManager = new Class({
 	
 	groupFields: function (cedent) {
 		if (cedent.getNumLiteralRefs() !== cedent.getNumMarkedFields()) {
-			var newCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.dataContainer.getDBAConstraint(cedent.getNextLevel()), this.getDefaultConnective(), [], []);
+			var newCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.FL.getDBAConstraint(cedent.getNextLevel()), this.FL.getDefaultConnective(), [], []);
 			cedent.groupLiteralRefs(newCedent);
 		} else {
 			cedent.unmarkLiteralRefs();
@@ -268,7 +255,7 @@ var ARManager = new Class({
 	},
 	
 	addCedent: function (cedent) {
-		var childCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.dataContainer.getDBAConstraint(cedent.getNextLevel()), this.getDefaultConnective(), [], []);
+		var childCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.FL.getDBAConstraint(cedent.getNextLevel()), this.FL.getDefaultConnective(), [], []);
 		cedent.addChildCedent(childCedent);
 		this.UIPainter.renderCedent(cedent, null);
 		this.setActiveRuleChanged();
@@ -332,7 +319,7 @@ var ARManager = new Class({
 	},
 	
 	getIMPrototype: function (name) {
-		return this.dataContainer.getIM(name);
+		return this.FL.getIM(name);
 	},
 	
 	getMarkedRules: function () {
@@ -358,42 +345,37 @@ var ARManager = new Class({
 		return ++this.maxFieldID;
 	},
 	
-	getDefaultConnective: function () {
-		return new Connective(this.generateConnectiveID(), this.defaultConnectiveName);
-	},
-	
-	generateConnectiveID: function () {
-		return ++this.maxConnectiveID;
-	},
-	
 	getAttributesByGroup: function () {
 		return this.attributesByGroup;
 	},
 	
 	/* attribute sort */
 	sortAttributes: function () {
-		var attributes = this.dataContainer.getAttributes();
-		var attributeSorter = new AttributeSorter(this, this.UIPainter);
-		attributeSorter.sort(attributes, []);
+		var attributeSorter = new AttributeSorter(this.DD, this.activeRule);
+		var positions = attributeSorter.sort(this.DD.getAttributes());
+		this.DD.sortAttributes(positions);
+		
+		// repaint attributes
+		this.UIPainter.sortAttributes(positions);
 	},
 	
 	/* mining */
 	display4ftTaskBox: function () {
-		return (this.activeRule.isValid() && this.activeRule.isChanged() && !this.miningManager.getInProgress());
+		return (this.activeRule.isValid() && (true || this.activeRule.isChanged()) && !this.miningManager.getInProgress());
 	},
 	
 	displayETreeTaskBox: function () {
-		return (this.activeRule.isChanged() && !this.ETreeManager.getInProgress() && this.ETreeValidator.isValid(this.activeRule));
+		return this.settings.getRecEnabled() && ((true || this.activeRule.isChanged()) && !this.ETreeManager.getInProgress() && this.ETreeValidator.isValid(this.activeRule));
 	},
 	
 	mineRulesConfirm: function () {
-		this.activeRule.setChanged(false);
-		this.miningManager.mineRules(this.activeRule);
-		this.UIPainter.renderActiveRule();
+		// TODO odprasit
+		$('fr-paging').empty();
+		this.UIPainter.morph($('fr-paging'), {'display': 'none', 'opacity': '0'});
+		this.miningManager.mineRules(this.activeRule, this.settings.getRulesCnt());
 	},
 
 	recommendAttributesConfirm: function () {
-		this.activeRule.setChanged(false);
 		this.ETreeManager.recommendAttributes(this.activeRule);
 		this.UIPainter.renderActiveRule();
 	},
@@ -401,12 +383,21 @@ var ARManager = new Class({
 	/* found rules */
 	markFoundRule: function (rule) {
 		this.markedRules.push(rule);
-		this.UIPainter.disposeElement($(rule.getFoundRuleCSSID()));
+		this.UIPainter.destroyElement($(rule.getFoundRuleCSSID()));
+		this.UIPainter.updatePaging();
 		this.UIPainter.renderMarkedRules();
 	},
 	
 	removeFoundRule: function (rule) {
-		this.UIPainter.disposeElement($(rule.getFoundRuleCSSID()));
+		this.UIPainter.destroyElement($(rule.getFoundRuleCSSID()));
+		this.UIPainter.updatePaging();
+	},
+	
+	clearFoundRules: function () {
+		this.UIPainter.resetFoundRules();
+		$('fr-paging').empty();
+		$('fr-paging').set('value', 'No found rules yet. Create an association rule and start mining first.');
+		$('fr-paging').set('text', 'No found rules yet. Create an association rule and start mining first.');
 	}
 	
 });

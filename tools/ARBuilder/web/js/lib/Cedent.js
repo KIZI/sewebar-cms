@@ -342,7 +342,10 @@ var Cedent = new Class({
 		if (this.hasPositiveSign() !== true) { string += '<span class="field-sign negative">'; }
 		if (this.hasBrackets()) { 
 			string += '('; 
+			//string += '<span class="left-bracket">(</span>'; 
 		}
+		
+		//string += '<span class="rule">';
 		
 		var i = 0;
 		Array.each(this.literalRefs, function (field) {
@@ -359,9 +362,11 @@ var Cedent = new Class({
 			}
 		}.bind(this));
 		
+		//string += '</span>';
 		
 		if (this.hasBrackets()) { 
-			string += ')'; 
+			string += ' )'; 
+			//string += '<span class="right-bracket">)</span>'; 
 		}
 		if (this.hasPositiveSign() !== true) { string += '</span>'; }
 		

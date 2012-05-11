@@ -97,7 +97,7 @@ if (!DEV_MODE) { // SewebarConnect
     $response = $LM_export_path;
 }
 
-$DP = new DataParser(DDPath, FLPath, FGCPath, null, $response, LANG);
+$DP = new DataParser(DDPath, unserialize(FLPath), FGCPath, null, $response, LANG);
 $DP->loadData();
 $DP->parseData();
 echo $DP->getRecommendedAttributes();

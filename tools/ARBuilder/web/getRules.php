@@ -19,79 +19,53 @@ $data = str_replace("\\\"", "\"", $data);
 $serializer = new SerializeRulesTaskSetting();
 
 if (!DEV_MODE) { // SewebarConnect
-    /*
-    // LM data init
-    $cookie = dirname(__FILE__) . '/temp/cookie_'.session_id();
-    if (!file_exists ($cookie)) {
-        $requestData = array('content' => file_get_contents('../data/barboraForLMImport.pmml'));
-         
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://lmcloud.vse.cz/SewebarConnect/Import.ashx');
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, encodeData($requestData));
-        curl_setopt($ch, CURLOPT_VERBOSE, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-         
-        $response = curl_exec($ch);
-        $info = curl_getinfo($ch);
-        curl_close($ch);
-    }
-    
-    $requestData = array('content' => $serializer->serializeRules($data));
-    
+    $id = 'VdcuecAZZEa5MTVm6E7huA';
+    $data = array('guid' => $id, 'content' => $serializer->serializeRules($data));
+
     // save LM task
     $LM_import_path = './temp/4ft_task_'.date('md_His').'.pmml';
     $LM_import = new DOMDocument('1.0', 'UTF-8');
-    $LM_import->loadXML($requestData['content'], LIBXML_NOBLANKS);
+    $LM_import->loadXML($data['content'], LIBXML_NOBLANKS);
     $LM_import->save($LM_import_path);
     
+    // run task
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "http://lmcloud.vse.cz/SewebarConnect/TaskPooler.ashx");
-    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, encodeData($requestData));
+    curl_setopt($ch, CURLOPT_URL, "http://lmcloud.vse.cz/SewebarConnect/Task/Pool");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, encodeData($data));
     curl_setopt($ch, CURLOPT_VERBOSE, false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
-    
-    // ziskani vysledku tasku z LISpMiner-a
+
     $response = curl_exec($ch);
     $info = curl_getinfo($ch);
     curl_close($ch);
-    
+
     // save LM result
     $LM_export_path = './temp/4ft_result_'.date('md_His').'.pmml';
     $LM_export = new DOMDocument('1.0', 'UTF-8');
     $LM_export->loadXML($response, LIBXML_NOBLANKS);
     $LM_export->save($LM_export_path);
-    */
-    
-    sleep(3);
-    echo '{"taskState":"Solved","rules":[{"id":948,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Benesov"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":949,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Brno - venkov"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":0.9090909091}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":950,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Ceska Lipa"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":951,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Decin"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":952,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Frydek - Mistek"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":0.9333333333}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":953,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Hodonin"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":954,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Cheb"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":955,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Chomutov"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":956,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Jablonec n. Nisou"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]},{"id":957,"antecedent":[{"name":"District","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"Jicin"}]}],"IM":[{"name":"FUI","type":"im","category":"","fields":{"name":"prahovaHodnota","value":1}}],"consequent":[{"name":"Quality","type":"attr","category":"One category","active":true,"fields":[{"name":"coef","value":"good"}]}]}]}';
-    die;
 } else { // localhost dev env
     $LM_import_path = './temp/4ft_task_'.date('md_His').'.pmml';
     $LM_import = new DOMDocument('1.0', 'UTF-8');
     $LM_import->loadXML($serializer->serializeRules($data), LIBXML_NOBLANKS);
     $LM_import->save($LM_import_path);
-    
+
     // import LM task
     exec(DEV_LM_PATH.DS.'LMSwbImporter.exe /DSN:"LM Barbora.mdb MB" /Input:"'.$LM_import_path.'" /Alias:"'.DEV_LM_PATH.DS.'Sewebar'.DS.'Template'.DS.'LM.PMML.Alias.txt" /Quiet /NoProgress /AppLog:"./temp/_LM_log.dat"');
-    
+
     // run LM task
     $XPath = new DOMXPath($LM_import);
     $taskName = $XPath->evaluate('//*[@modelName]/@modelName')->item(0)->value;
     exec(DEV_LM_PATH.DS.'LMTaskPooler.exe /DSN:"LM Barbora.mdb MB" /TaskName:"'.$taskName.'" /Quiet /NoProgress /AppLog:"./temp/_LM_log.dat"');
-    
-    // export LM task 
+
+    // export LM task
     $LM_export_path = './temp/4ft_result_'.date('md_His').'.pmml';
     exec(DEV_LM_PATH.DS.'LMSwbExporter.exe /DSN:"LM Barbora.mdb MB" /TaskName:"'.$taskName.'" /Template:"'.DEV_LM_PATH.DS.'/Sewebar/Template/4ftMiner.Task.Template.PMML" /Alias:"'.DEV_LM_PATH.DS.'Sewebar'.DS.'Template'.DS.'LM.PMML.Alias.txt" /Output:"'.$LM_export_path.'" /Quiet /NoProgress /AppLog:"./temp/_LM_log.dat"');
     $response = $LM_export_path;
 }
 
-$DP = new DataParser(DDPath, FLPath, FGCPath, $response, null, LANG);
+$DP = new DataParser(DDPath, unserialize(FLPath), FGCPath, $response, null, LANG);
 $DP->loadData();
 $DP->parseData();
 echo $DP->getER();
