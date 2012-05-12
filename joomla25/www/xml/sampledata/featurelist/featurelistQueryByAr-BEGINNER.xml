@@ -65,7 +65,7 @@
                             <Datatype>double</Datatype>
                         </Validation>
                     </Field>
-    </Type>    
+    </Type>
     <Type>
                     <Name>CHI</Name>
                     <LocalizedName lang="en">Chi-Square</LocalizedName>
@@ -100,7 +100,7 @@
     </SupportedIMCombination>
     <SupportedIMCombination>
      <InterestMeasure>CHI</InterestMeasure>
-     <InterestMeasure>SUPP</InterestMeasure>     
+     <InterestMeasure>SUPP</InterestMeasure>
      <InterestMeasure>FUI</InterestMeasure>
     </SupportedIMCombination>
    </SupportedInterestMeasureCombinations>
@@ -112,6 +112,7 @@
     <Type>
                     <Name>Subset</Name>
                     <LocalizedName lang="en">Any one value</LocalizedName>
+     <MaxOccurrences>1</MaxOccurrences>
                     <Field hidden="true">
                         <Name>minLength</Name>
                         <DefaultValue>1</DefaultValue>
@@ -156,6 +157,7 @@
      <Name>Left cut</Name>
      <LocalizedName lang="en">Only low values</LocalizedName>
      <Explanation lang="en">Only lowest values will be considered for the value of the field. </Explanation>
+     <MaxOccurrences>1</MaxOccurrences>
      <Field hidden="true">
       <Name>minLength</Name>
       <DefaultValue>1</DefaultValue>
@@ -184,9 +186,10 @@
      </Field>
     </Type>
     <Type>
-     <Name>Left cut</Name>
+     <Name>Right cut</Name>
      <LocalizedName lang="en">Only highest values will be considered for the value of the field. </LocalizedName>
      <Explanation lang="en">For the value of the field, only highest values will be considered. How many values you want to be processed as low.</Explanation>
+     <MaxOccurrences>1</MaxOccurrences>
      <Field hidden="true">
       <Name>minLength</Name>
       <DefaultValue>1</DefaultValue>
@@ -228,7 +231,7 @@
        <Datatype>string</Datatype>
       </Validation>
      </Field>
-    </Type>   
+    </Type>
    </Coefficient>
   </BasicBooleanAttribute>
 
@@ -285,9 +288,9 @@
       <Any allowed="no"/>
       <Negation allowed="no"/>
      </Connectives>
-    </NestingConstraint>    
+    </NestingConstraint>
    </NestingConstraints>
-   
+
   </DerivedBooleanAttribute>
  </BuildingBlocks>
 </arf:GUHAFeatureList>
