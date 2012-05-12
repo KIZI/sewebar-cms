@@ -10,10 +10,16 @@ The ARD then does not need to "understand" these two elements, it is only requir
 -->
 
 
-<!-- Version 0.5
+<!-- Version 0.6
   
   author: Tomas Kliegr
   
+  Change 0.5 to 0.6
+   - changed namespace to  http://keg.vse.cz/ns/arfeatures_02
+   - added attribute scope on Coefficient and allowed multiple Coefficient and allowed multiple coefficients to be defined
+   - added optional element DefaultValue on Field.
+   - added optional attribute hidden on Field.
+   - added AutoSuggest, Name, LocalizedName and Explanation on UserInterface
   Changes 0.4 to 0.5:
   - added Validation/Value
   - added DATATYPE enum
@@ -70,10 +76,25 @@ Changes  0.1 to 0.2:
   <xs:complexType name="UserInterface">
     <xs:sequence>
       <xs:element name="AllowMultipleRules" type="xs:boolean"/>
+     <xs:element name="Name" type="xs:string"></xs:element>
+     <xs:element name="LocalizedName" type="LocalizedName" minOccurs="0" maxOccurs="unbounded"></xs:element>
+     <xs:element name="Explanation" type="Explanation"  minOccurs="0" maxOccurs="unbounded"></xs:element>
+     <xs:element name="AutoSuggest" type="AutoSuggest"></xs:element>
     </xs:sequence>
   </xs:complexType>
-
-
+<xs:complexType name="AutoSuggest">
+ <xs:sequence>
+  <xs:element name="Option" type="AutoSuggestOption"></xs:element>
+ </xs:sequence>
+</xs:complexType>
+<xs:complexType name="AutoSuggestOption">
+ <xs:sequence>
+  <xs:element name="Name" type="xs:string"></xs:element>
+  <xs:element name="LocalizedName" type="LocalizedName" minOccurs="0" maxOccurs="unbounded"></xs:element>
+  <xs:element name="Explanation" type="Explanation"  minOccurs="0" maxOccurs="unbounded"></xs:element> 
+ </xs:sequence>
+ <xs:attribute name="default" default="false"></xs:attribute>
+</xs:complexType>
   <xs:complexType name="RulePattern">
     <xs:sequence>
       <xs:element name="Antecedent" type="cedent"/>
@@ -160,7 +181,7 @@ Changes  0.1 to 0.2:
 
   <xs:complexType name="BasicBooleanAttribute">
     <xs:sequence>
-      <xs:element name="Coefficient" type="Coefficient"/>
+      <xs:element name="Coefficient" type="Coefficient" maxOccurs="3"/>
     </xs:sequence>
     <xs:attribute name="coefficient" use="required" type="mandatoryType"/>
   </xs:complexType>
@@ -170,6 +191,7 @@ Changes  0.1 to 0.2:
     <xs:sequence>
       <xs:element maxOccurs="unbounded" name="Type" type="CoefType"/>
     </xs:sequence>
+   <xs:attribute name="scope" type="RulePart"/>
   </xs:complexType>
 
 
@@ -334,11 +356,13 @@ Changes  0.1 to 0.2:
 
     <xs:sequence minOccurs="1">
       <xs:element name="Name" type="xs:string"/>
+     <xs:element name="DefaultValue" type="xs:string" minOccurs="0"></xs:element>
       <xs:element name="LocalizedName" type="LocalizedName" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="Explanation" type="Explanation" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="Validation" type="Validation"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:integer"/>
+   <xs:attribute name="hidden" type="xs:boolean" default="false"></xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="Validation">
