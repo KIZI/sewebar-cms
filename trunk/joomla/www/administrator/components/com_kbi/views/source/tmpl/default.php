@@ -9,6 +9,16 @@
 			<tbody>
 				<tr>
 					<td width="20%" class="key">
+						<label>
+							<?php echo JText::_( 'ID' ); ?>:
+						</label>
+					</td>
+					<td width="80%">
+						<span><?php echo isset($this->row->id) ? htmlspecialchars($this->row->id) : '' ;?></span>
+					</td>
+				</tr>
+				<tr>
+					<td width="20%" class="key">
 						<label for="name">
 							<?php echo JText::_( 'Name' ); ?>:
 						</label>
@@ -68,6 +78,8 @@
 						<a id="documents" href="<?php echo JRoute::_("index.php?option={$option}&controller=documents&id[]={$this->row->id}") ?>"><?php echo JText::_( 'Documents' ); ?></a>
 					</td>
 				</tr>
+				<?php endif ?>
+				<?php if(isset($this->source) && ($this->source instanceof IHasDataDictionary)):?>
 				<tr>
 					<td width="20%" class="key">
 						<label for="dictionaryLink">
