@@ -2,12 +2,14 @@ var UIListener = new Class({
 	
 	ARBuilder: null,
 	ARManager: null,
+	FRManager: null,
 	UIColorizer: null,
 	UIPainter: null,
 	
-	initialize: function (ARBuilder, ARManager, UIColorizer) {
+	initialize: function (ARBuilder, ARManager, FRManager, UIColorizer) {
 		this.ARBuilder = ARBuilder;
 		this.ARManager = ARManager;
+		this.FRManager = FRManager;
 		this.UIColorizer = UIColorizer;
 	},
 	
@@ -49,14 +51,18 @@ var UIListener = new Class({
 		
 		// save
 		var elSubmit = $('settings-form').getElement('input[type=submit]');
+		elSubmit.removeEvent('click');
 		elSubmit.addEvent('click', function (e) {
 			e.stop();
+			var elRulesCnt = $('rules-cnt'); if (!elRulesCnt) { return; } // TODO odprasit
 			var rulesCnt = $('rules-cnt').value;
 			var elSelect = $('fl-select');
 			var FLName = elSelect.options[elSelect.selectedIndex].value;
 			var autoSearch = $('autofilter').hasClass('autofilter-on');
 			var autoSuggest = $('as').hasClass('autosuggest-on');
+			
 			this.ARBuilder.saveSettings(rulesCnt, FLName, autoSearch, autoSuggest);
+			
 		}.bind(this));
 		
 		// close
@@ -224,7 +230,7 @@ var UIListener = new Class({
 	
 	registerMarkedRuleEventHandlers: function (rule) {
 		$(rule.getMarkedRuleCSSRemoveID()).addEvent('click', function (event) {
-			this.ARManager.removeMarkedRule(rule);
+			this.FRManager.removeMarkedRule(rule);
 			event.stop();
 		}.bind(this));
 	},
@@ -506,23 +512,29 @@ var UIListener = new Class({
 		}.bind(this));
 	},
 	
-	registerFoundRuleEventHandlers: function(rule) {
+	registerFoundRuleEventHandlers: function(FR) {
+		// ask background knowledge
+		$(FR.getRule().getFoundRuleCSSBKID()).addEvent('click', function (e) {
+			e.stop();
+			this.FRManager.askBK(FR);
+		}.bind(this));		
+		
 		// mark
-		$(rule.getFoundRuleCSSMarkID()).addEvent('click', function (event) {
+		$(FR.getRule().getFoundRuleCSSMarkID()).addEvent('click', function (event) {
 			event.stop();
-			this.ARManager.markFoundRule(rule);
+			this.FRManager.markFoundRule(FR);
 		}.bind(this));
 		
 		// remove
-		$(rule.getFoundRuleCSSRemoveID()).addEvent('click', function (event) {
+		$(FR.getRule().getFoundRuleCSSRemoveID()).addEvent('click', function (event) {
 			event.stop();
-			this.ARManager.removeFoundRule(rule);
+			this.FRManager.removeFoundRule(FR);
 		}.bind(this));
 		
 		// clear
-		$('found-rules').getElement('.controls').addEvent('click', function (e) {
+		$('pager-clear').addEvent('click', function (e) {
 			e.stop();
-			this.ARManager.clearFoundRules();
+			this.FRManager.clearFoundRules();
 		}.bind(this));
 	},
 	

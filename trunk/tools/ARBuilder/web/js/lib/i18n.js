@@ -53,7 +53,10 @@ var i18n = new Class({
 			   49: {'cs': 'Automatický filtr', 'en': 'Auto filter'},
 			   50: {'cs': 'Omezení zadání', 'en': 'Association rule pattern restrictions'},
 			   51: {'cs': 'Vymazat pravidla', 'en': 'Clear rules'},
-			   52: {'cs': '', 'en': 'No found rules yet. Create an association rule and start mining first.'}},
+			   52: {'cs': 'Zatím nebyla nalezena žádná pravidla. Nejdříve vytvořte šablonu asociačního pravidla a spusťte dolování.', 'en': 'No rules found yet. Create an association rule pattern to start mining.'},
+			   53: {'cs': 'Dotaz na doménové znalosti.', 'en': 'Ask background knowledge.'},
+			   54: {'cs': 'Dolování pravidel úspěšně skončilo.', 'en': 'Mining has finished!'},
+			   55: {'cs': 'Nenalezena žádná pravidla. Zkuste změnit šablonu asociačního pravidla a spusťte dolování znovu.', 'en': 'No rules found. Try to change the association rule pattern and start mining again.'}},
 			   
 	initialize: function (lang) {
 		this.lang = lang;

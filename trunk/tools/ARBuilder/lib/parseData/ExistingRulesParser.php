@@ -45,7 +45,7 @@ class ExistingRulesParser {
     }
 
     protected function parseExistingRules() {
-        if ($this->XPath->evaluate('count(//AssociationRules/AssociationRule | //Hits)')) {
+        if ($this->XPath->evaluate('count(//AssociationRules | //Hits)')) {
             return $this->parseAssociationRules();
         } else if ($this->XPath->evaluate('count(//TaskSetting)')) {
             return $this->parseTaskSettingRules();

@@ -11,9 +11,8 @@ var DomReady = new Class({
 		nativeTypeExtender.extendAll();
 		
 		var config = new Config();
-		
-		var URLHelperObj = new URLHelper();
-		config.setParams(URLHelperObj.getURLParams());
+		var uri = new URI(window.location.href);
+		config.setParams(uri.get('data'));
 		
 		var ARB = new ARBuilder(config);
 		ARB.run();

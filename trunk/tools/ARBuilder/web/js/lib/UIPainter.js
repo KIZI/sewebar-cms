@@ -7,11 +7,12 @@ var UIPainter = new Class({
 	FL: null,
 	FGC: null,
 	ARManager: null,
+	FRManager: null,
 	ETreeManager: null,
 	miningManager: null,
 	UIColorizer: null,
 	UIListener: null,
-	FRPager: null,
+	pager: null,
 	
 	rootElement: null,
 	i18n: null,
@@ -27,7 +28,7 @@ var UIPainter = new Class({
 	// dispose element
 	disposeDuration: 750,
 	
-	initialize: function (ARBuilder, config, DD, FL, FGC, ARManager, miningManager, ETreeManager, UIColorizer, UIListener) {
+	initialize: function (ARBuilder, config, DD, FL, FGC, ARManager, FRManager, miningManager, ETreeManager, UIColorizer, UIListener) {
 		this.config = config;
 		this.rootElement = $(this.config.getRootElementID());
 		this.i18n = new i18n(this.config.getLang());
@@ -35,6 +36,7 @@ var UIPainter = new Class({
 		this.FL = FL;
 		this.FGC = FGC;
 		this.ARManager = ARManager;
+		this.FRManager = FRManager;
 		this.miningManager = miningManager;
 		this.ETreeManager = ETreeManager;
 		this.UIColorizer = UIColorizer;
@@ -177,18 +179,18 @@ var UIPainter = new Class({
 		this.UIListener.registerMarkedRulesEventHandlers();
 	},
 	
-	renderMarkedRules: function (elementParent) {
+	renderMarkedRules: function (elementParent, markedRules) {
 		if (!elementParent) { // re-render
 			elementParent = $$('#marked-rules ul')[0];
 			elementParent.empty();
 		}
 		
 		var i = 0;
-		Object.each(this.ARManager.getMarkedRules(), function (rule) {
-			rule.setId(++i);
-			var elementRule = Mooml.render('markedRuleTemplate', {i18n: this.i18n, rule: rule});
+		Object.each(markedRules, function (FR) {
+			FR.getRule().setId(++i);
+			var elementRule = Mooml.render('markedRuleTemplate', {i18n: this.i18n, rule: FR.getRule()});
 			elementParent.grab(elementRule);
-			this.UIListener.registerMarkedRuleEventHandlers(rule);
+			this.UIListener.registerMarkedRuleEventHandlers(FR.getRule());
 		}.bind(this));
 		
 		var sortables = new Sortables(elementParent, {
@@ -419,43 +421,6 @@ var UIPainter = new Class({
 	},
 	
 	/* found rules */
-	renderFoundRules: function (rules) {
-		elPaging = $('fr-paging');
-		this.morph(elPaging, {'display': 'block', 'opacity': '1'});
-		
-		elPager = $('fr-pager');
-		this.morph(elPager, {'display': 'block', 'opacity': '1'});
-		
-		elCtr = $$('#found-rules a.controls')[0];
-		elCtr.show();
-		
-		elementFoundRules = $$('#found-rules ul')[0];
-		elementFoundRules.empty();
-		Array.each(rules, function (rule, key) {
-			elementFoundRules.grab(Mooml.render('foundRuleTemplate', {key: key + 1, rule: rule, i18n: this.i18n}));
-			this.UIListener.registerFoundRuleEventHandlers(rule);
-		}.bind(this));
-		
-		if (!this.FRPager) {
-			this.FRPager = new Pager('fr-pager', 'fr-paging');
-		} else {
-			this.FRPager = new Pager('fr-pager', 'fr-paging');
-//			this.FRPager.createActuators();
-		}
-		
-		if (rules.length === 0) {
-			elPaging.value = 'xxx';
-			elPaging.text = 'yyy';
-		}
-	},
-	
-	resetFoundRules: function () {
-		// TODO odprasit
-		//this.morph($('fr-paging'), {'display': 'none', 'opacity': '0'});
-		this.morph($('fr-pager'), {'display': 'none', 'opacity': '0'});
-		this.morph($$('#found-rules a.controls')[0], {'display': 'none', 'opacity': '0'});
-	},
-	
 	updateFoundRule: function (FR) {
 		var elFR = $(FR.getRule().getFoundRuleCSSID());
 		if (!FR.getInteresting()) {
@@ -483,37 +448,6 @@ var UIPainter = new Class({
 		
 	clearCedentInfo: function (cedent) {
 		$(cedent.getCSSInfoID()).empty();
-	},
-	
-	updatePaging: function () {
-		this.FRPager.updateActuators();
-	},
-	
-	showMiningProgress: function () {
-		var el = $('mining-in-progress');
-		el.toggle();
-		el.set('morph', {duration: this.disposeDuration});
-		el.morph({
-			'opacity': '1'
-		});
-	},
-	
-	hideMiningProgress: function () {
-//		var el = $('mining-in-progress');
-//		el.set('morph', {duration: this.disposeDuration});
-//		el.morph({
-//			'opacity': '0'
-//		});
-//		el.toggle.delay(this.disposeDuration, el);
-		$('mining-in-progress').toggle();
-	},
-
-	showClearRules: function () {
-		this.showElement($('found-rules').getElement('.controls'));
-	},
-	
-	hideClearRules: function () {
-		this.hideElement($('found-rules').getElement('.controls'));
 	},
 	
 	/* navigation */

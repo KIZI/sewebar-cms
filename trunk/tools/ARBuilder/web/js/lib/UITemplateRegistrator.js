@@ -43,14 +43,12 @@ var UITemplateRegistrator = new Class({
 						section({id: 'active-rule'}),
 						section({id: 'found-rules'}, 
 							h2(i18n.translate('Found rules')),
-							span({id: 'mining-in-progress'}, i18n.translate('Mining is in progress, it may take a while to get the results.')),
-							//div({id: 'fr-filter'}, 'Quick filter'),
-							div({id: 'fr-paging'}, i18n.translate('No found rules yet. Create an association rule and start mining first.')),
-							//div({id: 'fr-sort'}, 'Sort by order / IM'),
-							//div({id: 'fr-per-page'}, 'Items per page?'),
-							div({id: 'fr-pager'},
+							div({id: 'pager-label'}),
+							div({id: 'paging'}),
+							div({id: 'pager'},
 								ul({'class': 'scroller'})),
-							a({'class': 'controls', href: '#'}, i18n.translate('Clear rules')))),
+							a({id: 'pager-clear', href: '#'}, i18n.translate('Clear rules'))
+						)),
 					nav({id: 'navigation'}),
 					div({'class': 'clearfix'})));
 		});
@@ -439,9 +437,11 @@ var UITemplateRegistrator = new Class({
 			key = data.key;
 			rule = data.rule;
 			i18n = data.i18n;
+			BK = data.BK;
 			
 			li({id: rule.getFoundRuleCSSID(), 'class': 'found-rule'}, 
 				span({'class': 'rule'}, '<span class="id">' + key + '.</span>' + rule.getIdent()),
+				!BK ? a({id: rule.getFoundRuleCSSBKID(), href: '#', 'class': 'bk', 'title': i18n.translate('Ask background knowledge')}) : '',
 				a({id: rule.getFoundRuleCSSMarkID(), href: '#', 'class': 'mark', 'title': i18n.translate('Mark rule')}),
 				a({id: rule.getFoundRuleCSSRemoveID(),href: '#', 'class': 'clear', 'title': i18n.translate('Clear rule')}),
 				div({'class': 'loading'}, '')
