@@ -210,6 +210,10 @@ var AssociationRule = new Class({
 		return 'found-rule-' + this.id;
 	},
 	
+	getFoundRuleCSSBKID: function () {
+		return 'bk-found-rule-' + this.id;
+	},
+	
 	getFoundRuleCSSMarkID: function () {
 		return 'mark-found-rule-' + this.id;
 	},

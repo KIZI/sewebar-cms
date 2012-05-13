@@ -32,17 +32,19 @@ var ARBuilder = new Class({
 		this.ARManager = new ARManager(this, this.DD, this.getDefFL(), this.miningManager, this.ETreeManager, this.settings);
 		this.ETreeManager.setARManager(this.ARManager);
 		this.UIColorizer = new UIColorizer();
-		this.UIListener = new UIListener(this, this.ARManager, this.UIColorizer);
-		this.UIPainter = new UIPainter(this, this.config, this.DD, this.getDefFL(), this.FGC, this.ARManager, this.miningManager, this.ETreeManager, this.UIColorizer, this.UIListener);
+		this.UIListener = new UIListener(this, this.ARManager, this.FRManager, this.UIColorizer);
+		this.UIPainter = new UIPainter(this, this.config, this.DD, this.getDefFL(), this.FGC, this.ARManager, this.FRManager, this.miningManager, this.ETreeManager, this.UIColorizer, this.UIListener);
 		this.UIListener.setUIPainter(this.UIPainter);
 		this.ARManager.setUIPainter(this.UIPainter);
 		this.ETreeManager.setUIPainter(this.UIPainter);
 		this.FRManager.setUIPainter(this.UIPainter);
+		this.FRManager.setUIListener(this.UIListener);
 	},
 	
 	// run ARB
 	run: function () {
 		this.UIPainter.createUI();
+		this.FRManager.initPager();
 	},
 	
 	getDefFL: function () {

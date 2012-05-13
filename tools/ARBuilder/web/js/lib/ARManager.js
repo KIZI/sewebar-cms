@@ -11,7 +11,6 @@ var ARManager = new Class({
 	
 	activeRule: null,
 	ETreeValidator: null,
-	markedRules: [],
 	maxCedentID: 0,
 	maxFieldID: 0,
 	attributesByGroup: false,
@@ -279,51 +278,12 @@ var ARManager = new Class({
 		this.UIPainter.renderCedent(cedent, null);
 	},
 
-	getMarkedRule: function(id) {
-		var rule = null;
-		Object.each(this.markedRules, function (markedRule) {
-			if (id === markedRule.getId()) {
-				rule = markedRule;
-			}
-		}.bind(this));
-		
-		return rule;
-	},
-	
-	removeMarkedRule: function(rule) {
-		Object.each(this.markedRules, function (markedRule, key) {
-			if (rule.getId() === markedRule.getId()) {
-				delete this.markedRules[key];
-			}
-		}.bind(this));
-
-		this.UIPainter.renderMarkedRules(null);
-	},
-
-	sortMarkedRules: function (order) {
-		var markedRules = [];
-		Array.each(order, function (CSSID) {
-			if (CSSID !== null) {
-				var ruleId = this.stringHelper.getId(CSSID);
-				var rule = this.getMarkedRule(ruleId);
-				markedRules.push(rule);
-			}
-		}.bind(this));
-		
-		this.markedRules = markedRules;
-		this.UIPainter.renderMarkedRules(null);
-	},
-	
 	setActiveRuleChanged: function () {
 		this.activeRule.setChanged(true);
 	},
 	
 	getIMPrototype: function (name) {
 		return this.FL.getIM(name);
-	},
-	
-	getMarkedRules: function () {
-		return this.markedRules;
 	},
 	
 	displayAttributesByGroup: function () {
@@ -369,35 +329,12 @@ var ARManager = new Class({
 	},
 	
 	mineRulesConfirm: function () {
-		// TODO odprasit
-		$('fr-paging').empty();
-		this.UIPainter.morph($('fr-paging'), {'display': 'none', 'opacity': '0'});
 		this.miningManager.mineRules(this.activeRule, this.settings.getRulesCnt());
 	},
 
 	recommendAttributesConfirm: function () {
 		this.ETreeManager.recommendAttributes(this.activeRule);
 		this.UIPainter.renderActiveRule();
-	},
-	
-	/* found rules */
-	markFoundRule: function (rule) {
-		this.markedRules.push(rule);
-		this.UIPainter.destroyElement($(rule.getFoundRuleCSSID()));
-		this.UIPainter.updatePaging();
-		this.UIPainter.renderMarkedRules();
-	},
-	
-	removeFoundRule: function (rule) {
-		this.UIPainter.destroyElement($(rule.getFoundRuleCSSID()));
-		this.UIPainter.updatePaging();
-	},
-	
-	clearFoundRules: function () {
-		this.UIPainter.resetFoundRules();
-		$('fr-paging').empty();
-		$('fr-paging').set('value', 'No found rules yet. Create an association rule and start mining first.');
-		$('fr-paging').set('text', 'No found rules yet. Create an association rule and start mining first.');
 	}
-	
+
 });

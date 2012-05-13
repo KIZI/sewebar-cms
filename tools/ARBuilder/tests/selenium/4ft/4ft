@@ -10,6 +10,10 @@
 <tr><td><b>Test Suite</b></td></tr>
 <tr><td><a href="test2.html">District (Praha) => Quality (good) [FUI: 0.90]</a></td></tr>
 <tr><td><a href="test3.html">District (Subset 1-1) => Quality (good) [CHI: 0.05]</a></td></tr>
+<tr><td><a href="test8.html">Ask BK manually</a></td></tr>
+<tr><td><a href="test10.html">Mark rule</a></td></tr>
+<tr><td><a href="test9.html">Clear rule</a></td></tr>
+<tr><td><a href="test11.html">Clear rules</a></td></tr>
 </tbody></table>
 </body>
 </html>

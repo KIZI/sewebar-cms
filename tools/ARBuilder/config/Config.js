@@ -11,7 +11,7 @@ var Config = new Class({
 	lang: 'en',
 	
 	// URL settings
-	params: '',
+	params: {},
 	BKGetURL: 'getBK.php',
 	dataGetURL: 'getData.php',
 	dataSetURL: 'setData.php',
@@ -52,7 +52,7 @@ var Config = new Class({
 	},
 	
 	getBKGetURL: function () {
-		return this.BKGetURL;
+		return Object.getLength(this.params) ? this.BKGetURL + "?id_kb=" + this.params.id_kb : this.BKGetURL;
 	},
 	
 	getDataGetURL: function () {
@@ -68,7 +68,7 @@ var Config = new Class({
 	},
 	
 	getRulesGetURL: function () {
-		return this.params ? this.rulesGetURL + "?" + this.params : this.rulesGetURL;
+		return Object.getLength(this.params) ? this.rulesGetURL + "?id_dm=" + this.params.id_dm : this.rulesGetURL;
 	},
 	
 	setRulesGetURL: function (URL) {

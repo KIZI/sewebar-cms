@@ -62,7 +62,8 @@ if (!DEV_MODE) { // SewebarConnect
     // export LM task
     $LM_export_path = './temp/4ft_result_'.date('md_His').'.pmml';
     exec(DEV_LM_PATH.DS.'LMSwbExporter.exe /DSN:"LM Barbora.mdb MB" /TaskName:"'.$taskName.'" /Template:"'.DEV_LM_PATH.DS.'/Sewebar/Template/4ftMiner.Task.Template.PMML" /Alias:"'.DEV_LM_PATH.DS.'Sewebar'.DS.'Template'.DS.'LM.PMML.Alias.txt" /Output:"'.$LM_export_path.'" /Quiet /NoProgress /AppLog:"./temp/_LM_log.dat"');
-    $response = $LM_export_path;
+    $response = file_get_contents($LM_export_path);
+    $response = preg_replace('/[^(\x20-\x7F)]*/','', $response);
 }
 
 $DP = new DataParser(DDPath, unserialize(FLPath), FGCPath, $response, null, LANG);
