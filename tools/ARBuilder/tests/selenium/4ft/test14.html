@@ -4,16 +4,31 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost/arbuilder/web/" />
-<title>Mine rules</title>
+<title>Ask BK automatically</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Mine rules</td></tr>
+<tr><td rowspan="1" colspan="3">Ask BK automatically</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>http://sewebar-dev.vse.cz/arbuilder/web/?id_dm=1&amp;id_kb=4</td>
+	<td>/arbuilder/web/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#settings-open</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#autofilter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=input[type='submit']</td>
 	<td></td>
 </tr>
 <tr>
@@ -23,8 +38,8 @@
 </tr>
 <tr>
 	<td>select</td>
-	<td>css=#add-coefficient-category</td>
-	<td>value=Praha</td>
+	<td>css=#add-coefficient-select</td>
+	<td>value=Subset</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -70,6 +85,11 @@
 	<td>waitForElementPresent</td>
 	<td>css=.found-rule</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForXpathCount</td>
+	<td>//li[@class='found-rule' and @style]</td>
+	<td>1</td>
 </tr>
 </tbody></table>
 </body>
