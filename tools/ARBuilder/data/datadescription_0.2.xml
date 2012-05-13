@@ -112,12 +112,12 @@
     
         <Field dataType="string">
             <Name>Amount</Name>
-            <Interval closure="closedOpen" leftMargin="0" rightMargin="20" />
-            <Interval closure="closedOpen" leftMargin="20" rightMargin="50" />
-            <Interval closure="closedOpen" leftMargin="50" rightMargin="100" />
-            <Interval closure="closedOpen" leftMargin="100" rightMargin="250" />
-            <Interval closure="closedOpen" leftMargin="250" rightMargin="500" />
-            <Interval closure="closedOpen" leftMargin="500" rightMargin="1000" />
+            <Category>&lt; 20</Category>
+            <Category>&lt;20;50)</Category>
+            <Category>&lt;50;100)</Category>
+            <Category>&lt;100;250)</Category>
+            <Category>&lt;250;500)</Category>
+            <Category>&gt;= 500</Category>
         </Field>
         
         <Field dataType="string">
