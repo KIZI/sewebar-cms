@@ -39,7 +39,7 @@
 		</pre>
 		<label for="query">Query<span>(id or source specific language or JSON)</span></label>
 		<textarea id="query" name="query" rows="10" cols="80" wrap="off"></textarea>
-		<label for="query">Query parameters<span>(JSON)</span></label>
+		<label for="query">Query parameters<span>(JSON, XML in case of <em>Template Query</em> (empty query text and defined XSLT))</span></label>
 		<textarea id="params" name="params" rows="10" cols="80"></textarea>
 		<label for="xslt">XSLT for results<span>(id or XML/XSLT)</span></label>
 		<textarea id="xslt" name="xslt" rows="10" cols="80"></textarea>

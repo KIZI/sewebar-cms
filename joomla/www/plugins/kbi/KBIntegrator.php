@@ -99,8 +99,10 @@ class KBIntegrator implements IKBIntegrator
 	 *
 	 * @param KBIQuery | string Query
 	 * @param string XSLT
+     * @return The result of query execution.
 	 */
-	public function query($query, $xsl = '') {
+	public function query($query, $xsl = '')
+	{
 		if($query instanceof KBIQuery) {
 			$query = $query->proccessQuery();
 		}
@@ -144,22 +146,26 @@ class KBIntegrator implements IKBIntegrator
 		}
 	}
 
-	protected function queryGet($query) {
+	protected function queryGet($query)
+	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (GET).");
 	}
 
-	protected function queryPost($query) {
+	protected function queryPost($query)
+	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (POST).");
 	}
 
-	protected function querySoap($query) {
+	protected function querySoap($query)
+	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (SOAP).");
 	}
 
-	function requestGet($url, $_data) {
+	function requestGet($url, $_data)
+	{
 		$data = array();
 	    while(list($n,$v) = each($_data)){
 	        $data[] = "$n=" . urlencode($v);
@@ -171,7 +177,8 @@ class KBIntegrator implements IKBIntegrator
 		return $p;
 	}
 
-	function requestCurl($url, $_data) {
+	function requestCurl($url, $_data)
+	{
 		$data = array();
 	    while(list($n,$v) = each($_data)){
 	        $data[] = "$n=" . urlencode($v);
@@ -215,7 +222,8 @@ class KBIntegrator implements IKBIntegrator
 		return $response;
 	}
 
-	function requestPost($url, $_data, $referer = NULL) {
+	function requestPost($url, $_data, $referer = NULL)
+	{
 	    // convert variables array to string:
 	    $data = array();
 	    while(list($n,$v) = each($_data)){
@@ -262,7 +270,6 @@ class KBIntegrator implements IKBIntegrator
 
 	    // split the result header from the content
 	    $result = explode("\r\n\r\n", $result, 2);
-
 	    $header = isset($result[0]) ? $result[0] : '';
 	    $content = isset($result[1]) ? $result[1] : '';
 
@@ -270,7 +277,8 @@ class KBIntegrator implements IKBIntegrator
 	    return $content;
 	}
 
-	function parseNameValues($text) {
+	function parseNameValues($text)
+	{
 		if(is_array($text)) return $text;
 
 		$values = json_decode($text, true);

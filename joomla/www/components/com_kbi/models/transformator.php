@@ -177,11 +177,11 @@ class KbiModelTransformator extends JModel
 	{
 		$source = $this->getSource();
 
-		if($source != NULL && $source instanceof ISynchronable) {
+		if($source != NULL && $source instanceof IHasDataDictionary) {
 			KBIDebug::log(array('source' => $source), 'DataDescription Source');
 			return $source->getDataDescription();
 		} else {
-			return JText::_('Chyba');
+			return JText::_('Given source has no DataDictionary (does not implenent IHasDataDictionary)');
 		}
 	}
 }

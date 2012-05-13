@@ -17,7 +17,8 @@ function KbiPostAjax(url)
 			{
 				source: $('source').getValue(),
 				query: $('query').getValue(),
-				xslt: $('xslt').getValue()
+				xslt: $('xslt').getValue(),
+                parameters: $('params').getValue()
 			}
 		}).request();
 
@@ -32,6 +33,7 @@ function KbiGetAjax(url)
 	url += "&source=" + $('source').getValue();
 	url += "&query=" + $('query').getValue();
 	url += "&xslt=" + $('xslt').getValue();
+    url += "&parameters=" + $('parameters').getValue();
 
 	url = encodeURI(url);
 
