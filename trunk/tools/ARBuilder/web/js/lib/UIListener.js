@@ -512,12 +512,13 @@ var UIListener = new Class({
 		}.bind(this));
 	},
 	
-	registerFoundRuleEventHandlers: function(FR) {
-		// ask background knowledge
-		$(FR.getRule().getFoundRuleCSSBKID()).addEvent('click', function (e) {
-			e.stop();
-			this.FRManager.askBK(FR);
-		}.bind(this));		
+	registerFoundRuleEventHandlers: function(FR, autoSearch) {
+		if (!autoSearch) { // ask background knowledge
+			$(FR.getRule().getFoundRuleCSSBKID()).addEvent('click', function (e) {
+				e.stop();
+				this.FRManager.askBK(FR);
+			}.bind(this));		
+		}
 		
 		// mark
 		$(FR.getRule().getFoundRuleCSSMarkID()).addEvent('click', function (event) {

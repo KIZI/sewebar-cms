@@ -63,7 +63,7 @@ var FRManager = new Class({
 			
 			// register handlers
 			Object.each(this.rules, function (FR) {
-				this.UIListener.registerFoundRuleEventHandlers(FR);
+				this.UIListener.registerFoundRuleEventHandlers(FR, this.settings.getBKAutoSearch());
 			}.bind(this));
 			
 			if (!inProgress) {
