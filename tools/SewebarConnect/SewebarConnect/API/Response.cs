@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace SewebarConnect.API
@@ -35,11 +37,14 @@ namespace SewebarConnect.API
 
 		public virtual string Write()
 		{
-			using (var sw = new StringWriter())
+			using (var m = new MemoryStream())
 			{
-				this.XDocument.Save(sw);
+				using (var sw = new XmlTextWriter(m, Encoding.UTF8))
+				{
+					this.XDocument.Save(sw);
+				}
 
-				return sw.ToString();
+				return Encoding.UTF8.GetString(m.ToArray());
 			}
 		}
 	}
