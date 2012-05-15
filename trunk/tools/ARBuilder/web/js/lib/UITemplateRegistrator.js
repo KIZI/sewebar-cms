@@ -42,7 +42,7 @@ var UITemplateRegistrator = new Class({
 					section({id: 'content'},
 						section({id: 'active-rule'}),
 						section({id: 'found-rules'}, 
-							h2(i18n.translate('Found rules')),
+							h2(i18n.translate('Discovered rules')),
 							div({id: 'pager-label'}),
 							div({id: 'paging'}),
 							div({id: 'pager'},
@@ -127,7 +127,7 @@ var UITemplateRegistrator = new Class({
 						h3(i18n.translate('Interest measures')), 
 						div(),
 						displayAddIM ? a({href: '#', id: 'add-im'}, i18n.translate('Add')) : ''),
-				div({id: 'succedent'}, h3(i18n.translate('Succedent'))),
+				div({id: 'succedent'}, h3(i18n.translate('Consequent'))),
 				div({'class': 'clearfix'}),
 				span({id: 'action-box', styles: {'visibility': taskBox ? 'visible' : 'hidden'}}, taskText));
 		});
@@ -454,7 +454,7 @@ var UITemplateRegistrator = new Class({
 			i18n = data.i18n;
 			
 			section({id: 'marked-rules'}, 
-					h2(i18n.translate('Marked rules'), a({href: '#', 'class': 'dropdown'}, '')),
+					h2(i18n.translate('Rule clipboard'), a({href: '#', 'class': 'dropdown'}, '')),
 					div(
 						ul(),
 						div({'class': 'clearfix'})));
@@ -502,7 +502,7 @@ var UITemplateRegistrator = new Class({
 												autoSuggestPossible ? a({id: 'as', 'href': '#', 'class': settings.getRecEnabled() ? 'autosuggest-on' : 'autosuggest-off'}, i18n.translate(settings.getRecEnabled() ? 'On': 'Off')) : span({'class': 'autosuggest-off'}, i18n.translate(settings.getRecEnabled() ? 'On': 'Off')),
 												span({id: 'as-select'}))),
 					div(
-						span({'class': 'category'}, i18n.translate('Found rules'))),
+						span({'class': 'category'}, i18n.translate('Discovered rules'))),
 					div(
 						label({'for': 'rulesCnt'}, i18n.translate('Limit') + ':'),
 						input({id: 'rules-cnt', 'type': 'text', 'class': 'shortnr', value: settings.getRulesCnt()}),
