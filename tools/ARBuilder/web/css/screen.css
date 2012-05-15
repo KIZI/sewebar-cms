@@ -87,7 +87,7 @@ section#overlay h2 {
 #overlay select {
 	border: 1px solid #AAA;
 	color: #434343;	
-	margin-right: 70px;
+	margin-right: 50px;
 }
 
 #overlay input[type='submit'] {

@@ -377,8 +377,18 @@ var UIPainter = new Class({
 				select.grab(Mooml.render('addCoefficientWindowSelectOption2Template', {choice: choice}));
 			});
 		} else {
-			var coefficientSlider1 = new CoefficientAddSlider($('add-coefficient-minlength-slider'), $('add-coefficient-minlength'), selectedCoefficient.fields.minLength);
-			var coefficientSlider2 = new CoefficientAddSlider($('add-coefficient-maxlength-slider'), $('add-coefficient-maxlength'), selectedCoefficient.fields.maxLength);
+			if (selectedCoefficient.fields.minLength.minValue < selectedCoefficient.fields.minLength.maxValue) {
+				var coefficientSlider1 = new CoefficientAddSlider($('add-coefficient-minlength-slider'), $('add-coefficient-minlength'), selectedCoefficient.fields.minLength);
+			} else {
+				$('add-coefficient-minlength').set('value', selectedCoefficient.fields.minLength.minValue);
+				$('add-coefficient-minlength-slider').setStyles({display: 'none'});
+			}
+			if (selectedCoefficient.fields.maxLength.minValue < selectedCoefficient.fields.maxLength.maxValue) {
+				var coefficientSlider2 = new CoefficientAddSlider($('add-coefficient-maxlength-slider'), $('add-coefficient-maxlength'), selectedCoefficient.fields.maxLength);
+			} else {
+				$('add-coefficient-maxlength').set('value', selectedCoefficient.fields.maxLength.minValue);
+				$('add-coefficient-maxlength-slider').setStyles({display: 'none'});
+			}
 		}
 		
 		this.UIListener.registerAddCoefficientFormEventHandler(field);
@@ -399,8 +409,18 @@ var UIPainter = new Class({
 				select.grab(Mooml.render('editCoefficientWindowSelectOption2Template', {choice: choice, isSelected: isSelected}));
 			});
 		} else {
-			var coefficientSlider1 = new CoefficientEditSlider($('edit-coefficient-minlength-slider'), $('edit-coefficient-minlength'), selectedCoefficient.fields.minLength);
-			var coefficientSlider2 = new CoefficientEditSlider($('edit-coefficient-maxlength-slider'), $('edit-coefficient-maxlength'), selectedCoefficient.fields.maxLength, coefficientSlider1);
+			if (selectedCoefficient.fields.minLength.minValue < selectedCoefficient.fields.minLength.maxValue) {
+				var coefficientSlider1 = new CoefficientEditSlider($('edit-coefficient-minlength-slider'), $('edit-coefficient-minlength'), selectedCoefficient.fields.minLength);
+			} else {
+				$('edit-coefficient-minlength').set('value', selectedCoefficient.fields.minLength.minValue);
+				$('edit-coefficient-minlength-slider').setStyles({display: 'none'});
+			}
+			if (selectedCoefficient.fields.maxLength.minValue < selectedCoefficient.fields.maxLength.maxValue) {
+				var coefficientSlider2 = new CoefficientEditSlider($('edit-coefficient-maxlength-slider'), $('edit-coefficient-maxlength'), selectedCoefficient.fields.maxLength, coefficientSlider1);
+			} else {
+				$('edit-coefficient-maxlength').set('value', selectedCoefficient.fields.maxLength.minValue);
+				$('edit-coefficient-maxlength-slider').setStyles({display: 'none'});
+			}
 		}
 		
 		this.UIListener.registerEditCoefficientFormEventHandler(field);

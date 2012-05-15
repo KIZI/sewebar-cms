@@ -5,8 +5,8 @@ define('APP_PATH', realpath(realpath(dirname(__FILE__)).DS.'..'));
 
 $configs = array(array('DDPath' => APP_PATH.DS.'data'.DS.'datadescription_0.2.xml',
                    'FLPath' => array (
-                        APP_PATH.DS.'data'.DS.'featurelistQueryByAr_restrict.xml', // array only, first one is default
-                        APP_PATH.DS.'data'.DS.'featurelistQueryByAr_expert.xml'),
+                        APP_PATH.DS.'data'.DS.'featureList_beginner.xml', // array only, first one is default
+                        APP_PATH.DS.'data'.DS.'featureList_exploration.xml'),
                    'FGCPath' => APP_PATH.DS.'data'.DS.'fieldGroupConfig.xml',
                    'ERPath' => null,
                    'ETreePath' => null, 

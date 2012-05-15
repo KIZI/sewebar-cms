@@ -40,7 +40,7 @@ var InterestMeasureAddSlider = new Class({
 	
 	    	$('add-im-value').value = string;
 		} else {
-			var number = IM.field.values[value];
+			var number = this.IM.field.values[value];
 			$('add-im-value').value = number;
 		}
 	}

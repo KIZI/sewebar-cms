@@ -29,20 +29,24 @@ var AssociationRuleValidator = new Class({
 			valid = false;
 		}
 		
-		var IMs = [];
-		Object.each(rule.getIMs(), function (IM) {
-			IMs.include(IM.getName());
-		}.bind(this));
-		
-		var IMsValid = false;
-		Array.each(this.IMCombinations, function (IMComb) {
-			if (IMs.equalsTo(IMComb)) {
-				IMsValid = true;
-			}
-		}.bind(this));
-		
-		valid = valid && IMsValid;
-		
+		if (this.IMCombinations.length) {
+			var IMs = [];
+			Object.each(rule.getIMs(), function (IM) {
+				IMs.include(IM.getName());
+			}.bind(this));
+			
+			var IMsValid = false;
+			Array.each(this.IMCombinations, function (IMComb) {
+				if (IMs.equalsTo(IMComb)) {
+					IMsValid = true;
+				}
+			}.bind(this));
+			
+			valid = valid && IMsValid;
+		} else if (!Object.getLength(rule.getIMs())) {
+			valid = false;
+		}
+	
 		return valid;
 	}
 	
