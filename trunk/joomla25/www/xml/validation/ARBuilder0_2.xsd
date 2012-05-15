@@ -4,8 +4,15 @@
     xmlns:arf="http://keg.vse.cz/ns/arfeatures_02" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
     xmlns:data="http://keg.vse.cz/ns/datadescription0_2" xmlns:bkef="http://keg.vse.cz/bkef_patterns" elementFormDefault="unqualified" >
     <xs:annotation>
-        <xs:documentation>Version 0.2. 
-            Changes: updated BackgroundAssociationRules model to v0.2, updated DataDescription to 0.2
+        <xs:documentation>Version 0.3. 
+            Change from 0.2 to 0.3
+            * Removed TaskSetting and AssociationRules modes as it is not used (GUHA AR PMML is used instead)
+            * Added AnnotatedAssociationRules - used to send rules with user feedback to xquery 
+            * Refactored QueryByAssociationRule, should not impact instance XMLs
+            Change from 0.1 to 0.2
+            * updated BackgroundAssociationRules model to v0.2, updated DataDescription to 0.2
+            
+            
         </xs:documentation>
     </xs:annotation>
     <xs:import namespace="http://keg.vse.cz/ns/GUHA0.1rev1"
@@ -22,10 +29,8 @@
                 <xs:element name="DataDescription" type="data:DataDescription_DD"/>
                 <xs:choice>
                     <xs:element name="ARQuery" type="ar:ARQuery"/>
-                    <!-- Used to send mining setting to the mining software, currently not used in the SEWEBAR project (used GUHA AR PMML instead).  -->
-                    <xs:element name="TaskSetting" type="guha:TaskSetting4ft"/>
-                    <!-- Used to send mining results from the mining software -->                    
-                    <xs:element name="AssociationRules" type="guha:AssociationRules"/>
+                      <!-- Used to exchange discovered rules annotated with relevance feedback -->                    
+                 <xs:element name="AnnotatedAssociationRules" type="ar:AnnotatedAssociationRules"/>
                     <!-- Used to send search setting to the search provider  -->
                     <xs:element name="QueryByAssociationRule" type="ar:QueryByAssociationRule"/>
                     <xs:element name="BackgroundAssociationRules" type="bkef:BackgroundAssociationRulesType"/>
@@ -66,22 +71,44 @@
                 <xs:element type="ar:BBA" name="BBA"/>
                 <xs:element type="guha:DBA" name="DBA"/>
             </xs:choice>
-            <xs:element name="AssociationRule" type="ar:AssociationRule" maxOccurs="1"/>
+         <xs:element name="AssociationRule" type="guha:AssociationRule" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="AssociationRule">
-        <!-- redefine  guha:AssociationRule  so that consequent is not mandatory-->
-        <!-- redefine  guha:AssociationRule  so that IMValue is not mandatory-->
-        <!-- redefine  guha:AssociationRule  so that FourFtTable is not present-->
-        <xs:sequence>
-            <xs:element name="Text" type="guha:Text" minOccurs="0"/>
-            <xs:element name="IMValue" type="guha:IMValue" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="antecedent" type="guha:BARef"/>
-        <xs:attribute name="consequent" type="guha:BARef"/>
-        <xs:attribute name="condition" type="guha:BARef"/>
-        <xs:attribute name="id" type="xs:NMTOKEN"/>
-    </xs:complexType>
+ <xs:complexType name="AnnotatedAssociationRules">
+  <xs:sequence>
+   <xs:choice maxOccurs="unbounded">
+    <xs:element type="ar:BBA" name="BBA"/>
+    <xs:element type="guha:DBA" name="DBA"/>
+   </xs:choice>
+   <xs:element name="AssociationRule" type="ar:AnnotatedAssociationRule" maxOccurs="unbounded"/>
+   
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="AnnotatedAssociationRule">
+  <!-- redefine  guha:AssociationRule  so that UserFeedback is added-->
+  <xs:complexContent>
+   <xs:extension base="guha:AssociationRule">
+    <xs:sequence>
+     <xs:element name="Text" type="guha:Text" minOccurs="0"/>
+     <xs:element name="Annotation" type="ar:RuleAnnotation"></xs:element>
+     <xs:element name="IMValue" type="guha:IMValue" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>  
+ </xs:complexType>
+ <xs:complexType name="RuleAnnotation">
+ <xs:sequence>
+  <xs:element name="Interestingness" type="ar:InterestingnessEnum"></xs:element>
+ </xs:sequence>
+</xs:complexType>
+ 
+ <xs:simpleType name="InterestingnessEnum">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="interesting"/>   
+   <xs:enumeration value="not interesting"/>
+  </xs:restriction>
+ </xs:simpleType>
+ 
     <xs:complexType name="BBA">
         <xs:sequence>
             <xs:element name="Extension" type="guha:Extension" minOccurs="0" maxOccurs="unbounded"/>
