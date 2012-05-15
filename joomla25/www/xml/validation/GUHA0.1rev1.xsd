@@ -372,6 +372,7 @@
             <xs:enumeration value="DUCI"/>
             <xs:enumeration value="FUE"/>            
             <xs:enumeration value="LCE"/>
+            <xs:enumeration value="UCE"/>
             <xs:enumeration value="Fisher"/>
             <xs:enumeration value="CHI"/>
             <xs:enumeration value="SID"/>
