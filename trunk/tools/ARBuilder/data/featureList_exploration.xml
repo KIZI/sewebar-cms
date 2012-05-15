@@ -172,7 +172,7 @@
      <LocalizedName lang="cs">Double Lower Critical Implication</LocalizedName>
      <ThresholdType>% of all</ThresholdType>
      <CompareType>Greater than or equal</CompareType>
-     <Explanation lang="en">The binomical test rejects on the level alpha the null hypothesis P(A and C | A or C) &lt;= p in favour of the alternative hypothesis P(A and C | A or C) &gt; p </Explanation>
+     <Explanation lang="en">The binomical test rejects on the level alpha the null hypothesis P (A and C | A or C) &lt;= p in favour of the alternative hypothesis P (A and C | A or C) &gt; p </Explanation>
      <Field>
       <Name>prahovaHodnota</Name>
       <LocalizedName lang="en">min value</LocalizedName>
@@ -203,7 +203,7 @@
      <LocalizedName lang="cs">Double Upper Critical Implication</LocalizedName>
      <ThresholdType>% of all</ThresholdType>
      <CompareType>Greater than or equal</CompareType>
-     <Explanation lang="en">The binomical test does not reject on the level alpha the null hypothesis P(A and C | A or C) &lt;= p in favour of the alternative hypothesis P(A and C | A or C) &gt; p </Explanation>
+     <Explanation lang="en">The binomical test does not reject on the level alpha the null hypothesis P (A and C | A or C) &lt;= p in favour of the alternative hypothesis P (A and C | A or C) &gt; p </Explanation>
      <Field>
       <Name>prahovaHodnota</Name>
       <LocalizedName lang="en">min value</LocalizedName>
@@ -255,7 +255,7 @@
      <LocalizedName lang="cs">Lower Critical Equivalence</LocalizedName>
      <ThresholdType>% of all</ThresholdType>
      <CompareType>Greater than or equal</CompareType>
-     <Explanation lang="en">The binomical test rejects on the level alpha the null hypothesis P(A and C have the same truth value) &lt;= p in favour of the alternative hypothesis P(A and C have the same truth value) &gt; p </Explanation>
+     <Explanation lang="en">The binomical test rejects on the level alpha the null hypothesis P (A and C have the same truth value) &lt;= p in favour of the alternative hypothesis P (A and C have the same truth value) &gt; p </Explanation>
      <Field>
       <Name>prahovaHodnota</Name>
       <LocalizedName lang="en">min value</LocalizedName>
@@ -286,7 +286,7 @@
      <LocalizedName lang="cs">Upper Critical Equivalence</LocalizedName>
      <ThresholdType>% of all</ThresholdType>
      <CompareType>Greater than or equal</CompareType>
-     <Explanation lang="en">The binomical test does not reject on the level alpha the null hypothesis P(A and C have the same truth value) &lt;= p in favour of the alternative hypothesis P(A and C have the same truth value) &gt; p </Explanation>
+     <Explanation lang="en">The binomical test does not reject on the level alpha the null hypothesis P (A and C have the same truth value) &lt;= p in favour of the alternative hypothesis P (A and C have the same truth value) &gt; p </Explanation>
      <Field>
       <Name>prahovaHodnota</Name>
       <LocalizedName lang="en">min value</LocalizedName>
@@ -397,7 +397,7 @@
      </Field>
     </Type>
     <Type>
-     <Name>Interval</Name>
+     <Name>Cyclical intervals</Name>
      <LocalizedName lang="en">Only consecutive values</LocalizedName>
      <Explanation lang="en">Binning wildcard - specified number of consecutive values will be considered for the value of the field. The lowest and highest value are considered as consecutive. </Explanation>
      <MaxOccurrences>1</MaxOccurrences>

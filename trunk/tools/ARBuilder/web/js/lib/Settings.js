@@ -4,7 +4,7 @@ var Settings = new Class({
 	sorts: ['id', 'im', 'length'],
 	defSort: 'id',
 	BK: {autoSearch: false},
-	rec: {enabled: false},
+	rec: {enabled: true},
 	foundRules: {
 		AJAXBalancerLimit: 10,
 		displayLimit: 10
