@@ -28,7 +28,7 @@ var FRManager = new Class({
 	},
 	
 	initPager: function () {
-		this.pager = new Pager($('pager-label'), $('paging'), $('pager'), $('pager-clear'), i18n.translate('No rules found yet. Create an association rule pattern to start mining.'), i18n.translate('Mining is in progress, it may take a while to get the results.'), i18n.translate('Mining has finished!'), i18n.translate('No rules found. Try to change the association rule pattern and start mining again.'));
+		this.pager = new Pager($('pager-label'), $('paging'), $('pager'), $('pager-clear'), i18n.translate('No discovered rules yet. Create an association rule pattern to start mining.'), i18n.translate('Mining is in progress, it may take a while to get the results.'), i18n.translate('Mining has finished!'), i18n.translate('No discovered rules. Try to change the association rule pattern and start mining again.'));
 	},
 	
 	handleInProgress: function () {

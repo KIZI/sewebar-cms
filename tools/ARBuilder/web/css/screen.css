@@ -176,15 +176,22 @@ header h1 {
 	margin-left: 20px;
 }
 
+header h1 em {
+	font-style: normal;
+    position: relative; bottom: 5px;
+    margin: 0 2px;
+}
+
 header h1 sup {
 	color: #9de045;
 	font-size: 0.6em;
-	margin-left: 5px;
+	margin-left: 10px;
 }
 
 header h1 span {
 	display: block;
-	font-size: 0.4em;
+	font-size: 0.38em;
+	position: relative; top: 2px;
 }
 
 /* main */
