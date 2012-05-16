@@ -145,7 +145,9 @@ var FeatureList = new Class({
 		
 		if (Object.getLength(usedIMs) === 0) {
 			possibleIMs = this.getIMs();
-		} else {
+		} else if (this.getIMCombinations().length === 0) {
+      possibleIMs = this.getRemainingIMs(usedIMs);
+    } else {
 			Array.each(this.getIMCombinations(), function (IMCombination) {
 				var applicableCombination = true;
 				Object.each(usedIMs, function (usedIM) {
