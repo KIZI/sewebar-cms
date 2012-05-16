@@ -228,6 +228,18 @@ var Cedent = new Class({
 	},
 	
 	hasBrackets: function () {
+		if ((this.level === 1 && this.getNumLiteralRefs() > 1 && this.getNumLiterals() !== this.getNumLiteralRefs()) || (this.level === 2 && this.getNumLiteralRefs() > 1)) {
+			return true;
+		}
+		//else if (this.getNumLiteralRefs() > 2) {
+		//	return true;
+		//}
+		
+		return false;
+	},
+	
+	/*
+	hasBrackets: function () {
 		if (this.getNumLiteralRefs() > 1 && (this.getNumLiterals() > this.getNumLiteralRefs() + 1)) {
 			return true;
 		} else if (this.getNumLiteralRefs() > 1) {
@@ -235,7 +247,7 @@ var Cedent = new Class({
 		}
 		
 		return false;
-	},
+	},*/
 	
 	displayChangeSign: function () {
 		return this.isNegativeSignAllowed() && this.hasBrackets();
