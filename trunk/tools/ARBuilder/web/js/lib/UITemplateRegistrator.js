@@ -292,6 +292,7 @@ var UITemplateRegistrator = new Class({
 			if (selectedCoefficient.getName() === 'One category') {
 				span({id: 'add-coefficient-autocomplete'},
 					select({name: 'add-coefficient-select', id: 'add-coefficient-select'}),
+					br(),
 					label({'for': 'add-coefficient-category'}, selectedCoefficient.fields.category.localizedName + ':'),
 					select({name: 'add-coefficient-category', id: 'add-coefficient-category'}),
 					input({type: 'submit', value: i18n.translate('Add')}));
@@ -333,6 +334,7 @@ var UITemplateRegistrator = new Class({
 			if (selectedCoefficient.getName() === 'One category') {
 				span({id: 'edit-coefficient-autocomplete'},
 					select({name: 'edit-coefficient-select', id: 'edit-coefficient-select'}),
+					br(),
 					label({'for': 'edit-coefficient-category'}, i18n.translate('Category')),
 					select({name: 'edit-coefficient-category', id: 'edit-coefficient-category'}),
 					input({type: 'submit', value: i18n.translate('Edit')}));
