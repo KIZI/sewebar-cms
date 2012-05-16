@@ -131,7 +131,8 @@ input[type='text']#add-im-value	 {
 #edit-coefficient-close,
 #add-im-close,
 #edit-im-close,
-#settings-close {
+#settings-close,
+#edit-connective-close {
 	background: transparent url('../images/icon-close.png') 0 0 no-repeat;
 	padding-left: 20px;
 	color: #126499;
