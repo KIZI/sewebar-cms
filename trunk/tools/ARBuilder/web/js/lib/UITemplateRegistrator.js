@@ -208,7 +208,7 @@ var UITemplateRegistrator = new Class({
 			i18n = data.i18n;
 			
 			div({id: connective.getCSSID(), 'class': 'connective'},
-				span(connective.toString()));
+				a({id: cedent.getCSSEditConnectiveID(), href: '#', 'class': 'edit-connective', 'title': i18n.translate('edit connective')}, connective.toString()));
 		});
 		
 		Mooml.register('bracketTemplate', function (data) {

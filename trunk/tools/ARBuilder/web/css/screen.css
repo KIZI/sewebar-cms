@@ -470,10 +470,13 @@ span.right-bracket {
 }
 
 div.connective { 
-	color: #336600;
 	font-size: 14px; 
-	
 	margin: 1px 5px 0 16px;
+}
+
+div.connective a {
+	color: #336600;
+	text-decoration: none;
 }
 
 div.cedent > div.controls {
