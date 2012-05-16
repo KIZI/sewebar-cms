@@ -412,15 +412,15 @@ var UITemplateRegistrator = new Class({
 			i18n = data.i18n;
 			
 			div({id: 'edit-connective-window'},
+				a({id: 'edit-connective-close', href: '#'}, i18n.translate('Close')),
 				h2(i18n.translate('Edit connective')),
-				span({id: 'edit-connective-close'},
-						a({href: '#'}, i18n.translate('Close'))),
 				form({action: '#', method: 'POST', id: 'edit-connective-form'},
 					label({'for': 'edit-connective-select'}, i18n.translate('Connective')),
 					select({name: 'edit-connective-select', id: 'edit-connective-select'}),
-					input({type: 'submit', value: i18n.translate('Edit')})));
+					input({type: 'submit', value: i18n.translate('Edit')})),
+				div({'class': 'clearfix'}));
 		});
-
+		
 		Mooml.register('editConnectiveWindowSelectOptionTemplate', function (data) {
 			connective = data.connective;
 			isSelected = data.isSelected;

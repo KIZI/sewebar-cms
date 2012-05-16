@@ -326,7 +326,10 @@ var UIListener = new Class({
 		Array.each(elCons, function (elCon) {
 			elCon.addEvent('click', function (e) {
 				e.stop();
-				this.ARManager.openEditConnectiveWindow(cedent);
+				// TODO called twice, how to stop propagation???
+				if (!$('edit-connective-window')) {
+					this.ARManager.openEditConnectiveWindow(cedent);
+				}
 			}.bind(this));
 		}.bind(this));
 		
