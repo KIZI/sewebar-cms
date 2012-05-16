@@ -44,16 +44,32 @@ namespace LMWrapper.LISpMiner
 		private LMSwbExporter _exporter;
 		private Task4ftGen _task4FtGen;
 		private LMTaskPooler _lmTaskPooler;
+		private Version _version;
 
 		#region Properties
 
 		public string Id { get; protected set; }
+
+		public DateTime Created { get; protected set; }
 
 		public OdbcConnection Database { get; protected set; }
 
 		public AccessConnection Metabase { get; protected set; }
 
 		public string LMPath { get; set; }
+
+		public Version Version
+		{
+			get
+			{
+				if (this._version == null)
+				{
+					this._version = GetVersion();
+				}
+
+				return this._version;
+			}
+		}
 
 		public ExecutableStatus Status
 		{
@@ -158,6 +174,8 @@ namespace LMWrapper.LISpMiner
 			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
 
 			CopyFolder(environment.LMPath, this.LMPath);
+
+			this.Created = DateTime.Now;
 		}
 
 		/// <summary>
@@ -237,6 +255,8 @@ namespace LMWrapper.LISpMiner
 
 			this.GetMetabaseNames(out metabaseFile, ref devNull, out metabaseDSN);
 			this.Metabase = new AccessConnection(metabaseFile, string.Empty, metabaseDSN);
+
+			this.Created = lmpath.CreationTime;
 		}
 
 		protected void CreateMetabase(string metabasePrototypeFile)
@@ -275,6 +295,32 @@ namespace LMWrapper.LISpMiner
 			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypeFile);
 			file = String.Format(@"{0}\LM-{2}-{1}.mdb", this.LMPath, this.Id, databaseName);
 			dsn = String.Format("LM{0}", this.Id);
+		}
+
+		protected Version GetVersion()
+		{
+			var versionPath = String.Format("{0}/version.xml", this.LMPath);
+
+			if (!File.Exists(versionPath))
+			{
+				var exporter = this.Exporter;
+
+				exporter.Version = true;
+				exporter.Output = versionPath;
+
+				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMVersion.Template.TXT");
+				exporter.Execute();
+			}
+
+			if (File.Exists(versionPath))
+			{
+				using (var reader = new StreamReader(versionPath))
+				{
+					return new Version(reader.ReadToEnd());
+				}
+			}
+
+			throw new Exception("Version was not correctly exported");
 		}
 
 		public void Dispose()

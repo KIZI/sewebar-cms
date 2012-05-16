@@ -49,6 +49,11 @@ namespace LMWrapper.LISpMiner
 		public string Output { get; set; }
 
 		/// <summary>
+		/// /Version    ... special mode to export system version
+		/// </summary>
+		public bool Version { get; set; }
+
+		/// <summary>
 		/// /DistinctValuesMax:[nnn] ... maximal number of exported distinct values of DB columns (default: 1000)
 		/// </summary>
 		public string DistinctValuesMax { get; set; }
@@ -122,6 +127,12 @@ namespace LMWrapper.LISpMiner
 				if (this.NoProgress)
 				{
 					arguments.Append("/NoProgress ");
+				}
+
+				// /Version
+				if (this.Version)
+				{
+					arguments.Append("/Version ");
 				}
 
 				// /AppLog
