@@ -29,7 +29,7 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// /NoProgress   ... no progress dialog is displayed
 		/// </summary>
-		public bool NoProgress { get; set; }
+		public bool NoProgress { get; set; }		
 
 		/// <summary>
 		/// /AppLog:[log_file]		... (O) alternative path and file name for logging
