@@ -322,9 +322,12 @@ var UIListener = new Class({
 		}.bind(this));
 		
 		// edit connective
-		$(cedent.getCSSEditConnectiveID()).addEvent('click', function (event) {
-			this.ARManager.openEditConnectiveWindow(cedent);
-			event.stop();
+		var elCons = $$('#' + cedent.getCSSID() + ' a.edit-connective');
+		Array.each(elCons, function (elCon) {
+			elCon.addEvent('click', function (e) {
+				e.stop();
+				this.ARManager.openEditConnectiveWindow(cedent);
+			}.bind(this));
 		}.bind(this));
 		
 		// change cedent sign
