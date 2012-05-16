@@ -87,7 +87,6 @@ section#overlay h2 {
 #overlay select {
 	border: 1px solid #AAA;
 	color: #434343;	
-	margin-right: 50px;
 }
 
 #overlay input[type='submit'] {
@@ -174,10 +173,12 @@ header h1 {
 	font-family: 'Average', serif;
 	margin-top: 10px;
 	margin-left: 20px;
+	letter-spacing: 2px;
 }
 
 header h1 em {
 	font-style: normal;
+    letter-spacing: normal;
     position: relative; bottom: 5px;
     margin: 0 2px;
 }
@@ -185,12 +186,14 @@ header h1 em {
 header h1 sup {
 	color: #9de045;
 	font-size: 0.6em;
+	letter-spacing: normal;
 	margin-left: 10px;
 }
 
 header h1 span {
 	display: block;
 	font-size: 0.38em;
+	letter-spacing: normal;
 	position: relative; top: 2px;
 }
 
@@ -363,6 +366,12 @@ div.cedent a.change-sign-disabled {
 	color: #999;
 }
 
+div.cedent .field .controls a.change-sign.positive {
+	opacity: 1;
+	float: right;
+	margin-right: 5px;
+}
+
 div.cedent .field .controls a.mark-field {
 	background: transparent url('../images/icon-mark.png') 0 1px no-repeat;
 	display: block; width: 15px; height: 15px;
@@ -387,6 +396,7 @@ div.cedent .field a.edit-coefficient {
 	float: right;
 	margin-left: 2px;
 	visibility: hidden;
+	position: relative; top: 2px;
 }
 
 div.cedent .field:hover .controls a.edit-coefficient {
@@ -422,6 +432,15 @@ div.cedent a.change-cedent-sign.positive {
 	background: transparent url('../images/icon-negation-active.png') 0 8px no-repeat;
 	padding-left: 13px;
 	opacity: 0.35;
+	visibility: hidden;
+}
+
+div.cedent a.change-cedent-sign.positive {
+	display: none;
+}
+
+div.cedent .field:hover a.change-sign.positive {
+	visibility: visible;
 }
 
 section#marked-rules span.field-sign.negative,
@@ -434,7 +453,10 @@ div.cedent a.change-cedent-sign.negative {
 div.field,
 div.connective,
 span.left-bracket,
-span.right-bracket { float: left; }
+span.right-bracket { 
+	float: left; 
+	margin-left: 5px;	
+}
 
 span.left-bracket {
 	font-size: 14px;
@@ -451,7 +473,7 @@ div.connective {
 	color: #336600;
 	font-size: 14px; 
 	
-	margin: 1px 5px 0 7px;
+	margin: 1px 5px 0 16px;
 }
 
 div.cedent > div.controls {
