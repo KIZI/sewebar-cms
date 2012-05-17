@@ -33,11 +33,10 @@
                  <LocalizedName lang="cs">Podpora</LocalizedName>
                  <ThresholdType>% of all</ThresholdType>
                  <CompareType>Greater than or equal</CompareType>
-                 
                     <Explanation lang="en">Percentage of objects the rule must match.</Explanation>
                     <Explanation lang="cs">Relativní podpora pravidla</Explanation>
                     <Field>
-                        <Name>prahovaHodnota</Name>
+                        <Name>threshold</Name>
                         <LocalizedName lang="en">min value</LocalizedName>
                         <LocalizedName lang="cs">prahová hodnota</LocalizedName>
                         <Validation>
@@ -54,10 +53,10 @@
                     <LocalizedName lang="cs">Spolehlivost</LocalizedName>    
                     <ThresholdType>% of all</ThresholdType>
                     <CompareType>Greater than or equal</CompareType>
-     <Explanation lang="en">At lest specified percentage of instances matching the left side of the rule must match also the right side of the rule.</Explanation>
+     				<Explanation lang="en">At lest specified percentage of instances matching the left side of the rule must match also the right side of the rule.</Explanation>
      
                     <Field>
-                        <Name>prahovaHodnota</Name>
+                        <Name>threshold</Name>
                         <LocalizedName lang="en">min value</LocalizedName>
                         <LocalizedName lang="cs">prahová hodnota</LocalizedName>
                         <Validation>
@@ -120,7 +119,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">The percentage of instances satisfying the consequent must be a specified number of perecent  higher if the antecedent is specified than is the total percentage of instances satisfying the consequent.</Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -138,7 +137,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">The percentage of instances satisfying the consequent must be a specified number of perecent  lower if the antecedent is specified than is the total percentage of instances satisfying the consequent.</Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -156,7 +155,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">At least a specified percentage of instances satisfying antecedent or consequent satisfy both antecedent and consequent</Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -174,7 +173,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">The binomical test rejects on the level alpha the null hypothesis P (A and C | A or C) &lt;= p in favour of the alternative hypothesis P (A and C | A or C) &gt; p </Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -205,7 +204,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">The binomical test does not reject on the level alpha the null hypothesis P (A and C | A or C) &lt;= p in favour of the alternative hypothesis P (A and C | A or C) &gt; p </Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -237,7 +236,7 @@
      <Explanation lang="en">At least a specified percentage of instances has the same truth value for Antecedent and Consequent</Explanation>
      
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -257,7 +256,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">The binomical test rejects on the level alpha the null hypothesis P (A and C have the same truth value) &lt;= p in favour of the alternative hypothesis P (A and C have the same truth value) &gt; p </Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -288,7 +287,7 @@
      <CompareType>Greater than or equal</CompareType>
      <Explanation lang="en">The binomical test does not reject on the level alpha the null hypothesis P (A and C have the same truth value) &lt;= p in favour of the alternative hypothesis P (A and C have the same truth value) &gt; p </Explanation>
      <Field>
-      <Name>prahovaHodnota</Name>
+      <Name>threshold</Name>
       <LocalizedName lang="en">min value</LocalizedName>
       <LocalizedName lang="cs">prahová hodnota</LocalizedName>
       <Validation>
@@ -430,7 +429,7 @@
     <Type>
      <Name>Left cut</Name>
      <LocalizedName lang="en">Lowest values</LocalizedName>
-     <Explanation lang="en">Only lowest values will be considered for the value of the field. </Explanation>
+     <Explanation lang="en">Only lowest values will be considered for the value of the field.</Explanation>
      <MaxOccurrences>1</MaxOccurrences>
      <Field hidden="true">
       <Name>minLength</Name>

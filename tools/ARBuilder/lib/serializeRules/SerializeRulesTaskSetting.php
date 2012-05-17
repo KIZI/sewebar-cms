@@ -346,22 +346,17 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
    * @param <StdClass> $im Interest Measure StdClass object
    */
   private function createInterestMeasureTreshold($im) {
-    $name = $im->name;
-    $fields = $im->fields;
-    $value = 0;
-    if (count($fields) && strlen($fields[0]->value)) { $value = $fields[0]->value; }
-
     $interestMeasureTreshold = $this->finalXmlDocument->createElement("InterestMeasureThreshold");
     $id = $this->getNewId();
     $interestMeasureTreshold->setAttribute("id", $id);
-
-    $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("InterestMeasure", $name));
-    
-    $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("Threshold", $value));
-    if (stripos($name, 'chi') !== false) {
-        $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("SignificanceLevel", $value));  
+    $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("InterestMeasure", $im->name));
+    foreach ($im->fields as $f) {
+        if ($f->name === 'threshold') {
+            $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("Threshold", $f->value));
+        } else if ($f->name === 'alpha') {
+            $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("SignificanceLevel", $f->value)); 
+        }
     }
-    
     $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("ThresholdType", $im->thresholdType));
     $interestMeasureTreshold->appendChild($this->finalXmlDocument->createElement("CompareType", $im->compareType));
     

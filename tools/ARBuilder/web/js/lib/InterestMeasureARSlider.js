@@ -8,22 +8,26 @@ var InterestMeasureARSlider = new Class({
 	
 	elementSlider: null,
 	IM: null,
+	field: null,
+	ARManager: null,
 	numberNormalizer: null,
 	inverseNumberNormalizer: null,
 	
-	initialize: function (elementSlider, IM) {
-		this.dataType = IM.field.dataType;
+	initialize: function (elementSlider, IM, field, ARManager) {
+		this.dataType = field.dataType;
 		this.elementSlider = elementSlider;
 		this.IM = IM;
+		this.field = field;
+		this.ARManager = ARManager;
 		
 		if (this.dataType !== 'enum') {
-			this.numberNormalizer = new NumberNormalizer(IM.field.minValue, IM.field.maxValue, this.inversePrecision, 0, 100, this.precision, this.numSteps, IM.field.minValueInclusive, IM.field.maxValueInclusive);
-			this.inverseNumberNormalizer = new NumberNormalizer(0, 100, this.precision, IM.field.minValue, IM.field.maxValue, this.inversePrecision, this.numSteps, IM.field.minValueInclusive, IM.field.maxValueInclusive);
+			this.numberNormalizer = new NumberNormalizer(this.field.minValue, this.field.maxValue, this.inversePrecision, 0, 100, this.precision, this.numSteps, this.field.minValueInclusive, this.field.maxValueInclusive);
+			this.inverseNumberNormalizer = new NumberNormalizer(0, 100, this.precision, this.field.minValue, this.field.maxValue, this.inversePrecision, this.numSteps, this.field.minValueInclusive, this.field.maxValueInclusive);
 		}
 		
 		this.parent(this.elementSlider, this.elementSlider.getElement('.knob'), {
-			range: [0, (this.dataType !== 'enum' ? this.numSteps : (IM.field.values.length - 1))],
-	        initialStep: this.dataType !== 'enum' ? this.numberNormalizer.normalize(IM.getValue()) : IM.field.values.indexOf(IM.getValue()),
+			range: [0, (this.dataType !== 'enum' ? this.numSteps : (this.field.values.length - 1))],
+	        initialStep: this.dataType !== 'enum' ? this.numberNormalizer.normalize(IM.getThreshold()) : this.field.values.indexOf(IM.getAlpha()),
 	        
 	        onChange: function(value) {
 	        	this.handleChange(value);
@@ -36,13 +40,21 @@ var InterestMeasureARSlider = new Class({
 	    	var number = this.inverseNumberNormalizer.validate(value);
 	    	number = this.inverseNumberNormalizer.normalize(number);
 	    	var string = this.inverseNumberNormalizer.format(number);
-	    	$(this.IM.getCSSValueID()).set('text', string);
+	    	
+	    	if (this.IM.hasAlpha()) {
+	    		$(this.IM.getCSSValueID()).set('text', string + ', α ' + this.IM.getAlpha());
+	    	} else {
+	    		$(this.IM.getCSSValueID()).set('text', string);
+	    	}
 		} else {
-			var number = IM.field.values[value];
-			$(this.IM.getCSSValueID()).set('text', number);
+			var number = this.field.values[value];
+			$(this.IM.getCSSValueID()).set('text', 'α=' + number);
 		}
+		
+		IM.setValue(number);
+		//this.ARManager.setIMChanged();
 
-    	this.elementSlider.fireEvent('change');
+    	//this.elementSlider.fireEvent('change', number);
 	}
 
 });

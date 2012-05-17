@@ -24,8 +24,8 @@ var RulesParser = new Class({
 		Array.each(data, function (iRule) {
 			var rule = new AssociationRule(null);
 			rule.setId(iRule.id);
-			rule.addAntecedent(this.parseCedent(iRule.antecedent, 1));
-			rule.addSuccedent(this.parseCedent(iRule.consequent, 1));
+			rule.addAntecedent(this.parseCedent('antecedent', iRule.antecedent, 1));
+			rule.addSuccedent(this.parseCedent('consequent', iRule.consequent, 1));
 			Array.each(iRule.IM, function(iIM) {
 				rule.addIM(this.parseIM(iIM));
 			}.bind(this));
@@ -35,7 +35,7 @@ var RulesParser = new Class({
 		return rules;
 	},
 	
-	parseCedent: function (cedent, depth) {
+	parseCedent: function (scope, cedent, depth) {
 		var brToSolve = this.findOutterBrackets(cedent); // brackets to solve at this level
 	    var bracketsInterval = this.mergeIntervals(brToSolve);
 	    var bToSolve = this.findBooleans(cedent, bracketsInterval); // booleans to solve at this level
@@ -46,7 +46,7 @@ var RulesParser = new Class({
 		}
 	    var aToSolve = this.findAttributes(cedent, bracketsInterval); // attributes to solve at this level
 	    
-	    var partialCedent = new Cedent(this.generateCedentID(), depth, this.FL.getDBAConstraint(1), connective, [], []);
+	    var partialCedent = new Cedent(this.generateCedentID(), depth, this.FL.getDBAConstraint(scope, 1), connective, [], [], scope);
 	    Array.each(aToSolve, function (attribute) {
 	    	var literalRef = new FieldAR(this.generateFieldID(), this.DD.getAttributeByName(attribute.name), attribute.category, new StringHelper(), attribute.fields[0].value);	
 	    	partialCedent.addLiteralRef(literalRef);
@@ -56,7 +56,7 @@ var RulesParser = new Class({
 	    Array.each(brToSolve, function (br) {
 	    	if ((cedent[br.start + 1] !== -1) && (cedent[br.end - 1] !== -1) && true || ((br.start + 1) < (br.end -1))) {
 	    		var newCedent = cedent.slice(br.start + 1, br.end);
-	    		var childCedent = this.parseCedent(newCedent, depth + 1);
+	    		var childCedent = this.parseCedent(scope, newCedent, depth + 1);
 	    		partialCedent.addChildCedent(childCedent);
 	    	}
 		}.bind(this));
@@ -124,7 +124,7 @@ var RulesParser = new Class({
 	
 	parseIM: function (IM) {
 		var IMPrototype = this.FL.getIM(IM.name);
-		return new InterestMeasureAR(IM.name, IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getThresholdType(), IMPrototype.getCompareType(), IMPrototype.getField(), IMPrototype.getStringHelper(), IM.fields.value);
+		return new InterestMeasureAR(IM.name, IMPrototype.getDefaultValue(), IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getThresholdType(), IMPrototype.getCompareType(), IMPrototype.getFields(), IMPrototype.getStringHelper(), IM.fields.value, null);
 	},
 	
 	generateCedentID: function () {
