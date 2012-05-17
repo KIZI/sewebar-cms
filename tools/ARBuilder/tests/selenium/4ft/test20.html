@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost/arbuilder/web/" />
-<title>Serialize - ETree</title>
+<title>BUG: no found rules - negation</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Serialize - ETree</td></tr>
+<tr><td rowspan="1" colspan="3">BUG: no found rules - negation</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -24,16 +24,31 @@
 <tr>
 	<td>select</td>
 	<td>css=#add-coefficient-select</td>
-	<td>value=One category</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>css=#add-coefficient-category</td>
-	<td>value=Praha</td>
+	<td>value=Subset</td>
 </tr>
 <tr>
 	<td>click</td>
 	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>dragAndDropToObject</td>
+	<td>css=li#attribute-nav-sex</td>
+	<td>css=#antecedent .cedent</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>css=#add-coefficient-select</td>
+	<td>value=One category</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#change-field-sign-2</td>
 	<td></td>
 </tr>
 <tr>
@@ -49,7 +64,7 @@
 <tr>
 	<td>type</td>
 	<td>css=#add-im-threshold-value</td>
-	<td>0.5</td>
+	<td>0.09</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -64,7 +79,7 @@
 <tr>
 	<td>select</td>
 	<td>css=#add-coefficient-select</td>
-	<td>value=One category</td>
+	<td>value=Subset</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -77,15 +92,11 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>css=#im-fui-value</td>
-	<td>0.5*</td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>css=.found-rule</td>
 	<td></td>
 </tr>
+
 </tbody></table>
 </body>
 </html>

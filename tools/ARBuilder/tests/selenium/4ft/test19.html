@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost/arbuilder/web/" />
-<title>Serialize - ETree</title>
+<title>BUG: negation in rule clipboard</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Serialize - ETree</td></tr>
+<tr><td rowspan="1" colspan="3">BUG: negation in rule clipboard</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -24,12 +24,7 @@
 <tr>
 	<td>select</td>
 	<td>css=#add-coefficient-select</td>
-	<td>value=One category</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>css=#add-coefficient-category</td>
-	<td>value=Praha</td>
+	<td>value=Subset</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -49,7 +44,7 @@
 <tr>
 	<td>type</td>
 	<td>css=#add-im-threshold-value</td>
-	<td>0.5</td>
+	<td>0.88</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -73,19 +68,40 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=#mine-rules-confirm</td>
+	<td>css=.change-sign.positive</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>css=#im-fui-value</td>
-	<td>0.5*</td>
+	<td>click</td>
+	<td>css=.change-sign.positive</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.change-sign.negative</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#mine-rules-confirm</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
 	<td>css=.found-rule</td>
 	<td></td>
 </tr>
+<tr>
+	<td>click</td>
+	<td>css=.mark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=#marked-rules .field-sign.negative</td>
+	<td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
