@@ -41,20 +41,21 @@ var InterestMeasureARSlider = new Class({
 	    	number = this.inverseNumberNormalizer.normalize(number);
 	    	var string = this.inverseNumberNormalizer.format(number);
 	    	
-	    	if (this.IM.hasAlpha()) {
-	    		$(this.IM.getCSSValueID()).set('text', string + ', α ' + this.IM.getAlpha());
-	    	} else {
+	    	//if (this.IM.hasAlpha()) {
+	    	//	$(this.IM.getCSSValueID()).set('text', string + ', α ' + this.IM.getAlpha());
+	    	//} else {
 	    		$(this.IM.getCSSValueID()).set('text', string);
-	    	}
+	    	//}
 		} else {
 			var number = this.field.values[value];
-			$(this.IM.getCSSValueID()).set('text', 'α=' + number);
+			//$(this.IM.getCSSValueID()).set('text', 'α=' + number);
+			$(this.IM.getCSSValueID()).set('text', number);
 		}
 		
-		IM.setValue(number);
+		//IM.setValue(number);
 		//this.ARManager.setIMChanged();
 
-    	//this.elementSlider.fireEvent('change', number);
+    	this.elementSlider.fireEvent('change');
 	}
 
 });
