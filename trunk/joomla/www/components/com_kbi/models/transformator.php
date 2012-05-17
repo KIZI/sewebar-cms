@@ -116,8 +116,12 @@ class KbiModelTransformator extends JModel
 			$this->query = $query;
 		}
 
-		if($this->query != NULL)
+		if($this->query != NULL) {
+			$query->setOptions($_GET, 'GET');
+			$query->setOptions($_POST, 'POST');
+
 			return $this->query->setParameters($this->getParams());
+		}
 
 		return $this;
 	}

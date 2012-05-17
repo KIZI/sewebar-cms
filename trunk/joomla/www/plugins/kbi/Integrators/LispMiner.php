@@ -123,7 +123,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return trim($dd);
 	}
 
-	public function queryPost($query)
+	public function queryPost($query, $options)
 	{
 		if($this->getMinerId() === NULL) {
 			throw new Exception('LISpMiner ID was not provided.');
@@ -137,7 +137,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			'guid' => $this->getMinerId()
 		);
 
-		KBIDebug::log(array('URL' => $url, 'POST' => $data, 'LM Query'));
+		if(isset($options['template'])) {
+			$data['template'] = $options['template'];
+			KBIDebug::info("Using LM exporting template {$data['template']}", 'LISpMiner');
+		}
+
+		KBIDebug::log(array('URL' => $url, 'POST' => $data), 'LM Query');
 		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
