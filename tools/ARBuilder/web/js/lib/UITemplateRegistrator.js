@@ -171,9 +171,8 @@ var UITemplateRegistrator = new Class({
 			
 			if (field.getType() === null) {
 				div({id: field.getCSSID(), 'class': 'field'},
-					//a({id: field.getCSSChangeSignID(), href: '#', 'class': 'change-sign ' + fieldSign}),
 					span({id: field.getCSSDragID()}, field.toString()));
-			} else {// if (field.getType() === 'One category') {
+			} else {
 				div({id: field.getCSSID(), 'class': 'field'},
 						fieldSign === 'negative' ? a({id: field.getCSSChangeSignID(), href: '#', 'class': 'change-sign ' + fieldSign}) : '',
 						span({id: field.getCSSDragID(), 'class': 'field-drag'}, field.toStringAR()),
@@ -182,23 +181,7 @@ var UITemplateRegistrator = new Class({
 							a({id: field.getCSSRemoveID(), href: '#', 'class': 'remove-field', 'title': i18n.translate('Remove')}),
 							a({id: field.getEditCoefficientCSSID(), href: '#', 'class': 'edit-coefficient', 'title': i18n.translate('Edit')}),
 							fieldSign === 'positive' ? a({id: field.getCSSChangeSignID(), href: '#', 'class': 'change-sign ' + fieldSign}) : ''));
-			}// else {
-//				div({id: field.getCSSID(), 'class': 'field'},
-//						a({id: field.getCSSChangeSignID(), href: '#', 'class': 'change-sign ' + fieldSign}),
-//						span({id: field.getCSSDragID(), 'class': 'field-drag'}, field.toStringAR()),
-//						div({'class': 'controls'},
-//							a({id: field.getCSSMarkID(), href: '#', 'class': field.isMarked() === true ? 'marked-field': 'mark-field', 'title': field.isMarked() === true ? i18n.translate('Unmark') : i18n.translate('Mark')}),
-//							   a({id: field.getEditCoefficientCSSID(), href: '#', 'class': 'edit-coefficient', 'title': i18n.translate('Edit')}),
-//							   a({id: field.getCSSRemoveID(), href: '#', 'class': 'remove-field', 'title': i18n.translate('Remove')})));
-//				div({id: field.getCSSID(), 'class': 'field'},
-//					a({id: field.getCSSChangeSignID(), href: '#', 'class': 'change-sign ' + fieldSign}),	
-//					span({id: field.getCSSDragID(), 'class': 'field-drag'}, field.toStringAR()),
-//					div({'class': 'controls'},
-//						ul(li(a({id: field.getCSSMarkID(), href: '#', 'class': field.isMarked() === true ? 'marked-field': 'mark-field'}, field.isMarked() === true ? i18n.translate('Unmark') : i18n.translate('Mark'))),
-//						   li(a({id: field.getEditCoefficientCSSID(), href: '#', 'class': 'edit-coefficient'}, i18n.translate('Edit'))),
-//						   li(a({id: field.getCSSRemoveID(), href: '#', 'class': 'remove-field'}, i18n.translate('Remove'))))));				
-//			}
-//		}
+			}
 		});
 		
 		Mooml.register('connectiveTemplate', function (data) {
