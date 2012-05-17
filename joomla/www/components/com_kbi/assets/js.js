@@ -44,3 +44,38 @@ function KbiGetAjax(url)
 	return false;
 }
 
+function KbiUploadDocument(url)
+{
+    var myAjax = new Ajax(url,
+        {
+            method: 'post',
+            update: $('results'),
+            data:
+            {
+                source: $('source').getValue(),
+                content: $('document').getValue()
+            }
+        }).request();
+
+    $('messages').empty();
+
+    return false;
+}
+
+function KbiDataDictionary(url)
+{
+    var myAjax = new Ajax(url,
+        {
+            method: 'get',
+            update: $('results'),
+            data:
+            {
+                source: $('source').getValue()
+            }
+        }).request();
+
+    $('messages').empty();
+
+    return false;
+}
+

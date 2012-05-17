@@ -52,6 +52,11 @@ class KBIntegrator implements IKBIntegrator
 	/** @var string */
 	protected $config;
 
+	public function getName()
+	{
+		return isset($this->config['name']) ? $this->config['name'] : '';
+	}
+
 	public function getUrl()
 	{
 		return isset($this->config['url']) ? $this->config['url'] : '';

@@ -33,6 +33,8 @@ class KbiViewDemo extends JView
 		$document->addStyleDeclaration($style);
 
 		$this->url = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;task=query&amp;format=raw';
+		$this->urlDataDictionary = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;task=dataDescription&amp;format=raw';
+		$this->urlUploadDocument = /*$_SERVER['HTTP_HOST'].*/'/index.php?option=com_kbi&amp;task=storeDocument&amp;format=raw';
 
 		parent::display($tpl);
 	}
