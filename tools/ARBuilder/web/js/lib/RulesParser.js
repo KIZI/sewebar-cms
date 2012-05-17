@@ -40,19 +40,23 @@ var RulesParser = new Class({
 	    var bracketsInterval = this.mergeIntervals(brToSolve);
 	    var bToSolve = this.findBooleans(cedent, bracketsInterval); // booleans to solve at this level
 	    if (bToSolve.length) {
-	    	var connective = new Connective(this.generateConnectiveID(), bToSolve.pop().type === 'and' ? 'Conjunction' : 'Disjunction');
+	    	var connective = new Connective(this.generateConnectiveID(), bToSolve.getLast().type === 'and' ? 'Conjunction' : 'Disjunction');
 	    } else {
 	    	var connective = new Connective(this.generateConnectiveID(), 'Conjunction');
 		}
 	    var aToSolve = this.findAttributes(cedent, bracketsInterval); // attributes to solve at this level
 	    
 	    var partialCedent = new Cedent(this.generateCedentID(), depth, this.FL.getDBAConstraint(scope, 1), connective, [], [], scope);
-	    Array.each(aToSolve, function (attribute) {
+	    Array.each(aToSolve, function (attribute, k) {
 	    	var vals = [];
 	    	Array.each(attribute.fields, function (f) {
 				vals.push(f.value);
 			}.bind(this));
 	    	var literalRef = new FieldFR(this.generateFieldID(), this.DD.getAttributeByName(attribute.name), attribute.category, new StringHelper(), vals);	
+	    	
+	    	if (k > 0 && bToSolve[k - 1] && bToSolve[k - 1].type === 'neg') {
+	    		literalRef.setNegativeSign();
+	    	}
 	    	partialCedent.addLiteralRef(literalRef);
 		}.bind(this));
 	    

@@ -14,6 +14,10 @@ var FieldFR = new Class({
 		return this.sign;
 	},
 	
+	setNegativeSign: function () {
+		this.sign = false;
+	},
+	
 	serialize: function () {
 		var serialized = {};
 		serialized.name = this.getAttributeName();
@@ -25,7 +29,12 @@ var FieldFR = new Class({
 	},
 	
 	toStringAR: function() {
-		var str = this.getAttributeName() + '<span class="coefficient">';
+		var str = '';
+		if (!this.hasPositiveSign()) {
+			str += '<span class="field-sign negative"></span>';
+		}
+		
+		str += this.getAttributeName() + '<span class="coefficient">';
 		if (this.category.length > 1) {
 			str += '(';
 		}
