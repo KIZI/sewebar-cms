@@ -284,8 +284,13 @@ div#interest-measures .im-slider {
 	margin: 5px 0 6px;
 }
 
+div#interest-measures .im-slider-static,
 div#interest-measures .im-slider-value {
 	color: #7B0D2E;
+}
+
+div#interest-measures .im-slider-static {
+	padding-left: 5px;
 }
 
 div#interest-measures .remove-im {

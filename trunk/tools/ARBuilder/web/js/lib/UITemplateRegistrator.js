@@ -140,6 +140,7 @@ var UITemplateRegistrator = new Class({
 				span({'class': 'name', 'title': IM.getFields().localizedName}, 
 						IM.getLocalizedName() + ': ', 
 						span({id: IM.getCSSValueID(), 'class': 'im-slider-value'}),
+						IM.hasThreshold() && IM.hasAlpha() ? ',<span class="im-slider-static">α ' + IM.getAlpha() + '</span>' : '',
 						a({id: IM.getCSSRemoveID(), href: '#', 'class': 'remove-im', 'title': i18n.translate('Remove')})),
 				div({id: IM.getCSSSliderID(), 'class': 'im-slider'},
 						div({'class': 'knob'})));
