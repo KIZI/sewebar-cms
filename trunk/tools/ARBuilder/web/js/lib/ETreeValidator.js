@@ -15,13 +15,15 @@ var ETreeValidator = new Class({
 		// IM
 		if (rule.getNumIMs() !== 1) {
 			valid = false;
-		} else {
+		}
+		/*
+		else {
 			var IM = rule.getFirstIM();
 			var lcname = IM.getName().toLowerCase();
 			if (!lcname.contains('chi')) {
 				valid = false;
 			}
-		}
+		}*/
 
 		// succedent
 		var succedentNumLiterals = rule.getSuccedent().getNumLiterals();
