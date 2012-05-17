@@ -229,7 +229,7 @@
     <Type>
      <Name>FUE</Name>
      <DefaultValue>0.7</DefaultValue>
-     <LocalizedName lang="en">Founded Equivallence</LocalizedName>
+     <LocalizedName lang="en">Founded Equivalence</LocalizedName>
      <LocalizedName lang="cs">Fundovaná ekvivalence</LocalizedName>    
      <ThresholdType>% of all</ThresholdType>
      <CompareType>Greater than or equal</CompareType>
