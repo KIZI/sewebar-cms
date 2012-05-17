@@ -66,6 +66,7 @@ class BBA{
                  'value' => $cr);
             array_push($fields, $field);
         }
+        
         $array['fields'] = $fields;
         $array = array($array);
 

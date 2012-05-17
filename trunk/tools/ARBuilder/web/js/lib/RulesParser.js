@@ -48,7 +48,11 @@ var RulesParser = new Class({
 	    
 	    var partialCedent = new Cedent(this.generateCedentID(), depth, this.FL.getDBAConstraint(scope, 1), connective, [], [], scope);
 	    Array.each(aToSolve, function (attribute) {
-	    	var literalRef = new FieldAR(this.generateFieldID(), this.DD.getAttributeByName(attribute.name), attribute.category, new StringHelper(), attribute.fields[0].value);	
+	    	var vals = [];
+	    	Array.each(attribute.fields, function (f) {
+				vals.push(f.value);
+			}.bind(this));
+	    	var literalRef = new FieldFR(this.generateFieldID(), this.DD.getAttributeByName(attribute.name), attribute.category, new StringHelper(), vals);	
 	    	partialCedent.addLiteralRef(literalRef);
 		}.bind(this));
 	    

@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost/arbuilder/web/" />
-<title>Order attributes</title>
+<title>Age (Interval 1-2) => Quality (bad)</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Order attributes</td></tr>
+<tr><td rowspan="1" colspan="3">Age (Interval 1-2) => Quality (bad)</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -18,22 +18,22 @@
 </tr>
 <tr>
 	<td>dragAndDropToObject</td>
-	<td>css=li#attribute-nav-district</td>
+	<td>css=li#attribute-nav-age</td>
 	<td>css=#antecedent .cedent</td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>css=#add-coefficient-select</td>
-	<td>label=One category</td>
+	<td>value=Interval</td>
 </tr>
 <tr>
-	<td>select</td>
-	<td>css=#add-coefficient-category</td>
-	<td>label=Praha</td>
+	<td>type</td>
+	<td>css=#add-coefficient-maxlength</td>
+	<td>2</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=#add-coefficient-form input[type=&quot;submit&quot;]</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -44,12 +44,12 @@
 <tr>
 	<td>select</td>
 	<td>css=#add-im-select</td>
-	<td>value=CHI</td>
+	<td>value=FUI</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>css=#add-im-alpha-value</td>
-	<td>0.01</td>
+	<td>css=#add-im-threshold-value</td>
+	<td>0.88</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -64,7 +64,7 @@
 <tr>
 	<td>select</td>
 	<td>css=#add-coefficient-select</td>
-	<td>label=One category</td>
+	<td>value=One category</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -73,24 +73,15 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=#recommend-attributes-confirm</td>
+	<td>css=#mine-rules-confirm</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForXpathCount</td>
-	<td>//ul/li[@id='attribute-nav-repayment'][1]/</td>
-	<td>1</td>
+	<td>waitForElementPresent</td>
+	<td>css=.found-rule</td>
+	<td></td>
 </tr>
-<tr>
-	<td>waitForXpathCount</td>
-	<td>//ul/li[@id='attribute-nav-amount'][1]/</td>
-	<td>1</td>
-</tr>
-<tr>
-	<td>waitForXpathCount</td>
-	<td>//ul/li[@id='attribute-nav-duration'][1]/</td>
-	<td>1</td>
-</tr>
+
 </tbody></table>
 </body>
 </html>
