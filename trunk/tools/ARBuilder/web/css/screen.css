@@ -444,6 +444,7 @@ div.cedent .field:hover a.change-sign.positive {
 	visibility: visible;
 }
 
+section#marked-rules span.field-sign.negative,
 section#found-rules span.field-sign.negative,
 div.cedent .field a.change-sign.negative,
 div.cedent a.change-cedent-sign.negative {
