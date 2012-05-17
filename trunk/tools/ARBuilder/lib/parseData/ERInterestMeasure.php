@@ -28,7 +28,7 @@ class ERInterestMeasure {
         $array = array('name' => $this->name,
                'type' => 'im',
                'category' => '',
-               'fields' => array('name' => 'prahovaHodnota', 
+               'fields' => array('name' => 'threshold', 
                			   	 'value' => $this->value));
 
         return $array;

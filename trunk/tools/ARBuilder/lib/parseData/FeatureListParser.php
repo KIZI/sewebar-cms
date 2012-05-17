@@ -87,6 +87,7 @@ class FeatureListParser {
         $array['types'] = array();
         foreach ($this->XPath->evaluate('BuildingBlocks/InterestMeasures/Types/Type') as $t) {
             $name = $this->XPath->evaluate('Name', $t)->item(0)->nodeValue;
+            $defaultValue = $this->XPath->evaluate('DefaultValue', $t)->item(0)->nodeValue;
             $localizedName = '';
             if ($LN = $this->XPath->evaluate('LocalizedName[@lang="'.$this->lang.'"]', $t)->item(0)) {
                 $localizedName = $LN->nodeValue;
@@ -97,39 +98,40 @@ class FeatureListParser {
             if ($EX = $this->XPath->evaluate('Explanation[@lang="'.$this->lang.'"]', $t)->item(0)) {
                 $explanation = $EX->nodeValue;
             }
-            $IM = new FLInterestMeasure($name, $localizedName, $thresholdType, $compareType, $explanation);
+            $IM = new FLInterestMeasure($name, $defaultValue, $localizedName, $thresholdType, $compareType, $explanation);
 
-            $f = $this->XPath->evaluate('Field', $t)->item(0);
-            $name = $this->XPath->evaluate('Name', $f)->item(0)->nodeValue;
-            $localizedName = $this->XPath->evaluate('LocalizedName[@lang="'.$this->lang.'"]', $f)->item(0)->nodeValue;
-            $dataType = $this->XPath->evaluate('Validation/Datatype', $f)->item(0)->nodeValue;
-            
-            if ($dataType === 'enum') { // enumeration
-                $vals = array();
-                foreach($this->XPath->evaluate('Validation/Value', $f) as $fv) {
-                    array_push($vals, $fv->nodeValue);
-                }
-                sort($vals);
+            foreach ($this->XPath->evaluate('Field', $t) as $f) {
+                $name = $this->XPath->evaluate('Name', $f)->item(0)->nodeValue;
+                $localizedName = $this->XPath->evaluate('LocalizedName[@lang="'.$this->lang.'"]', $f)->item(0)->nodeValue;
+                $dataType = $this->XPath->evaluate('Validation/Datatype', $f)->item(0)->nodeValue;
                 
-                $IM->setEnumerationField($name, $localizedName, $vals, $dataType);
-            } else { // interval
-                if ($mv = $this->XPath->evaluate('Validation/MinValue', $f)->item(0)) {
-                    $minValue = intval($mv->nodeValue);
-                    $minValueInclusive = ($mv->getAttribute('inclusive') === 'yes');
-                } else {
-                    $minValue = self::$IM_MIN;
-                    $minValueInclusive = self::$IM_INCLUSIVE_MIN;
+                if ($dataType === 'enum') { // enumeration
+                    $vals = array();
+                    foreach($this->XPath->evaluate('Validation/Value', $f) as $fv) {
+                        array_push($vals, $fv->nodeValue);
+                    }
+                    sort($vals);
+                    
+                    $IM->addEnumerationField($name, $localizedName, $vals, $dataType);
+                } else { // interval
+                    if ($mv = $this->XPath->evaluate('Validation/MinValue', $f)->item(0)) {
+                        $minValue = intval($mv->nodeValue);
+                        $minValueInclusive = ($mv->getAttribute('inclusive') === 'yes');
+                    } else {
+                        $minValue = self::$IM_MIN;
+                        $minValueInclusive = self::$IM_INCLUSIVE_MIN;
+                    }
+        
+                    if ($mv = $this->XPath->evaluate('Validation/MaxValue', $f)->item(0)) {
+                        $maxValue = intval($mv->nodeValue);
+                        $maxValueInclusive = ($mv->getAttribute('inclusive') === 'yes');
+                    } else {
+                        $maxValue = self::$IM_MAX;
+                        $maxValueInclusive = self::$IM_INCLUSIVE_MAX;
+                    }
+        
+                    $IM->addIntervalField($name, $localizedName, $minValue, $minValueInclusive, $maxValue, $maxValueInclusive, $dataType);
                 }
-    
-                if ($mv = $this->XPath->evaluate('Validation/MaxValue', $f)->item(0)) {
-                    $maxValue = intval($mv->nodeValue);
-                    $maxValueInclusive = ($mv->getAttribute('inclusive') === 'yes');
-                } else {
-                    $maxValue = self::$IM_MAX;
-                    $maxValueInclusive = self::$IM_INCLUSIVE_MAX;
-                }
-    
-                $IM->setIntervalField($name, $localizedName, $minValue, $minValueInclusive, $maxValue, $maxValueInclusive, $dataType);
             }
             
             $array['types'] = array_merge_recursive($array['types'], $IM->toArray());
@@ -217,23 +219,41 @@ class FeatureListParser {
     }
 
     protected function parseNestingConstraints($maxLevels) {
-        $array['constraints'] = array();
-        foreach ($this->XPath->evaluate('BuildingBlocks/DerivedBooleanAttribute/NestingConstraints/NestingConstraint') as $k => $nc) {
-            $NC = new NestingConstraint();
-            $level = $nc->getAttribute('level');
-            foreach ($this->XPath->evaluate('Connectives/child::node()', $nc) as $c) {
-                $allowed = ($c->getAttribute('allowed') === 'yes');
-                $NC->addConnective($c->nodeName, $allowed);
-            }
-
-            if ($level === self::$CONSTRAINT_REMAINING) {
-                for ($i = ($k + 1); $i <= $maxLevels; $i++) {
-                    $NC->setLevel($i);
-                    $array['constraints'] = array_merge_recursive($array['constraints'], $NC->toArray());
+        $array['constraints']['antecedent'] = array();
+        $array['constraints']['consequent'] = array();
+        $array['constraints']['condition'] = array();
+        
+        foreach ($this->XPath->evaluate('BuildingBlocks/DerivedBooleanAttribute/NestingConstraints') as $k => $elNcs) {
+            $scope = $elNcs->getAttribute('scope');
+            foreach ($this->XPath->evaluate('NestingConstraint', $elNcs) as $k => $elNc) {
+                $NC = new NestingConstraint();
+                $level = $elNc->getAttribute('level');
+                foreach ($this->XPath->evaluate('Connectives/child::node()', $elNc) as $c) {
+                    $allowed = ($c->getAttribute('allowed') === 'yes');
+                    $NC->addConnective($c->nodeName, $allowed);
                 }
-            } else {
-                $NC->setLevel($level);
-                $array['constraints'] = array_merge_recursive($array['constraints'], $NC->toArray());
+    
+                if ($level === self::$CONSTRAINT_REMAINING) {
+                    for ($i = ($k + 1); $i <= $maxLevels; $i++) {
+                        $NC->setLevel($i);
+                        if ($scope === 'all') {
+                            $array['constraints']['antecedent'] = array_merge_recursive($array['constraints']['antecedent'], $NC->toArray());
+                            $array['constraints']['consequent'] = array_merge_recursive($array['constraints']['consequent'], $NC->toArray());
+                            $array['constraints']['condition'] = array_merge_recursive($array['constraints']['condition'], $NC->toArray());
+                        } else {
+                            $array['constraints'][$scope] = array_merge_recursive($array['constraints'][$scope], $NC->toArray());
+                        }
+                    }
+                } else {
+                    $NC->setLevel($level);
+                    if ($scope === 'all') {
+                        $array['constraints']['antecedent'] = array_merge_recursive($array['constraints']['antecedent'], $NC->toArray());
+                        $array['constraints']['consequent'] = array_merge_recursive($array['constraints']['consequent'], $NC->toArray());
+                        $array['constraints']['condition'] = array_merge_recursive($array['constraints']['condition'], $NC->toArray());
+                    } else {
+                        $array['constraints'][$scope] = array_merge_recursive($array['constraints'][$scope], $NC->toArray());
+                    }
+                }
             }
         }
 

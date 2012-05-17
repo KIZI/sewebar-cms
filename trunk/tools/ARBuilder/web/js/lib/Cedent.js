@@ -8,16 +8,18 @@ var Cedent = new Class({
 	connective: null,
 	literalRefs: [],
 	childCedents: [],
+	scope: '',
 	sign: true,
 	colors: {0: '#FF9999', 1: '#CC99FF', 2: '#99CCFF', 3: '#FFFF99', 4: '#99FFCC', 5: '#FFCC99'},
 
-	initialize: function (id, level, constraint, connective, literalRefs, childCedents) {
+	initialize: function (id, level, constraint, connective, literalRefs, childCedents, scope) {
 		this.id = id;
 		this.level = level;
 		this.constraint = constraint;
 		this.connective = connective;
 		this.literalRefs = literalRefs;
 		this.childCedents = childCedents;
+		this.scope = scope;
 	},
 	
 	getId: function () {
@@ -152,6 +154,10 @@ var Cedent = new Class({
 		}.bind(this));
 		
 		return literals;
+	},
+	
+	getScope: function () {
+		return this.scope;
 	},
 	
 	getNumMarkedFields: function () {

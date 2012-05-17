@@ -23,7 +23,7 @@ var FeatureList = new Class({
 	
 	// - derived boolean attribute
 	DBAMaxLevels: null,
-	DBAConstraints: [],
+	DBAConstraints: {},
 	
 	// custom properties
 	defaultConnectiveName: 'Conjunction',
@@ -55,7 +55,7 @@ var FeatureList = new Class({
 		this.IMTreshold = data.interestMeasures.treshold;
 		
 		Object.each(data.interestMeasures.types, function (value, key) {
-			this.IMs[key] = new InterestMeasure(key, value.localizedName, value.explanation, value.thresholdType, value.compareType, value.field, new StringHelper());
+			this.IMs[key] = new InterestMeasure(key, value.defaultValue, value.localizedName, value.explanation, value.thresholdType, value.compareType, value.fields, new StringHelper());
 		}.bind(this));
 		
 		Object.each(data.interestMeasures.combinations, function (value, key) {
@@ -78,12 +78,18 @@ var FeatureList = new Class({
 		// derived boolean attribute
 		this.DBAMaxLevels = data.DBA.maxLevels;
 		
-		Object.each(data.DBA.constraints, function (value, key) {
-			var constraint = {'Conjunction': value.Conjunction.allowed,
-			                  'Disjunction': value.Disjunction.allowed,
-			                  'Any': value.Any.allowed,
-			                  'Negation': value.Negation.allowed};
-			this.DBAConstraints[key] = constraint;
+		Object.each(data.DBA.constraints, function (DBAC, scope) {
+			Object.each(DBAC, function(value, key) {
+				var constraint = {
+					'Conjunction': value.Conjunction.allowed,
+					'Disjunction': value.Disjunction.allowed,
+					'Any': value.Any.allowed,
+					'Negation': value.Negation.allowed};
+				if (typeOf(this.DBAConstraints[scope]) !== 'object') {
+					this.DBAConstraints[scope] = {};
+				}
+				this.DBAConstraints[scope][key] = constraint;
+			}.bind(this));
 		}.bind(this));
 	},
 	
@@ -189,8 +195,8 @@ var FeatureList = new Class({
 		return this.getBBACoefficients()[Object.keys(this.getBBACoefficients())[0]];
 	},
 	
-	getDBAConstraint: function (level) {
-		return this.DBAConstraints['level' + level];
+	getDBAConstraint: function (scope, level) {
+		return this.DBAConstraints[scope]['level' + level];
 	},
 	
 	getDefaultConnective: function () {

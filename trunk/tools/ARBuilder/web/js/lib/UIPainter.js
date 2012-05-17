@@ -255,10 +255,6 @@ var UIPainter = new Class({
 			// re-render
 			elementCedent.replaces($(cedent.getCSSID()));
 		}
-
-		if (cedent.getNumLiterals() <= 1) {
-			$(cedent.getCSSEditConnectiveID()).hide();
-		}
 		
 		var elementFields = elementCedent.getElement('div.fields');
 		if (cedent.displayChangeSign()) {
@@ -324,7 +320,7 @@ var UIPainter = new Class({
 		elementParent.grab(Mooml.render('interestMeasureTemplate', {IM: IM, i18n: this.i18n}));
 		
 	    var elementSlider = $(IM.getCSSSliderID());
-	    var IMSlider = new InterestMeasureARSlider(elementSlider, IM);	
+	    var IMSlider = new InterestMeasureARSlider(elementSlider, IM, IM.fields[0], this.ARManager);	
 	    
 	    this.UIListener.registerIMEventHandler(IM);
 	}, 
@@ -333,20 +329,23 @@ var UIPainter = new Class({
 		var overlay = this.showOverlay();
 		overlay.grab(Mooml.render('addIMWindowTemplate', {i18n: this.i18n}));
 		var selectedIM = IMs[Object.keys(IMs)[0]];
-		this.renderAddIMAutocomplete(IMs, selectedIM);
-	},
-	
-	renderAddIMAutocomplete: function (IMs, selectedIM) {
-		Mooml.render('addIMWindowAutocompleteTemplate', {i18n: this.i18n}).replaces($('add-im-autocomplete'));
 		Object.each(IMs, function (IM) {
 			var isSelected = (IM.getName() === selectedIM.getName());
 			$('add-im-select').grab(Mooml.render('addIMWindowSelectOptionTemplate', {IM: IM, isSelected: isSelected}));
-			if (isSelected === true) {
-				var IMSlider = new InterestMeasureAddSlider($('add-im-slider'), IM);
-			}
 		}.bind(this));
 		
+		this.renderAddIMAutocomplete(selectedIM);
+
 		this.UIListener.registerAddIMFormEventHandler();
+	},
+	
+	renderAddIMAutocomplete: function (selectedIM) {
+		var autocomplete = $('add-im-form').getElement('.autocomplete');
+		autocomplete.empty();
+		Array.each(selectedIM.getFields(), function (f) {
+			autocomplete.grab(Mooml.render('addIMWindowAutocompleteTemplate', {i18n: this.i18n, field: f}));
+			var IMSlider = new InterestMeasureAddSlider($('add-im-' + f.name + '-slider'), f);
+		}.bind(this));
 	},
 	
 	renderAddCoefficientWindow: function (field) {

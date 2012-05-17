@@ -73,6 +73,8 @@ var FRManager = new Class({
 			if (this.settings.getBKAutoSearch()) {
 				this.AJAXBalancer.run.delay(500, this.AJAXBalancer);
 			}
+			
+			this.UIPainter.renderActiveRule();
 		}
 	},
 	

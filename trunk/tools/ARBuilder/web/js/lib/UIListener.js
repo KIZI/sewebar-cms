@@ -276,20 +276,22 @@ var UIListener = new Class({
 		// submit
 		var elementSubmit = $('add-im-form').getElement('input[type=submit]');
 		elementSubmit.addEvent('click', function (event) {
+			event.stop();
 			var elementSelect = $('add-im-select');
 			var IMName = elementSelect.options[elementSelect.selectedIndex].value;
-			var IMValue = $('add-im-value').value;
-			var IM = this.ARManager.addIM(IMName, IMValue);
-			event.stop();
+			var IM = this.ARManager.getIMPrototype(IMName);
+			var IMThresholdValue = $('add-im-threshold-value') ? $('add-im-threshold-value').value : null;
+			var IMAlphaValue = $('add-im-alpha-value') ? $('add-im-alpha-value').value : null;
+			var IM = this.ARManager.addIM(IMName, IMThresholdValue, IMAlphaValue);
 		}.bind(this));
 		
 		// change IM
 		var elementSelect = $('add-im-select');
-		elementSelect.addEvent('change', function (event) {
+		elementSelect.addEvent('change', function (e) {
+			e.stop();
 			var IMName = elementSelect.options[elementSelect.selectedIndex].value;
 			var IM = this.ARManager.getIMPrototype(IMName);
-			this.UIPainter.renderAddIMAutocomplete(this.ARManager.getPossibleIMs(), IM);
-			event.stop();
+			this.UIPainter.renderAddIMAutocomplete(IM);
 		}.bind(this));
 		
 		// close
@@ -348,12 +350,6 @@ var UIListener = new Class({
 				this.ARManager.groupFields(cedent);
 				event.stop();
 			}.bind(this));
-			
-//			// group fields reject
-//			$(cedent.getCSSGroupFieldsRejectID()).addEvent('click', function (event) {
-//				this.ARManager.rejectGroupFields(cedent);
-//				event.stop();
-//			}.bind(this));
 		}
 	},
 	

@@ -107,7 +107,7 @@ input[type='text']#add-coefficient-minlength,
 input[type='text']#add-coefficient-maxlength,
 input[type='text']#edit-coefficient-minlength,
 input[type='text']#edit-coefficient-maxlength,
-input[type='text']#add-im-value	 {
+input[type='text'].add-im-value	 {
 	color: #7B0D2E;	
 	border: none;
 	font-weight: bold;
@@ -261,7 +261,7 @@ div#antecedent {
 }
 
 div#interest-measures {
-	width: 150px;
+	width: 170px;
 	float: left;
 	margin-right: 20px;
 }
@@ -510,7 +510,7 @@ section#overlay #add-coefficient-minlength-slider,
 section#overlay #edit-coefficient-minlength-slider,
 section#overlay #add-coefficient-maxlength-slider,
 section#overlay #edit-coefficient-maxlength-slider,
-section#overlay #add-im-slider,
+section#overlay .add-im-slider,
 section#active-rule .im-slider {
     background: #FFF none;
     border: 1px solid #A6C9E2;
@@ -524,7 +524,7 @@ section#overlay #add-coefficient-minlength-slider .knob,
 section#overlay #edit-coefficient-minlength-slider .knob,
 section#overlay #add-coefficient-maxlength-slider .knob,
 section#overlay #edit-coefficient-maxlength-slider .knob,
-section#overlay #add-im-slider .knob,
+section#overlay .add-im-slider .knob,
 section#active-rule .im-slider .knob {
 	background: url("../images/?new=0078ae&w=1&h=400&f=png&q=100&fltr[]=over|textures/02_glass.png|0|0|45") repeat-x scroll 0 50% #0078AE;
     border: 1px solid #77D5F7;
@@ -648,7 +648,7 @@ ul#attributes-by-group {
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 	line-height: 20px;
     
-    width: 650px;
+    width: 800px;
     margin-top: 25px; padding: 10px 20px;
 }
 

@@ -44,11 +44,11 @@ var ARManager = new Class({
 		var AR = new AssociationRule(this.initARValidator());
 
 		// antecedent
-		var antecedent = this.initCedent(1);
+		var antecedent = this.initCedent('antecedent', 1);
 		AR.addAntecedent(antecedent);
 		
 		// succedent
-		var succedent = this.initCedent(1);
+		var succedent = this.initCedent('consequent', 1);
 		AR.addSuccedent(succedent);
 		
 		this.activeRule = AR;
@@ -58,8 +58,8 @@ var ARManager = new Class({
 		return new AssociationRuleValidator(this.FL.getRulePattern(), this.FL.getIMCombinations());
 	},
 	
-	initCedent: function (level) {
-		return new Cedent(this.generateCedentID(), level, this.FL.getDBAConstraint(level), this.FL.getDefaultConnective(), [], []);
+	initCedent: function (scope, level) {
+		return new Cedent(this.generateCedentID(), level, this.FL.getDBAConstraint(scope, level), this.FL.getDefaultConnective(), [], [], scope);
 	},
 	
 	hasPossibleIMs: function () {
@@ -87,9 +87,9 @@ var ARManager = new Class({
 		this.activeRule.addAntecedent(antecedent);
 	},
 	
-	addIM: function (name, value) {
+	addIM: function (name, thresholdValue, alphaValue) {
 		var IMPrototype = this.getIMPrototype(name);
-		var IM = new InterestMeasureAR(name, IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getThresholdType(), IMPrototype.getCompareType(), IMPrototype.getField(), IMPrototype.getStringHelper(), value);
+		var IM = new InterestMeasureAR(name, IMPrototype.getDefaultValue(), IMPrototype.getLocalizedName(), IMPrototype.getExplanation(), IMPrototype.getThresholdType(), IMPrototype.getCompareType(), IMPrototype.getFields(), IMPrototype.getStringHelper(), thresholdValue, alphaValue);
 		this.activeRule.addIM(IM);
 		
 		this.UIPainter.hideOverlay();
@@ -98,11 +98,17 @@ var ARManager = new Class({
 	
 	editIM: function (IM) {
 		this.activeRule.editIM(IM, $(IM.getCSSValueID()).get('text'));
+		this.setActiveRuleChanged();
 		this.UIPainter.renderActiveRule();
 	},
 	
 	removeIM: function (IM) {
 		this.activeRule.removeIM(IM.getName());
+		this.UIPainter.renderActiveRule();
+	},
+	
+	setIMChanged: function () {
+		this.setActiveRuleChanged();
 		this.UIPainter.renderActiveRule();
 	},
 	
@@ -233,7 +239,7 @@ var ARManager = new Class({
 	
 	groupFields: function (cedent) {
 		if (cedent.getNumLiteralRefs() !== cedent.getNumMarkedFields()) {
-			var newCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.FL.getDBAConstraint(cedent.getNextLevel()), this.FL.getDefaultConnective(), [], []);
+			var newCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.FL.getDBAConstraint(cedent.getScope(), cedent.getNextLevel()), this.FL.getDefaultConnective(), [], [], cedent.getScope());
 			cedent.groupLiteralRefs(newCedent);
 		} else {
 			cedent.unmarkLiteralRefs();
@@ -254,7 +260,7 @@ var ARManager = new Class({
 	},
 	
 	addCedent: function (cedent) {
-		var childCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.FL.getDBAConstraint(cedent.getNextLevel()), this.FL.getDefaultConnective(), [], []);
+		var childCedent = new Cedent(this.generateCedentID(), cedent.getNextLevel(), this.FL.getDBAConstraint(cedent.getScope(), cedent.getNextLevel()), this.FL.getDefaultConnective(), [], [], cedent.getScope());
 		cedent.addChildCedent(childCedent);
 		this.UIPainter.renderCedent(cedent, null);
 		this.setActiveRuleChanged();
@@ -262,7 +268,7 @@ var ARManager = new Class({
 	
 	removeCedent: function (cedent) {
 		if (cedent.getLevel() === 1) {
-			var blankCedent = this.initCedent(cedent.getLevel());
+			var blankCedent = this.initCedent(cedent.getScope(), cedent.getLevel());
 			this.activeRule.setCedent(cedent, blankCedent);
 		} else {
 			this.activeRule.removeCedent(cedent);

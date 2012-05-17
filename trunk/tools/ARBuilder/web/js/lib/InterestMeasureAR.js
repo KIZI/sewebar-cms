@@ -3,34 +3,73 @@
 var InterestMeasureAR = new Class({
 	Extends: InterestMeasure,
 
-	value: 0,
-	displayPrecision: 3,
+	threshold: null,
+	alpha: null,
+	displayPrecision: 6,
 	
-	initialize: function (name, localizedName, explanation, thresholdType, compareType, field, stringHelper, value) {
-		this.parent(name, localizedName, explanation, thresholdType, compareType, field, stringHelper);
-		this.value = value;
+	initialize: function (name, defaultValue, localizedName, explanation, thresholdType, compareType, fields, stringHelper, threshold, alpha) {
+		this.parent(name, defaultValue, localizedName, explanation, thresholdType, compareType, fields, stringHelper);
+		this.threshold = threshold;
+		this.alpha = alpha;
 	},
 	
 	getValue: function () {
-		return this.value;
+		return this.hasThreshold() ? this.getThreshold() : this.getAlpha();
 	},
 	
-	setValue: function (value) {
-		this.value = value;
+	setValue: function (val) {
+		if (this.hasThreshold()) {
+			this.threshold = val;
+		} else {
+			this.alpha = val;
+		}
+	},
+	
+	hasThreshold: function() {
+		return this.threshold !== null;
+	},
+	
+	getThreshold: function () {
+		return this.threshold;
+	},
+	
+	setThreshold: function (val) {
+		this.threshold = val;
+	},
+	
+	hasAlpha: function() {
+		return this.alpha !== null;
+	},
+	
+	getAlpha: function () {
+		return this.alpha;
+	},
+	
+	setAlpha: function (val) {
+		this.alpha = val;
 	},
 	
 	serialize: function () {
-		return {name: this.name, 
-				type: 'oper',
-				thresholdType: this.thresholdType,
-				compareType: this.compareType,
-				fields: [{
-					name: 'prahovaHodnota',
-					value: this.value}]};
+		var arr =  {
+			name: this.name, 
+			type: 'oper',
+			thresholdType: this.thresholdType,
+			compareType: this.compareType,
+			fields: []};
+		if (this.hasThreshold()) {
+			var tr = {name: 'threshold', value: this.threshold};
+			arr.fields.push(tr);
+		}
+		if (this.hasAlpha()) {
+			var tr = {name: 'alpha', value: this.alpha};
+			arr.fields.push(tr);
+		}
+		
+		return arr;
 	},
 	
 	toString: function () {
-		return this.getLocalizedName() + ':<span class="im-value">' + this.value.format({decimals: this.displayPrecision}) + '</span>';
+		return this.getLocalizedName() + ':<span class="im-value">' + this.getValue().format({decimals: this.displayPrecision}) + '</span>';
 	}
 
 });

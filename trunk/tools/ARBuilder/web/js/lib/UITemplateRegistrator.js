@@ -137,7 +137,7 @@ var UITemplateRegistrator = new Class({
 			i18n = data.i18n;
 			
 			div({id: IM.getCSSID()},
-				span({'class': 'name', 'title': IM.getField().localizedName}, 
+				span({'class': 'name', 'title': IM.getFields().localizedName}, 
 						IM.getLocalizedName() + ': ', 
 						span({id: IM.getCSSValueID(), 'class': 'im-slider-value'}),
 						a({id: IM.getCSSRemoveID(), href: '#', 'class': 'remove-im', 'title': i18n.translate('Remove')})),
@@ -153,10 +153,8 @@ var UITemplateRegistrator = new Class({
 			div({id: cedent.getCSSID(), 'class': 'cedent'},
 				div({id: cedent.getCSSFieldsID(), 'class': 'fields'}, !cedent.getNumLiterals() ? '<span class="info">Drag & Drop<br/>attribute here</span>' : ''),
 				div({'class': 'controls'},
-					//span(i18n.translate('Cedent ') + cedent.getId()),
 					span({id: cedent.getCSSInfoID(), 'class': 'info'},
-						 rule.getGroupFields() && cedent.displayGroupButton() ? '<a href="#" id="' + cedent.getCSSGroupFieldsConfirmID() + '" class="group-fields">' + i18n.translate('group fields') + '</a> | ' : ''),
-					a({id: cedent.getCSSEditConnectiveID(), href: '#', 'class': 'edit-connective'}, i18n.translate('edit connective'))));
+						 rule.getGroupFields() && cedent.displayGroupButton() ? '<a href="#" id="' + cedent.getCSSGroupFieldsConfirmID() + '" class="group-fields">' + i18n.translate('group fields') + '</a> | ' : '')));
 		});
 		
 		Mooml.register('cedentSignTemplate', function (data) {
@@ -231,21 +229,22 @@ var UITemplateRegistrator = new Class({
 				h2(i18n.translate('Add interest measure')),
 				form({action: '#', method: 'POST', id: 'add-im-form'},
 					label({'for': 'add-im-select'}, i18n.translate('Interest measure:')),
-					span({id: 'add-im-autocomplete'})));
+					select({name: 'add-im-select', id: 'add-im-select'}),
+					div({'class': 'autocomplete'}),
+					input({type: 'submit', value: i18n.translate('Add')})));
 		});
 		
 		Mooml.register('addIMWindowAutocompleteTemplate', function (data) {
 			i18n = data.i18n;
+			field = data.field;
 			
-			span({id: 'add-im-autocomplete'},
+			div(
 				div(
-					select({name: 'add-im-select', id: 'add-im-select'}),
-					label({'for': 'add-im-value'}, i18n.translate('Threshold value:'))),
+					label({'for': 'add-im-' + field.name +'-value'}, field.localizedName + ':')),
 				div(
-					input({type: 'text', name: 'add-im-value', id: 'add-im-value', 'readonly': 'readonly'}),
-					div({id: 'add-im-slider'},
-						div({'class': 'knob'}))),
-				input({type: 'submit', value: i18n.translate('Add')}));
+					input({type: 'text', name: 'add-im-' + field.name +'-value', id: 'add-im-' + field.name +'-value', 'readonly': 'readonly', 'class': 'add-im-value'}),
+					div({id: 'add-im-' + field.name +'-slider', 'class': 'add-im-slider'},
+						div({'class': 'knob'}))));
 		});
 		
 		Mooml.register('addIMWindowSelectOptionTemplate', function (data) {

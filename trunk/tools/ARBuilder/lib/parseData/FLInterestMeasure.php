@@ -9,46 +9,53 @@
 class FLInterestMeasure {
 
     private $name;
+    private $defaultValue;
     private $localizedName;
     private $thresholdType;
     private $compareType;
     private $explanation;
-    private $field;
+    private $fields;
 
-    public function __construct ($name, $localizedName, $thresholdType, $compareType, $explanation) {
+    public function __construct ($name, $defaultValue, $localizedName, $thresholdType, $compareType, $explanation) {
         $this->name = $name;
+        $this->defaultValue = $defaultValue;
         $this->localizedName = $localizedName;
         $this->thresholdType = $thresholdType;
         $this->compareType = $compareType;
         $this->explanation = $explanation;
-        $this->field = array();
+        $this->fields = array();
     }
 
-    public function setIntervalField ($name, $localizedName, $minValue, $minValueInclusive, $maxValue, $maxValueInclusive, $dataType) {
-        $this->field = array('name' => $name,
-                     'localizedName' => $localizedName,
-                     'minValue' => $minValue,
-                     'minValueInclusive' => $minValueInclusive,
-                     'maxValue' => $maxValue,
-                     'maxValueInclusive' => $maxValueInclusive,
-                     'dataType' => $dataType);
+    public function addIntervalField ($name, $localizedName, $minValue, $minValueInclusive, $maxValue, $maxValueInclusive, $dataType) {
+        $arr = array(
+        	'name' => $name,
+            'localizedName' => $localizedName,
+            'minValue' => $minValue,
+            'minValueInclusive' => $minValueInclusive,
+            'maxValue' => $maxValue,
+            'maxValueInclusive' => $maxValueInclusive,
+            'dataType' => $dataType);
+        array_push($this->fields, $arr);
     }
-    
-    public function setEnumerationField ($name, $localizedName, $values, $dataType) {
-        $this->field = array('name' => $name,
-                     'localizedName' => $localizedName,
-                     'values' => $values,
-                     'dataType' => $dataType);
+
+    public function addEnumerationField ($name, $localizedName, $values, $dataType) {
+        $arr = array(
+        	'name' => $name,
+            'localizedName' => $localizedName,
+            'values' => $values,
+            'dataType' => $dataType);
+        array_push($this->fields, $arr);
     }
 
     public function toArray () {
         $array = array(
-            $this->name => array(
+        $this->name => array(
+            'defaultValue' => $this->defaultValue,
             	'localizedName' => $this->localizedName,
                 'thresholdType' => $this->thresholdType,
                 'compareType' => $this->compareType,
 				'explanation' => $this->explanation,
-				'field' => $this->field));
+				'fields' => $this->fields));
 
         return $array;
     }

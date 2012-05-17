@@ -16,19 +16,19 @@ var AssociationRuleValidator = new Class({
 		if (antecedentNumLiterals  < this.rulePatterns.Antecedent.minNumberOfBBAs || antecedentNumLiterals  > this.rulePatterns.Antecedent.maxNumberOfBBAs || !rule.getAntecedent().isValid()) {
 			valid = false;
 		}
-		
+
 		// succedent
 		var succedentNumLiterals = rule.getSuccedent().getNumLiterals();
 		if (succedentNumLiterals < this.rulePatterns.Consequent.minNumberOfBBAs || succedentNumLiterals > this.rulePatterns.Consequent.maxNumberOfBBAs || !rule.getSuccedent().isValid()) {
 			valid = false;
 		}
-		
+
 		// general
 		if ((antecedentNumLiterals + succedentNumLiterals) < this.rulePatterns.Antecedent.minNumberOfBBAs || 
 			(antecedentNumLiterals + succedentNumLiterals) > this.rulePatterns.Antecedent.maxNumberOfBBAs) {
 			valid = false;
 		}
-		
+
 		if (this.IMCombinations.length) {
 			var IMs = [];
 			Object.each(rule.getIMs(), function (IM) {

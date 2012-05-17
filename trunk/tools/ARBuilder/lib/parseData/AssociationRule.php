@@ -62,7 +62,7 @@ class AssociationRule{
     }
 
     protected function parseIMs() {
-        $XPathExpr = 'IMValue';
+        $XPathExpr = 'IMValue[@imSettingRef]';
         foreach ($this->XPath->evaluate($XPathExpr, $this->ARNode) as $iIM){
             $IM = new ERInterestMeasure($iIM->getAttribute('name'), floatval($iIM->nodeValue));
             if ($this->hasValidIM($IM)) {

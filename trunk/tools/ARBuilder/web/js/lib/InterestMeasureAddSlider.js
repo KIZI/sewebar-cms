@@ -8,22 +8,22 @@ var InterestMeasureAddSlider = new Class({
 	dataType: 'double',
 	
 	elementSlider: null,
-	IM: null,
+	field: null,
 	numberNormalizer: null,
 	inverseNumberNormalizer: null,
 	
-	initialize: function (elementSlider, IM) {
-		this.dataType = IM.field.dataType;
+	initialize: function (elementSlider, field) {
+		this.dataType = field.dataType;
 		this.elementSlider = elementSlider;
-		this.IM = IM;
+		this.field = field;
 		
 		if (this.dataType !== 'enum') {
-			this.numberNormalizer = new NumberNormalizer(IM.field.minValue, IM.field.maxValue, this.inversePrecision, 0, 100, this.precision, this.numSteps, IM.field.minValueInclusive, IM.field.maxValueInclusive);
-			this.inverseNumberNormalizer = new NumberNormalizer(0, 100, this.precision, IM.field.minValue, IM.field.maxValue, this.inversePrecision, this.numSteps, IM.field.minValueInclusive, IM.field.maxValueInclusive);
+			this.numberNormalizer = new NumberNormalizer(field.minValue, field.maxValue, this.inversePrecision, 0, 100, this.precision, this.numSteps, field.minValueInclusive, field.maxValueInclusive);
+			this.inverseNumberNormalizer = new NumberNormalizer(0, 100, this.precision, field.minValue, field.maxValue, this.inversePrecision, this.numSteps, field.minValueInclusive, field.maxValueInclusive);
 		}
 		
 		this.parent(this.elementSlider, this.elementSlider.getElement('.knob'), {
-	        range: [0, (this.dataType !== 'enum' ? this.numSteps : (IM.field.values.length - 1))],
+	        range: [0, (this.dataType !== 'enum' ? this.numSteps : (field.values.length - 1))],
 	        initialStep: this.dataType !== 'enum' ? this.numberNormalizer.normalize(this.initialStep) : 0,
 	        
 	        onChange: function(value) {
@@ -38,10 +38,10 @@ var InterestMeasureAddSlider = new Class({
 	    	number = this.inverseNumberNormalizer.normalize(number);
 	    	var string = this.inverseNumberNormalizer.format(number);
 	
-	    	$('add-im-value').value = string;
+	    	$('add-im-' + this.field.name + '-value').value = string;
 		} else {
-			var number = this.IM.field.values[value];
-			$('add-im-value').value = number;
+			var number = this.field.values[value];
+			$('add-im-' + this.field.name + '-value').value = number;
 		}
 	}
 
