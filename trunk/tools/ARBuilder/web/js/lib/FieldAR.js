@@ -114,7 +114,7 @@ var FieldAR = new Class({
 		if (this.type === 'One category') {
 			return this.getAttributeName() + '<span class="coefficient">' + (!this.category.contains('(') && !this.category.contains(')') ? '(' : '') + this.category + (!this.category.contains('(') && !this.category.contains(')') ? ')' : '') + '</span>';
 		} else {
-			return this.getAttributeName() + '<span class="coefficient">(' + this.type + ' ' + this.minimalLength + '-' + this.maximalLength + ')</span>';
+			return this.getAttributeName() + '<span class="coefficient">(' + ((this.type === 'Subset' && this.minimalLength == 1 && this.maximalLength == 1) ? '*' : '*' + this.type + ' ' + this.minimalLength + '-' + this.maximalLength) + ')</span>';
 		}
 	}
 	
