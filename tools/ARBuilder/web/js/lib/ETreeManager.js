@@ -91,16 +91,21 @@ var ETreeManager = new Class({
 	
 	sortAttributes: function (data, responseJSON) {
 		this.setInProgress(false);
-		var attributeSorter = new AttributeSorter(this.DD, this.ARManager.getActiveRule());
-		var positions = attributeSorter.sort(this.DD.getAttributes(), responseJSON);
-		this.DD.sortAttributes(positions);
-		
-		// repaint attributes
-		this.UIPainter.sortAttributes(positions);
+		if (responseJSON.length === 0) {
+			this.UIPainter.renderActiveRule();
+		} else {
+			var attributeSorter = new AttributeSorter(this.DD, this.ARManager.getActiveRule());
+			var positions = attributeSorter.sort(this.DD.getAttributes(), responseJSON);
+			this.DD.sortAttributes(positions);
+			
+			// repaint attributes
+			this.UIPainter.sortAttributes(positions);
+		}
 	},
 	
 	handleErrorRequest: function () {
 		this.setInProgress(false);
+		this.UIPainter.renderActiveRule();
 		
 		if (window.console && console.log) {
 			console.log('AJAX request error!');
