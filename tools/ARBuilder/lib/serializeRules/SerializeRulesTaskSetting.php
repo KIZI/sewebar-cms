@@ -289,9 +289,11 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
   private function getModelName($ruleData) {
     if (DEV_MODE) {
         return date('d. m. Y H:i:s');
-    } else { // TODO delete when SewebarConnect is ready
-        return sha1($this->finalXmlDocument->saveXML($this->arQuery));
     }
+    
+// else { // TODO delete when SewebarConnect is ready
+//        return sha1($this->finalXmlDocument->saveXML($this->arQuery));
+//    }
       
     $modelName = '';
     $implInserted = false;
@@ -307,7 +309,7 @@ class SerializeRulesTaskSetting extends AncestorSerializeRules {
       }
       if (($k + 1) < count($ruleData)) { $modelName .= ' '; }
     }
-
+    
     $modelName .= ' | '.sha1($this->finalXmlDocument->saveXML($this->arQuery));
 
     return $modelName;
