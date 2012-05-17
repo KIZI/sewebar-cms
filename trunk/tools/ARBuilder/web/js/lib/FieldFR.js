@@ -31,7 +31,13 @@ var FieldFR = new Class({
 		}
 		
 		Array.each(this.category, function (cat, key) {
+			if (this.category.length === 1 && !cat.contains('(') && !cat.contains(')') {
+				str += '(';
+			}
 			str += cat;
+			if (this.category.length === 1 && !cat.contains('(') && !cat.contains(')') {
+				str += ')';
+			}
 			
 			if (this.category.length !== (key + 1)) {
 				str += ', ';
