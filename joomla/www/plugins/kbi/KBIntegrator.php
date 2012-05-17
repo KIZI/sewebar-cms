@@ -103,15 +103,17 @@ class KBIntegrator implements IKBIntegrator
 	 */
 	public function query($query, $xsl = '')
 	{
+		$options = array();
+
 		if($query instanceof KBIQuery) {
-			$query = $query->proccessQuery();
+			$query = $query->proccessQuery($options);
 		}
 
 		$method = strtoupper($this->getMethod());
 
 		switch($method) {
 			case 'POST':
-				$xml_data = $this->queryPost($query);
+				$xml_data = $this->queryPost($query, $options);
 				break;
 			case 'SOAP':
 				$xml_data = $this->querySoap($query);
@@ -152,7 +154,7 @@ class KBIntegrator implements IKBIntegrator
 		throw new Exception("Source type ({$class}) does not support this method (GET).");
 	}
 
-	protected function queryPost($query)
+	protected function queryPost($query, $options)
 	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (POST).");

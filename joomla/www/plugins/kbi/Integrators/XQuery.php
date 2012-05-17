@@ -46,7 +46,7 @@ class XQuery extends KBIntegratorSynchronable
 		parent::__construct($config);
 	}
 
-	public function queryPost($query)
+	public function queryPost($query, $options)
 	{
 		$url = $this->getUrl();
 

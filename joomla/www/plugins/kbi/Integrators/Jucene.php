@@ -31,7 +31,7 @@ class Jucene extends KBIntegratorSynchronable
 	 *
 	 * @return string  XML with query results
 	 */
-	public function queryPost($query)
+	public function queryPost($query, $options)
 	{
 		$server = $this->getUrl();
 		//$server = 'http://joomla.drupaler.cz';
