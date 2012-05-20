@@ -88,14 +88,16 @@ class KbiControllerTransformator extends JController
 
 		$id = JRequest::getVar('source', null, 'method', 'int');
 		$pmml = JRequest::getVar('content', NULL, 'default', 'none', JREQUEST_ALLOWRAW);
+		$pmml_id = JRequest::getVar('id', time(), 'default', 'none');
+		$pmml_name = JRequest::getVar('title', "Document " . date("Y-m-d H:i:s"), 'default', 'none');
 
 		$model = new KbiModelSources();
 		$sourceConfig = $model->getSource($id);
 		$source = KBIntegrator::create(get_object_vars($sourceConfig));
 
 		$document = (object) array(
-			'id' => time(),
-			'title' => "Document for {$source->getName()}",
+			'id' => $pmml_id,
+			'title' => $pmml_name,
 			'modified' => date("Y-m-d H:i:s"),
 			'text'=> $pmml,
 			'reportUri' => '',
