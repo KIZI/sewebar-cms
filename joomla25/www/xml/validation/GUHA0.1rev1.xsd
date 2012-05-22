@@ -360,6 +360,7 @@
             <xs:enumeration value="d-frequency"/>
             <xs:enumeration value="r-frequency"/>
             <xs:enumeration value="s-frequency"/>
+            <xs:enumeration value="k-frequency"/>
             <xs:enumeration value="l-frequency"/>
             <xs:enumeration value="n-frequency"/>            
             <xs:enumeration value="AAD"/>
@@ -373,7 +374,7 @@
             <xs:enumeration value="FUE"/>            
             <xs:enumeration value="LCE"/>
             <xs:enumeration value="UCE"/>
-            <xs:enumeration value="Fisher"/>
+            <xs:enumeration value="FSH"/>
             <xs:enumeration value="CHI"/>
             <xs:enumeration value="SID"/>
         </xs:restriction>        
@@ -439,7 +440,7 @@
     <xs:simpleType name="coefTypes">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Interval"/>
-            <xs:enumeration value="Cyclic interval"/>
+            <xs:enumeration value="Cyclical intervals"/>
             <xs:enumeration value="Subset"/>
             <xs:enumeration value="Cut"/>
             <xs:enumeration value="Left cut"/>
