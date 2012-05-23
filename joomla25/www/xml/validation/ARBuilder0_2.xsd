@@ -219,6 +219,8 @@
             <xs:enumeration value="requireListed_exclusive"/>
             <!-- all referenced BAs need to appear together in one DBA, but this DBA can contain other BAs.  -->
             <xs:enumeration value="requireListed_notexclusive"/>
+         <xs:enumeration value="At least one from listed"/>
+         <xs:enumeration value="None from listed"/>
             <!-- DBA complying to this DBASetting must link via BARefs to BAs referenced via BASettingRefs either directly or indirectly, via several intermediate BBAs  -->
             <xs:enumeration value="traverseOnly"/>
         </xs:restriction>
