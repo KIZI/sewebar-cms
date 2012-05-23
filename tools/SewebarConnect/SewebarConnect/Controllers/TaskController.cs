@@ -9,8 +9,8 @@ using System.Xml.XPath;
 using LMWrapper;
 using LMWrapper.LISpMiner;
 using SewebarConnect.API;
+using SewebarConnect.API.Exceptions;
 using SewebarConnect.API.Requests.Task;
-using SewebarConnect.API.Responses;
 using SewebarConnect.API.Responses.Task;
 using log4net;
 
@@ -20,222 +20,173 @@ namespace SewebarConnect.Controllers
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(TaskController));
 
-		protected string GetStatus(string xmlPath)
+		private const string XPathStatus = "/*/*/TaskSetting/Extension/TaskState";
+		private const string XPathNumberOfRules = "/*/*/@numberOfRules";
+		private const string XPathHypothesesCountMax = "/*/*/TaskSetting/Extension/HypothesesCountMax";
+
+		protected class TaskDefinition
+		{
+			public string DefaultTemplate { get; set; }
+
+			public ITaskLauncher Launcher { get; set; }
+		}
+
+		protected void GetInfo(string xmlPath, out string status, out int numberOfRules, out int hypothesesCountMax)
 		{
 			var document = XDocument.Load(xmlPath);
-			var attr = ((IEnumerable<object>) document.XPathEvaluate("//@taskState")).FirstOrDefault() as XAttribute;
 
-			if (attr == null)
+			var statusAttribute = ((IEnumerable<object>) document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
+			var numberOfRulesAttribute = ((IEnumerable<object>)document.XPathEvaluate(XPathNumberOfRules)).FirstOrDefault() as XAttribute;
+			var hypothesesCountMaxAttribute = ((IEnumerable<object>)document.XPathEvaluate(XPathHypothesesCountMax)).FirstOrDefault() as XElement;
+
+			if (statusAttribute == null)
 			{
-				Log.DebugFormat("TaskState cannot be resolved Miner: {0}, Task: {1}.", this.LISpMiner.Id, Path.GetFileName(xmlPath));
-				//throw new Exception("TaskState cannot be resolved");
+				throw new InvalidTaskResultXml("TaskState cannot be resolved.", xmlPath, XPathStatus);
 			}
 
-			return (attr != null) ? attr.Value : string.Empty;
+			status = statusAttribute.Value;
+
+			if (numberOfRulesAttribute == null || !Int32.TryParse(numberOfRulesAttribute.Value, out numberOfRules))
+			{
+				throw new InvalidTaskResultXml("NumberOfRulesAttribute cannot be resolved.", xmlPath, XPathNumberOfRules);
+			}
+
+			if (hypothesesCountMaxAttribute == null || !Int32.TryParse(hypothesesCountMaxAttribute.Value, out hypothesesCountMax))
+			{
+				throw new InvalidTaskResultXml("HypothesesCountMax cannot be resolved.", xmlPath, XPathHypothesesCountMax);
+			}
+		}
+
+		protected ActionResult RunTask(TaskDefinition definition)
+		{
+			var exporter = this.LISpMiner.Exporter;
+			var importer = this.LISpMiner.Importer;
+
+			try
+			{
+				var request = new TaskRequest(this);
+				var response = new TaskResponse();
+
+				if (this.LISpMiner != null && request.Task != null)
+				{
+					var status = "Not generated";
+					var numberOfRules = 0;
+					var hypothesesCountMax = Int32.MaxValue;
+
+					exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
+													request.TaskFileName, DateTime.Now);
+
+					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
+													  request.GetTemplate(definition.DefaultTemplate));
+
+					exporter.TaskName = request.TaskName;
+
+					try
+					{
+						// try to export results
+						exporter.Execute();
+
+						if (!System.IO.File.Exists(exporter.Output))
+						{
+							throw new LISpMinerException("Task possibly does not exist but no appLog generated");
+						}
+						
+						this.GetInfo(exporter.Output, out status, out numberOfRules, out hypothesesCountMax);
+					}
+					catch (LISpMinerException ex)
+					{
+						// task was never imported - does not exists. Therefore we need to import at first.
+						Log.Debug(ex);
+
+						// import task
+						importer.Input = request.TaskPath;
+
+						if (!string.IsNullOrEmpty(request.Alias))
+						{
+							importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMPath, request.Alias);
+						}
+
+						importer.Execute();
+					}
+
+					switch (status)
+					{
+						// * Not Generated (po zadání úlohy nebo změně v zadání)
+						case "Not generated":
+						// * Interrupted (přerušena -- buď kvůli time-outu nebo max počtu hypotéz)
+						case "Interrupted":
+							// run task - generate results
+							if (definition.Launcher.Status == ExecutableStatus.Ready)
+							{
+								var taskLauncher = definition.Launcher;
+								taskLauncher.TaskName = request.TaskName;
+								taskLauncher.Execute();
+
+								// run export once again to refresh results and status
+								if (status != "Interrupted")
+								{
+									exporter.Execute();
+								}
+							}
+							else
+							{
+								Log.Debug("Waiting for result generation");
+							}
+							break;
+						// * Running (běží generování)
+						case "Running":
+						// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
+						case "Waiting":
+							definition.Launcher.KeepAlive = 10;
+							break;
+						// * Solved (úspěšně dokončena)
+						case "Solved":
+						case "Finnished":
+						default:
+							break;
+					}
+
+					response.OutputFilePath = exporter.Output;
+
+					if (!System.IO.File.Exists(response.OutputFilePath))
+					{
+						throw new Exception("Results generation did not succeed.");
+					}
+				}
+				else
+				{
+					throw new Exception("No LISpMiner instance or task defined");
+				}
+
+				return new XmlFileResult
+						{
+							Data = response
+						};
+			}
+			finally
+			{
+				// clean up
+				exporter.Output = String.Empty;
+				exporter.Template = String.Empty;
+				exporter.TaskName = String.Empty;
+
+				importer.Input = String.Empty;
+				importer.Alias = String.Empty;
+			}
 		}
 
 		[ValidateInput(false)]
 		[ErrorHandler]
 		public ActionResult Run()
 		{
-			var request = new TaskRequest(this);
-
-			var response = new TaskResponse();
-
-			if (this.LISpMiner != null && request.Task != null)
-			{
-				var status = "Not generated";
-
-				var exporter = this.LISpMiner.Exporter;
-				exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
-				                                request.TaskFileName, DateTime.Now);
-
-				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
-				                                  request.GetTemplate("4ftMiner.Task.Template.PMML"));
-				exporter.TaskName = request.TaskName;
-
-				try
-				{
-					// try to export results
-					exporter.Execute();
-
-					if (!System.IO.File.Exists(exporter.Output))
-					{
-						throw new LISpMinerException("Task possibly does not exist but no appLog generated");
-					}
-
-					status = this.GetStatus(exporter.Output);
-				}
-				catch (LISpMinerException ex)
-				{
-					// task was never imported - does not exists. Therefore we need to import at first.
-					Log.Debug(ex);
-
-					// import task
-					var importer = this.LISpMiner.Importer;
-					importer.Input = request.TaskPath;
-
-					if (!string.IsNullOrEmpty(request.Alias))
-					{
-						importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMPath, request.Alias);
-					}
-
-					importer.Execute();
-				}
-
-				switch (status)
-				{
-						// * Not Generated (po zadání úlohy nebo změně v zadání)
-					case "Not generated":
-						// * Interrupted (přerušena -- buď kvůli time-outu nebo max počtu hypotéz)
-					case "Interrupted":
-						// run task - generate results
-						if (this.LISpMiner.Task4FtGen.Status == ExecutableStatus.Ready)
-						{
-							var task4FtGen = this.LISpMiner.Task4FtGen;
-							task4FtGen.TaskName = request.TaskName;
-							task4FtGen.Execute();
-
-							// run export once again to refresh results and status
-							if (status != "Interrupted")
-								exporter.Execute();
-						}
-						else
-						{
-							Log.Debug("Waiting for result generation");
-						}
-						break;
-						// * Running (běží generování)
-					case "Running":
-						// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
-					case "Waiting":
-						this.LISpMiner.Task4FtGen.KeepAlive = 10;
-						break;
-						// * Solved (úspěšně dokončena)
-					case "Solved":
-					case "Finnished":
-					default:
-						break;
-				}
-
-				response.OutputFilePath = exporter.Output;
-
-				if (!System.IO.File.Exists(response.OutputFilePath))
-				{
-					throw new Exception("Results generation did not succeed.");
-				}
-			}
-			else
-			{
-				throw new Exception("No LISpMiner instance or task defined");
-			}
-
-			return new XmlFileResult
-			       	{
-			       		Data = response
-			       	};
+			return this.RunTask(new TaskDefinition { DefaultTemplate = "4ftMiner.Task.Template.PMML", Launcher = this.LISpMiner.Task4FtGen });
 		}
 
 		[ValidateInput(false)]
 		[ErrorHandler]
 		public ActionResult Pool()
 		{
-			var request = new TaskRequest(this);
-
-			var response = new TaskResponse();
-
-			if (this.LISpMiner != null && request.Task != null)
-			{
-				var status = "Not generated";
-
-				var exporter = this.LISpMiner.Exporter;
-				exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
-				                                request.TaskFileName, DateTime.Now);
-
-				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
-				                                  request.GetTemplate("4ftMiner.Task.Template.PMML"));
-				exporter.TaskName = request.TaskName;
-
-				try
-				{
-					// try to export results
-					exporter.Execute();
-
-					if (!System.IO.File.Exists(exporter.Output))
-					{
-						throw new LISpMinerException("Task possibly does not exist but no appLog generated");
-					}
-
-					status = this.GetStatus(exporter.Output);
-				}
-				catch (LISpMinerException ex)
-				{
-					// task was never imported - does not exists. Therefore we need to import at first.
-					Log.Debug(ex);
-
-					// import task
-					var importer = this.LISpMiner.Importer;
-					importer.Input = request.TaskPath;
-
-					if (!string.IsNullOrEmpty(request.Alias))
-					{
-						importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMPath, request.Alias);
-					}
-
-					importer.Execute();
-				}
-
-				switch (status)
-				{
-						// * Not Generated (po zadání úlohy nebo změně v zadání)
-					case "Not generated":
-						// * Interrupted (přerušena -- buď kvůli time-outu nebo max počtu hypotéz)
-					case "Interrupted":
-						// run task - generate results
-						if (this.LISpMiner.LMTaskPooler.Status == ExecutableStatus.Ready)
-						{
-							var taskPooler = this.LISpMiner.LMTaskPooler;
-							taskPooler.TaskName = request.TaskName;
-							taskPooler.Execute();
-
-							// run export once again to refresh results and status
-							if (status != "Interrupted")
-								exporter.Execute();
-						}
-						else
-						{
-							Log.Debug("Waiting for result generation");
-						}
-						break;
-						// * Running (běží generování)
-					case "Running":
-						// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
-					case "Waiting":
-						this.LISpMiner.LMTaskPooler.KeepAlive = 10;
-						break;
-						// * Solved (úspěšně dokončena)
-					case "Solved":
-					case "Finnished":
-					default:
-						break;
-				}
-
-				response.OutputFilePath = exporter.Output;
-
-				if (!System.IO.File.Exists(response.OutputFilePath))
-				{
-					throw new Exception("Results generation did not succeed.");
-				}
-			}
-			else
-			{
-				throw new Exception("No LISpMiner instance or task defined");
-			}
-
-			return new XmlFileResult
-			       	{
-			       		Data = response
-			       	};
+			return this.RunTask(new TaskDefinition { DefaultTemplate = "ETreeMiner.Task.Template.PMML", Launcher = this.LISpMiner.LMTaskPooler });
 		}
 	}
 }

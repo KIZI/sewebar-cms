@@ -6,7 +6,7 @@ using log4net;
 
 namespace LMWrapper.LISpMiner
 {
-	public class LMTaskPooler : Executable
+	public class LMTaskPooler : Executable, ITaskLauncher
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(LMTaskPooler));
 

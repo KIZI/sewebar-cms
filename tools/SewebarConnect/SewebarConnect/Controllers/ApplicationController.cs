@@ -6,9 +6,7 @@ using LMWrapper.LISpMiner;
 using LMWrapper.ODBC;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.Application;
-using SewebarConnect.API.Responses;
 using SewebarConnect.API.Responses.Application;
-using log4net;
 
 namespace SewebarConnect.Controllers
 {

@@ -305,11 +305,23 @@ namespace LMWrapper.LISpMiner
 			{
 				var exporter = this.Exporter;
 
-				exporter.Version = true;
-				exporter.Output = versionPath;
+				if (exporter.Status == ExecutableStatus.Ready)
+				{
+					exporter.Version = true;
+					exporter.Output = versionPath;
+					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMVersion.Template.TXT");
 
-				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMVersion.Template.TXT");
-				exporter.Execute();
+					exporter.Execute();
+
+					// Clean up
+					exporter.Version = false;
+					exporter.Output = String.Empty;
+					exporter.Template = String.Empty;
+				}
+				else
+				{
+					throw new Exception("LM Exporter is occupied at this moment.");
+				}
 			}
 
 			if (File.Exists(versionPath))
@@ -321,6 +333,33 @@ namespace LMWrapper.LISpMiner
 			}
 
 			throw new Exception("Version was not correctly exported");
+		}
+
+		public string GetTaskList()
+		{
+			var exporter = this.Exporter;
+			var tasksFile = String.Format("{0}/LMTaskSurvey_{1:yyyyMMdd-Hmmss}.txt", exporter.LMPath, DateTime.Now);
+
+			if (exporter.Status == ExecutableStatus.Ready)
+			{
+				exporter.Survey = true;
+				exporter.Output = tasksFile;
+				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMTaskSurvey.Template.TXT");
+
+				exporter.Execute();
+
+				// Clean up
+				exporter.Survey = false;
+				exporter.Output = String.Empty;
+				exporter.Template = String.Empty;
+
+				using (var reader = new StreamReader(tasksFile))
+				{
+					return reader.ReadToEnd();
+				}
+			}
+
+			throw new Exception("LM Exporter is occupied at this moment.");
 		}
 
 		public void Dispose()

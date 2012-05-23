@@ -64,6 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ErrorHandlerAttribute.cs" />
+    <Compile Include="API\Exceptions\InvalidTaskResultXml.cs" />
+    <Compile Include="API\Exceptions\IXmlException.cs" />
     <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
     <Compile Include="API\Responses\Application\LISpMinerResponse.cs" />
     <Compile Include="API\Responses\DataDictionary\ExportResponse.cs" />
