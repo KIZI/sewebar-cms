@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace SewebarWebTests
+namespace SewebarConnectTests
 {
 	internal class CookieAwareWebClient : WebClient
 	{

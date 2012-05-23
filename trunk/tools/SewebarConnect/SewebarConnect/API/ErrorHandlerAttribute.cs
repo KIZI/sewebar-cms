@@ -66,7 +66,7 @@ namespace SewebarConnect.API
 
 			using (var stream = new StreamWriter(filterContext.HttpContext.Response.OutputStream))
 			{
-				var response = new ExceptionResponse(exception.Message);
+				var response = new ExceptionResponse(exception);
 
 				stream.Write(response.Write());
 			}

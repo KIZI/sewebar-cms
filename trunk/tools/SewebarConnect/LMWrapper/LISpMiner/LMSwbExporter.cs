@@ -54,6 +54,12 @@ namespace LMWrapper.LISpMiner
 		public bool Version { get; set; }
 
 		/// <summary>
+		/// /Survey		... special mode to export survey of tasks
+
+		/// </summary>
+		public bool Survey { get; set; }
+
+		/// <summary>
 		/// /DistinctValuesMax:[nnn] ... maximal number of exported distinct values of DB columns (default: 1000)
 		/// </summary>
 		public string DistinctValuesMax { get; set; }
@@ -133,6 +139,12 @@ namespace LMWrapper.LISpMiner
 				if (this.Version)
 				{
 					arguments.Append("/Version ");
+				}
+
+				// /Survey
+				if (this.Survey)
+				{
+					arguments.Append("/Survey ");
 				}
 
 				// /AppLog

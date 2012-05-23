@@ -51,6 +51,7 @@
     <Compile Include="LISpMiner\LMSwbExporter.cs" />
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
     <Compile Include="LISpMiner\LMTaskPooler.cs" />
+    <Compile Include="LISpMiner\TaskLauncher.cs" />
     <Compile Include="ODBC\AccessConnection.cs" />
     <Compile Include="ODBC\DbConnection.cs" />
     <Compile Include="ODBC\MySQLConnection.cs" />
