@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <arf:GUHAFeatureList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_05 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
+ xsi:schemaLocation="http://keg.vse.cz/ns/arfeatures_02 http://sewebar.vse.cz/schemas/GUHAARfeature.xsd"
  xmlns:arf="http://keg.vse.cz/ns/arfeatures_02" mode="AssociationRules" procedure="4ft">
  <UserInterface>
   <AllowMultipleRules>false</AllowMultipleRules>
@@ -28,6 +28,7 @@
    <Types>
     <Type>
                     <Name>SUPP</Name>
+                 
                  <LocalizedName lang="en">Support</LocalizedName>
                  <LocalizedName lang="cs">Podpora</LocalizedName>
                  <ThresholdType>% of all</ThresholdType>
@@ -37,6 +38,7 @@
                     <Explanation lang="cs">Relativní podpora pravidla</Explanation>
                     <Field>
                         <Name>prahovaHodnota</Name>
+                     <DefaultValue>0.05</DefaultValue>
                         <LocalizedName lang="en">min value</LocalizedName>
                         <LocalizedName lang="cs">prahová hodnota</LocalizedName>
                         <Validation>
@@ -48,7 +50,7 @@
                 </Type>
     <Type>
                     <Name>FUI</Name>
-     
+                    
                     <LocalizedName lang="en">Confidence</LocalizedName>
                     <LocalizedName lang="cs">Spolehlivost</LocalizedName>    
                     <ThresholdType>% of all</ThresholdType>
@@ -57,6 +59,7 @@
      
                     <Field>
                         <Name>prahovaHodnota</Name>
+                     <DefaultValue>0.7</DefaultValue>
                         <LocalizedName lang="en">min value</LocalizedName>
                         <LocalizedName lang="cs">prahová hodnota</LocalizedName>
                         <Validation>
@@ -68,6 +71,7 @@
     </Type>
     <Type>
                     <Name>CHI</Name>
+     
                     <LocalizedName lang="en">Chi-Square</LocalizedName>
                     <LocalizedName lang="cs">Chí-kvadrát</LocalizedName>
                  <ThresholdType>% of all</ThresholdType>
@@ -75,6 +79,7 @@
      <Explanation lang="en">The degree of dependence between the conditions expressed by the left and right side of the rule must pass chi-square test on level alpha</Explanation>
                     <Field>
                         <Name>prahovaHodnota</Name>
+                     <DefaultValue>0.01</DefaultValue>
                         <LocalizedName lang="en">alpha</LocalizedName>
                         <LocalizedName lang="cs">alfa</LocalizedName>
                         <Validation>
@@ -112,7 +117,7 @@
     <Type>
                     <Name>Subset</Name>
                     <LocalizedName lang="en">Any one value</LocalizedName>
-     <MaxOccurrences>1</MaxOccurrences>
+                    <MaxOccurrences>1</MaxOccurrences>
                     <Field hidden="true">
                         <Name>minLength</Name>
                         <DefaultValue>1</DefaultValue>
