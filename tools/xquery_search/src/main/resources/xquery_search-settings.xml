@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="settings" class="xquerysearch.domain.Settings">
+		<property name="environmentDirectory" value="${dir.env}" />
+		<property name="queriesDirectory" value="${dir.queries}" />
+		<property name="containerName" value="${container.name}" />
+		<property name="useTransformation" value="${trans.use}" />
+		<property name="pmmlTransformationPath" value="${trans.pmml.path}" />
+		<property name="bkefTransformationPath" value="${trans.bkef.path}" />
+		<property name="qbarTransformationPath" value="${trans.qbar.path}" />
+		<property name="temporaryDirectory" value="${dir.temp}" />
+		<property name="validationSchemaPath" value="${schema.path}" />
+	</bean>
+		
+</beans>
