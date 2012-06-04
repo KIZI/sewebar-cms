@@ -30,7 +30,7 @@ public class SettingsManagerTest {
 		Assert.assertEquals("/directory/temporary", setMan.getTemporaryDirectory());
 		Assert.assertEquals("/directory/environment", setMan.getEnvironmentDirectory());
 		Assert.assertEquals("containerName", setMan.getContainerName());
-		Assert.assertEquals(true, setMan.isUseTransformation());
+		Assert.assertEquals(true, setMan.getUseTransformationBool());
 		Assert.assertEquals("/transformation/pmml", setMan.getPmmlTransformationPath());
 		Assert.assertEquals("/transformation/bkef", setMan.getBkefTransformationPath());
 		Assert.assertEquals("/validation", setMan.getValidationSchemaPath());
