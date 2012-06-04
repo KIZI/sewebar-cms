@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<context:annotation-config />	
+	<context:component-scan base-package="xquerysearch.dao.*" />
+	
+		
+<!-- 		<bean id="bdbxmlEnvironment" class="com.sleepycat.db.Environment"> -->
+<!-- 			<constructor-arg ref="environmentConfig" /> -->
+<!-- 		</bean> -->
+		
+<!-- 		<bean id="xmlManager" class="com.sleepycat.dbxml.XmlManager"> -->
+<!-- 		</bean> -->
+		
+<!-- 		<bean id="environmentConfig" class="com.sleepycat.db.EnvironmentConfig"> -->
+<!-- 			<property name="transactional" value="true" /> -->
+<!-- 			<property name="allowCreate" value="true" /> -->
+<!-- 			<property name="initializeCache" value="true" /> -->
+<!-- 		</bean> -->
+</beans>
