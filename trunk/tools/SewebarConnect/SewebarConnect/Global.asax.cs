@@ -45,6 +45,8 @@ namespace SewebarConnect
 		{
 			var env = MvcApplication.Environment;
 
+			if (!Directory.Exists(env.LMPoolPath)) return;
+
 			foreach (var path in Directory.GetDirectories(env.LMPoolPath))
 			{
 				try

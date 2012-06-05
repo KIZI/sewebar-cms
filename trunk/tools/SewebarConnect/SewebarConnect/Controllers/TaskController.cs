@@ -121,16 +121,16 @@ namespace SewebarConnect.Controllers
 								var taskLauncher = definition.Launcher;
 								taskLauncher.TaskName = request.TaskName;
 								taskLauncher.Execute();
-
-								// run export once again to refresh results and status
-								if (status != "Interrupted")
-								{
-									exporter.Execute();
-								}
 							}
 							else
 							{
 								Log.Debug("Waiting for result generation");
+							}
+
+							// run export once again to refresh results and status
+							if (status != "Interrupted" && exporter.Status == ExecutableStatus.Ready)
+							{
+								exporter.Execute();
 							}
 							break;
 						// * Running (běží generování)
