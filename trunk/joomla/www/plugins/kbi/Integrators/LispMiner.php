@@ -22,9 +22,14 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return isset($this->config['method']) ? $this->config['method'] : 'POST';
 	}
 
-	public function getMinerId()
+	public function getMinerId($default = NULL)
 	{
-		return isset($this->config['miner_id']) ? $this->config['miner_id'] : NULL;
+		return isset($this->config['miner_id']) ? $this->config['miner_id'] : $default;
+	}
+
+	public function getMatrixName()
+	{
+		return isset($this->config['matrix']) ? $this->config['matrix'] : 'Loans';
 	}
 
 	public function getPort()
@@ -73,6 +78,24 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		
 		return $this->parseRegisterResponse($response);
 	}
+
+	public function unregister($server_id = NULL)
+	{
+		$url = trim($this->getUrl(), '/');
+
+		$response = $this->requestCurl("$url/Application/Remove", array('guid' => $this->getMinerId($server_id)));
+
+		$xml_response = simplexml_load_string($response);
+
+		if($xml_response['status'] == 'failure') {
+			throw new Exception($xml_response->message);
+		} else if($xml_response['status'] == 'success') {
+			KBIDebug::log("Miner unregistered/removed");
+			return;
+		}
+
+		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
+	}
 	
 	public function importDataDictionary($dataDictionary, $server_id = NULL)
 	{
@@ -112,8 +135,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$data = array(
 			'guid' => $this->getMinerId(),
-			// TODO: make parametrizable
-			'matrix' => 'Loans',
+			'matrix' => $this->getMatrixName(),
 			'template' => ''
 		);
 

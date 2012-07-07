@@ -23,7 +23,7 @@ class KbiViewLmservers extends JView
 		JToolBarHelper::title( JText::_( 'LispMiner Connect servers' ), 'generic.png' );
 		//JToolBarHelper::deleteList( '', 'remove' );
 		//JToolBarHelper::editListX( 'edit' );
-		//JToolBarHelper::addNewX( 'add' );
+		JToolBarHelper::addNewX( 'add' );
 		//JToolBarHelper::( '' );
 		//JToolBarHelper::help( 'screen.banners.client' );
 	}

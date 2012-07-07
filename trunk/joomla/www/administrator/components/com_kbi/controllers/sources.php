@@ -153,6 +153,24 @@ class KbiControllerSources extends JController
 
 		for ($i = 0; $i < $n; $i++)
 		{
+			$sources = &$this->getModel('sources');
+			$source = $sources->getSource((int) $ids[$i]);
+
+			// delete miner if it is LISpMiner
+			if($source && $source->type == 'LISPMINER') {
+				try {
+					$config = get_object_vars($source);
+
+					JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
+
+					$miner = KBIntegrator::create($config);
+					$miner->unregister();
+				} catch (Exception $ex) {
+					// Just log it
+					KBIDebug::log($ex->getMessage());
+				}
+			}
+
 			if (!$table->delete( (int) $ids[$i] ))
 			{
 				return JError::raiseWarning( 500, $table->getError() );

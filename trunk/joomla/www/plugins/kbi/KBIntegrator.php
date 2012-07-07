@@ -181,6 +181,8 @@ class KBIntegrator implements IKBIntegrator
 
 		$p = file_get_contents("$url?$data");
 
+		KBIDebug::info("$url?$data", 'GET');
+
 		return $p;
 	}
 

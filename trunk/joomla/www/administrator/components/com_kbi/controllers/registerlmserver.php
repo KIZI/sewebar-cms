@@ -67,9 +67,10 @@ class KbiControllerRegisterlmserver extends JController
 		$name = JRequest::getVar( 'name', '','post', 'string');
 		$db_type = JRequest::getVar( 'type', '','post', 'string');
 		$db_conf = JRequest::getVar( 'db', '','post', 'string', JREQUEST_ALLOWRAW );
+		$matrix_name = JRequest::getVar( 'matrix', '','post', 'string');
 		$dataDictionary = JRequest::getVar( 'dataDictionary', '','post', 'string', JREQUEST_ALLOWRAW );
 		
-		$this->setRedirect("index.php?option={$option}&controller=registerlmserver&id[]={$id[0]}");		
+		$this->setRedirect("index.php?option={$option}&controller=registerlmserver&id[]={$id[0]}");
 
 		try
 		{	
@@ -96,7 +97,8 @@ class KbiControllerRegisterlmserver extends JController
 			$table->type = 'LISPMINER';
 			$table->method = 'POST';
 			$table->params = json_encode(array(
-				'miner_id' => $server_id
+				'miner_id' => $server_id,
+				'matrix' => $matrix_name
 			));
 			$table->dictionaryquery = '';
 			
@@ -116,6 +118,16 @@ class KbiControllerRegisterlmserver extends JController
 		catch (Exception $ex)
 		{
 			JFactory::getApplication ()->enqueueMessage ( JText::_( 'ERROR REGISTERING SERVER' ) . "<br />" . $ex->getMessage(), 'error' );
+
+			// try to remove registered miner as it is in invalid state.
+			if(isset($server_id) && isset($miner)) {
+				try {
+					$miner->unregister($server_id);
+				}
+				catch (Exception $innerException) {
+					JFactory::getApplication ()->enqueueMessage ( JText::_( 'ERROR REMOVING REGISTERING SERVER' ) . "<br />" . $innerException->getMessage(), 'error' );
+				}
+			}
 		}		
 	}
 
