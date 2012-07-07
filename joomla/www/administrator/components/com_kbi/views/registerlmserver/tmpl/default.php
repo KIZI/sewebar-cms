@@ -47,12 +47,12 @@
 				</tr>
 				<tr>
 					<td width="20%" class="key">
-						<label for="name">
-							<?php echo JText::_( 'Name' ); ?>:
+						<label for="server">
+							<?php echo JText::_( 'LM Server' ); ?>:
 						</label>
 					</td>
 					<td width="80%">
-						<input class="inputbox" type="text" name="name" id="name" disabled="disabled" readonly="readonly" size="50" value="<?php echo $this->row->name;?>" />
+						<input class="inputbox" type="text" name="server" id="server" disabled="disabled" readonly="readonly" size="50" value="<?php echo $this->row->name;?>" />
 					</td>
 				</tr>
 				<tr>
@@ -78,6 +78,16 @@
 							'username' => 'lisp',
 							'password' => 'lisp'
 						))?></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td width="20%" class="key">
+						<label for="matrix">
+							<?php echo JText::_( 'Matrix name' ); ?>:
+						</label>
+					</td>
+					<td width="80%">
+						<input class="inputbox" type="text" name="matrix" id="matrix" size="50" value="Loans" />
 					</td>
 				</tr>
 				<tr>
