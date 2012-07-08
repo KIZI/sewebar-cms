@@ -8,8 +8,7 @@
     
     <servlet-mapping>
         <servlet-name>xquery_search</servlet-name>
-        <url-pattern>/*</url-pattern>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 	
    	<context-param>

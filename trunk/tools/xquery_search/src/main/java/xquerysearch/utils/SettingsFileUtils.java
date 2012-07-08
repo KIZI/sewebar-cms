@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.logging.Logger;
 
-import xquerysearch.controllers.MainController;
+import xquerysearch.controller.MainController;
 
 /**
  * 

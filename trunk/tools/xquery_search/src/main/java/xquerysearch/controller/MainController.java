@@ -1,4 +1,4 @@
-package xquerysearch.controllers;
+package xquerysearch.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,19 +12,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import xquerysearch.BDBXMLHandler;
 import xquerysearch.datadescription.DataDescriptionHandler;
 import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
-import xquerysearch.domain.Settings;
 import xquerysearch.service.DocumentService;
 import xquerysearch.service.HelperService;
 import xquerysearch.service.IndexService;
 import xquerysearch.service.QueryService;
 import xquerysearch.service.StoredQueryService;
 import xquerysearch.utils.QueryUtils;
-import xquerysearch.utils.SettingsFileUtils;
-import xquerysearch.utils.SettingsUtils;
 
 /**
  * Class for main communication to the outside world
@@ -33,6 +33,7 @@ import xquerysearch.utils.SettingsUtils;
  * @version 1.21 (5.1.2012)
  */
 
+//@Controller
 public class MainController extends HttpServlet {
 	private static final String ID_MISSING_ERROR = "<error><![CDATA[ID is missing!]]></error>";
 	private static final String QUERY_MISSING_ERROR = "<error><![CDATA[Query content is missing!]]></error>";
@@ -46,13 +47,13 @@ public class MainController extends HttpServlet {
 	
 	private static final Logger logger = Logger.getLogger("xquery_search");
 	private static final String SETTINGS_FILE_NAME = "xquery_search_settings.xml";
-	private Settings settings;
 	private String action;
 	private String content;
 	private String docId;
 	private HttpServletRequest request;
 
-	
+	private String containerName;
+
 	/**
 	 * Only calls method {@link #processRequest(HttpServletRequest, HttpServletResponse)}.
 	 * For <code>GET</code> requests.
@@ -101,12 +102,9 @@ public class MainController extends HttpServlet {
 
 		// Nacteni nastaveni z konfiguracniho souboru
 		
-		SettingsUtils xmlSettings = new SettingsUtils();
 		if (action.equals("writesettings")) {
-			settings.changeSettings(SettingsFileUtils.getSettingsFile(), request);
 			output += "<message>Settings updated</message>";
 		} else {
-			settings = xmlSettings.readSettings(SettingsFileUtils.getSettingsFile());
 
 			try {
 				if (request.getParameter("action").equals("")){
@@ -220,15 +218,15 @@ public class MainController extends HttpServlet {
 		// actions -> codes mapping
 		int mappedAction = mapAction(action);
 		
-		DataDescriptionHandler ddh = new DataDescriptionHandler(settings);
-		StoredQueryService storedQueryService = new StoredQueryService(settings);
+		DataDescriptionHandler ddh = new DataDescriptionHandler();
+		StoredQueryService storedQueryService = new StoredQueryService();
 		
 		DocumentService documentService = new DocumentService();
 		QueryService queryService = new QueryService();
 		HelperService helperService = new HelperService();
 		IndexService indexService = new IndexService();
 		
-		BDBXMLHandler bh = new BDBXMLHandler(settings);
+		BDBXMLHandler bh = new BDBXMLHandler();
 		
 		String output = "";
 		// Pole cisel akci, ktere nepotrebuji zadne vstupy nebo pouze vstup content
@@ -258,7 +256,7 @@ public class MainController extends HttpServlet {
 					InputStream is1 = new ByteArrayInputStream(QueryUtils.queryPrepare(content).toByteArray());
 					InputStream is2 = new ByteArrayInputStream(QueryUtils.queryPrepare(content).toByteArray());
 					InputStream is3 = new ByteArrayInputStream(QueryUtils.queryPrepare(content).toByteArray());
-					String xpath[] = QueryUtils.makeXPath(is1, settings.getContainerName());
+					String xpath[] = QueryUtils.makeXPath(is1, containerName);
 					output += bh.queryShortened(xpath[0], restructure, Boolean.parseBoolean(xpath[1]), QueryUtils.getMaxResults(is2), is3);
 					//output += "<xpath><![CDATA["+ xpath[0]+"]]></xpath><exception>" + xpath[1] + "</exception>";
 					//output += qh.queryPrepare(content).toString();

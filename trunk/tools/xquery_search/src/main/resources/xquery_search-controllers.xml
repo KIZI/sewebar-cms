@@ -11,8 +11,8 @@
 <!-- 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> -->
 <!-- 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /> -->
 
-	<context:component-scan base-package="xquerysearch.controllers" />
+	<context:component-scan base-package="xquerysearch.controller" />
 	
 	<mvc:annotation-driven />
-
+	
 </beans>

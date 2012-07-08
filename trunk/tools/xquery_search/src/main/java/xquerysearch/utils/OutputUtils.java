@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 
-import xquerysearch.controllers.MainController;
+import xquerysearch.controller.MainController;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;

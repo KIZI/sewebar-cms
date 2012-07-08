@@ -10,17 +10,36 @@
 	<context:annotation-config />	
 	<context:component-scan base-package="xquerysearch.dao.*" />
 	
+	<bean id="properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:bdbxml.properties" />
+	</bean>
 		
-<!-- 		<bean id="bdbxmlEnvironment" class="com.sleepycat.db.Environment"> -->
-<!-- 			<constructor-arg ref="environmentConfig" /> -->
-<!-- 		</bean> -->
-		
-<!-- 		<bean id="xmlManager" class="com.sleepycat.dbxml.XmlManager"> -->
-<!-- 		</bean> -->
-		
-<!-- 		<bean id="environmentConfig" class="com.sleepycat.db.EnvironmentConfig"> -->
-<!-- 			<property name="transactional" value="true" /> -->
-<!-- 			<property name="allowCreate" value="true" /> -->
-<!-- 			<property name="initializeCache" value="true" /> -->
-<!-- 		</bean> -->
+	<bean id="bdbxmlEnvironment" class="com.sleepycat.db.Environment">
+		<constructor-arg ref="environmentConfig" />
+		<constructor-arg ref="environmentDirectory" />
+	</bean>
+	
+	<bean id="xmlManager" class="com.sleepycat.dbxml.XmlManager">
+		<constructor-arg ref="bdbxmlEnvironment" />
+		<constructor-arg><bean class="com.sleepycat.dbxml.XmlManagerConfig" /></constructor-arg>
+	</bean>
+	
+	<bean id="environmentConfig" class="com.sleepycat.db.EnvironmentConfig">
+		<property name="transactional" value="true" />
+		<property name="allowCreate" value="true" />
+		<property name="initializeCache" value="true" />
+		<property name="runRecovery" value="false" />
+		<property name="maxMutexes" value="1000000" />
+		<property name="cacheSize" value="134217728" /> <!-- 128 * 1024 * 1024 -->
+		<property name="initializeLocking" value="true" />
+		<property name="initializeLogging" value="true" />
+		<property name="lockDetectMode" value="MINWRITE" />
+		<property name="logAutoRemove" value="true" />
+		<property name="lockTimeout" value="1" />
+		<property name="txnMaxActive" value="5000" />
+	</bean>
+	
+	<bean id="environmentDirectory" class="java.io.File">
+		<constructor-arg value="${dir.env}" />
+	</bean>
 </beans>

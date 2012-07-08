@@ -1,4 +1,4 @@
-package xquerysearch.controllers;
+package xquerysearch.controller;
 
 import org.springframework.stereotype.Controller;
 
