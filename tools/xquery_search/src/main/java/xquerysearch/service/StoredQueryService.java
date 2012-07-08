@@ -3,8 +3,6 @@ package xquerysearch.service;
 import java.util.List;
 
 import xquerysearch.dao.StoredQueryDao;
-import xquerysearch.dao.StoredQueryDaoImpl;
-import xquerysearch.domain.Settings;
 import xquerysearch.domain.StoredQuery;
 
 /**
@@ -16,13 +14,6 @@ import xquerysearch.domain.StoredQuery;
 public class StoredQueryService {
 	
 	private StoredQueryDao dao;
-	
-	/**
-	 * 
-	 */
-	public StoredQueryService(Settings settings) {
-		dao = new StoredQueryDaoImpl(settings);
-	}
 	
 	/**
 	 * 

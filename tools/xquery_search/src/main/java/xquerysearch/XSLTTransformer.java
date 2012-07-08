@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import javax.xml.transform.TransformerException;
 
-import xquerysearch.controllers.MainController;
+import xquerysearch.controller.MainController;
 
 /**
  * Trida XSLT transformace

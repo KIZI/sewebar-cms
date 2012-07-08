@@ -14,7 +14,7 @@ import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
 
-import xquerysearch.controllers.MainController;
+import xquerysearch.controller.MainController;
 
 /**
  * 

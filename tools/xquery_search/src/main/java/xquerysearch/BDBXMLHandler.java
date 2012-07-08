@@ -20,19 +20,16 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.InputSource;
 
-import xquerysearch.controllers.MainController;
+import xquerysearch.controller.MainController;
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.dao.IndexDao;
 import xquerysearch.dao.ResultsDao;
-import xquerysearch.dao.bdbxml.BdbxmlDocumentDao;
-import xquerysearch.dao.bdbxml.BdbxmlIndexDao;
-import xquerysearch.dao.bdbxml.BdbxmlResultsDao;
 import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
-import xquerysearch.domain.Settings;
 import xquerysearch.service.StoredQueryService;
 import xquerysearch.utils.OutputUtils;
 import xquerysearch.utils.QueryUtils;
@@ -44,14 +41,19 @@ import xquerysearch.validation.DocumentValidator;
  */
 public class BDBXMLHandler {
 	private Logger logger = MainController.getLogger();
+	@Autowired
 	private DocumentDao documentDao;
+	
+	@Autowired
 	private ResultsDao resultsDao;
+	
+	@Autowired
 	private IndexDao indexDao;
     
-	private QueryUtils queryUtils;
+	private QueryUtils queryUtils = new QueryUtils();
 	
-	private Settings settings;
     private String containerName;
+    private String validationSchemePath;
     boolean useTransformation;
     private String xsltPathPMML;
     private String xsltPathBKEF;
@@ -61,18 +63,6 @@ public class BDBXMLHandler {
     
     private StoredQueryService storedQueryService;
     
-    public BDBXMLHandler(Settings settings) {
-    	this.documentDao = new BdbxmlDocumentDao();
-    	this.indexDao = new BdbxmlIndexDao(settings);
-    	this.settings = settings;
-    	this.containerName = settings.getContainerName();
-    	this.useTransformation = settings.getUseTransformationBool();
-    	this.xsltPathPMML = settings.getPmmlTransformationPath();
-    	this.xsltPathBKEF = settings.getBkefTransformationPath();
-    	this.storedQueryService = new StoredQueryService(settings);
-    	this.resultsDao = new BdbxmlResultsDao();
-    }
-
     /**
      * Removes document
      * @param id document id
@@ -195,7 +185,7 @@ public class BDBXMLHandler {
                 if (document.contains("sourceType=\"BKEF\"")) {
                     xsltFile = new File(xsltPathBKEF);
                 } else {
-                    isValid = DocumentValidator.validate(document, settings.getValidationSchemaPath());
+                    isValid = DocumentValidator.validate(document, validationSchemePath);
                     xsltFile = new File(xsltPathPMML);
                 }
                 XSLTTransformer xslt = new XSLTTransformer();
@@ -247,7 +237,7 @@ public class BDBXMLHandler {
         } catch (IOException e) {
         	return "<error></error>";
         }
-        boolean isValid = DocumentValidator.validate(xml_doc, settings.getValidationSchemaPath());
+        boolean isValid = DocumentValidator.validate(xml_doc, validationSchemePath);
         if(isValid){
 	        if (useTransformation) {
 	            File xsltFile = new File(xsltPathPMML);

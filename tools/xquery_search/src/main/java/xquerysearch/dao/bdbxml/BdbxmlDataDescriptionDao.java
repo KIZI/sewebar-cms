@@ -2,15 +2,17 @@ package xquerysearch.dao.bdbxml;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import xquerysearch.dao.DataDescriptionDao;
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
-import xquerysearch.domain.Settings;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
 import com.sleepycat.dbxml.XmlException;
+import com.sleepycat.dbxml.XmlTransaction;
 
 /**
  * Implementation of {@link DataDescriptionDao}.
@@ -25,17 +27,9 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	
 	private String containerName;
 	
+	@Autowired
 	private ResultsDao resultsDao;
 	
-	/**
-	 * 
-	 */
-	public BdbxmlDataDescriptionDao(Settings settings) {
-		this.settings = settings;
-		containerName = settings.getContainerName();
-		resultsDao = new BdbxmlResultsDao();
-	}
-
 	/*
 	 * @{InheritDoc}
 	 */
@@ -150,15 +144,18 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	 * @{InheritDoc}
 	 */
 	public String getDataDescriptionFromCache() {
-		XmlContainer cont = openConnection(DATA_DESCRIPTION_CONTAINER);
-		try {
+		XmlContainer cont = null;
+        XmlTransaction trans = null;
+        try {
+        	cont = xmlManager.openContainer(DATA_DESCRIPTION_CONTAINER);
+        	trans = xmlManager.createTransaction();
     		XmlDocument doc = cont.getDocument(DATA_DESCRIPTION_DOCUMENT);
     		return doc.getContentAsString();
 		} catch (XmlException e) {
 			logger.warning("Getting data description failed!");
 			return null;
 		} finally {
-			closeConnection(cont);
+			commitAndClose(trans, cont);
 		}
 	}
 
@@ -166,15 +163,18 @@ public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDe
 	 * @{InheritDoc}
 	 */
 	public boolean saveDataDescriptionIntoCache(String dataDescription) {
-		XmlContainer cont = openConnection(DATA_DESCRIPTION_CONTAINER);
-		try {
+		XmlContainer cont = null;
+        XmlTransaction trans = null;
+        try {
+        	cont = xmlManager.openContainer(DATA_DESCRIPTION_CONTAINER);
+        	trans = xmlManager.createTransaction();
 			cont.putDocument(DATA_DESCRIPTION_DOCUMENT, dataDescription);
 			return true;
 		} catch (XmlException e) {
 			logger.warning("Saving data description failed!");
 			return false;
 		} finally {
-			closeConnection(cont);
+			commitAndClose(trans, cont);
 		}
 	}
 

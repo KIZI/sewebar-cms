@@ -1,8 +1,8 @@
 package xquerysearch.datadescription;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import xquerysearch.dao.DataDescriptionDao;
-import xquerysearch.dao.bdbxml.BdbxmlDataDescriptionDao;
-import xquerysearch.domain.Settings;
 
 /**
  * This class is responsible for handling all operations concerning data description.
@@ -12,15 +12,9 @@ import xquerysearch.domain.Settings;
  */
 public class DataDescriptionHandler {
 	
+	@Autowired
 	private DataDescriptionDao dataDescriptionDao;
 	
-	/**
-	 * 
-	 */
-	public DataDescriptionHandler(Settings settings) {
-		dataDescriptionDao = new BdbxmlDataDescriptionDao(settings);
-	}
-    
     /**
      * Method for retrieve saved data description from repository
      * @return DataDescription / chyba

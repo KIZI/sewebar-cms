@@ -12,7 +12,7 @@ public interface DocumentDao {
 	
 	/**
 	 * Retrieves {@link Document} from database.
-	 * @param docId if of document to found
+	 * @param docId ID of document to find
 	 * @return {@link Document} when found, otherwise <code>null</code>.
 	 */
 	public Document getDocumentById(String docId);

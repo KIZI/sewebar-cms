@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import xquerysearch.controllers.MainController;
+import xquerysearch.controller.MainController;
 import xquerysearch.dao.HelperDao;
-import xquerysearch.domain.Settings;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlIndexDeclaration;
 import com.sleepycat.dbxml.XmlIndexSpecification;
 import com.sleepycat.dbxml.XmlResults;
+import com.sleepycat.dbxml.XmlTransaction;
 import com.sleepycat.dbxml.XmlValue;
 
 /**
@@ -23,16 +23,20 @@ import com.sleepycat.dbxml.XmlValue;
  */
 public class BdbxmlHelperDao extends ConnectionHelper implements HelperDao {
 
-	private Settings settings;
 	private Logger logger = MainController.getLogger();
+	
+	private String containerName;
 	
 	/*
 	 * @{InheritDoc}
 	 */
 	public List<String> getAllDocumentsNames() {
 		List<String> names = new ArrayList<String>();
-		XmlContainer cont = openConnection(settings.getContainerName());
-		try {
+		XmlContainer cont = null;
+        XmlTransaction trans = null;
+        try {
+        	cont = xmlManager.openContainer(containerName);
+        	trans = xmlManager.createTransaction();
 			XmlResults results = cont.getAllDocuments(null);
 			XmlValue document = null;
 			while((document = results.next()) != null) {
@@ -42,6 +46,8 @@ public class BdbxmlHelperDao extends ConnectionHelper implements HelperDao {
 		} catch (XmlException e) {
 			logger.warning("Retrieving all documents names failed!");
 			return null;
+		} finally {
+			commitAndClose(trans, cont);
 		}
 	}
 
@@ -50,9 +56,12 @@ public class BdbxmlHelperDao extends ConnectionHelper implements HelperDao {
 	 */
 	public List<String[]> getAllIndexes() {
 		List<String[]> indexes = new ArrayList<String[]>();
-		XmlContainer cont = openConnection(settings.getContainerName());
 		XmlIndexSpecification indexSpec = null;
-		try {
+		XmlContainer cont = null;
+        XmlTransaction trans = null;
+        try {
+        	cont = xmlManager.openContainer(containerName);
+        	trans = xmlManager.createTransaction();
             indexSpec = cont.getIndexSpecification();
             XmlIndexDeclaration indexDeclaration = null;
             while ((indexDeclaration = (indexSpec.next())) != null) {
@@ -64,7 +73,7 @@ public class BdbxmlHelperDao extends ConnectionHelper implements HelperDao {
 			return null;
 		} finally {
 			indexSpec.delete();
-			closeConnection(cont);
+			commitAndClose(trans, cont);
 		}
 	}
 

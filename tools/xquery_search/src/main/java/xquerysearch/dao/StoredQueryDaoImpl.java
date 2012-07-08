@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import xquerysearch.controllers.MainController;
-import xquerysearch.domain.Settings;
+import org.springframework.beans.factory.annotation.Value;
+
+import xquerysearch.controller.MainController;
 
 /**
  * Default implementation of {@link StoredQueryDao}.
@@ -22,23 +23,17 @@ import xquerysearch.domain.Settings;
  */
 public class StoredQueryDaoImpl implements StoredQueryDao {
 
-	private Settings settings;
 	private Logger logger = MainController.getLogger();
 	
-	/**
-	 * Constructor for stored query DAO. 
-	 */
-	public StoredQueryDaoImpl(Settings settings) {
-		this.settings = settings;
-	}
-
+	@Value("${dir.queries}")
+	private String queriesDirectory;
 	/*
 	 * @{InheritDoc}
 	 */
 	public String getQueryById(String queryId) {
 		FileReader rdr = null;
         BufferedReader out = null;
-        File file = new File(settings.getQueriesDirectory() + queryId + ".txt");
+        File file = new File(queriesDirectory + queryId + ".txt");
         if (file.exists()) {
             try {
             	String query = "";
@@ -68,7 +63,7 @@ public class StoredQueryDaoImpl implements StoredQueryDao {
 	 * @{InheritDoc}
 	 */
 	public boolean insertQuery(String queryId, String queryBody) {
-		File file = new File(settings.getQueriesDirectory() + queryId + ".txt");
+		File file = new File(queriesDirectory + queryId + ".txt");
         if (file.exists()) {
         	return false;
         } else {
@@ -91,7 +86,7 @@ public class StoredQueryDaoImpl implements StoredQueryDao {
 	 * @{InheritDoc}
 	 */
 	public boolean removeQuery(String queryId) {
-		File file = new File(settings.getQueriesDirectory() + queryId + ".txt");
+		File file = new File(queriesDirectory + queryId + ".txt");
 
         if (file.exists()) {
             file.delete();
@@ -106,7 +101,7 @@ public class StoredQueryDaoImpl implements StoredQueryDao {
 	 */
 	public List<String> getNames() {
 		List<String> queries = new ArrayList<String>();
-        File uploadFolder = new File(settings.getQueriesDirectory());
+        File uploadFolder = new File(queriesDirectory);
         File uploadFiles[] = uploadFolder.listFiles();
 
         for(int i = 0; i < uploadFiles.length; i++){
