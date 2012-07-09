@@ -1,45 +1,13 @@
 ﻿using System;
-using System.Data.Odbc;
 using System.IO;
 using LMWrapper.ODBC;
+using LMWrapper.Utils;
 using OdbcConnection = LMWrapper.ODBC.OdbcConnection;
 
 namespace LMWrapper.LISpMiner
 {
 	public class LISpMiner : IDisposable
 	{
-		#region Statics
-
-		protected static void CopyFolder(string sourceFolder, string destFolder)
-		{
-			if (!Directory.Exists(destFolder))
-			{
-				Directory.CreateDirectory(destFolder);
-			}
-
-			foreach (string folder in Directory.GetDirectories(sourceFolder))
-			{
-				string name = Path.GetFileName(folder);
-
-				if (name == null) continue;
-
-				string dest = Path.Combine(destFolder, name);
-				CopyFolder(folder, dest);
-			}
-
-			foreach (string file in Directory.GetFiles(sourceFolder))
-			{
-				string name = Path.GetFileName(file);
-
-				if (name == null) continue;
-
-				string dest = Path.Combine(destFolder, name);
-				File.Copy(file, dest, true);
-			}
-		}
-
-		#endregion
-
 		private LMSwbImporter _importer;
 		private LMSwbExporter _exporter;
 		private Task4ftGen _task4FtGen;
@@ -173,7 +141,7 @@ namespace LMWrapper.LISpMiner
 			this.Environment = environment;
 			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
 
-			CopyFolder(environment.LMPath, this.LMPath);
+			DirectoryUtil.Copy(environment.LMPath, this.LMPath);
 
 			this.Created = DateTime.Now;
 		}

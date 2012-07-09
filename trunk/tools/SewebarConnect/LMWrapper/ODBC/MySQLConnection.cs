@@ -38,7 +38,7 @@ namespace LMWrapper.ODBC
 
 			if (!ODBCManagerRegistry.DSNExists(this.DSN))
 			{
-				ODBCManagerRegistry.CreateDSN(this.DSN, "Auto created DSN for LISpMiner", this.ServerAddress, this.Database, this.Username, this.Password);
+				ODBCManagerRegistry.CreateDSNMySQL(this.DSN, "Auto created DSN for LISpMiner", this.ServerAddress, this.Database, this.Username, this.Password);
 			}
 		}
 

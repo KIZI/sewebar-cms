@@ -64,6 +64,16 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public string DistinctValuesMax { get; set; }
 
+		/// <summary>
+		/// /NoAttributeDisctinctValues ... (O) to skip reading distinct values of attributes from metabase (if not needed afterwards for export)
+		/// </summary>
+		public bool NoAttributeDisctinctValues { get; set; }
+
+		/// <summary>
+		/// /NoEscapeSeqUnicode ... (O) to suppress substitution of national characters for UNICODE escape-sequences (like: &Aacute, &Rcaron etc.) (default: FALSE)
+		/// </summary>
+		public bool NoEscapeSeqUnicode { get; set; }
+
 		public override string Arguments
 		{
 			get
@@ -123,6 +133,16 @@ namespace LMWrapper.LISpMiner
 					arguments.AppendFormat("\"/DistinctValuesMax:{0}\" ", this.DistinctValuesMax);
 				}
 
+				if (this.NoAttributeDisctinctValues)
+				{
+					arguments.Append("/NoAttributeDisctinctValues ");
+				}
+
+				if (this.NoEscapeSeqUnicode)
+				{
+					arguments.Append("/NoEscapeSeqUnicode ");
+				}
+
 				// /Quiet
 				if (this.Quiet)
 				{
@@ -161,6 +181,9 @@ namespace LMWrapper.LISpMiner
 		{
 			this.ApplicationName = "LMSwbExporter.exe";
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_exporter", Guid.NewGuid());
+
+			this.NoAttributeDisctinctValues = false;
+			this.NoEscapeSeqUnicode = false;
 		}
 
 		/// <summary>

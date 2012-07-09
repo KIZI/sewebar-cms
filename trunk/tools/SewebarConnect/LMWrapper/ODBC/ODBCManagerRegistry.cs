@@ -45,12 +45,12 @@ namespace LMWrapper.ODBC
 		/// <summary>
 		/// Gets all System data source names for the local machine.
 		/// </summary>
-		public static System.Collections.SortedList GetSystemDataSourceNames()
+		public static SortedList GetSystemDataSourceNames()
 		{
-			System.Collections.SortedList dsnList = new System.Collections.SortedList();
+			var dsnList = new System.Collections.SortedList();
 
 			// get system dsn's
-			Microsoft.Win32.RegistryKey reg = (Microsoft.Win32.Registry.LocalMachine).OpenSubKey("Software");
+			RegistryKey reg = (Registry.LocalMachine).OpenSubKey("Software");
 			if (reg != null)
 			{
 				reg = reg.OpenSubKey("ODBC");
@@ -83,12 +83,12 @@ namespace LMWrapper.ODBC
 		/// <summary>
 		/// Gets all User data source names for the local machine.
 		/// </summary>
-		public static System.Collections.SortedList GetUserDataSourceNames()
+		public static SortedList GetUserDataSourceNames()
 		{
-			System.Collections.SortedList dsnList = new System.Collections.SortedList();
+			var dsnList = new SortedList();
 
 			// get user dsn's
-			Microsoft.Win32.RegistryKey reg = (Microsoft.Win32.Registry.CurrentUser).OpenSubKey("Software");
+			RegistryKey reg = (Registry.CurrentUser).OpenSubKey("Software");
 			if (reg != null)
 			{
 				reg = reg.OpenSubKey("ODBC");
@@ -127,7 +127,7 @@ namespace LMWrapper.ODBC
 		/// <param name="driverName">Name of the driver to use</param>
 		/// <param name="trustedConnection">True to use NT authentication, false to require applications to supply username/password in the connection string</param>
 		/// <param name="database">Name of the datbase to connect to</param>
-		public static void CreateDSN(string dsnName, string description, string server, string driverName, bool trustedConnection, string database)
+		public static void CreateDSNMSSQL(string dsnName, string description, string server, string driverName, bool trustedConnection, string database)
 		{
 			// Lookup driver path from driver name
 			var driverKey = Registry.LocalMachine.CreateSubKey(ODBCINST_INI_REG_PATH + driverName);
@@ -158,7 +158,7 @@ namespace LMWrapper.ODBC
 		/// <param name="description">Description of the DSN that appears in the ODBC control panel applet</param>
 		/// <param name="driverName">Name of the driver to use</param>
 		/// <param name="database">Name of the datbase to connect to</param>
-		public static void CreateDSN(string dsnName, string description, string driverName, string database)
+		public static void CreateDSNAccess(string dsnName, string description, string driverName, string database)
 		{
 			// Lookup driver path from driver name
 			var driverKey = Registry.LocalMachine.CreateSubKey(ODBCINST_INI_REG_PATH + driverName);
@@ -201,7 +201,7 @@ namespace LMWrapper.ODBC
 		/// <param name="database">Name of the datbase to connect to</param>
 		/// <param name="username">Username used to authenticate</param>
 		/// <param name="password">Password used to authenticate</param>
-		public static void CreateDSN(string dsnName, string description, string server, string database, string username, string password)
+		public static void CreateDSNMySQL(string dsnName, string description, string server, string database, string username, string password)
 		{
 			// Lookup driver path from driver name]
 			const string driverName = "MySQL ODBC 5.1 Driver";
@@ -242,6 +242,7 @@ namespace LMWrapper.ODBC
 			dsnKey.SetValue("PWD", password); // 5. PWD - Password for the database (in my it is case ... :) )
 			dsnKey.SetValue("SERVER", server); // 6. SERVER - MySQL server name (in my case it is localhost)
 			dsnKey.SetValue("UID", username); // 7. UID - User Name for the MYSQL Server (in my case it is root)
+			dsnKey.SetValue("CHARSET", "utf8"); // 8. CHARSET (utf8 / cp1250)
 		}
 
 		/// <summary>

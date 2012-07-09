@@ -59,6 +59,16 @@ namespace LMWrapper.LISpMiner
 
 		public int KeepAlive { get; set; }
 
+		/// <summary>
+		/// /TaskCancel			... (O) to cancel task of given TaskID or name (if already running) or to remove it from queue
+		/// </summary>
+		public bool TaskCancel { get; set; }
+
+		/// <summary>
+		/// /CancelAll			... (O) to cancel any running task and to empty the queue
+		/// </summary>
+		public bool CancelAll { get; set; }
+
 		public override string Arguments
 		{
 			get
@@ -80,6 +90,18 @@ namespace LMWrapper.LISpMiner
 				if (!String.IsNullOrEmpty(this.TaskName))
 				{
 					arguments.AppendFormat("\"/TaskName:{0}\" ", this.TaskName);
+				}
+
+				// /TaskCancel
+				if (this.TaskCancel)
+				{
+					arguments.Append("/TaskCancel ");
+				}
+
+				// /CancelAll
+				if (this.CancelAll)
+				{
+					arguments.Append("/CancelAll ");
 				}
 
 				// /TimeOut <sec>
@@ -117,6 +139,8 @@ namespace LMWrapper.LISpMiner
 			this._stopwatch = new Stopwatch();
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_LMTaskPooler", Guid.NewGuid());
 			//this.TimeOut = 10;
+
+			this.CancelAll = false;
 		}
 
 		protected override void Run()
@@ -139,8 +163,16 @@ namespace LMWrapper.LISpMiner
 			this._stopwatch.Stop();
 			this.Status = ExecutableStatus.Ready;
 
-			Log.InfoFormat("Result generation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
-			               this._stopwatch.Elapsed);
+			if (this.CancelAll || this.TaskCancel)
+			{
+				Log.InfoFormat("Task cancelation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
+				               this._stopwatch.Elapsed);
+			}
+			else
+			{
+				Log.InfoFormat("Result generation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
+				               this._stopwatch.Elapsed);
+			}
 
 			this.Process.Close();
 			this._process = null;

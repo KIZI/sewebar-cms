@@ -1,0 +1,1 @@
+build\release\Debugger.exe update Libs

@@ -80,6 +80,7 @@ namespace SewebarConnect.Controllers
 													  request.GetTemplate(definition.DefaultTemplate));
 
 					exporter.TaskName = request.TaskName;
+					exporter.NoEscapeSeqUnicode = true;
 
 					try
 					{
@@ -187,6 +188,53 @@ namespace SewebarConnect.Controllers
 		public ActionResult Pool()
 		{
 			return this.RunTask(new TaskDefinition { DefaultTemplate = "ETreeMiner.Task.Template.PMML", Launcher = this.LISpMiner.LMTaskPooler });
+		}
+
+		[ValidateInput(false)]
+		[ErrorHandler]
+		public ActionResult Cancel(string taskName)
+		{
+			var taskPooler = this.LISpMiner.LMTaskPooler;
+
+			try
+			{
+				if (String.IsNullOrWhiteSpace(taskName))
+				{
+					// cancel all
+					taskPooler.CancelAll = true;
+					taskPooler.Execute();
+
+					return new XmlResult
+							{
+								Data = new Response
+										{
+											Message = "All tasks has been canceled."
+										}
+							};
+				}
+				else
+				{
+					// cancel task
+					taskPooler.TaskCancel = true;
+					taskPooler.TaskName = taskName;
+					taskPooler.Execute();
+
+					return new XmlResult
+							{
+								Data = new Response
+										{
+											Message = String.Format("Task {0} has been canceled.", taskName)
+										}
+							};
+				}
+			}
+			finally
+			{
+				// clean up
+				taskPooler.CancelAll = false;
+				taskPooler.TaskCancel = false;
+				taskPooler.TaskName = String.Empty;
+			}
 		}
 	}
 }
