@@ -66,28 +66,51 @@
 
 <h2>Tasks</h2>
 <form action="#" class="console">
+	<fieldset class="id">
+		<label for="task_id">LM ID</label>
+		<input type="text" value="" name="task_id" id="task_id" size="32" />
+		&nbsp;
+		<label for="task_alias">Alias (used for import task)</label>
+		<input type="text" value="" name="task_alias" id="task_alias" size="32" />
+		&nbsp;
+		<label for="task_template">Template (used for exporting task results)</label>
+		<input type="text" value="" name="task_template" id="task_template" size="32" />
+	</fieldset>
+
+	<fieldset>
+		<legend>Task Definition</legend>
+		<textarea name="task_request" id="task_request" rows="20" cols="80"></textarea>
+	</fieldset>
+	<fieldset class="output">
+		<legend>Response</legend>
+		<textarea name="task_response" id="task_response" rows="20" cols="80"></textarea>
+	</fieldset>
+	<div class="buttons">
+		<button name="task_4ft">4ft Task</button>
+		<button name="task_pool">Pool Task</button>
+	</div>
+</form>
+
+<h2>Tasks Cancel (TaskPooler only)</h2>
+<form action="#" class="console">
 <fieldset class="id">
-	<label for="task_id">LM ID</label>
-	<input type="text" value="" name="task_id" id="task_id" size="32" />
+	<label for="cancel_id">LM ID</label>
+	<input type="text" value="" name="cancel_id" id="cancel_id" size="32" />
 	&nbsp;
-	<label for="task_alias">Alias (used for import task)</label>
-	<input type="text" value="" name="task_alias" id="task_alias" size="32" />
-	&nbsp;
-	<label for="task_template">Template (used for exporting task results)</label>
-	<input type="text" value="" name="task_template" id="task_template" size="32" />
+	<label for="cancel_task">Task to cancel</label>
+	<input type="text" value="" name="cancel_task" id="cancel_task" size="32" />
 </fieldset>
 
 <fieldset>
-	<legend>Task Definition</legend>
-	<textarea name="task_request" id="task_request" rows="20" cols="80"></textarea>
+	<legend>&nbsp;</legend>
+	<textarea rows="20" cols="80" disabled="disabled"></textarea>
 </fieldset>
 <fieldset class="output">
 	<legend>Response</legend>
-	<textarea name="task_response" id="task_response" rows="20" cols="80"></textarea>
+	<textarea name="cancel_response" id="cancel_response" rows="20" cols="80"></textarea>
 </fieldset>
 <div class="buttons">
-	<button name="task_4ft">4ft Task</button>
-	<button name="task_pool">Pool Task</button>
+	<button name="cancel">Cancel</button>
 </div>
 </form>
 

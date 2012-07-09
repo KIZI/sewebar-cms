@@ -28,7 +28,7 @@ namespace LMWrapper.ODBC
 
 			if (!ODBCManagerRegistry.DSNExists(this.DSN))
 			{
-				ODBCManagerRegistry.CreateDSN(this.DSN, "Auto created DSN for LISpMiner", Driver, this.Path);
+				ODBCManagerRegistry.CreateDSNAccess(this.DSN, "Auto created DSN for LISpMiner", Driver, this.Path);
 			}
 		}
 

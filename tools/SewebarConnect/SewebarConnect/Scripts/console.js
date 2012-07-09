@@ -26,6 +26,7 @@
 			if (id) {
 				$('#import_id').val(id);
 				$('#task_id').val(id);
+				$('#cancel_id').val(id);
 				$('#export_id').val(id);
 			}
 		});
@@ -89,6 +90,26 @@
 			dataType: 'text',
 			complete: function (data) {
 				var textarea = $('#task_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
+		});
+
+		return false;
+	});
+
+	// cancel
+	$('button[name="cancel"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "Task/Cancel",
+			data: {
+				guid: $('#cancel_id').val(),
+				taskName: $('#cancel_task').val()
+			},
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#cancel_response');
 				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
 				textarea.val(data.responseText);
 			}
