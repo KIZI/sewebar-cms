@@ -35,7 +35,7 @@ namespace SewebarConnect.Controllers
 
 			var manager = new LMWrapper.Manager(path);
 
-			manager.Update();
+			ViewBag.Output = manager.Update();
 
 			ViewBag.Path = path;
 
