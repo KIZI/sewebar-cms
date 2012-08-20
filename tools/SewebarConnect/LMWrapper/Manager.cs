@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using LMWrapper.Utils;
 
@@ -43,13 +44,19 @@ namespace LMWrapper
 			}
 		}
 
-		public void Update()
+		public string Update()
 		{
+			var sb = new StringBuilder();
 			var directory = String.Format("{0}\\LISp Miner {1}", this.TargetPath, this.ReleaseDate.ToString("yyyy.MM.dd"));
 			var current = String.Format("{0}\\LISp Miner", this.TargetPath);
 
-			Console.WriteLine(String.Format("Updating LISp Miner to version {0} from {1}", this.Version, this.ReleaseDate.ToShortDateString()));
-			Console.WriteLine(String.Format("\tto destination: {0}", Path.GetFullPath(this.TargetPath)));
+			var outputBuffer = string.Format("Updating LISp Miner to version {0} from {1}", this.Version, this.ReleaseDate.ToShortDateString());
+			sb.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
+
+			outputBuffer = string.Format("\tto destination: {0}", Path.GetFullPath(this.TargetPath));
+			sb.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
 
 			if (Directory.Exists(directory))
 			{
@@ -60,7 +67,7 @@ namespace LMWrapper
 
 			foreach (var package in Packages)
 			{
-				this.DownloadPackage(directory, package);
+				this.DownloadPackage(directory, package, sb);
 			}
 
 			if (Directory.Exists(current))
@@ -68,21 +75,29 @@ namespace LMWrapper
 				Directory.Delete(current, true);
 			}
 
-			Console.WriteLine(String.Format("Setting LISp Miner version {0} as current.", this.Version));
+			outputBuffer = string.Format("Setting LISp Miner version {0} as current.", this.Version);
+			sb.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
 
 			DirectoryUtil.Copy(directory, current);
+
+			return sb.ToString();
 		}
 
-		private void DownloadPackage(string directory, string package)
+		private void DownloadPackage(string directory, string package, StringBuilder output)
 		{
-			Console.WriteLine(String.Format("Downloading {0} ...", package));
+			var outputBuffer = String.Format("Downloading {0} ...", package);
+			output.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
 
 			var source = String.Format("{0}/{1}", FilesPath, package);
 			var destination = String.Format("{0}\\{1}", directory, package);
 
 			this.Client.DownloadFile(source, destination);
 
-			Console.WriteLine(String.Format("Unpacking {0} ...", package));
+			outputBuffer = String.Format("Unpacking {0} ...", package);
+			output.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
 			ZipUtil.Unzip(directory, destination);
 
 			File.Delete(destination);
