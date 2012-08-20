@@ -7,7 +7,7 @@ namespace SewebarConnect.Controllers
 {
 	public class BaseController : Controller
 	{
-		private const string PARAMS_GUID = "guid";
+		protected const string PARAMS_GUID = "guid";
 
 		private LISpMiner _miner;
 

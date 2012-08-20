@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using LMWrapper;
@@ -14,6 +15,30 @@ namespace SewebarConnect.Controllers
 	{
 		public ActionResult Index()
 		{
+			return View();
+		}
+
+		public ActionResult Update()
+		{
+			string path;
+
+			if (this.HttpContext.Request.Params[PARAMS_GUID] != null)
+			{
+				throw new NotSupportedException();
+
+				path = Path.GetFullPath(this.LISpMiner.LMPath);
+			}
+			else
+			{
+				path = Path.GetFullPath(MvcApplication.Environment.LMPath + "\\..");
+			}
+
+			var manager = new LMWrapper.Manager(path);
+
+			manager.Update();
+
+			ViewBag.Path = path;
+
 			return View();
 		}
 
