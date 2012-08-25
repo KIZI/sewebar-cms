@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.IO;
 
 namespace LMWrapper.ODBC
 {
@@ -21,7 +22,14 @@ namespace LMWrapper.ODBC
 					break;
 				case OdbcDrivers.AccessConnection:
 				default:
-					var databaseFile = String.Format(@"{0}\Barbora\Barbora_{1}.mdb", environment.DataPath, id);
+					var folder = String.Format(@"{0}\Barbora", environment.DataPath);
+
+					if (!Directory.Exists(folder))
+					{
+						Directory.CreateDirectory(folder);
+					}
+
+					var databaseFile = String.Format(@"{0}\Barbora_{1}.mdb", folder, id);
 					var databasePrototypeFile = String.Format(@"{0}\Barbora.mdb", environment.DataPath);
 
 					return new AccessConnection(databaseFile, databasePrototypeFile, databaseDSN);

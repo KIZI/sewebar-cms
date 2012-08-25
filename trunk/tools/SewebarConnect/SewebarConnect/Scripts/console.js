@@ -12,16 +12,15 @@
 				username: $('#reg_username').val(),
 				password: $('#reg_password').val()
 			},
-			dataType: 'text'
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#reg_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
 		}).done(function (data) {
 			var xml = jQuery.parseXML(data),
-				id = $(xml).contents().attr('id'),
-				textarea = $('textarea[name="reg_response"]'),
-				status = $(xml).contents().attr('status');
-
-			setStatusClass(textarea, status);
-
-			textarea.val(data);
+			    id = $(xml).contents().attr('id');
 
 			if (id) {
 				$('#import_id').val(id);
