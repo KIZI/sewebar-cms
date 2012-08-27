@@ -43,27 +43,34 @@ namespace SewebarConnect.Controllers
 
 		protected void GetInfo(string xmlPath, out string status, out int numberOfRules, out int hypothesesCountMax)
 		{
-			var document = XDocument.Load(RemoveInvalidXmlChars(xmlPath));
-
-			var statusAttribute = ((IEnumerable<object>) document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
-			var numberOfRulesAttribute = ((IEnumerable<object>)document.XPathEvaluate(XPathNumberOfRules)).FirstOrDefault() as XAttribute;
-			var hypothesesCountMaxAttribute = ((IEnumerable<object>)document.XPathEvaluate(XPathHypothesesCountMax)).FirstOrDefault() as XElement;
-
-			if (statusAttribute == null)
+			using (var reader = new StreamReader(xmlPath, System.Text.Encoding.UTF8))
 			{
-				throw new InvalidTaskResultXml("TaskState cannot be resolved.", xmlPath, XPathStatus);
-			}
+				var xml = RemoveInvalidXmlChars(reader.ReadToEnd());
+				var document = XDocument.Load(xml);
 
-			status = statusAttribute.Value;
+				var statusAttribute = ((IEnumerable<object>) document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
+				var numberOfRulesAttribute =
+					((IEnumerable<object>) document.XPathEvaluate(XPathNumberOfRules)).FirstOrDefault() as XAttribute;
+				var hypothesesCountMaxAttribute =
+					((IEnumerable<object>) document.XPathEvaluate(XPathHypothesesCountMax)).FirstOrDefault() as XElement;
 
-			if (numberOfRulesAttribute == null || !Int32.TryParse(numberOfRulesAttribute.Value, out numberOfRules))
-			{
-				throw new InvalidTaskResultXml("NumberOfRulesAttribute cannot be resolved.", xmlPath, XPathNumberOfRules);
-			}
+				if (statusAttribute == null)
+				{
+					throw new InvalidTaskResultXml("TaskState cannot be resolved.", xmlPath, XPathStatus);
+				}
 
-			if (hypothesesCountMaxAttribute == null || !Int32.TryParse(hypothesesCountMaxAttribute.Value, out hypothesesCountMax))
-			{
-				throw new InvalidTaskResultXml("HypothesesCountMax cannot be resolved.", xmlPath, XPathHypothesesCountMax);
+				status = statusAttribute.Value;
+
+				if (numberOfRulesAttribute == null || !Int32.TryParse(numberOfRulesAttribute.Value, out numberOfRules))
+				{
+					throw new InvalidTaskResultXml("NumberOfRulesAttribute cannot be resolved.", xmlPath, XPathNumberOfRules);
+				}
+
+				if (hypothesesCountMaxAttribute == null ||
+				    !Int32.TryParse(hypothesesCountMaxAttribute.Value, out hypothesesCountMax))
+				{
+					throw new InvalidTaskResultXml("HypothesesCountMax cannot be resolved.", xmlPath, XPathHypothesesCountMax);
+				}
 			}
 		}
 
