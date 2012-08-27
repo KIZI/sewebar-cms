@@ -31,9 +31,19 @@ namespace SewebarConnect.Controllers
 			public ITaskLauncher Launcher { get; set; }
 		}
 
+		public static string RemoveInvalidXmlChars(string input)
+		{
+			return new string(input.Where(value =>
+				(value >= 0x0020 && value <= 0xD7FF) ||
+				(value >= 0xE000 && value <= 0xFFFD) ||
+				value == 0x0009 ||
+				value == 0x000A ||
+				value == 0x000D).ToArray());
+		}
+
 		protected void GetInfo(string xmlPath, out string status, out int numberOfRules, out int hypothesesCountMax)
 		{
-			var document = XDocument.Load(xmlPath);
+			var document = XDocument.Load(RemoveInvalidXmlChars(xmlPath));
 
 			var statusAttribute = ((IEnumerable<object>) document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
 			var numberOfRulesAttribute = ((IEnumerable<object>)document.XPathEvaluate(XPathNumberOfRules)).FirstOrDefault() as XAttribute;
