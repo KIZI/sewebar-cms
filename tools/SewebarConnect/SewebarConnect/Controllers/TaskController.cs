@@ -46,7 +46,7 @@ namespace SewebarConnect.Controllers
 			using (var reader = new StreamReader(xmlPath, System.Text.Encoding.UTF8))
 			{
 				var xml = RemoveInvalidXmlChars(reader.ReadToEnd());
-				var document = XDocument.Load(xml);
+				var document = XDocument.Parse(xml);
 
 				var statusAttribute = ((IEnumerable<object>) document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
 				var numberOfRulesAttribute =
