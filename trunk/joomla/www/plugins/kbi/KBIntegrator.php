@@ -252,7 +252,11 @@ class KBIntegrator implements IKBIntegrator
 	    $path = $url['path'];
 
 	    // open a socket connection on port 80
-	    $fp = fsockopen($host, $this->getPort());
+	    $fp = fsockopen($host, $this->getPort(), $errno, $errstr);
+
+        if(!$fp) {
+            throw new Exception("Communication error: $errno $errstr ($host).");
+        }
 
 	    // send the request headers:
 	    fputs($fp, "POST $path HTTP/1.1\r\n");

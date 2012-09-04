@@ -74,7 +74,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$response = $this->requestPost("$url/Application/Register", $db_cfg);
 
-		KBIDebug::log($response, "Miner registered");
+		KBIDebug::log(array('config' => $db_cfg, 'response' => $response), "Miner registered");
 		
 		return $this->parseRegisterResponse($response);
 	}
@@ -181,4 +181,21 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		return $response;
 	}
+
+    public function cancelTask($taskName)
+    {
+        $url = trim($this->getUrl(), '/');
+        $url = "$url/Task/Cancel";
+
+        $data = array(
+            'guid' => $this->getMinerId(),
+            'taskName' => $taskName
+        );
+
+        KBIDebug::info(array($url, $data));
+
+        $dd = $this->requestCurl($url, $data);
+
+        return trim($dd);
+    }
 }
