@@ -188,6 +188,18 @@ class KbiModelTransformator extends JModel
 			return JText::_('Given source has no DataDictionary (does not implenent IHasDataDictionary)');
 		}
 	}
+
+    public function cancelQuery($taskName)
+    {
+        $source = $this->getSource();
+
+        if($source != NULL && $source instanceof LispMiner) {
+            KBIDebug::log(array('source' => $source, 'task' => $taskName), 'Canceling task');
+            return $source->cancelTask($taskName);
+        } else {
+            return JText::_('Given source does not support query cancelation (only LISpMiner sources does).');
+        }
+    }
 }
 
 ?>
