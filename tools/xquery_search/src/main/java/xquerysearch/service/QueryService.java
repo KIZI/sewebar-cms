@@ -2,6 +2,8 @@ package xquerysearch.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
@@ -12,6 +14,7 @@ import xquerysearch.domain.Result;
  * @author Tomas Marek
  *
  */
+@Service
 public class QueryService {
 	
 	private ResultsDao dao;

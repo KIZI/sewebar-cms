@@ -1,5 +1,7 @@
 package xquerysearch.service;
 
+import org.springframework.stereotype.Service;
+
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.domain.Document;
 
@@ -9,6 +11,7 @@ import xquerysearch.domain.Document;
  * @author Tomas Marek
  *
  */
+@Service
 public class DocumentService {
 	
 	DocumentDao dao;

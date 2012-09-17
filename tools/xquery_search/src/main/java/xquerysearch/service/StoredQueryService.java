@@ -2,6 +2,8 @@ package xquerysearch.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import xquerysearch.dao.StoredQueryDao;
 import xquerysearch.domain.StoredQuery;
 
@@ -11,6 +13,7 @@ import xquerysearch.domain.StoredQuery;
  * @author Tomas Marek
  *
  */
+@Service
 public class StoredQueryService {
 	
 	private StoredQueryDao dao;

@@ -17,7 +17,7 @@ import xquerysearch.datadescription.DataDescriptionHandler;
 import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
 import xquerysearch.service.DocumentService;
-import xquerysearch.service.HelperService;
+import xquerysearch.service.AggregationService;
 import xquerysearch.service.IndexService;
 import xquerysearch.service.QueryService;
 import xquerysearch.service.StoredQueryService;
@@ -220,7 +220,7 @@ public class MainController extends HttpServlet {
 		
 		DocumentService documentService = new DocumentService();
 		QueryService queryService = new QueryService();
-		HelperService helperService = new HelperService();
+		AggregationService helperService = new AggregationService();
 		IndexService indexService = new IndexService();
 		
 		BDBXMLHandler bh = new BDBXMLHandler();

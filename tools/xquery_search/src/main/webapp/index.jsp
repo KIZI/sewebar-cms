@@ -29,7 +29,7 @@
       <option value="deleteDocument">Delete document</option>
       <option value="addIndex">Add index</option>
       <option value="delIndex">Remove index</option>
-      <option value="listIn">Show indexes</option>
+      <option value="listIndexes">Show indexes</option>
       <option value="actDescription">Update DataDescription</option>
       <option value="getDescription">Show DataDescription</option>
       <option value="completeTest">Test settings</option>
@@ -64,7 +64,7 @@
     </table>
     <br />
     <br />
-    <i>Version 1.22 (6.1.2012)</i>
+    <i>Version 2.0.0 (x.2012)</i>
     <hr />
     <form name="settingsForm" action="xquery_servlet" method="post" target="_blank">
     	<input type="hidden" name="action" value="showsettings">
