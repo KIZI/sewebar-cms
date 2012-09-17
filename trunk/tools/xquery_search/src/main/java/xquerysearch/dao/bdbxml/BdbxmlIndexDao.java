@@ -13,7 +13,7 @@ import com.sleepycat.dbxml.XmlTransaction;
  * @author Tomas Marek
  *
  */
-public class BdbxmlIndexDao extends ConnectionHelper implements IndexDao {
+public class BdbxmlIndexDao extends AbstractDao implements IndexDao {
 
 	private String containerName;
 	

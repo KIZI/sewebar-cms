@@ -9,7 +9,7 @@ import java.util.List;
  * @author Tomas Marek
  *
  */
-public interface HelperDao {
+public interface AggregationDao {
 	
 	public List<String> getAllDocumentsNames();
 	

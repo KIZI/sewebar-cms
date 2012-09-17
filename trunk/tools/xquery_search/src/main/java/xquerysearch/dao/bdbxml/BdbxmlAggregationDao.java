@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Repository;
+
 import xquerysearch.controller.MainController;
-import xquerysearch.dao.HelperDao;
+import xquerysearch.dao.AggregationDao;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
@@ -13,19 +15,17 @@ import com.sleepycat.dbxml.XmlIndexDeclaration;
 import com.sleepycat.dbxml.XmlIndexSpecification;
 import com.sleepycat.dbxml.XmlResults;
 import com.sleepycat.dbxml.XmlTransaction;
-import com.sleepycat.dbxml.XmlValue;
 
 /**
- * Implementation of {@link HelperDao}.
+ * Implementation of {@link AggregationDao}.
  * 
  * @author Tomas Marek
  *
  */
-public class BdbxmlHelperDao extends ConnectionHelper implements HelperDao {
+@Repository
+public class BdbxmlAggregationDao extends AbstractDao implements AggregationDao {
 
 	private Logger logger = MainController.getLogger();
-	
-	private String containerName;
 	
 	/*
 	 * @{InheritDoc}
@@ -38,9 +38,8 @@ public class BdbxmlHelperDao extends ConnectionHelper implements HelperDao {
         	cont = xmlManager.openContainer(containerName);
         	trans = xmlManager.createTransaction();
 			XmlResults results = cont.getAllDocuments(null);
-			XmlValue document = null;
-			while((document = results.next()) != null) {
-				names.add(document.getNodeValue());
+			while(results.hasNext()) {			
+				names.add(results.next().asDocument().getName());
 			}
 			return names;
 		} catch (XmlException e) {

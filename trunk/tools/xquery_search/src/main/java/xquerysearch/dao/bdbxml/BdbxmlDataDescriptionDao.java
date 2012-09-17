@@ -20,7 +20,7 @@ import com.sleepycat.dbxml.XmlTransaction;
  * @author Tomas Marek
  *
  */
-public class BdbxmlDataDescriptionDao extends ConnectionHelper implements DataDescriptionDao {
+public class BdbxmlDataDescriptionDao extends AbstractDao implements DataDescriptionDao {
 	
 	private final String DATA_DESCRIPTION_CONTAINER = "__DataDescriptionCacheContainer";
 	private final String DATA_DESCRIPTION_DOCUMENT = "__DataDescriptionCacheDocument";

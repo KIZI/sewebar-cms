@@ -2,7 +2,7 @@ package xquerysearch.service;
 
 import java.util.List;
 
-import xquerysearch.dao.HelperDao;
+import xquerysearch.dao.AggregationDao;
 
 /**
  * Provides additional informations.
@@ -12,7 +12,7 @@ import xquerysearch.dao.HelperDao;
  */
 public class HelperService {
 	
-	HelperDao dao;
+	AggregationDao dao;
 	
 	public List<String> getAllDocumentsNames() {
 		return dao.getAllDocumentsNames();
