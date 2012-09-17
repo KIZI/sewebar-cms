@@ -1,5 +1,7 @@
 package xquerysearch.service;
 
+import org.springframework.stereotype.Service;
+
 import xquerysearch.dao.IndexDao;
 
 /**
@@ -8,6 +10,7 @@ import xquerysearch.dao.IndexDao;
  * @author Tomas Marek
  *
  */
+@Service
 public class IndexService {
 	
 	IndexDao dao;

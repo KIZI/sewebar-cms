@@ -2,6 +2,9 @@ package xquerysearch.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import xquerysearch.dao.AggregationDao;
 
 /**
@@ -10,9 +13,11 @@ import xquerysearch.dao.AggregationDao;
  * @author Tomas Marek
  *
  */
-public class HelperService {
+@Service
+public class AggregationService {
 	
-	AggregationDao dao;
+	@Autowired
+	private AggregationDao dao;
 	
 	public List<String> getAllDocumentsNames() {
 		return dao.getAllDocumentsNames();
