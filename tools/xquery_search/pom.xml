@@ -1,139 +1,118 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>xquery_search</groupId>
-  <artifactId>xquery_search</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <name>xquery_search</name>
-  
-  <properties>
-  	<java.version>1.6</java.version>
-  	<spring.version>3.1.2.RELEASE</spring.version>
-  	<berkeley.version>2.5.16</berkeley.version>
-  </properties>
-  
-  <!-- Local repository in /lib folder -->
-  <repositories>
-  	<repository>
-		<id>lib-repo</id>
-		<name>lib-repository</name>
-		<url>file://${basedir}/lib</url>                
-		<releases>
-			<checksumPolicy>ignore</checksumPolicy>
-		</releases>
-	</repository>
-  </repositories>
-  
-  <build>
-  	<defaultGoal>package</defaultGoal>
-  	<directory>${basedir}/target</directory>
-  	<finalName>${project.artifactId}</finalName>
-  	<plugins>
-		<plugin>
-		 	<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<configuration>
-				<source>1.6</source>
-				<target>1.6</target>
-			</configuration>
-		</plugin>
-	     <plugin>
-	       <artifactId>maven-war-plugin</artifactId>
-	       <version>2.2</version>
-	       <configuration>
-	      		<webXml>web/WEB-INF/web.xml</webXml>   
-	       	<packagingExcludes>web/WEB-INF/lib/*.jar</packagingExcludes>
-			<archive>
-			  <manifest>
-			    <addClasspath>true</addClasspath>
-			    <classpathPrefix>lib/</classpathPrefix>
-			  </manifest>
-			</archive>
-	       </configuration>
-	     </plugin>
-	      <plugin>
-	        <groupId>org.glassfish.maven.plugin</groupId>
-	        <artifactId>maven-glassfish-plugin</artifactId>
-	        <version>2.1</version>
-	        <configuration>
-				<user>admin</user>
-				<adminPassword>admin</adminPassword>
-				<glassfishDirectory>c:\gf3-sts\glassfish</glassfishDirectory>
-	          	<components>
-	            	<component>
-	              	<name>${project.artifactId}</name>
-	              	<artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
-	            	</component>
-	          	</components>
-	          	<domain>
-	           		<name>${project.artifactId}</name>
-	            	<adminPort>4848</adminPort>
-	            	<httpPort>8081</httpPort>
-	            	<httpsPort>8443</httpsPort>
-	          	</domain>
-	        </configuration>
-	      </plugin>
-    </plugins>
-  </build>
-  
-  <dependencies>
-  	<dependency>
-		<groupId>com.sleepycat</groupId>
-		<artifactId>db</artifactId>
-		<version>${berkeley.version}</version>
-		<type>jar</type>
-	</dependency>
-	
-	<dependency>
-		<groupId>com.sleepycat</groupId>
-		<artifactId>dbxml</artifactId>
-		<version>${berkeley.version}</version>
-		<type>jar</type>
-	</dependency>
-	
-  	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-webmvc</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-  	
-  	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-core</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-context</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-beans</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-	
-  	<dependency>
-		<groupId>net.sf.saxon</groupId>
-		<artifactId>Saxon-HE</artifactId>
-		<version>9.4</version>
-	</dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>xquery_search</groupId>
+	<artifactId>xquery_search</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>xquery_search</name>
 
-  	<dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.0</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
+	<properties>
+		<java.version>1.6</java.version>
+		<spring.version>3.1.2.RELEASE</spring.version>
+		<berkeley.version>2.5.16</berkeley.version>
+	</properties>
 
-	<dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.16</version>
-	</dependency>
-	
-  </dependencies>
+	<!-- Local repository in /lib folder -->
+	<repositories>
+		<repository>
+			<id>lib-repo</id>
+			<name>lib-repository</name>
+			<url>file://${basedir}/lib</url>
+			<releases>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</repository>
+	</repositories>
+
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<directory>${basedir}/target</directory>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+<!-- 					<webXml>web/WEB-INF/web.xml</webXml> -->
+<!-- 					<packagingExcludes>web/WEB-INF/lib/*.jar</packagingExcludes> -->
+					<archive>
+						<manifest>
+							<!-- <addClasspath>true</addClasspath> -->
+							<!-- <classpathPrefix>lib/</classpathPrefix> -->
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.sleepycat</groupId>
+			<artifactId>db</artifactId>
+			<version>${berkeley.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sleepycat</groupId>
+			<artifactId>dbxml</artifactId>
+			<version>${berkeley.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.saxon</groupId>
+			<artifactId>Saxon-HE</artifactId>
+			<version>9.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+
+	</dependencies>
 </project>

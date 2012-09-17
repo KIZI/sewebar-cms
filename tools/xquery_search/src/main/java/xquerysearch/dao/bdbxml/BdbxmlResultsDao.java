@@ -22,7 +22,7 @@ import com.sleepycat.dbxml.XmlValue;
  * @author Tomas Marek
  *
  */
-public class BdbxmlResultsDao extends ConnectionHelper implements ResultsDao {
+public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 
 	Logger logger = MainController.getLogger();
 	

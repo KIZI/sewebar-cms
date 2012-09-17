@@ -17,9 +17,8 @@ import com.sleepycat.dbxml.XmlTransaction;
  *
  */
 @Repository
-public class BdbxmlDocumentDao extends ConnectionHelper implements DocumentDao {
+public class BdbxmlDocumentDao extends AbstractDao implements DocumentDao {
 
-	private String containerName;
 	/*
 	 * @{InheritDoc}
 	 */

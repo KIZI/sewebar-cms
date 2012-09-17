@@ -3,6 +3,7 @@ package xquerysearch.dao.bdbxml;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import xquerysearch.controller.MainController;
 
@@ -17,9 +18,12 @@ import com.sleepycat.dbxml.XmlTransaction;
  * @author Tomas Marek
  *
  */
-public abstract class ConnectionHelper {
+public abstract class AbstractDao {
 
 	protected Logger logger = MainController.getLogger();
+	
+	@Value("${container.name}")
+	protected String containerName;
 	
 	@Autowired
 	protected XmlManager xmlManager;
