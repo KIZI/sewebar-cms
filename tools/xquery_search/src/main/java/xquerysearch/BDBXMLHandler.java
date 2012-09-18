@@ -31,6 +31,7 @@ import xquerysearch.domain.Document;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.Result;
 import xquerysearch.service.StoredQueryService;
+import xquerysearch.transformation.XSLTTransformer;
 import xquerysearch.utils.OutputUtils;
 import xquerysearch.utils.QueryUtils;
 import xquerysearch.validation.DocumentValidator;
@@ -188,8 +189,7 @@ public class BDBXMLHandler {
                     isValid = DocumentValidator.validate(document, validationSchemePath);
                     xsltFile = new File(xsltPathPMML);
                 }
-                XSLTTransformer xslt = new XSLTTransformer();
-                xml_doc += xslt.xsltTransformation(document, xsltFile, docID, creationTime, reportUri);
+                xml_doc += XSLTTransformer.transform(document, xsltFile, docID, creationTime, reportUri);
             } else {
                 xml_doc = document;
             }
@@ -241,8 +241,7 @@ public class BDBXMLHandler {
         if(isValid){
 	        if (useTransformation) {
 	            File xsltFile = new File(xsltPathPMML);
-	            XSLTTransformer xslt = new XSLTTransformer();
-	            xml_doc = xslt.xsltTransformation(xml_doc, xsltFile, docID, creationTime, reportUri);
+	            xml_doc = XSLTTransformer.transform(xml_doc, xsltFile, docID, creationTime, reportUri);
 	            output += "<xslt_time>" + (System.currentTimeMillis() - act_time_long) + "</xslt_time>";
 	       }
 	
