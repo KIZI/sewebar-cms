@@ -13,4 +13,8 @@
 
 	<context:component-scan base-package="xquerysearch.service" />
 	
+	<bean id="properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:xquery_search.properties" />
+	</bean>
+	
 </beans>
