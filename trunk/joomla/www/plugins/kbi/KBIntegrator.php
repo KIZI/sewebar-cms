@@ -42,6 +42,10 @@ class KBIntegrator implements IKBIntegrator
 				require_once 'Integrators/LispMiner.php';
 				return new LispMiner($config);
 				break;
+            case 'JOOMLA':
+                require_once 'Integrators/Joomla.php';
+                return new JoomlaKBIIntegrator($config);
+                break;
 			case 'GENERIC':
 			default:
 				return new KBIntegrator($config);
