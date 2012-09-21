@@ -312,7 +312,7 @@ namespace LMWrapper.LISpMiner
 			{
 				exporter.Survey = true;
 				exporter.Output = tasksFile;
-				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMTaskSurvey.Template.TXT");
+                exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMSurvey.Task.Template.TXT");
 
 				exporter.Execute();
 
