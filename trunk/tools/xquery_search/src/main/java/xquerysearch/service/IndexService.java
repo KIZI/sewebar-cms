@@ -1,5 +1,6 @@
 package xquerysearch.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import xquerysearch.dao.IndexDao;
@@ -13,7 +14,8 @@ import xquerysearch.dao.IndexDao;
 @Service
 public class IndexService {
 	
-	IndexDao dao;
+	@Autowired
+	private IndexDao dao;
 	
 	public boolean insertIndex(String index) {
 		return dao.insertIndex(index);

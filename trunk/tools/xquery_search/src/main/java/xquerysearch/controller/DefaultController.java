@@ -20,4 +20,9 @@ public class DefaultController {
 		return new ModelAndView("defaultPage");
 	}
 
+	@RequestMapping(value = "style.css", method = RequestMethod.GET)
+	public ModelAndView getStyle() {
+		System.out.println("Give me style called");
+		return null;
+	}
 }
