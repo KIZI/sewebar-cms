@@ -1,5 +1,7 @@
 package xquerysearch.dao.bdbxml;
 
+import org.springframework.stereotype.Repository;
+
 import xquerysearch.dao.IndexDao;
 
 import com.sleepycat.dbxml.XmlContainer;
@@ -13,6 +15,7 @@ import com.sleepycat.dbxml.XmlTransaction;
  * @author Tomas Marek
  *
  */
+@Repository
 public class BdbxmlIndexDao extends AbstractDao implements IndexDao {
 
 	private String containerName;

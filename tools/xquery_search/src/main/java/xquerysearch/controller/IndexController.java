@@ -58,7 +58,7 @@ public class IndexController extends AbstractController {
 		return null;
 	}
 	
-	@RequestMapping(params="action=removeIndex", method = RequestMethod.POST)
+	@RequestMapping(params="action=delIndex", method = RequestMethod.POST)
 	public ModelAndView delIndex(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
 		if (content.isEmpty()) {
 			addResponseContent("<error>Index has to be specified!</error>", response);

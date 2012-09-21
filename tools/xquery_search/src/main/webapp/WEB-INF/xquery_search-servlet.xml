@@ -11,9 +11,5 @@
 		<property name="prefix" value="/WEB-INF/view/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-
-	<bean id="properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:xquery_search.properties" />
-	</bean>
 	
 </beans>
