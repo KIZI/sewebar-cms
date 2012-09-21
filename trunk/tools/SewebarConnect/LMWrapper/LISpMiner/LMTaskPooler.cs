@@ -77,7 +77,7 @@ namespace LMWrapper.LISpMiner
 
 				if (!String.IsNullOrEmpty(this.Dsn))
 				{
-					arguments.AppendFormat("/DSN {0} ", this.Dsn);
+					arguments.AppendFormat("/DSN:{0} ", this.Dsn);
 				}
 
 				// /TaskID <TaskID>
@@ -107,7 +107,7 @@ namespace LMWrapper.LISpMiner
 				// /TimeOut <sec>
 				if (this.TimeOut != null)
 				{
-					arguments.AppendFormat("/TimeOut {0} ", this.TimeOut);
+					arguments.AppendFormat("/TimeOut:{0} ", this.TimeOut);
 				}
 
 				// /Quiet
