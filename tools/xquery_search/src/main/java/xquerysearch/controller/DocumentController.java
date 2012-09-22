@@ -5,14 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import xquerysearch.domain.Document;
 import xquerysearch.service.AggregationService;
@@ -100,9 +99,9 @@ public class DocumentController extends AbstractController {
 		addResponseContent(message, response);
 		return null;
 	}
-	
+
 	@RequestMapping(params = "action=addDocumentMultiple", method = RequestMethod.POST)
 	public ModelAndView addMultipleDocuments() {
-		throw new NotImplementedException();
+		throw new NotImplementedException("Not implemented yet...");
 	}
 }

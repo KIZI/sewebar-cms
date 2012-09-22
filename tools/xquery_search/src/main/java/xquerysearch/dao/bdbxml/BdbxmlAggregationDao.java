@@ -2,11 +2,9 @@ package xquerysearch.dao.bdbxml;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.springframework.stereotype.Repository;
 
-import xquerysearch.controller.MainController;
 import xquerysearch.dao.AggregationDao;
 
 import com.sleepycat.dbxml.XmlContainer;
@@ -24,8 +22,6 @@ import com.sleepycat.dbxml.XmlTransaction;
  */
 @Repository
 public class BdbxmlAggregationDao extends AbstractDao implements AggregationDao {
-
-	private Logger logger = MainController.getLogger();
 	
 	/*
 	 * @{InheritDoc}

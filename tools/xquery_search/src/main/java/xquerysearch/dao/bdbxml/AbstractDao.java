@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import xquerysearch.controller.MainController;
-
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlManager;
@@ -20,7 +18,7 @@ import com.sleepycat.dbxml.XmlTransaction;
  */
 public abstract class AbstractDao {
 
-	protected Logger logger = MainController.getLogger();
+	protected static final Logger logger = Logger.getLogger("dao");
 	
 	@Value("${container.name}")
 	protected String containerName;

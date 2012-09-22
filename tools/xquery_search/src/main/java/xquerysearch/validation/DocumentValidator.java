@@ -14,15 +14,13 @@ import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
 
-import xquerysearch.controller.MainController;
-
 /**
  * 
  * @author Tomas Marek
  */
 public class DocumentValidator {
    
-	private static Logger logger = MainController.getLogger();
+	private static final Logger logger = Logger.getLogger("DocumentValidator");
 	
     /**
      * Validates given document
