@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author Tomas Marek
  *
  */
-public abstract class AbstractController {
+abstract class AbstractController {
 	
 	protected final static Logger logger = Logger.getLogger("controller");
 	

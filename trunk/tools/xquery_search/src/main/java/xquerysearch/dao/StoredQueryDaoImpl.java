@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import xquerysearch.controller.MainController;
-
 /**
  * Default implementation of {@link StoredQueryDao}.
  * 
@@ -23,7 +21,7 @@ import xquerysearch.controller.MainController;
  */
 public class StoredQueryDaoImpl implements StoredQueryDao {
 
-	private Logger logger = MainController.getLogger();
+	private static final Logger logger = Logger.getLogger("StoredQueryDao");
 	
 	@Value("${dir.queries}")
 	private String queriesDirectory;

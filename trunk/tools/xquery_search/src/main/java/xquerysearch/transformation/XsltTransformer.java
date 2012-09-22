@@ -11,8 +11,6 @@ import java.util.logging.Logger;
 
 import javax.xml.transform.TransformerException;
 
-import xquerysearch.controller.MainController;
-
 /**
  * Class providing XSLT transformation features.
  * 
@@ -21,7 +19,7 @@ import xquerysearch.controller.MainController;
  */
 public class XsltTransformer {
 
-	private static Logger logger = MainController.getLogger();
+	private static Logger logger = Logger.getLogger("transformer");
 
 	/**
 	 * Transforms document (as file) using given XSLT transformation

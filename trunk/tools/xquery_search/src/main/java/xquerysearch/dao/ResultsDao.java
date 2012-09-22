@@ -20,4 +20,10 @@ public interface ResultsDao {
 	 */
 	public List<Result> getResultsByQuery(Query query);
 
+	/**
+	 * Queries database for results using XPath.
+	 * @param xpath XPath query
+	 * @return list of {@link Result}s or <code>null</code> when no results were found
+	 */
+	public List<Result> getResultsByXpath(String xpath);
 }
