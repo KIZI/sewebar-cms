@@ -9,33 +9,31 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
 
-import xquerysearch.dao.DocumentDao;
-import xquerysearch.domain.DerivedBooleanAttribute;
-import xquerysearch.domain.Document;
+import xquerysearch.domain.arbquery.ArBuilderQuery;
 
 /**
  * @author Tomas
- *
+ * 
  */
 public class TestCastor {
-	
-	public void testXmlToObject(CastorMarshaller castorMarshaller, DocumentDao documentDao) {
-		Document doc = documentDao.getDocumentById("loose-cedent-test-1");
-		
-		InputStream bais = new ByteArrayInputStream( doc.getDocBody().getBytes() );
+
+	public ArBuilderQuery testXmlToObject(CastorMarshaller castorMarshaller, String query) {
+
+		InputStream bais = new ByteArrayInputStream(query.getBytes());
 		StreamSource inSource = new StreamSource(bais);
-		
-		castorMarshaller.setTargetClass(DerivedBooleanAttribute.class);
-		
+
+		castorMarshaller.setTargetClass(ArBuilderQuery.class);
+
 		try {
-			DerivedBooleanAttribute dba = (DerivedBooleanAttribute) castorMarshaller.unmarshal(inSource);
-			System.out.println("DBA ID: " + dba.getId());
+			return (ArBuilderQuery) castorMarshaller.unmarshal(inSource);
 		} catch (XmlMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 	}
 
