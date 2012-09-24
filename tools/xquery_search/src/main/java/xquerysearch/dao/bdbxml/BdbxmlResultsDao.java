@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
+import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
-import xquerysearch.mapping.MappingCastor;
+import xquerysearch.transformer.ResultObjectTransformer;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
@@ -30,70 +31,13 @@ import com.sleepycat.dbxml.XmlValue;
 public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 
 	@Autowired
-	@Qualifier("resultSetCastor")
-	private CastorMarshaller resultSetCastor;
-
-	private static final MappingCastor<ResultSet> mappingCastor = new MappingCastor<ResultSet>();
+	@Qualifier("resultCastor")
+	private CastorMarshaller resultCastor;
 
 	/*
 	 * @inheritDoc
-	 */
-	public ResultSet getResultSetByQuery(Query query) {
-		ResultSet resultSet = new ResultSet();
-
-		XmlContainer cont = null;
-		XmlTransaction trans = null;
-		try {
-			cont = xmlManager.openContainer(containerName);
-			trans = xmlManager.createTransaction();
-
-			XmlQueryContext queryContext = xmlManager.createQueryContext();
-			XmlResults dbResults = xmlManager.query(query.getQueryBody(), queryContext);
-			XmlValue value = new XmlValue();
-
-			while ((value = dbResults.next()) != null) {
-				resultSet = mappingCastor.targetToObject(resultSetCastor, value.asString());
-			}
-			return resultSet;
-		} catch (XmlException e) {
-			logger.warning("Query failed!");
-			return null;
-		} finally {
-			commitAndClose(trans, cont);
-		}
-	}
-
-	/*
-	 * @{InheritDoc}
 	 */
 	@Override
-	public ResultSet getResultSetByXpath(String xpath) {
-		ResultSet resultSet = new ResultSet();
-
-		XmlContainer cont = null;
-		XmlTransaction trans = null;
-		try {
-			cont = xmlManager.openContainer(containerName);
-			trans = xmlManager.createTransaction();
-
-			XmlQueryContext queryContext = xmlManager.createQueryContext();
-			XmlResults dbResults = xmlManager.query(xpath, queryContext);
-			XmlValue value = new XmlValue();
-			while ((value = dbResults.next()) != null) {
-				resultSet = mappingCastor.targetToObject(resultSetCastor, value.asString());
-			}
-			return resultSet;
-		} catch (XmlException e) {
-			logger.warning("Query failed!");
-			return null;
-		} finally {
-			commitAndClose(trans, cont);
-		}
-	}
-
-	/*
-	 * @inheritDoc
-	 */
 	public List<String> getResultsByQuery(Query query) {
 		List<String> results = new ArrayList<String>();
 
@@ -138,8 +82,68 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 			while ((value = dbResults.next()) != null) {
 				results.add(value.asString());
 			}
-
 			return results;
+		} catch (XmlException e) {
+			logger.warning("Query failed!");
+			return null;
+		} finally {
+			commitAndClose(trans, cont);
+		}
+	}
+
+	/*
+	 * @{InheritDoc}
+	 */
+	@Override
+	public ResultSet getResultSetByQuery(Query query) {
+		ResultSet resultSet = new ResultSet();
+
+		XmlContainer cont = null;
+		XmlTransaction trans = null;
+		try {
+			cont = xmlManager.openContainer(containerName);
+			trans = xmlManager.createTransaction();
+
+			XmlQueryContext queryContext = xmlManager.createQueryContext();
+			XmlResults dbResults = xmlManager.query(query.getQueryBody(), queryContext);
+			XmlValue value = new XmlValue();
+			while ((value = dbResults.next()) != null) {
+				resultSet.getResults().add(ResultObjectTransformer.transform(resultCastor, value.asString()));
+			}
+			return resultSet;
+		} catch (XmlException e) {
+			logger.warning("Query failed!");
+			return null;
+		} finally {
+			commitAndClose(trans, cont);
+		}
+	}
+
+	/*
+	 * @{InheritDoc}
+	 */
+	@Override
+	public ResultSet getResultSetByXpath(String xpath) {
+		ResultSet resultSet = new ResultSet();
+
+		XmlContainer cont = null;
+		XmlTransaction trans = null;
+		try {
+			cont = xmlManager.openContainer(containerName);
+			trans = xmlManager.createTransaction();
+
+			XmlQueryContext queryContext = xmlManager.createQueryContext();
+			XmlResults dbResults = xmlManager.query(xpath, queryContext);
+			XmlValue value = new XmlValue();
+			while ((value = dbResults.next()) != null) {
+				resultSet.getResults().add(ResultObjectTransformer.transform(resultCastor, value.asString()));
+			}
+			for (Result result : resultSet.getResults()) {
+				if (result != null) {
+					System.out.println(result.getRuleId() + " | " + result.getDocId() + " | " + result.getRule().getAntecedent().getDbas().size());
+				}
+			}
+			return resultSet;
 		} catch (XmlException e) {
 			logger.warning("Query failed!");
 			return null;

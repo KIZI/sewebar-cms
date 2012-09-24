@@ -8,7 +8,7 @@ import xquerysearch.domain.result.ResultSet;
  * @author Tomas Marek
  *
  */
-public interface OutputTransformer {
+public class OutputTransformer {
 
 	/**
 	 * Transforms {@link ResultSet} to response-friendly form represented as String. 
@@ -16,6 +16,9 @@ public interface OutputTransformer {
 	 * @param resultSet
 	 * @return transformed ResultSet
 	 */
-	public String transformResultSet(ResultSet resultSet);
+	public static String transformResultSet(ResultSet resultSet) {
+		// TODO implement
+		return null;
+	}
 	
 }

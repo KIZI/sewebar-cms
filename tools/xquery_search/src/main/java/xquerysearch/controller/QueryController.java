@@ -16,8 +16,8 @@ import xquerysearch.domain.Query;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
-import xquerysearch.mapping.MappingCastor;
 import xquerysearch.service.QueryService;
+import xquerysearch.transformer.QueryObjectTransformer;
 
 /**
  * Controller for querying.
@@ -29,11 +29,11 @@ import xquerysearch.service.QueryService;
 public class QueryController extends AbstractController {
 
 	@Autowired
-	private QueryService queryService;
-
-	@Autowired
 	@Qualifier("arbQueryCastor")
 	private CastorMarshaller arbQueryCastor;
+	
+	@Autowired
+	private QueryService queryService;
 
 	// TODO rename action in jsp
 	@RequestMapping(params = "action=useQuery", method = RequestMethod.POST)
@@ -43,13 +43,12 @@ public class QueryController extends AbstractController {
 			addResponseContent("<error>Query content has to be entered!</error>", response);
 			return null;
 		}
-		MappingCastor<ArBuilderQuery> castor = new MappingCastor<ArBuilderQuery>();
-		ArBuilderQuery arbQuery = castor.targetToObject(arbQueryCastor, content);
+		ArBuilderQuery arbQuery = QueryObjectTransformer.transform(arbQueryCastor, content);
 		System.out.println("ANTE: " + arbQuery.getArQuery().getAntecedentSetting());
 		System.out.println("CONS: " + arbQuery.getArQuery().getConsequentSetting());
 
 		Query query = new Query(content);
-		ResultSet resultSet = queryService.getResults(query);
+		ResultSet resultSet = queryService.getResultSet(query);
 		StringBuffer responseMessage = new StringBuffer();
 		if (resultSet != null) {
 			for (Result result : resultSet.getResults()) {

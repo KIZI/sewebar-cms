@@ -28,17 +28,17 @@ public class QueryService {
 	 * @param query
 	 * @return {@link ResultSet} or <code>null</code> when no results were found
 	 */
-	public ResultSet getResults(Query query) {
+	public ResultSet getResultSet(Query query) {
 		ByteArrayOutputStream preparedQuery = QueryUtils.queryPrepare(query.getQueryBody());
 		String xpath = QueryUtils.makeXPath(new ByteArrayInputStream(preparedQuery.toByteArray()), false, "sewebar1.dbxml");
-        String xquery = "<Hits>{" +
+        String xquery = "" +
         		"for $ar in subsequence(" + xpath + ", 1, " + 100 + ")"
                 + "\n return"
                 + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
                     + "\n {$ar/Text}"
                     + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
                 + "\n </Hit>" +
-            "}</Hits>";
+            "";
 		return dao.getResultSetByXpath(xquery);
 	}
 

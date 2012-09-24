@@ -8,9 +8,9 @@
 		<property name="targetClass" value="xquerysearch.domain.arbquery.ArBuilderQuery" />
 	</bean>
 	
-	<bean id="resultSetCastor" class="org.springframework.oxm.castor.CastorMarshaller">
-		<property name="mappingLocation" value="classpath:xquery_search/mapping/resultset-mapping.xml" />
-		<property name="targetClass" value="xquerysearch.domain.result.ResultSet" />
+	<bean id="resultCastor" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:xquery_search/mapping/result-mapping.xml" />
+		<property name="targetClass" value="xquerysearch.domain.result.Result" />
 	</bean>
 	
 </beans>

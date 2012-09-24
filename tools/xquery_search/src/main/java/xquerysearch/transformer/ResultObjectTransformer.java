@@ -1,20 +1,28 @@
 package xquerysearch.transformer;
 
-import xquerysearch.domain.result.ResultSet;
+import org.springframework.oxm.castor.CastorMarshaller;
+
+import xquerysearch.domain.result.Result;
+import xquerysearch.mapping.MappingCastor;
 
 /**
- * Transformer used to transform data retrieved from DB to objects. 
+ * Transformer used to transform data retrieved from DB to objects.
  * 
  * @author Tomas Marek
- *
+ * 
  */
-public interface ResultObjectTransformer {
+public class ResultObjectTransformer {
+
+	private static final MappingCastor<Result> mappingCastor = new MappingCastor<Result>();
 
 	/**
-	 * Transforms data from DB to {@link ResultSet} object.
+	 * Transforms data from DB to {@link Result} object.
 	 * 
 	 * @param result
 	 * @return
 	 */
-	public ResultSet transform(String result);
+	public static Result transform(CastorMarshaller resultCastor, final String result) {
+		return mappingCastor.targetToObject(resultCastor, result);
+	}
+
 }

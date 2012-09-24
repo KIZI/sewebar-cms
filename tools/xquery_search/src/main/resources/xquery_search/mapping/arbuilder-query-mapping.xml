@@ -153,7 +153,7 @@
 		<field name="match" type="string">
 			<bind-xml name="match" node="attribute" />
 		</field>
-		<field name="baSettingRef" type="string">
+		<field name="baSettingRefs" collection="set" type="string">
 			<bind-xml name="BASettingRef" node="element" />
 		</field>
 		<field name="literalSign" type="string">
