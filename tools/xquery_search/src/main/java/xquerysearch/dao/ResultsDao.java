@@ -3,27 +3,50 @@ package xquerysearch.dao;
 import java.util.List;
 
 import xquerysearch.domain.Query;
-import xquerysearch.domain.Result;
+import xquerysearch.domain.result.ResultSet;
 
 /**
  * DAO for results returned by querying database.
  * 
  * @author Tomas Marek
- *
+ * 
  */
 public interface ResultsDao {
 
 	/**
-	 * Queries database for results.
+	 * Queries database for results. Maps results to {@link ResultSet}.
+	 * 
 	 * @param query
-	 * @return list of {@link Result}s or <code>null</code> when no results were found
+	 * @return {@link ResultSet} or <code>null</code> when no results were found
 	 */
-	public List<Result> getResultsByQuery(Query query);
+	public ResultSet getResultSetByQuery(Query query);
+
+	/**
+	 * Queries database for results using XPath. Maps results to
+	 * {@link ResultSet}.
+	 * 
+	 * @param xpath
+	 *            XPath query
+	 * @return {@link ResultSet} or <code>null</code> when no results were found
+	 */
+	public ResultSet getResultSetByXpath(String xpath);
+
+	/**
+	 * Queries database for results.
+	 * 
+	 * @param query
+	 * @return list of {@link Result}s or <code>null</code> when no results were
+	 *         found
+	 */
+	public List<String> getResultsByQuery(Query query);
 
 	/**
 	 * Queries database for results using XPath.
-	 * @param xpath XPath query
-	 * @return list of {@link Result}s or <code>null</code> when no results were found
+	 * 
+	 * @param xpath
+	 *            XPath query
+	 * @return list of {@link Result}s or <code>null</code> when no results were
+	 *         found
 	 */
-	public List<Result> getResultsByXpath(String xpath);
+	public List<String> getResultsByXpath(String xpath);
 }

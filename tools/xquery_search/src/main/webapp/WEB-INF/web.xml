@@ -9,18 +9,8 @@
 
 	<servlet-mapping>
 		<servlet-name>xquery_search</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>/xquery_servlet</url-pattern>
 	</servlet-mapping>
-
-	<!-- <servlet-mapping> -->
-	<!-- <servlet-name>xquery_search</servlet-name> -->
-	<!-- <url-pattern>*.js</url-pattern> -->
-	<!-- </servlet-mapping> -->
-
-	<!-- <servlet-mapping> -->
-	<!-- <servlet-name>xquery_search</servlet-name> -->
-	<!-- <url-pattern>*.css</url-pattern> -->
-	<!-- </servlet-mapping> -->
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
