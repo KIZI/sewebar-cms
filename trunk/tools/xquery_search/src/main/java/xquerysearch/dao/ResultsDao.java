@@ -14,7 +14,7 @@ import xquerysearch.domain.result.ResultSet;
 public interface ResultsDao {
 
 	/**
-	 * Queries database for results. Maps results to {@link ResultSet}.
+	 * Queries database for result. Maps results to {@link ResultSet}.
 	 * 
 	 * @param query
 	 * @return {@link ResultSet} or <code>null</code> when no results were found
@@ -22,7 +22,7 @@ public interface ResultsDao {
 	public ResultSet getResultSetByQuery(Query query);
 
 	/**
-	 * Queries database for results using XPath. Maps results to
+	 * Queries database for result using XPath. Maps results to
 	 * {@link ResultSet}.
 	 * 
 	 * @param xpath

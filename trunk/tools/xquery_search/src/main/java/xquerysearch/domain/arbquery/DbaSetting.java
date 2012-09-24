@@ -1,5 +1,7 @@
 package xquerysearch.domain.arbquery;
 
+import java.util.Set;
+
 /**
  * Domain object representing DBASetting element from ARBuilder query.
  * 
@@ -11,7 +13,7 @@ public class DbaSetting {
 	private String id;
 	private String type;
 	private String match;
-	private String baSettingRef;
+	private Set<String> baSettingRefs;
 	private String literalSign;
 
 	/**
@@ -60,18 +62,18 @@ public class DbaSetting {
 	}
 
 	/**
-	 * @return the baSettingRef
+	 * @return the baSettingRefs
 	 */
-	public String getBaSettingRef() {
-		return baSettingRef;
+	public Set<String> getBaSettingRefs() {
+		return baSettingRefs;
 	}
 
 	/**
-	 * @param baSettingRef
-	 *            the baSettingRef to set
+	 * @param baSettingRefs
+	 *            the baSettingRefs to set
 	 */
-	public void setBaSettingRef(String baSettingRef) {
-		this.baSettingRef = baSettingRef;
+	public void setBaSettingRefs(Set<String> baSettingRefs) {
+		this.baSettingRefs = baSettingRefs;
 	}
 
 	/**

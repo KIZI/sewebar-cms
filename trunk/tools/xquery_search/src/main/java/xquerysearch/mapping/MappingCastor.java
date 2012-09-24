@@ -28,7 +28,7 @@ public class MappingCastor<T> {
 	 * @return mapped source data as specified domain object
 	 */
 	@SuppressWarnings("unchecked")
-	public T targetToObject(CastorMarshaller castorMarshaller, String source) {
+	public T targetToObject(CastorMarshaller castorMarshaller, final String source) {
 
 		InputStream bais = new ByteArrayInputStream(source.getBytes());
 		StreamSource inSource = new StreamSource(bais);

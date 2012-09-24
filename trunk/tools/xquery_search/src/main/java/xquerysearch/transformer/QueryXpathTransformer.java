@@ -8,7 +8,7 @@ import xquerysearch.domain.arbquery.ArBuilderQuery;
  * @author Tomas Marek
  *
  */
-public interface QueryXpathTransformer {
+public class QueryXpathTransformer {
 
 	/**
 	 * Transforms {@link ArBuilderQuery} to XPath query.
@@ -16,5 +16,8 @@ public interface QueryXpathTransformer {
 	 * @param query
 	 * @return XPath query, <code>null</code> if error occurred
 	 */
-	public String transformToXpath(ArBuilderQuery query);
+	public static String transformToXpath(ArBuilderQuery query) {
+		// TODO implement
+		return null;
+	}
 }
