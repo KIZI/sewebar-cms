@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+	<description>ResultSet mapping</description>
+	
+	<class name="xquerysearch.domain.result.ResultSet">
+		<map-to xml="Hits" />
+		<field name="results" collection="set" type="xquerysearch.domain.result.Result">
+			<bind-xml name="Hit" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.Result">
+		<map-to xml="Hit" />
+		<field name="ruleId" type="string">
+			<bind-xml name="ruleID" node="attribute" />
+		</field>
+		<field name="docId" type="string">
+			<bind-xml name="docID" node="attribute" />
+		</field>
+		<field name="docName" type="string">
+			<bind-xml name="docName" node="attribute" />
+		</field>
+		<field name="reportUri" type="string">
+			<bind-xml name="reportURI" node="attribute" />
+		</field>
+		<field name="database" type="string">
+			<bind-xml name="database" node="attribute" />
+		</field>
+		<field name="table" type="string">
+			<bind-xml name="table" node="attribute" />
+		</field>
+		<field name="text" type="string">
+			<bind-xml name="Text" node="element" />
+		</field>
+		<field name="rule" type="xquerysearch.domain.result.Rule">
+			<bind-xml name="Detail" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.Rule">
+		<map-to xml="Detail" />
+		<field name="antecedent" type="xquerysearch.domain.result.Antecedent">
+			<bind-xml name="Antecedent" node="element" />
+		</field>
+		<field name="consequent" type="xquerysearch.domain.result.Consequent">
+			<bind-xml name="Consequent" node="element" />
+		</field>
+		<field name="condition" type="xquerysearch.domain.result.Condition">
+			<bind-xml name="Condition" node="element" />
+		</field>
+		<field name="imValues" collection="set" type="xquerysearch.domain.result.ImValue">
+			<bind-xml name="IMValue" node="element" />
+		</field>
+		<field name="Annotation" type="xquerysearch.domain.result.Annotation">
+			<bind-xml name="Annotation" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.Antecedent">
+		<map-to xml="Antecedent" />
+		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.Consequent">
+		<map-to xml="Consequent" />
+		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.Condition">
+		<map-to xml="Condition" />
+		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.DBA">
+		<map-to xml="DBA" />
+		<field name="connective" type="string">
+			<bind-xml name="connective" node="attribute" />
+		</field>
+		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+		<field name="bba" type="xquerysearch.domain.result.BBA">
+			<bind-xml name="BBA" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.BBA">
+		<map-to xml="DBA" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="transformationDictionary" type="xquerysearch.domain.result.TransformationDictionary">
+			<bind-xml name="TransformationDictionary" node="element" />
+		</field>
+		<field name="dataDictionary" type="xquerysearch.domain.result.DataDictionary">
+			<bind-xml name="DataDictionary" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.TransformationDictionary">
+		<map-to xml="TransformationDictionary" />
+		<field name="fieldName" type="string">
+			<bind-xml name="FieldName" node="element" />
+		</field>
+		<field name="catNames" collection="set" type="string">
+			<bind-xml name="CatName" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.DataDictionary">
+		<map-to xml="DataDictionary" />
+	</class>
+
+	<class name="xquerysearch.domain.result.ImValue">
+		<map-to xml="IMValue" />
+		<field name="name" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="value" type="string">
+			<bind-xml name="." node="text" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.result.Annotation">
+		<map-to xml="Annotation" />
+		<field name="interestingness" type="string">
+			<bind-xml name="Interestingness" node="element" />
+		</field>
+	</class>
+</mapping>

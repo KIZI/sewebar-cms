@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import xquerysearch.dao.DataDescriptionDao;
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
-import xquerysearch.domain.Result;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlDocument;
@@ -127,14 +126,14 @@ public class BdbxmlDataDescriptionDao extends AbstractDao implements DataDescrip
             + "\n{$values union $ints}"
             + "\n</Field>}</Dictionary></DataDescription>";*/
     
-	List<Result> results = resultsDao.getResultsByQuery(new Query(query)); 
+	List<String> results = resultsDao.getResultsByQuery(new Query(query)); 
 	
 	 if (results != null) {
-        String resultsToPrint = "";
-     	for (Result result : results) {
-     		resultsToPrint += result.getResultBody();
+        StringBuffer resultsToPrint = new StringBuffer();
+     	for (String result : results) {
+     		resultsToPrint.append(result);
      	}
-     	return resultsToPrint;
+     	return resultsToPrint.toString();
      } else {
          return "<error>Data description retrieving failed</error>";
      }

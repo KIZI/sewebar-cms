@@ -2,14 +2,13 @@ package xquerysearch.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
-import xquerysearch.domain.Result;
+import xquerysearch.domain.result.ResultSet;
 import xquerysearch.utils.QueryUtils;
 
 /**
@@ -27,12 +26,20 @@ public class QueryService {
 	/**
 	 * Gets results from database by query.
 	 * @param query
-	 * @return list of {@link Result}s or <code>null</code> when no results were found
+	 * @return {@link ResultSet} or <code>null</code> when no results were found
 	 */
-	public List<Result> getResults(Query query) {
+	public ResultSet getResults(Query query) {
 		ByteArrayOutputStream preparedQuery = QueryUtils.queryPrepare(query.getQueryBody());
 		String xpath = QueryUtils.makeXPath(new ByteArrayInputStream(preparedQuery.toByteArray()), false, "sewebar1.dbxml");
-		return dao.getResultsByXpath(xpath);
+        String xquery = "<Hits>{" +
+        		"for $ar in subsequence(" + xpath + ", 1, " + 100 + ")"
+                + "\n return"
+                + "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
+                    + "\n {$ar/Text}"
+                    + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
+                + "\n </Hit>" +
+            "}</Hits>";
+		return dao.getResultSetByXpath(xquery);
 	}
 
 }

@@ -1,4 +1,4 @@
-package xquerysearch.transformation;
+package xquerysearch.transformer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

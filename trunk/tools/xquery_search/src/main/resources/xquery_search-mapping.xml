@@ -3,7 +3,14 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+	<bean id="arbQueryCastor" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocation" value="classpath:xquery_search/mapping/arbuilder-query-mapping.xml" />
+		<property name="targetClass" value="xquerysearch.domain.arbquery.ArBuilderQuery" />
 	</bean>
+	
+	<bean id="resultSetCastor" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:xquery_search/mapping/resultset-mapping.xml" />
+		<property name="targetClass" value="xquerysearch.domain.result.ResultSet" />
+	</bean>
+	
 </beans>

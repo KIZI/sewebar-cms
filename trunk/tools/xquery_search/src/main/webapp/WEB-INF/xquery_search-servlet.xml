@@ -10,5 +10,4 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<!-- <import resource="classpath:xquery_search-*.xml" /> -->
 </beans>
