@@ -2,28 +2,25 @@ package xquerysearch.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import xquerysearch.dao.AggregationDao;
-
 /**
- * Provides additional informations.
+ * Service for additional information.
  * 
  * @author Tomas Marek
  *
  */
-@Service
-public class AggregationService {
-	
-	@Autowired
-	private AggregationDao dao;
-	
-	public List<String> getAllDocumentsNames() {
-		return dao.getAllDocumentsNames();
-	}
+public interface AggregationService {
 
-	public List<String[]> getAllIndexes() {
-		return dao.getAllIndexes();
-	}
+	/**
+	 * Returns names of all documents stored.
+	 * 
+	 * @return
+	 */
+	public List<String> getAllDocumentsNames();
+	
+	/**
+	 * Returns all indexes in DB.
+	 * 
+	 * @return
+	 */
+	public List<String[]> getAllIndexes();
 }

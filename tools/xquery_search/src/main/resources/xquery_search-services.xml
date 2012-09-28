@@ -10,12 +10,12 @@
 	<context:component-scan base-package="xquerysearch.service" />
 
 	<beans profile="devel">
-		<context:property-placeholder location="classpath:xquery_search-devel.properties"
+		<context:property-placeholder location="classpath:xquery_search-devel.properties,classpath:bdbxml-devel.properties"
 			ignore-unresolvable="true" />
 	</beans>
 
 	<beans profile="prod">
-		<context:property-placeholder location="classpath:xquery_search-prod.properties"
+		<context:property-placeholder location="classpath:xquery_search-prod.properties,classpath:bdbxml-prod.properties"
 			ignore-unresolvable="true" />
 	</beans>
 

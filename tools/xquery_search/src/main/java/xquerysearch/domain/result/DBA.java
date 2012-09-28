@@ -59,4 +59,21 @@ public class DBA {
 		this.bba = bba;
 	}
 
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<DBA connective=\"" + connective + "\">");
+		if (bba != null) {
+			ret.append(bba.toString());
+		} else if (dbas != null) {
+			for (DBA dba : dbas) {
+				ret.append(dba.toString());
+			}
+		}
+		ret.append("</DBA>");
+		return ret.toString();
+	}
 }

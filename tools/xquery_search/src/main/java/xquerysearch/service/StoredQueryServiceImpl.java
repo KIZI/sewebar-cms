@@ -14,7 +14,7 @@ import xquerysearch.domain.StoredQuery;
  *
  */
 @Service
-public class StoredQueryService {
+public class StoredQueryServiceImpl {
 	
 	private StoredQueryDao dao;
 	

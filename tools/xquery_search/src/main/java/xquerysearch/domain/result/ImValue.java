@@ -41,4 +41,11 @@ public class ImValue {
 		this.value = value;
 	}
 
+	/**
+	 * @{inheritDoc
+	 */
+	@Override
+	public String toString() {
+		return "<IMValue name=\"" + name + "\">" + value + "</IMValue>";
+	}
 }

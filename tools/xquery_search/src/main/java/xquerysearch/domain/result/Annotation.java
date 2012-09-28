@@ -25,4 +25,11 @@ public class Annotation {
 		this.interestingness = interestingness;
 	}
 
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "<Annotation><Interestingness>" + interestingness + "</Interestingness></Annotation>";
+	}
 }

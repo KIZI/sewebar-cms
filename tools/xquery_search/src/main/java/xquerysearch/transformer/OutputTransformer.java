@@ -1,5 +1,6 @@
 package xquerysearch.transformer;
 
+import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 
 /**
@@ -17,6 +18,17 @@ public class OutputTransformer {
 	 * @return transformed ResultSet
 	 */
 	public static String transformResultSet(ResultSet resultSet) {
+		// TODO implement
+		return null;
+	}
+	
+	/**
+	 * Transforms {@link Result} to response-friendly form represented as String. 
+	 * 
+	 * @param result
+	 * @return transformed Result
+	 */
+	public static String transformResult(Result result) {
 		// TODO implement
 		return null;
 	}
