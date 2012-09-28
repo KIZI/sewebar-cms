@@ -43,5 +43,20 @@ public class TransformationDictionary {
 	public void setCatNames(Set<String> catNames) {
 		this.catNames = catNames;
 	}
+	
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<TransformationDictionary>");
+		ret.append("<FieldName>" + fieldName + "</FieldName>");
+		for (String catName : catNames) {
+			ret.append("<CatName>" + catName + "</CatName>");
+		}
+		ret.append("</TransformationDictionary>");
+		return ret.toString();
+	}
 
 }

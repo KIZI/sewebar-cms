@@ -56,5 +56,16 @@ public class BBA {
 	public void setDataDictionary(DataDictionary dataDictionary) {
 		this.dataDictionary = dataDictionary;
 	}
+	
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		String ret = "<BBA id=\"" + id + "\">";
+		ret += transformationDictionary.toString();
+		ret += "</BBA>";
+		return ret;
+	}
 
 }

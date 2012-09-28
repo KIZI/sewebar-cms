@@ -136,5 +136,19 @@ public class Result {
 	public void setRule(Rule rule) {
 		this.rule = rule;
 	}
+	
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Hit docID=\"" + docId + "\" ruleID=\"" + ruleId + "\" docName=\"" + docName + "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table + "\">");
+		if (rule != null) {
+			ret.append(rule.toString());
+		}
+		ret.append("</Hit>");
+		return ret.toString();
+	}
 
 }

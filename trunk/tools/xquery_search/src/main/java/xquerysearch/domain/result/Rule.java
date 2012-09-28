@@ -91,4 +91,30 @@ public class Rule {
 		this.annotation = annotation;
 	}
 
+	/**
+	 * @{inheritDoc
+	 */
+	@Override
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Detail>");
+		if (antecedent != null) {
+			ret.append(antecedent.toString());
+		}
+		if (consequent != null) {
+			ret.append(consequent.toString());
+		}
+		if (condition != null) {
+			ret.append(condition.toString());
+		}
+		for (ImValue imValue : imValues) {
+			ret.append(imValue.toString());
+		}
+		if (annotation != null) {
+			ret.append(annotation.toString());
+		}
+		ret.append("</Detail>");
+		return ret.toString();
+	}
+
 }

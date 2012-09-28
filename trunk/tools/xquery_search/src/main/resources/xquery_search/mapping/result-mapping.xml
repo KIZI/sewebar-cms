@@ -114,7 +114,7 @@
 	<class name="xquerysearch.domain.result.ImValue">
 		<map-to xml="IMValue" />
 		<field name="name" type="string">
-			<bind-xml name="id" node="attribute" />
+			<bind-xml name="name" node="attribute" />
 		</field>
 		<field name="value" type="string">
 			<bind-xml name="." node="text" />
