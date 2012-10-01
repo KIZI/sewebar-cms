@@ -15,4 +15,7 @@ public interface AggregationDao {
 	
 	public List<String[]> getAllIndexes();
 
+	public Long getDocumentsCount();
+	
+	public Long getAssociationRulesCount();
 }

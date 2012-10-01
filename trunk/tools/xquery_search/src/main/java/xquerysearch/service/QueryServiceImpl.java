@@ -88,5 +88,16 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		Set<Result> results = resultSet.getResults();
 		return OutputFuzzySorter.sortByCompliance(results);
 	}
-
+	
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String queryForSingleValue(String query) {
+		List<String> results = dao.getResultsByXpath(query);
+		if (results.size() != 1) {
+			return null;
+		}
+		return results.get(0);
+	}
 }
