@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import xquerysearch.domain.result.Result;
-import xquerysearch.service.QueryServiceImpl;
+import xquerysearch.service.AggregationService;
+import xquerysearch.service.QueryService;
+import xquerysearch.transformation.OutputTransformer;
 
 /**
  * Controller for querying.
@@ -25,7 +27,10 @@ import xquerysearch.service.QueryServiceImpl;
 public class QueryController extends AbstractController {
 
 	@Autowired
-	private QueryServiceImpl queryService;
+	private QueryService queryService;
+
+	@Autowired
+	private AggregationService aggregationService;
 
 	// TODO rename action in jsp
 	@RequestMapping(params = "action=useQuery", method = RequestMethod.POST)
@@ -35,21 +40,28 @@ public class QueryController extends AbstractController {
 			addResponseContent("<error>Query content has to be entered!</error>", response);
 			return null;
 		}
-//		ResultSet resultSet = queryService.getResultSet(content);
-//		StringBuffer responseMessage = new StringBuffer();
-//		if (resultSet != null) {
-//			for (Result result : resultSet.getResults()) {
-//				responseMessage.append(result.toString());
-//			}
-//		}
-		List<Result> results = queryService.getSortedResults(content);
+
+		long startTime = System.currentTimeMillis();
+
+		// ResultSet resultSet = queryService.getResultSet(content);
+		// StringBuffer responseMessage = new StringBuffer();
+		// if (resultSet != null) {
+		// for (Result result : resultSet.getResults()) {
+		// responseMessage.append(result.toString());
+		// }
+		// }
 		StringBuffer responseMessage = new StringBuffer();
-		if (results != null) {
-			for (Result result : results) {
-				responseMessage.append(result.toString());
-			}
-		}
-		addResponseContent("<result>" + responseMessage.toString() + "</result>", response);
+
+		List<Result> results = queryService.getSortedResults(content);
+		long queryTime = System.currentTimeMillis() - startTime;
+		Long docCount = aggregationService.getDocumentsCount();
+		Long arCount = aggregationService.getAssociationRulesCount();
+
+		responseMessage.append(OutputTransformer
+				.transformResultsInList(results, queryTime, docCount, arCount));
+		long fullTime = System.currentTimeMillis() - startTime;
+		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
+				+ "</result>", response);
 		return null;
 	}
 

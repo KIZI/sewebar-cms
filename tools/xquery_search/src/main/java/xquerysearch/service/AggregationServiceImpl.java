@@ -32,4 +32,20 @@ public class AggregationServiceImpl extends AbstractService implements Aggregati
 	public List<String[]> getAllIndexes() {
 		return dao.getAllIndexes();
 	}
+
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public Long getDocumentsCount() {
+		return dao.getDocumentsCount();
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public Long getAssociationRulesCount() {
+		return dao.getAssociationRulesCount();
+	}
 }

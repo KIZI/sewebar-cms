@@ -23,4 +23,18 @@ public interface AggregationService {
 	 * @return
 	 */
 	public List<String[]> getAllIndexes();
+	
+	/**
+	 * Returns amount of all documents stored in DB.
+	 * 
+	 * @return
+	 */
+	public Long getDocumentsCount();
+	
+	/**
+	 * Returns amount of all Association Rules stored in DB.
+	 * 
+	 * @return
+	 */
+	public Long getAssociationRulesCount();
 }
