@@ -79,7 +79,7 @@
 		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
 			<bind-xml name="DBA" node="element" />
 		</field>
-		<field name="bba" type="xquerysearch.domain.result.BBA">
+		<field name="bbas" collection="set" type="xquerysearch.domain.result.BBA">
 			<bind-xml name="BBA" node="element" />
 		</field>
 	</class>

@@ -17,6 +17,8 @@ public class Result {
 	private String text;
 	private Rule rule;
 
+	private Double queryCompliance;
+
 	/**
 	 * @return the ruleId
 	 */
@@ -136,14 +138,30 @@ public class Result {
 	public void setRule(Rule rule) {
 		this.rule = rule;
 	}
-	
+
 	/**
-	 * @{inheritDoc}
+	 * @return the queryComplience
+	 */
+	public Double getQueryCompliance() {
+		return queryCompliance;
+	}
+
+	/**
+	 * @param queryCompliance
+	 *            the queryComplience to set
+	 */
+	public void setQueryCompliance(Double queryCompliance) {
+		this.queryCompliance = queryCompliance;
+	}
+
+	/**
+	 * @{inheritDoc
 	 */
 	@Override
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
-		ret.append("<Hit docID=\"" + docId + "\" ruleID=\"" + ruleId + "\" docName=\"" + docName + "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table + "\">");
+		ret.append("<Hit docID=\"" + docId + "\" ruleID=\"" + ruleId + "\" docName=\"" + docName
+				+ "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table + "\" queryCompliance=\"" + queryCompliance + "\" >");
 		if (rule != null) {
 			ret.append(rule.toString());
 		}

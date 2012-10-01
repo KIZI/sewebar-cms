@@ -1,5 +1,7 @@
 package xquerysearch.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import xquerysearch.domain.result.Result;
-import xquerysearch.domain.result.ResultSet;
 import xquerysearch.service.QueryServiceImpl;
 
 /**
@@ -34,10 +35,17 @@ public class QueryController extends AbstractController {
 			addResponseContent("<error>Query content has to be entered!</error>", response);
 			return null;
 		}
-		ResultSet resultSet = queryService.getResultSet(content);
+//		ResultSet resultSet = queryService.getResultSet(content);
+//		StringBuffer responseMessage = new StringBuffer();
+//		if (resultSet != null) {
+//			for (Result result : resultSet.getResults()) {
+//				responseMessage.append(result.toString());
+//			}
+//		}
+		List<Result> results = queryService.getSortedResults(content);
 		StringBuffer responseMessage = new StringBuffer();
-		if (resultSet != null) {
-			for (Result result : resultSet.getResults()) {
+		if (results != null) {
+			for (Result result : results) {
 				responseMessage.append(result.toString());
 			}
 		}
