@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.domain.Document;
-import xquerysearch.transformer.XsltTransformer;
+import xquerysearch.transformation.XsltTransformer;
 import xquerysearch.validation.DocumentValidator;
 
 /**

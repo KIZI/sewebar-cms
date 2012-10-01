@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
-import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
-import xquerysearch.transformer.ResultObjectTransformer;
+import xquerysearch.transformation.ResultObjectTransformer;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
@@ -137,11 +136,6 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 			XmlValue value = new XmlValue();
 			while ((value = dbResults.next()) != null) {
 				resultSet.getResults().add(ResultObjectTransformer.transform(resultCastor, value.asString()));
-			}
-			for (Result result : resultSet.getResults()) {
-				if (result != null) {
-					System.out.println(result.getRuleId() + " | " + result.getDocId() + " | " + result.getRule().getAntecedent().getDbas().size());
-				}
 			}
 			return resultSet;
 		} catch (XmlException e) {

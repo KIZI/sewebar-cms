@@ -2,6 +2,8 @@ package xquerysearch.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,9 +14,12 @@ import org.springframework.stereotype.Service;
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
+import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
-import xquerysearch.transformer.QueryObjectTransformer;
-import xquerysearch.transformer.QueryXpathTransformer;
+import xquerysearch.fuzzysearch.service.FuzzySearchService;
+import xquerysearch.sorting.OutputFuzzySorter;
+import xquerysearch.transformation.QueryObjectTransformer;
+import xquerysearch.transformation.QueryXpathTransformer;
 import xquerysearch.utils.QueryUtils;
 
 /**
@@ -35,6 +40,9 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	@Autowired
 	@Qualifier("arbQueryCastor")
 	private CastorMarshaller arbQueryCastor;
+	
+	@Autowired
+	private FuzzySearchService fuzzySearchService;
 	
 	/**
 	 * @{inheritDoc}
@@ -60,8 +68,6 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	@Override
 	public ResultSet getResultSet(String query) {
 		ArBuilderQuery arbQuery = QueryObjectTransformer.transform(arbQueryCastor, query);
-		System.out.println("ANTE: " + arbQuery.getArQuery().getAntecedentSetting());
-		System.out.println("CONS: " + arbQuery.getArQuery().getConsequentSetting());
 		String xpath = QueryXpathTransformer.transformToXpath(arbQuery, containerName);
 		xpath = "for $ar in subsequence(" + xpath + ", 1, " + 100 + ")"
                 + "\n return"
@@ -69,7 +75,18 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
                     + "\n {$ar/Text}"
                     + "<Detail>{$ar/child::node() except $ar/Text}</Detail>"
                 + "\n </Hit>";
-		return dao.getResultSetByXpath(xpath);
+		ResultSet resultSet = dao.getResultSetByXpath(xpath);
+		return fuzzySearchService.evaluateResultSet(resultSet, arbQuery);
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public List<Result> getSortedResults(String query) {
+		ResultSet resultSet = getResultSet(query);
+		Set<Result> results = resultSet.getResults();
+		return OutputFuzzySorter.sortByCompliance(results);
 	}
 
 }

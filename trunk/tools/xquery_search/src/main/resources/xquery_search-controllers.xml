@@ -12,10 +12,6 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
 	<context:component-scan base-package="xquerysearch.controller" />
-	
 	<mvc:annotation-driven />
-	
-<!-- 	<mvc:resources location="/css/" mapping="/css/**" /> -->
-<!-- 	<mvc:resources location="/js/" mapping="/js/**" /> -->
 	
 </beans>
