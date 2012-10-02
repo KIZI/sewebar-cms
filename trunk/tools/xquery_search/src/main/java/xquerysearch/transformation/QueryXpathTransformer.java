@@ -17,6 +17,12 @@ import xquerysearch.domain.arbquery.DbaSetting;
 public class QueryXpathTransformer {
 
 	/**
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private QueryXpathTransformer() {
+	}
+
+	/**
 	 * Transforms {@link ArBuilderQuery} to XPath query.
 	 * 
 	 * @param query
@@ -32,14 +38,16 @@ public class QueryXpathTransformer {
 		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
-			xpath += "count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings) + ") > 0";
+			xpath += "count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
+					+ ") > 0";
 			if ((consequentSetting != null && consequentSetting.isEmpty() == false)
 					|| (conditionSetting != null && conditionSetting.isEmpty() == false)) {
 				xpath += " and ";
 			}
 		}
 		if (consequentSetting != null && consequentSetting.isEmpty() == false) {
-			xpath += "count(Consequent" + processCedent(consequentSetting, dbaSettings, bbaSettings) + ") > 0";
+			xpath += "count(Consequent" + processCedent(consequentSetting, dbaSettings, bbaSettings)
+					+ ") > 0";
 			if (conditionSetting != null && conditionSetting.isEmpty() == false) {
 				xpath += " and ";
 			}

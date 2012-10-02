@@ -16,6 +16,12 @@ import xquerysearch.domain.result.ResultSet;
 public class OutputTransformer {
 
 	/**
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private OutputTransformer() {
+	}
+
+	/**
 	 * Transforms {@link ResultSet} to response-friendly form represented as
 	 * String.
 	 * 
@@ -50,7 +56,8 @@ public class OutputTransformer {
 		return result.toString();
 	}
 
-	public static String transformResultsInList(List<Result> results, long queryTime, long docCount, long arCount) {
+	public static String transformResultsInList(List<Result> results, long queryTime, long docCount,
+			long arCount) {
 		if (results == null) {
 			return null;
 		}
@@ -67,8 +74,8 @@ public class OutputTransformer {
 	}
 
 	/**
-	 * Creates header for search result output.
-	 * TODO better output handling (for whole SearchResult element)
+	 * Creates header for search result output. TODO better output handling (for
+	 * whole SearchResult element)
 	 * 
 	 * @param sb
 	 * @param queryTime
@@ -88,7 +95,7 @@ public class OutputTransformer {
 		sb.append("<RulesSearched>" + arCount + "</RulesSearched>");
 		sb.append("</Statistics>");
 	}
-	
+
 	/**
 	 * @return actual timestamp in <tt>yyyy-MM-dd'T'HH:mm:ss</tt> format
 	 */

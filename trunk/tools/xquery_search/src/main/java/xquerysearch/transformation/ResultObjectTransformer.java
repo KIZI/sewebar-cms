@@ -16,6 +16,12 @@ public class ResultObjectTransformer {
 	private static final MappingCastor<Result> mappingCastor = new MappingCastor<Result>();
 
 	/**
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private ResultObjectTransformer() {
+	}
+
+	/**
 	 * Transforms data from DB to {@link Result} object.
 	 * 
 	 * @param result

@@ -19,10 +19,25 @@ import xquerysearch.domain.result.Rule;
 public class ResultAnalyzer {
 
 	/**
-	 * TODO documentation
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private ResultAnalyzer() {
+	}
+
+	/**
+	 * Analyzes {@link Result}.
+	 * <br />
+	 * <br />
+	 * Available values:
+	 * <ul>
+	 * 		<li>antecedentBbaCount</li>
+	 * 		<li>consequentBbaCount</li>
+	 * 		<li>conditionBbaCount</li>
+	 * 		<li></li>
+	 * </ul>
 	 * 
 	 * @param result
-	 * @return
+	 * @return values describing {@link Result}
 	 */
 	public static Map<String, Integer> analyze(Result result) {
 		Map<String, Integer> ret = new HashMap<String, Integer>();
@@ -42,7 +57,7 @@ public class ResultAnalyzer {
 	}
 
 	/**
-	 * TODO documentation
+	 * Gets count of {@link BBA}s for {@link Cedent}.
 	 * 
 	 * @param cedent
 	 * @return
@@ -51,7 +66,7 @@ public class ResultAnalyzer {
 		if (cedent == null) {
 			return 0;
 		}
-		
+
 		int bbaCount = 0;
 		for (DBA dba : cedent.getDbas()) {
 			bbaCount += getBbaCountForDba(dba);
@@ -60,7 +75,7 @@ public class ResultAnalyzer {
 	}
 
 	/**
-	 * TODO documentation
+	 * Gets count of {@link BBA}s for {@link DBA}.
 	 * 
 	 * @param dba
 	 * @return
@@ -69,7 +84,7 @@ public class ResultAnalyzer {
 		if (dba == null) {
 			return 0;
 		}
-		
+
 		int count = 0;
 		Set<BBA> bbas = dba.getBbas();
 		if (bbas != null) {

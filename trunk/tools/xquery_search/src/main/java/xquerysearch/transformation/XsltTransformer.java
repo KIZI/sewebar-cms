@@ -22,6 +22,12 @@ public class XsltTransformer {
 	private static Logger logger = Logger.getLogger("transformer");
 
 	/**
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private XsltTransformer() {
+	}
+
+	/**
 	 * Transforms document (as file) using given XSLT transformation
 	 * 
 	 * @param xmlFile

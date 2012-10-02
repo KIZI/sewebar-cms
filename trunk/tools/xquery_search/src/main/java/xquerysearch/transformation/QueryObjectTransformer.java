@@ -17,6 +17,12 @@ public class QueryObjectTransformer {
 	private static final MappingCastor<ArBuilderQuery> castor = new MappingCastor<ArBuilderQuery>();
 
 	/**
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private QueryObjectTransformer() {
+	}
+
+	/**
 	 * Transforms query as String to {@link ArBuilderQuery} object.
 	 * 
 	 * @param query
