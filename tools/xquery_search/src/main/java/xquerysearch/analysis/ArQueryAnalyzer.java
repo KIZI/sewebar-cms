@@ -19,10 +19,25 @@ import xquerysearch.domain.arbquery.DbaSetting;
 public class ArQueryAnalyzer {
 
 	/**
-	 * TODO documentation
+	 * Default constructor - made private, class provides only static methods
+	 */
+	private ArQueryAnalyzer() {
+	}
+	
+	/**
+	 * Analyzes {@link ArBuilderQuery}.
+	 * <br />
+	 * <br />
+	 * Available values:
+	 * <ul>
+	 * 		<li>antecedentBbaCount</li>
+	 * 		<li>consequentBbaCount</li>
+	 * 		<li>conditionBbaCount</li>
+	 * 		<li></li>
+	 * </ul>
 	 * 
 	 * @param query
-	 * @return
+	 * @return values describing {@link ArBuilderQuery}
 	 */
 	public static Map<String, Integer> analyze(ArBuilderQuery query) {
 		Map<String, Integer> ret = new HashMap<String, Integer>();
@@ -41,7 +56,7 @@ public class ArQueryAnalyzer {
 	}
 
 	/**
-	 * TODO documentation
+	 * Returns count of {@link BbaSetting}s for cedent. 
 	 * 
 	 * @param cedentSetting
 	 * @param dbaSettings
@@ -66,7 +81,7 @@ public class ArQueryAnalyzer {
 	}
 
 	/**
-	 * TODO documentation
+	 * Returns {@link BbaSetting}s for cedent.
 	 * 
 	 * @param id
 	 * @param dbaSettings
