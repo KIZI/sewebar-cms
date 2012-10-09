@@ -55,7 +55,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 
 			return results;
 		} catch (XmlException e) {
-			logger.warning("Query failed!");
+			logger.warn("Query failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);
@@ -83,7 +83,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 			}
 			return results;
 		} catch (XmlException e) {
-			logger.warning("Query failed!");
+			logger.warn("Query failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);
@@ -111,7 +111,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 			}
 			return resultSet;
 		} catch (XmlException e) {
-			logger.warning("Query failed!");
+			logger.warn("Query failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);
@@ -139,7 +139,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 			}
 			return resultSet;
 		} catch (XmlException e) {
-			logger.warning("Query failed!");
+			logger.warn("Query failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);

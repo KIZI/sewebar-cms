@@ -56,7 +56,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		if (transform) {
 			if (documentBody.toLowerCase().contains("<pmml")) {
 				if (DocumentValidator.validate(documentBody, pmmlValidationPath) == false) {
-					logger.warning("PMML validation failed!");
+					logger.warn("PMML validation failed!");
 					return false;
 				}
 				transFile = new File(pmmlTransPath);
@@ -73,11 +73,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			if (transformedBody != null) {
 				document.setDocBody(transformedBody);
 			} else {
-				logger.warning("XSLT transformation process failed!");
+				logger.warn("XSLT transformation process failed!");
 				return false;
 			}
 		} else {
-			logger.warning("XSLT file error!");
+			logger.warn("XSLT file error!");
 			return false;
 		}
 

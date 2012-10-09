@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +17,7 @@ import net.sf.saxon.query.StaticQueryContext;
 import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.trans.XPathException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -139,7 +139,7 @@ public class QueryUtils {
 			xqe.run(dqc, new StreamResult(baos), props);
 			return baos;
 		} catch (XPathException e) {
-			logger.warning("Query preparation failed! - XPath exception");
+			logger.warn("Query preparation failed! - XPath exception");
 			return null;
 		}
 	}
@@ -226,16 +226,16 @@ public class QueryUtils {
 			output += "]";
 			return output;
 		} catch (DOMException e) {
-			logger.warning("Making of XPath expression failed! - DOM exception");
+			logger.warn("Making of XPath expression failed! - DOM exception");
 			return null;
 		} catch (ParserConfigurationException e) {
-			logger.warning("Making of XPath expression failed! - Parser configuration exception");
+			logger.warn("Making of XPath expression failed! - Parser configuration exception");
 			return null;
 		} catch (IOException e) {
-			logger.warning("Making of XPath expression failed! - IO exception");
+			logger.warn("Making of XPath expression failed! - IO exception");
 			return null;
 		} catch (SAXException e) {
-			logger.warning("Making of XPath expression failed! - SAX exception");
+			logger.warn("Making of XPath expression failed! - SAX exception");
 			return null;
 		}
 	}
@@ -511,16 +511,16 @@ public class QueryUtils {
 			}
 			return maxResInt;
 		} catch (DOMException e) {
-			logger.warning("Error occured during getting max results restriction! - DOM exception");
+			logger.warn("Error occured during getting max results restriction! - DOM exception");
 			return null;
 		} catch (ParserConfigurationException e) {
-			logger.warning("Error occured during getting max results restriction! - Parser configuration exception");
+			logger.warn("Error occured during getting max results restriction! - Parser configuration exception");
 			return null;
 		} catch (IOException e) {
-			logger.warning("Error occured during getting max results restriction! - IO exception");
+			logger.warn("Error occured during getting max results restriction! - IO exception");
 			return null;
 		} catch (SAXException e) {
-			logger.warning("Error occured during getting max results restriction! - SAX exception");
+			logger.warn("Error occured during getting max results restriction! - SAX exception");
 			return null;
 		}
 	}

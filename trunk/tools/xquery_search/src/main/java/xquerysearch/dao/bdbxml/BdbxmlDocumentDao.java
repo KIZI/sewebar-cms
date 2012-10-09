@@ -32,7 +32,7 @@ public class BdbxmlDocumentDao extends AbstractDao implements DocumentDao {
 			XmlDocument returnedDocument = cont.getDocument(docId);
 			return new Document(returnedDocument.getName(), returnedDocument.getContentAsString());
 		} catch (XmlException e) {
-			logger.warning("Getting the document with id \"" + docId + "\" failed!");
+			logger.warn("Getting the document with id \"" + docId + "\" failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);
@@ -71,7 +71,7 @@ public class BdbxmlDocumentDao extends AbstractDao implements DocumentDao {
 			cont.deleteDocument(docId);
 			return true;
 		} catch (XmlException e) {
-			logger.warning("Removing document with id \"" + docId + "\" failed!");
+			logger.warn("Removing document with id \"" + docId + "\" failed!");
 			return false;
 		} finally {
 			commitAndClose(trans, cont);

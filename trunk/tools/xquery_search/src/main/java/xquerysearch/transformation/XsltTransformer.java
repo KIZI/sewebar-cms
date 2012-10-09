@@ -7,9 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Logger;
 
 import javax.xml.transform.TransformerException;
+
+import org.apache.log4j.Logger;
 
 /**
  * Class providing XSLT transformation features.
@@ -118,7 +119,7 @@ public class XsltTransformer {
 			logEncoding();
 			return null;
 		} catch (TransformerException e) {
-			logger.warning("Error during transformation occured - transformer exception");
+			logger.warn("Error during transformation occured - transformer exception");
 			return null;
 		}
 	}
@@ -127,7 +128,7 @@ public class XsltTransformer {
 	 * Sends warning with unsupported encoding message to logger
 	 */
 	private static void logEncoding() {
-		logger.warning("Error during transformation occured - unsupported encoding");
+		logger.warn("Error during transformation occured - unsupported encoding");
 	}
 
 }

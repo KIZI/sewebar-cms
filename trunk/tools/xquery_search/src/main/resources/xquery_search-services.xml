@@ -10,13 +10,15 @@
 	<context:component-scan base-package="xquerysearch.service" />
 
 	<beans profile="devel">
-		<context:property-placeholder location="classpath:xquery_search-devel.properties,classpath:bdbxml-devel.properties"
-			ignore-unresolvable="true" />
+		<context:property-placeholder
+			location="${xquery_search.config.location:classpath:}xquery_search-devel.properties,${xquery_search.config.location:classpath:}bdbxml-devel.properties"
+			ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
 	</beans>
 
 	<beans profile="prod">
-		<context:property-placeholder location="classpath:xquery_search-prod.properties,classpath:bdbxml-prod.properties"
-			ignore-unresolvable="true" />
+		<context:property-placeholder
+			location="${xquery_search.config.location:classpath:}xquery_search-prod.properties,${xquery_search.config.location:classpath:}bdbxml-prod.properties"
+			ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
 	</beans>
 
 </beans>
