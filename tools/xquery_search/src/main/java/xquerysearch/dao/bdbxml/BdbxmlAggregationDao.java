@@ -41,7 +41,7 @@ public class BdbxmlAggregationDao extends AbstractDao implements AggregationDao 
 			}
 			return names;
 		} catch (XmlException e) {
-			logger.warning("Retrieving all documents names failed!");
+			logger.warn("Retrieving all documents names failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);
@@ -66,7 +66,7 @@ public class BdbxmlAggregationDao extends AbstractDao implements AggregationDao 
 			}
 			return indexes;
 		} catch (XmlException e) {
-			logger.warning("Listing indexes failed! - Xml exeption");
+			logger.warn("Listing indexes failed! - Xml exeption");
 			return null;
 		} finally {
 			indexSpec.delete();
@@ -113,7 +113,7 @@ public class BdbxmlAggregationDao extends AbstractDao implements AggregationDao 
 			XmlValue value = dbResults.next();
 			return value.asString();
 		} catch (XmlException e) {
-			logger.warning("GetStringByXPath method failed! - Xml exeption");
+			logger.warn("GetStringByXPath method failed! - Xml exeption");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);

@@ -3,10 +3,10 @@ package xquerysearch.mapping;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
 
@@ -36,10 +36,10 @@ public class MappingCastor<T> {
 		try {
 			return (T) castorMarshaller.unmarshal(inSource);
 		} catch (XmlMappingException e) {
-			log.warning("Mapping String to domain object failed! - XmlMappingException");
+			log.warn("Mapping String to domain object failed! - XmlMappingException");
 			return null;
 		} catch (IOException e) {
-			log.warning("Mapping String to domain object failed! - I/O exception");
+			log.warn("Mapping String to domain object failed! - I/O exception");
 			return null;
 		} 
 	}

@@ -169,7 +169,7 @@
 	</class>
 
 	<class name="xquerysearch.domain.arbquery.InterestMeasureThreshold">
-		<map-to xml="InterestMeasureThreshold"/>
+		<map-to xml="InterestMeasureThreshold" />
 		<field name="id" type="string">
 			<bind-xml name="id" node="attribute" />
 		</field>

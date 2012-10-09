@@ -3,10 +3,11 @@ package xquerysearch.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
+
+import org.apache.log4j.Logger;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.query.DynamicQueryContext;
@@ -81,10 +82,10 @@ public class OutputUtils {
 	        xqe.run(dqc, new StreamResult(baos), props);
 	        return baos.toString("UTF-8");
         } catch (UnsupportedEncodingException e) {
-        	logger.warning("Error occured during data description preparation! - Unsupported encoding exception");
+        	logger.warn("Error occured during data description preparation! - Unsupported encoding exception");
         	return null;
 		} catch (XPathException e) {
-			logger.warning("Error occured during data description preparation! - XPath expression exception");
+			logger.warn("Error occured during data description preparation! - XPath expression exception");
 			return null;
 		}
     }
@@ -151,10 +152,10 @@ public class OutputUtils {
 	        xqe.run(dqc, new StreamResult(baos), props);
 	        return baos.toString("UTF-8");
         } catch (UnsupportedEncodingException e) {
-        	logger.warning("Error occured during restructuring output! - Unsupported encoding exception");
+        	logger.warn("Error occured during restructuring output! - Unsupported encoding exception");
         	return null;
 		} catch (XPathException e) {
-			logger.warning("Error occured during restructuring output! - XPath expression exception");
+			logger.warn("Error occured during restructuring output! - XPath expression exception");
 			return null;
 		}
     }

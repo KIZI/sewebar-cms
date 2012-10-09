@@ -1,6 +1,5 @@
 package xquerysearch.domain.arbquery;
 
-
 /**
  * Domain object representing ARQuery Element from ARBuilder query.
  * 

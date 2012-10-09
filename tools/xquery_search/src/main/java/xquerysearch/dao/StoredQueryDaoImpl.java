@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -45,10 +45,10 @@ public class StoredQueryDaoImpl implements StoredQueryDao {
                 out.close();
                 return query;
             } catch (FileNotFoundException e) {
-            	logger.warning("Getting query with id \"" + queryId + "\" failed! - File not found");
+            	logger.warn("Getting query with id \"" + queryId + "\" failed! - File not found");
             	return null;
             } catch (IOException e) {
-            	logger.warning("Getting query with id \"" + queryId + "\" failed! - IO exception");
+            	logger.warn("Getting query with id \"" + queryId + "\" failed! - IO exception");
             	return null;
             }
         }
