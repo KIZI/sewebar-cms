@@ -1,11 +1,17 @@
 package xquerysearch.fuzzysearch.evaluator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import xquerysearch.analysis.ArQueryAnalyzer;
 import xquerysearch.analysis.ResultAnalyzer;
+import xquerysearch.domain.ArQueryInternal;
+import xquerysearch.domain.AssociationRuleInternal;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
-import xquerysearch.domain.result.Result;
+import xquerysearch.domain.arbquery.BbaSetting;
+import xquerysearch.domain.arbquery.BbaSettings;
+import xquerysearch.domain.result.BBA;
 
 /**
  * Implementation of {@link FuzzySearchEvaluator}.
@@ -21,18 +27,20 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @{inheritDoc
 	 */
 	@Override
-	public Double evaluate(Result result, ArBuilderQuery arBuilderQuery) {
+	public Double evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
 		Double resultCompliance = DEFAULT_COMPLIANCE;
 
-		Map<String, Integer> resultAnalysis = ResultAnalyzer.analyze(result);
+		Map<String, Integer> resultAnalysis = ResultAnalyzer.analyze(ari);
 		// TODO move one level up? - performance
-		Map<String, Integer> queryAnalysis = ArQueryAnalyzer.analyze(arBuilderQuery);
+		Map<String, Integer> queryAnalysis = ArQueryAnalyzer.analyze(aqi);
 
 		Double bbaCountPenalty = checkBbaCounts(resultAnalysis, queryAnalysis);
 		if (bbaCountPenalty != null) {
 			resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
 		}
-
+		
+		System.out.println(evaluateBbas(ari.getAntecedentBbas(), aqi.getConsequentBbaSettingList()));
+		
 		return resultCompliance;
 	}
 
@@ -41,7 +49,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * 
 	 * @return
 	 */
-	private static Double checkBbaCounts(Map<String, Integer> resultAnalysis,
+	private static double checkBbaCounts(Map<String, Integer> resultAnalysis,
 			Map<String, Integer> queryAnalysis) {
 
 		double[] valuesPairAntecedent = getValuesPair("antecedentBbaCount", "antecedentBbaCount",
@@ -66,6 +74,17 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 			conditionPenalty = Math.abs(valuesPairCondition[0] - valuesPairCondition[1]) * 2;
 		}
 		return antecedentPenalty + consequentPenalty + conditionPenalty;
+	}
+
+	private static double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
+		double ret[] = new double[bbaSettings.size()];
+
+		return ret;
+	}
+
+	private static double evaluateBba(BBA bba, BbaSetting bbaSetting) {
+
+		return 0.0;
 	}
 
 	/**

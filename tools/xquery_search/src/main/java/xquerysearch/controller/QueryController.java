@@ -64,5 +64,12 @@ public class QueryController extends AbstractController {
 				+ "</result>", response);
 		return null;
 	}
+	
+	@RequestMapping(params = "action=directQuery", method = RequestMethod.POST)
+	public ModelAndView directQuery(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
+		String results = queryService.query(content);
+		addResponseContent("<result>" + results + "</result>", response);
+		return null;
+	}
 
 }

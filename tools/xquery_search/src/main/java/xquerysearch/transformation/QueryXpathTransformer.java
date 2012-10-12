@@ -17,11 +17,6 @@ import xquerysearch.domain.arbquery.DbaSetting;
 public class QueryXpathTransformer {
 
 	/**
-	 * Temporary - get same or shorter association rule than query
-	 */
-	private static final boolean SHORTER_QUERYING_TYPE = true;
-
-	/**
 	 * Default constructor - made private, class provides only static methods
 	 */
 	private QueryXpathTransformer() {
@@ -34,45 +29,82 @@ public class QueryXpathTransformer {
 	 * @return XPath query, <code>null</code> if error occurred
 	 */
 	public static String transformToXpath(ArBuilderQuery query, String containerName) {
+		StringBuffer xpath = new StringBuffer();
+
+		xpath.append("collection(\"" + containerName + "\")/PMML/AssociationRule[");
+
+		/**
+		 * TODO temporary "switch", needs rework
+		 */
+		transformNormal(query, containerName, xpath);
+//		transformShorter(query, containerName, xpath);
+
+		xpath.append("]");
+
+		System.out.println(xpath);
+		return xpath.toString();
+	}
+
+	private static void transformNormal(ArBuilderQuery query, String containerName, StringBuffer xpath) {
 		String antecedentSetting = query.getArQuery().getAntecedentSetting();
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();
-		String xpath = "";
 
 		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings().getDbaSettings();
 		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
-			if (SHORTER_QUERYING_TYPE) {
-				xpath += "("
-						+ processCedentShorter(antecedentSetting, dbaSettings, bbaSettings, "Antecedent", 0,
-								0) + ")";
-			}
+			xpath.append("count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
+					+ ") > 0");
 			if ((consequentSetting != null && consequentSetting.isEmpty() == false)
 					|| (conditionSetting != null && conditionSetting.isEmpty() == false)) {
-				xpath += " and ";
+				xpath.append(" and ");
 			}
 		}
 		if (consequentSetting != null && consequentSetting.isEmpty() == false) {
-			if (SHORTER_QUERYING_TYPE) {
-				xpath += "("
-						+ processCedentShorter(consequentSetting, dbaSettings, bbaSettings, "Consequent", 0,
-								0) + ")";
-			}
+			xpath.append("count(Consequent" + processCedent(consequentSetting, dbaSettings, bbaSettings)
+					+ ") > 0");
 			if (conditionSetting != null && conditionSetting.isEmpty() == false) {
-				xpath += " and ";
+				xpath.append(" and ");
 			}
 		}
 		if (conditionSetting != null && conditionSetting.isEmpty() == false) {
-			if (SHORTER_QUERYING_TYPE) {
-				xpath += "("
-						+ processCedentShorter(conditionSetting, dbaSettings, bbaSettings, "Condition", 0, 0)
-						+ ")";
+			xpath.append("count(Condition" + processCedent(conditionSetting, dbaSettings, bbaSettings)
+					+ ") > 0");
+		}
+	}
+
+	private static void transformShorter(ArBuilderQuery query, String containerName, StringBuffer xpath) {
+		String antecedentSetting = query.getArQuery().getAntecedentSetting();
+		String consequentSetting = query.getArQuery().getConsequentSetting();
+		String conditionSetting = query.getArQuery().getConditionSetting();
+
+		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings().getDbaSettings();
+		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings().getBbaSettings();
+
+		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
+			xpath.append("("
+					+ processCedentShorter(antecedentSetting, dbaSettings, bbaSettings, "Antecedent", 0, 0)
+					+ ")");
+			if ((consequentSetting != null && consequentSetting.isEmpty() == false)
+					|| (conditionSetting != null && conditionSetting.isEmpty() == false)) {
+				xpath.append(" and ");
 			}
 		}
-		xpath = "collection(\"" + containerName + "\")/PMML/AssociationRule[" + xpath + "]";
-		System.out.println(xpath);
-		return xpath;
+		if (consequentSetting != null && consequentSetting.isEmpty() == false) {
+			xpath.append("("
+					+ processCedentShorter(consequentSetting, dbaSettings, bbaSettings, "Consequent", 0, 0)
+					+ ")");
+			if (conditionSetting != null && conditionSetting.isEmpty() == false) {
+				xpath.append(" and ");
+			}
+		}
+		if (conditionSetting != null && conditionSetting.isEmpty() == false) {
+			xpath.append("("
+					+ processCedentShorter(conditionSetting, dbaSettings, bbaSettings, "Condition", 0, 0)
+					+ ")");
+		}
+
 	}
 
 	/**
@@ -100,42 +132,57 @@ public class QueryXpathTransformer {
 			xpath = processBbas(currentId, bbaSettings, xpath, queryType);
 		}
 
-		System.out.println("STEP: " + step);
-		System.out.println("CEDENT: " + cedentName);
+		StringBuffer noOthersCondition = new StringBuffer();
+		noOthersCondition.append(" and count(" + cedentName + "//DBA/BBA[");
 
+		// if (relatedBaRefs.size() == 1) {
 		int loopCount = 0;
 		for (String baRef : relatedBaRefs) {
-			if (relatedBaRefs.size() == 1) {
-				if (step == 0) {
-					if (loopCount > 0) {
-						xpath.append(" or ");
-					}
-					xpath.append("(");
-					xpath.append("count(" + cedentName);
-					xpath.append("/DBA");
-					xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, ++step, 1));
-					xpath.append(") > 0");
-					xpath.append(" and count(" + cedentName);
-					xpath.append("/DBA");
-					xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, step, 2));
-					xpath.append(") = 0");
-					xpath.append(" and count(" + cedentName);
-					xpath.append("/DBA");
-					xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, step, 3));
-					xpath.append(") = 0");
-					xpath.append(")");
-				} else {
-					xpath.append("/DBA");
-					xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, ++step,
-							queryType));
+			if (step == 0) {
+				if (loopCount > 0) {
+					xpath.append(" or ");
+					noOthersCondition.append(" and ");
 				}
-			} else if (relatedBaRefs.size() > 1) {
-				xpath.append("[DBA");
-				xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, ++step,
+				xpath.append("(");
+				xpath.append("count(" + cedentName);
+				xpath.append("/DBA");
+				xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, step + 1, 1));
+				xpath.append(") > 0");
+				xpath.append(" and count(" + cedentName);
+				xpath.append("/DBA");
+				xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, step + 1, 2));
+				xpath.append(") = 0");
+				xpath.append(")");
+
+			} else {
+				if (queryType < 3) {
+					xpath.append("/DBA");
+				}
+				xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName, step + 1,
 						queryType));
-				xpath.append("]");
 			}
+			noOthersCondition.append(processCedentShorter(baRef, dbaSettings, bbaSettings, cedentName,
+					step + 1, 3));
+			loopCount++;
 		}
+		noOthersCondition.append("]) = 0");
+		if (step == 0) {
+			xpath.append(noOthersCondition);
+		}
+		// }
+		// if (relatedBaRefs.size() > 1) {
+		// xpath.append("[");
+		// int loopCount = 0;
+		// for (String baRef : relatedBaRefs) {
+		// if (loopCount > 0) {
+		// xpath.append(" or ");
+		// }
+		// xpath.append("DBA");
+		// xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings,
+		// cedentName, ++step, queryType));
+		// }
+		// xpath.append("]");
+		// }
 
 		return xpath.toString();
 	}
@@ -147,7 +194,11 @@ public class QueryXpathTransformer {
 
 				if (bbaSetting.getFieldRef() != null) {
 					String dictionary = bbaSetting.getFieldRef().getDictionary();
-					xpath.append("/BBA/" + dictionary + "[");
+					if (queryType < 3) {
+						xpath.append("/BBA/" + dictionary + "[");
+					} else {
+						xpath.append(dictionary + "/");
+					}
 				} else {
 					continue;
 				}
@@ -179,10 +230,10 @@ public class QueryXpathTransformer {
 						}
 					}
 					xpath.append(")");
+					xpath.append("]");
 				} else {
 					xpath.append("FieldName != \"" + bbaSetting.getFieldRef().getValue() + "\"");
 				}
-				xpath.append("]");
 			}
 		}
 		return xpath;

@@ -47,4 +47,12 @@ public interface QueryService {
 	 *         DB
 	 */
 	public String queryForSingleValue(String query);
+	
+	/**
+	 * Queries database with given query, returns results as {@link String}.
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public String query(String query);
 }
