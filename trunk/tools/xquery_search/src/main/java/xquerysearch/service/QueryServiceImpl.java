@@ -100,4 +100,13 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		}
 		return results.get(0);
 	}
+	
+	/**
+	 * @{inheritDoc}
+	 */
+	@Override
+	public String query(String query) {
+		List<String> results = dao.getResultsByQuery(new Query(query));
+		return results.toString();
+	}
 }

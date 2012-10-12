@@ -2,10 +2,14 @@ package xquerysearch.fuzzysearch.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import xquerysearch.domain.ArQueryInternal;
+import xquerysearch.domain.AssociationRuleInternal;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 import xquerysearch.fuzzysearch.evaluator.FuzzySearchEvaluator;
+import xquerysearch.transformation.ArQueryToInternalTransformer;
+import xquerysearch.transformation.AssociationRuleToInternalTransformer;
 
 /**
  * Implementation of {@link FuzzySearchService}.
@@ -23,9 +27,11 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 	 */
 	@Override
 	public ResultSet evaluateResultSet(ResultSet resultSet, ArBuilderQuery query) {
-		if (resultSet.getResults() != null) {
+		ArQueryInternal aqi = ArQueryToInternalTransformer.transform(query.getArQuery());
+		if (resultSet != null && resultSet.getResults() != null) {
 			for (Result result : resultSet.getResults()) {
-				Double compliance = evaluator.evaluate(result, query);
+				AssociationRuleInternal ari = AssociationRuleToInternalTransformer.transform(result.getRule());
+				Double compliance = evaluator.evaluate(ari, aqi);
 				result.setQueryCompliance(compliance);
 			}
 		}
