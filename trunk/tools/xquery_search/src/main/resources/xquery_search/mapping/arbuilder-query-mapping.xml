@@ -72,6 +72,9 @@
 
 	<class name="xquerysearch.domain.arbquery.ArQuery">
 		<map-to xml="ARQuery" />
+		<field name="querySettings" type="xquerysearch.domain.arbquery.QuerySettings">
+			<bind-xml name="QuerySettings" node="element" />
+		</field>
 		<field name="bbaSettings" type="xquerysearch.domain.arbquery.BbaSettings">
 			<bind-xml name="BBASettings" node="element" />
 		</field>
@@ -89,6 +92,19 @@
 		</field>
 		<field name="interestMeasureSetting" type="xquerysearch.domain.arbquery.InterestMeasureSetting">
 			<bind-xml name="InterestMeasureSetting" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.arbquery.QuerySettings">
+		<map-to xml="QuerySettings" />
+		<field name="type" type="string">
+			<bind-xml name="Type" node="element" />
+		</field>
+		<field name="target" type="string">
+			<bind-xml name="Target" node="element" />
+		</field>
+		<field name="resultsAnalysis" type="string">
+			<bind-xml name="ResultsAnalysis" node="element" />
 		</field>
 	</class>
 

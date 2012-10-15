@@ -1,5 +1,7 @@
 package xquerysearch.fuzzysearch.service;
 
+import java.util.Set;
+
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
@@ -13,12 +15,12 @@ import xquerysearch.domain.result.ResultSet;
 public interface FuzzySearchService {
 
 	/**
-	 * Evaluates {@link ResultSet} and sets the value retrieved from evaluator
-	 * to all {@link Result}s in {@link ResultSet}.
+	 * Evaluates {@link Set} of {@link Result}s and sets the value retrieved from evaluator
+	 * to all {@link Result}s.
 	 * 
-	 * @param resultSet
-	 * @return evaluated {@link ResultSet}.
+	 * @param results
+	 * @return evaluated {@link Set} of {@link Result}s
 	 */
-	public ResultSet evaluateResultSet(ResultSet resultSet, ArBuilderQuery query);
+	public Set<Result> evaluateResults(Set<Result> results, ArBuilderQuery query);
 
 }

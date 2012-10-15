@@ -7,6 +7,8 @@ import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.arbquery.Coefficient;
 import xquerysearch.domain.arbquery.DbaSetting;
+import xquerysearch.domain.arbquery.QuerySettings;
+import xquerysearch.domain.arbquery.querysettings.QueryType;
 
 /**
  * Transformer used to transform query as object to XPath stored as String.
@@ -28,24 +30,23 @@ public class QueryXpathTransformer {
 	 * @param query
 	 * @return XPath query, <code>null</code> if error occurred
 	 */
-	public static String transformToXpath(ArBuilderQuery query, String containerName) {
+	public static String transformToXpath(ArBuilderQuery query, QuerySettings settings) {
 		StringBuffer xpath = new StringBuffer();
 
-		xpath.append("collection(\"" + containerName + "\")/PMML/AssociationRule[");
+		xpath.append("/PMML/AssociationRule[");
 
-		/**
-		 * TODO temporary "switch", needs rework
-		 */
-		transformNormal(query, containerName, xpath);
-//		transformShorter(query, containerName, xpath);
-
+		if (settings != null && settings.getType().equals(QueryType.NORMAL.getText()) == false) {
+			transformShorter(query, xpath);
+		} else {
+			transformNormal(query, xpath);
+		}
 		xpath.append("]");
 
 		System.out.println(xpath);
 		return xpath.toString();
 	}
 
-	private static void transformNormal(ArBuilderQuery query, String containerName, StringBuffer xpath) {
+	private static void transformNormal(ArBuilderQuery query, StringBuffer xpath) {
 		String antecedentSetting = query.getArQuery().getAntecedentSetting();
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();
@@ -74,7 +75,7 @@ public class QueryXpathTransformer {
 		}
 	}
 
-	private static void transformShorter(ArBuilderQuery query, String containerName, StringBuffer xpath) {
+	private static void transformShorter(ArBuilderQuery query, StringBuffer xpath) {
 		String antecedentSetting = query.getArQuery().getAntecedentSetting();
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();

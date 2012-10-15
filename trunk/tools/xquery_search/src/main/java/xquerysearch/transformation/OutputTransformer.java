@@ -28,14 +28,14 @@ public class OutputTransformer {
 	 * @param resultSet
 	 * @return transformed ResultSet
 	 */
-	public static String transformResultSet(ResultSet resultSet) {
+	public static String transformResultSet(ResultSet resultSet, long queryTime, long docCount,
+			long arCount) {
 		if (resultSet == null || resultSet.getResults() == null) {
 			return null;
 		}
 
 		StringBuffer ret = new StringBuffer();
-		// TODO remove zeros - give actual values
-		appendHeaderOfSearch(ret, 0, 0, 0);
+		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
 
 		ret.append("<Hits>");
 		for (Result result : resultSet.getResults()) {
