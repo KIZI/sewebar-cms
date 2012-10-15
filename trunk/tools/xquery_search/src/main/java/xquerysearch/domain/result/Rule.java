@@ -15,6 +15,7 @@ public class Rule {
 	private Cedent condition;
 	private Set<ImValue> imValues;
 	private Annotation annotation;
+	private FourFtTable fourFtTable;
 
 	/**
 	 * @return the antecedent
@@ -92,6 +93,21 @@ public class Rule {
 	}
 
 	/**
+	 * @return the fourFtTable
+	 */
+	public FourFtTable getFourFtTable() {
+		return fourFtTable;
+	}
+
+	/**
+	 * @param fourFtTable
+	 *            the fourFtTable to set
+	 */
+	public void setFourFtTable(FourFtTable fourFtTable) {
+		this.fourFtTable = fourFtTable;
+	}
+
+	/**
 	 * @{inheritDoc
 	 */
 	@Override
@@ -112,6 +128,9 @@ public class Rule {
 		}
 		if (annotation != null) {
 			ret.append(annotation.toString());
+		}
+		if (fourFtTable != null) {
+			ret.append(fourFtTable.toString());
 		}
 		ret.append("</Detail>");
 		return ret.toString();

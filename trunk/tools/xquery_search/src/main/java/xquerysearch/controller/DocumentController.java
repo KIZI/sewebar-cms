@@ -62,7 +62,7 @@ public class DocumentController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(params = "action=removeDocument", method = RequestMethod.POST)
+	@RequestMapping(params = "action=deleteDocument", method = RequestMethod.POST)
 	public ModelAndView deleteDocument(@RequestParam String id, HttpServletRequest request,
 			HttpServletResponse response) {
 		if (id.isEmpty()) {

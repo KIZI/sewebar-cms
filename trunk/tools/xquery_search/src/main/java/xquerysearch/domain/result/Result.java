@@ -1,5 +1,7 @@
 package xquerysearch.domain.result;
 
+import xquerysearch.domain.result.tasksetting.TaskSetting;
+
 /**
  * Domain object representing result of query.
  * 
@@ -16,6 +18,7 @@ public class Result {
 	private String table;
 	private String text;
 	private Rule rule;
+	private TaskSetting taskSetting;
 
 	private Double queryCompliance;
 
@@ -155,15 +158,37 @@ public class Result {
 	}
 
 	/**
+	 * @return the taskSetting
+	 */
+	public TaskSetting getTaskSetting() {
+		return taskSetting;
+	}
+
+	/**
+	 * @param taskSetting
+	 *            the taskSetting to set
+	 */
+	public void setTaskSetting(TaskSetting taskSetting) {
+		this.taskSetting = taskSetting;
+	}
+
+	/**
 	 * @{inheritDoc
 	 */
 	@Override
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
 		ret.append("<Hit docID=\"" + docId + "\" ruleID=\"" + ruleId + "\" docName=\"" + docName
-				+ "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table + "\" queryCompliance=\"" + queryCompliance + "\" >");
+				+ "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table
+				+ "\" queryCompliance=\"" + queryCompliance + "\" >");
+		if (text != null) {
+			ret.append("<Text><![CDATA[" + text + "]]></Text>");
+		}
 		if (rule != null) {
 			ret.append(rule.toString());
+		}
+		if (taskSetting != null) {
+			ret.append(taskSetting.toString());
 		}
 		ret.append("</Hit>");
 		return ret.toString();

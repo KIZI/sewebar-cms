@@ -82,6 +82,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 				+ ")"
 				+ "\n return"
 				+ "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
+				+ "\n {$ar/parent::node()/TaskSetting}"
 				+ "\n {$ar/Text}" + "<Detail>{$ar/child::node() except $ar/Text}</Detail>" + "\n </Hit>";
 		return dao.getResultSetByXpath(xpath);
 	}
