@@ -2,6 +2,8 @@ package xquerysearch.domain.result;
 
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Domain object representing TransformationDictionary element from query
  * result.
@@ -53,7 +55,7 @@ public class TransformationDictionary {
 		ret.append("<TransformationDictionary>");
 		ret.append("<FieldName>" + fieldName + "</FieldName>");
 		for (String catName : catNames) {
-			ret.append("<CatName>" + catName + "</CatName>");
+			ret.append("<CatName>" + StringEscapeUtils.escapeXml(catName) + "</CatName>");
 		}
 		ret.append("</TransformationDictionary>");
 		return ret.toString();

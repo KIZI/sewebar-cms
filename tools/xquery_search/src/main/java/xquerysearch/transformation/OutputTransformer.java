@@ -53,6 +53,9 @@ public class OutputTransformer {
 	 * @return transformed Result
 	 */
 	public static String transformResult(Result result) {
+		if (result == null) {
+			return "";
+		}
 		return result.toString();
 	}
 
