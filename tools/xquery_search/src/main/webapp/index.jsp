@@ -17,14 +17,14 @@
     <select name="action" onChange="showField(this.value)">
       <option value="useQuery">Use query</option>
       <option value="directQuery">Direct query</option>
-      <option value="directQuery10">Direct query 10x</option>
-      <option value="addQuery">Add query</option>
-      <option value="getQuery">Show query</option>
-      <option value="deleteQuery">Delete query</option>
-      <option value="getQueriesNames">Show saved XQuery names</option>
+<!--       <option value="directQuery10">Direct query 10x</option> -->
+<!--       <option value="addQuery">Add query</option> -->
+<!--       <option value="getQuery">Show query</option> -->
+<!--       <option value="deleteQuery">Delete query</option> -->
+<!--       <option value="getQueriesNames">Show saved XQuery names</option> -->
       <option value="getDocsNames">Show saved document names</option>
       <option value="addDocument">Add document</option>
-      <option value="addDocumentMultiple">Add documents [multiple]</option>
+<!--       <option value="addDocumentMultiple">Add documents [multiple]</option> -->
       <option value="getDocument">Show document</option>
       <option value="deleteDocument">Delete document</option>
       <option value="addIndex">Add index</option>
@@ -32,8 +32,8 @@
       <option value="listIndexes">Show indexes</option>
       <option value="actDescription">Update DataDescription</option>
       <option value="getDescription">Show DataDescription</option>
-      <option value="completeTest">Test settings</option>
-      <option value="removeAllDocuments">!!! Remove all documents !!!</option>
+<!--       <option value="completeTest">Test settings</option> -->
+<!--       <option value="removeAllDocuments">!!! Remove all documents !!!</option> -->
       <%--<option value="jaxpQuery">JAXP Query test</option>--%>
       <%--<option value="existQuery">Exist-DB XQuery</option>--%>
     </select></td></tr>

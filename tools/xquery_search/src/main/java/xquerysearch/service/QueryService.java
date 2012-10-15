@@ -23,20 +23,21 @@ public interface QueryService {
 	public ResultSet getResultSet(Query query);
 
 	/**
-	 * Gets {@link ResultSet} from database by query as String.
+	 * Gets {@link ResultSet} from database by XPath query as String.
 	 * 
-	 * @param query
+	 * @param xpath
+	 * @param maxResults
 	 * @return {@link ResultSet} including found results
 	 */
-	public ResultSet getResultSet(String query);
+	public ResultSet getResultSet(String xpath, int maxResults);
 
 	/**
-	 * Gets {@link Result}s from database by query and sorts them.
+	 * Retrieves {@link Result}s as {@link List} from database by query.
 	 * 
 	 * @param query
-	 * @return {@link List} of sorted {@link Result}s
+	 * @return {@link List} of {@link Result}s
 	 */
-	public List<Result> getSortedResults(String query);
+	public List<Result> getResultList(String query);
 
 	/**
 	 * Queries database with given query and returns single result value as
@@ -47,7 +48,7 @@ public interface QueryService {
 	 *         DB
 	 */
 	public String queryForSingleValue(String query);
-	
+
 	/**
 	 * Queries database with given query, returns results as {@link String}.
 	 * 

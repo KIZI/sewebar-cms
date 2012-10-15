@@ -8,12 +8,28 @@ package xquerysearch.domain.arbquery;
  */
 public class ArQuery {
 
+	private QuerySettings querySettings;
 	private BbaSettings bbaSettings;
 	private DbaSettings dbaSettings;
 	private String antecedentSetting;
 	private String consequentSetting;
 	private String conditionSetting;
 	private InterestMeasureSetting interestMeasureSetting;
+
+	/**
+	 * @return the querySettings
+	 */
+	public QuerySettings getQuerySettings() {
+		return querySettings;
+	}
+
+	/**
+	 * @param querySettings
+	 *            the querySettings to set
+	 */
+	public void setQuerySettings(QuerySettings querySettings) {
+		this.querySettings = querySettings;
+	}
 
 	/**
 	 * @return the bbaSettings

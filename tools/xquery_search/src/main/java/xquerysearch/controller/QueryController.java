@@ -52,7 +52,7 @@ public class QueryController extends AbstractController {
 		// }
 		StringBuffer responseMessage = new StringBuffer();
 
-		List<Result> results = queryService.getSortedResults(content);
+		List<Result> results = queryService.getResultList(content);
 		long queryTime = System.currentTimeMillis() - startTime;
 		Long docCount = aggregationService.getDocumentsCount();
 		Long arCount = aggregationService.getAssociationRulesCount();
