@@ -7,9 +7,7 @@ import java.util.Set;
 import xquerysearch.domain.ArQueryInternal;
 import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.BbaSetting;
-import xquerysearch.domain.arbquery.BbaSettings;
 import xquerysearch.domain.arbquery.DbaSetting;
-import xquerysearch.domain.arbquery.DbaSettings;
 import xquerysearch.domain.arbquery.InterestMeasureSetting;
 import xquerysearch.domain.arbquery.InterestMeasureThreshold;
 
@@ -41,8 +39,8 @@ public class ArQueryToInternalTransformer {
 		String consequent = arQuery.getConsequentSetting();
 		String condition = arQuery.getConditionSetting();
 
-		DbaSettings dbaSettings = arQuery.getDbaSettings();
-		BbaSettings bbaSettings = arQuery.getBbaSettings();
+		Set<DbaSetting> dbaSettings = arQuery.getDbaSettings();
+		Set<BbaSetting> bbaSettings = arQuery.getBbaSettings();
 
 		aqi.setAntecedentBbaSettingList(getBbaSettingsForCedent(antecedent, dbaSettings, bbaSettings));
 		aqi.setConsequentBbaSettingList(getBbaSettingsForCedent(consequent, dbaSettings, bbaSettings));
@@ -62,13 +60,13 @@ public class ArQueryToInternalTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static List<BbaSetting> getBbaSettingsForCedent(String cedent, DbaSettings dbaSettings,
-			BbaSettings bbaSettings) {
+	private static List<BbaSetting> getBbaSettingsForCedent(String cedent, Set<DbaSetting> dbaSettings,
+			Set<BbaSetting> bbaSettings) {
 		List<BbaSetting> ret = new ArrayList<BbaSetting>();
 
 		List<DbaSetting> dbaList = new ArrayList<DbaSetting>();
-		if (dbaSettings != null && dbaSettings.getDbaSettings() != null) {
-			dbaList.addAll(dbaSettings.getDbaSettings());
+		if (dbaSettings != null) {
+			dbaList.addAll(dbaSettings);
 		}
 
 		if (cedent != null) {
@@ -92,18 +90,18 @@ public class ArQueryToInternalTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static List<BbaSetting> getBbaSettingsForDbaSetting(Set<String> baRefs, DbaSettings dbaSettings,
-			BbaSettings bbaSettings) {
+	private static List<BbaSetting> getBbaSettingsForDbaSetting(Set<String> baRefs, Set<DbaSetting> dbaSettings,
+			Set<BbaSetting> bbaSettings) {
 		List<BbaSetting> ret = new ArrayList<BbaSetting>();
 
 		List<DbaSetting> dbaList = new ArrayList<DbaSetting>();
-		if (dbaSettings != null && dbaSettings.getDbaSettings() != null) {
-			dbaList.addAll(dbaSettings.getDbaSettings());
+		if (dbaSettings != null) {
+			dbaList.addAll(dbaSettings);
 		}
 
 		List<BbaSetting> bbaList = new ArrayList<BbaSetting>();
-		if (bbaSettings != null && bbaSettings.getBbaSettings() != null) {
-			bbaList.addAll(bbaSettings.getBbaSettings());
+		if (bbaSettings != null) {
+			bbaList.addAll(bbaSettings);
 		}
 
 		if (baRefs != null) {

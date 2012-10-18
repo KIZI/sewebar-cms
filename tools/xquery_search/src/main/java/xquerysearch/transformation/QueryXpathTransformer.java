@@ -11,7 +11,7 @@ import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.querysettings.QueryType;
 
 /**
- * Transformer used to transform query as object to XPath stored as String.
+ * Transformer used to transform query as object to XPath stored as String - for searching in Association Rules.
  * 
  * @author Tomas Marek
  * 
@@ -51,8 +51,8 @@ public class QueryXpathTransformer {
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();
 
-		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings().getDbaSettings();
-		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings().getBbaSettings();
+		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
+		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
@@ -80,8 +80,8 @@ public class QueryXpathTransformer {
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();
 
-		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings().getDbaSettings();
-		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings().getBbaSettings();
+		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
+		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("("

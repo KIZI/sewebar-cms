@@ -1,6 +1,8 @@
-package xquerysearch.domain.arbquery;
+package xquerysearch.domain.arbquery.tasksetting;
 
 import java.util.Set;
+
+import xquerysearch.domain.arbquery.QuerySettings;
 
 /**
  * Domain object representing ARQuery Element from ARBuilder query.
@@ -8,15 +10,14 @@ import java.util.Set;
  * @author Tomas Marek
  * 
  */
-public class ArQuery {
+public class ArTsQuery {
 
 	private QuerySettings querySettings;
-	private Set<BbaSetting> bbaSettings;
-	private Set<DbaSetting> dbaSettings;
+	private Set<BBASetting> bbaSettings;
+	private Set<DBASetting> dbaSettings;
 	private String antecedentSetting;
 	private String consequentSetting;
 	private String conditionSetting;
-	private InterestMeasureSetting interestMeasureSetting;
 
 	/**
 	 * @return the querySettings
@@ -36,7 +37,7 @@ public class ArQuery {
 	/**
 	 * @return the bbaSettings
 	 */
-	public Set<BbaSetting> getBbaSettings() {
+	public Set<BBASetting> getBbaSettings() {
 		return bbaSettings;
 	}
 
@@ -44,14 +45,14 @@ public class ArQuery {
 	 * @param bbaSettings
 	 *            the bbaSettings to set
 	 */
-	public void setBbaSettings(Set<BbaSetting> bbaSettings) {
+	public void setBbaSettings(Set<BBASetting> bbaSettings) {
 		this.bbaSettings = bbaSettings;
 	}
 
 	/**
 	 * @return the dbaSettings
 	 */
-	public Set<DbaSetting> getDbaSettings() {
+	public Set<DBASetting> getDbaSettings() {
 		return dbaSettings;
 	}
 
@@ -59,7 +60,7 @@ public class ArQuery {
 	 * @param dbaSettings
 	 *            the dbaSettings to set
 	 */
-	public void setDbaSettings(Set<DbaSetting> dbaSettings) {
+	public void setDbaSettings(Set<DBASetting> dbaSettings) {
 		this.dbaSettings = dbaSettings;
 	}
 
@@ -106,21 +107,6 @@ public class ArQuery {
 	 */
 	public void setConditionSetting(String conditionSetting) {
 		this.conditionSetting = conditionSetting;
-	}
-
-	/**
-	 * @return the interestMeasureSetting
-	 */
-	public InterestMeasureSetting getInterestMeasureSetting() {
-		return interestMeasureSetting;
-	}
-
-	/**
-	 * @param interestMeasureSetting
-	 *            the interestMeasureSetting to set
-	 */
-	public void setInterestMeasureSetting(InterestMeasureSetting interestMeasureSetting) {
-		this.interestMeasureSetting = interestMeasureSetting;
 	}
 
 }

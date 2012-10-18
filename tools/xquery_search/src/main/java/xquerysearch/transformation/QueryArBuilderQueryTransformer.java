@@ -12,14 +12,14 @@ import xquerysearch.mapping.MappingCastor;
  * @author Tomas Marek
  * 
  */
-public class QueryObjectTransformer {
+public class QueryArBuilderQueryTransformer {
 
 	private static final MappingCastor<ArBuilderQuery> castor = new MappingCastor<ArBuilderQuery>();
 
 	/**
 	 * Default constructor - made private, class provides only static methods
 	 */
-	private QueryObjectTransformer() {
+	private QueryArBuilderQueryTransformer() {
 	}
 
 	/**

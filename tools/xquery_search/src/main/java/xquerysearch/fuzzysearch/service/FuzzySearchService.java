@@ -4,7 +4,6 @@ import java.util.Set;
 
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.result.Result;
-import xquerysearch.domain.result.ResultSet;
 
 /**
  * Service providing fuzzy search.
