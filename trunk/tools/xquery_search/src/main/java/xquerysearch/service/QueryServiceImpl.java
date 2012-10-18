@@ -18,11 +18,15 @@ import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.querysettings.QueryResultsAnalysis;
+import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
+import xquerysearch.domain.arbquery.tasksetting.ArTsQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
 import xquerysearch.sorting.OutputFuzzySorter;
-import xquerysearch.transformation.QueryObjectTransformer;
+import xquerysearch.transformation.QueryArBuilderQueryTransformer;
+import xquerysearch.transformation.QueryArBuilderQueryTsTransformer;
+import xquerysearch.transformation.QueryXpathTaskSettingTransformer;
 import xquerysearch.transformation.QueryXpathTransformer;
 import xquerysearch.utils.QueryUtils;
 
@@ -44,6 +48,10 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	@Autowired
 	@Qualifier("arbQueryCastor")
 	private CastorMarshaller arbQueryCastor;
+	
+	@Autowired
+	@Qualifier("arbTsQueryCastor")
+	private CastorMarshaller arbTsQueryCastor;
 
 	@Autowired
 	private FuzzySearchService fuzzySearchService;
@@ -92,9 +100,19 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	 */
 	@Override
 	public List<Result> getResultList(String query) {
-		ArBuilderQuery arbQuery = QueryObjectTransformer.transform(arbQueryCastor, query);
-		QuerySettings settings = getQuerySettings(arbQuery);
-		String xpath = QueryXpathTransformer.transformToXpath(arbQuery, settings);
+		ArBuilderQuery arbQuery = null;
+		ArTsBuilderQuery arbTsQuery = null;
+		String xpath = null;
+		QuerySettings settings = null;
+		if (query.contains("<Target>TaskSetting</Target>")) {
+			arbTsQuery = QueryArBuilderQueryTsTransformer.transform(arbTsQueryCastor, query);
+			settings = getQuerySettings(arbTsQuery);
+			xpath = QueryXpathTaskSettingTransformer.transformToXpath(arbTsQuery, settings);
+		} else {
+			arbQuery = QueryArBuilderQueryTransformer.transform(arbQueryCastor, query);
+			settings = getQuerySettings(arbQuery);
+			xpath = QueryXpathTransformer.transformToXpath(arbQuery, settings);
+		}
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
 		Set<Result> results = resultSet.getResults();
@@ -137,6 +155,22 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	private QuerySettings getQuerySettings(ArBuilderQuery query) {
 		if (query != null) {
 			ArQuery arQuery = query.getArQuery();
+			if (arQuery != null) {
+				return arQuery.getQuerySettings();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Helps retrieve {@link QuerySettings} from {@link ArTsBuilderQuery}.
+	 * 
+	 * @param query
+	 * @return
+	 */
+	private QuerySettings getQuerySettings(ArTsBuilderQuery query) {
+		if (query != null) {
+			ArTsQuery arQuery = query.getArQuery();
 			if (arQuery != null) {
 				return arQuery.getQuerySettings();
 			}

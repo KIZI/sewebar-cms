@@ -75,11 +75,11 @@
 		<field name="querySettings" type="xquerysearch.domain.arbquery.QuerySettings">
 			<bind-xml name="QuerySettings" node="element" />
 		</field>
-		<field name="bbaSettings" type="xquerysearch.domain.arbquery.BbaSettings">
-			<bind-xml name="BBASettings" node="element" />
+		<field name="bbaSettings" collection="set" type="xquerysearch.domain.arbquery.BbaSetting">
+			<bind-xml name="BBASetting" location="BBASettings" node="element" />
 		</field>
-		<field name="dbaSettings" type="xquerysearch.domain.arbquery.DbaSettings">
-			<bind-xml name="DBASettings" node="element" />
+		<field name="dbaSettings" collection="set" type="xquerysearch.domain.arbquery.DbaSetting">
+			<bind-xml name="DBASetting" location="DBASettings" node="element" />
 		</field>
 		<field name="antecedentSetting" type="string">
 			<bind-xml name="AntecedentSetting" node="element" />
@@ -105,20 +105,6 @@
 		</field>
 		<field name="resultsAnalysis" type="string">
 			<bind-xml name="ResultsAnalysis" node="element" />
-		</field>
-	</class>
-
-	<class name="xquerysearch.domain.arbquery.BbaSettings">
-		<map-to xml="BBASettings" />
-		<field name="bbaSettings" collection="set" type="xquerysearch.domain.arbquery.BbaSetting">
-			<bind-xml name="BBASetting" node="element" />
-		</field>
-	</class>
-
-	<class name="xquerysearch.domain.arbquery.DbaSettings">
-		<map-to xml="DBASettings" />
-		<field name="dbaSettings" collection="set" type="xquerysearch.domain.arbquery.DbaSetting">
-			<bind-xml name="DBASetting" node="element" />
 		</field>
 	</class>
 
