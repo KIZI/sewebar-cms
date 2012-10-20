@@ -32,7 +32,7 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 		if (results != null) {
 			for (Result result : results) {
 				AssociationRuleInternal ari = AssociationRuleToInternalTransformer.transform(result.getRule());
-				Double compliance = evaluator.evaluate(ari, aqi);
+				Double[][] compliance = evaluator.evaluate(ari, aqi);
 				result.setQueryCompliance(compliance);
 			}
 		}

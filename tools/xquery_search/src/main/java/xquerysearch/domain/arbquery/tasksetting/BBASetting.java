@@ -10,9 +10,25 @@ import xquerysearch.domain.arbquery.tasksetting.Coefficient;
  */
 public class BBASetting {
 
+	private String id;
 	private String name;
 	private String fieldRef;
 	private Coefficient coefficient;
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the name

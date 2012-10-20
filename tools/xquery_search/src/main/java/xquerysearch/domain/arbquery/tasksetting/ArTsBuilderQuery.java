@@ -12,21 +12,21 @@ import xquerysearch.domain.arbquery.datadescription.DataDescription;
 public class ArTsBuilderQuery {
 
 	private DataDescription dataDescription;
-	private ArTsQuery arQuery;
+	private ArTsQuery arTsQuery;
 
 	/**
-	 * @return the arQuery
+	 * @return the arTsQuery
 	 */
-	public ArTsQuery getArQuery() {
-		return arQuery;
+	public ArTsQuery getArTsQuery() {
+		return arTsQuery;
 	}
 
 	/**
-	 * @param arQuery
-	 *            the arQuery to set
+	 * @param arTsQuery
+	 *            the arTsQuery to set
 	 */
-	public void setArQuery(ArTsQuery arQuery) {
-		this.arQuery = arQuery;
+	public void setArTsQuery(ArTsQuery arTsQuery) {
+		this.arTsQuery = arTsQuery;
 	}
 
 	/**

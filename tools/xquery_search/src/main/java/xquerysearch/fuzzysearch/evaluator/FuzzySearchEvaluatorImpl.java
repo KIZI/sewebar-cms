@@ -34,7 +34,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @{inheritDoc
 	 */
 	@Override
-	public Double evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
+	public Double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
 		Double resultCompliance = DEFAULT_COMPLIANCE;
 
 		Map<String, Integer> resultAnalysis = ResultAnalyzer.analyze(ari);
@@ -46,13 +46,10 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 			resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
 		}
 
-		double bbaVector[] = evaluateBbas(ari.getAntecedentBbas(), aqi.getAntecedentBbaSettingList());
+		Double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(), aqi.getAntecedentBbaSettingList());
+		Double[] consequentBbaVector = evaluateBbas(ari.getConsequentBbas(), aqi.getConsequentBbaSettingList());
 
-		for (int i = 0; i < bbaVector.length; i++) {
-			System.out.println("VECTOR ITEM " + i + ": " + bbaVector[i]);
-		}
-
-		return resultCompliance;
+		return new Double[][]{antecedentBbaVector, consequentBbaVector, new Double[]{resultCompliance}};
 	}
 
 	/**
@@ -95,8 +92,8 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
-		double ret[] = new double[bbaSettings.size()];
+	private static Double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
+		Double[] ret = new Double[bbaSettings.size()];
 
 		for (int i = 0; i < bbaSettings.size(); i++) {
 			BbaSetting bbaSetting = bbaSettings.get(i);

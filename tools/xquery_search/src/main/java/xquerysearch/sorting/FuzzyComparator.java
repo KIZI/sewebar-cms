@@ -17,12 +17,13 @@ public class FuzzyComparator implements Comparator<Result> {
 	 */
 	@Override
 	public int compare(Result o1, Result o2) {
-		Double o1Compliance = o1.getQueryCompliance();
-		Double o2Compliance = o2.getQueryCompliance();
+		Double[][] o1Compliance = o1.getQueryCompliance();
+		Double[][] o2Compliance = o2.getQueryCompliance();
 
-		if (o1Compliance > o2Compliance) {
+		// TODO need huge rework
+		if (o1Compliance[0][0] > o2Compliance[0][0]) {
 			return 1;
-		} else if (o1Compliance < o2Compliance) {
+		} else if (o1Compliance[0][0] < o2Compliance[0][0]) {
 			return -1;
 		} else {
 			return 0;

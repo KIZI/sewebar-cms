@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import xquerysearch.dao.AggregationDao;
 
 import com.sleepycat.dbxml.XmlContainer;
+import com.sleepycat.dbxml.XmlDocumentConfig;
 import com.sleepycat.dbxml.XmlException;
 import com.sleepycat.dbxml.XmlIndexDeclaration;
 import com.sleepycat.dbxml.XmlIndexSpecification;
@@ -35,10 +36,11 @@ public class BdbxmlAggregationDao extends AbstractDao implements AggregationDao 
 		try {
 			cont = xmlManager.openContainer(containerName);
 			trans = xmlManager.createTransaction();
-			XmlResults results = cont.getAllDocuments(null);
+			XmlResults results = cont.getAllDocuments(trans, XmlDocumentConfig.DEFAULT);
 			while (results.hasNext()) {
 				names.add(results.next().asDocument().getName());
 			}
+			results.delete();
 			return names;
 		} catch (XmlException e) {
 			logger.warn("Retrieving all documents names failed!");

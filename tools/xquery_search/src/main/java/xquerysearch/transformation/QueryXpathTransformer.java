@@ -228,6 +228,7 @@ public class QueryXpathTransformer {
 								xpath.append(" " + connective + " ");
 							}
 							xpath.append("CatName " + categorySign + " \"" + category + "\"");
+							i++;
 						}
 					}
 					xpath.append(")");
@@ -256,53 +257,32 @@ public class QueryXpathTransformer {
 			if (dbaSetting.getId().equals(currentId)) {
 				for (String baRef : dbaSetting.getBaSettingRefs()) {
 					relatedBaRefs.add(baRef);
-					// dbaSettings.remove(dbaSetting);
 				}
 			}
 		}
 
 		if (relatedBaRefs.size() == 0) {
-			for (BbaSetting bbaSetting : bbaSettings) {
-				if (bbaSetting.getId().equals(currentId)) {
-
-					if (bbaSetting.getFieldRef() != null) {
-						String dictionary = bbaSetting.getFieldRef().getDictionary();
-						xpath.append("/BBA/" + dictionary + "[");
-					} else {
-						continue;
-					}
-
-					// TODO set value some other way
-
-					xpath.append("FieldName = \"" + bbaSetting.getFieldRef().getValue() + "\" and (");
-
-					Coefficient coefficient = bbaSetting.getCoefficient();
-					if (coefficient.getCategories() != null) {
-						String connective = "and";
-						if (coefficient.getType().equals("At least one from listed")) {
-							connective = "or";
-						}
-						int i = 0;
-						for (String category : coefficient.getCategories()) {
-							if (i > 0) {
-								xpath.append(" " + connective + " ");
-							}
-							xpath.append("CatName = \"" + category + "\"");
-						}
-					}
-					xpath.append(")]");
-				}
-			}
+			processBbas(currentId, bbaSettings, xpath, 1);
 		}
 
+		int loopCount = 0;
 		for (String baRef : relatedBaRefs) {
 			if (relatedBaRefs.size() == 1) {
 				xpath.append("/DBA");
 				xpath.append(processCedent(baRef, dbaSettings, bbaSettings));
 			} else if (relatedBaRefs.size() > 1) {
-				xpath.append("[DBA");
+				if (loopCount == 0) {
+					xpath.append("[");
+				}
+				if (loopCount > 0) {
+					xpath.append(" and ");
+				}
+				xpath.append("DBA");
 				xpath.append(processCedent(baRef, dbaSettings, bbaSettings));
-				xpath.append("]");
+				if (loopCount == (relatedBaRefs.size() - 1)) {
+					xpath.append("]");
+				}
+				loopCount++;
 			}
 		}
 
