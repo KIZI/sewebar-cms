@@ -20,7 +20,7 @@ public class Result {
 	private Rule rule;
 	private TaskSetting taskSetting;
 
-	private Double queryCompliance;
+	private Double[][] array;
 
 	/**
 	 * @return the ruleId
@@ -145,16 +145,16 @@ public class Result {
 	/**
 	 * @return the queryComplience
 	 */
-	public Double getQueryCompliance() {
-		return queryCompliance;
+	public Double[][] getQueryCompliance() {
+		return array;
 	}
 
 	/**
 	 * @param queryCompliance
 	 *            the queryComplience to set
 	 */
-	public void setQueryCompliance(Double queryCompliance) {
-		this.queryCompliance = queryCompliance;
+	public void setQueryCompliance(Double[][] queryCompliance) {
+		this.array = queryCompliance;
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class Result {
 		StringBuffer ret = new StringBuffer();
 		ret.append("<Hit docID=\"" + docId + "\" ruleID=\"" + ruleId + "\" docName=\"" + docName
 				+ "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table
-				+ "\" queryCompliance=\"" + queryCompliance + "\" >");
+				+ "\" queryCompliance=\"" + getQueryComplianceForOutput(array) + "\" >");
 		if (text != null) {
 			ret.append("<Text><![CDATA[" + text + "]]></Text>");
 		}
@@ -191,6 +191,44 @@ public class Result {
 			ret.append(taskSetting.toString());
 		}
 		ret.append("</Hit>");
+		return ret.toString();
+	}
+
+	/**
+	 * TODO rework (see {@link #getDoubleArrayForOutput(Double[])}
+	 * 
+	 * @param queryCompliance
+	 * @return
+	 */
+	private String getQueryComplianceForOutput(Double[][] queryCompliance) {
+		StringBuffer ret = new StringBuffer();
+		ret.append("[");
+		for (int i = 0; i < queryCompliance.length; i++) {
+			if (i > 0) {
+				ret.append(", ");
+			}
+			ret.append(getDoubleArrayForOutput(queryCompliance[i]));
+		}
+		ret.append("]");
+		return ret.toString();
+	}
+
+	/**
+	 * TODO rework (see {@link #getQueryComplianceForOutput(Double[][])}
+	 * 
+	 * @param array
+	 * @return
+	 */
+	private String getDoubleArrayForOutput(Double[] array) {
+		StringBuffer ret = new StringBuffer();
+		ret.append("[");
+		for (int i = 0; i < array.length; i++) {
+			if (i > 0) {
+				ret.append(", ");
+			}
+			ret.append(array[i]);
+		}
+		ret.append("]");
 		return ret.toString();
 	}
 

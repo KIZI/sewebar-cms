@@ -8,7 +8,7 @@
 		<property name="targetClass" value="xquerysearch.domain.arbquery.ArBuilderQuery" />
 	</bean>
 	
-	<bean id="arbQueryTsCastor" class="org.springframework.oxm.castor.CastorMarshaller">
+	<bean id="arbTsQueryCastor" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocation" value="classpath:xquery_search/mapping/arbuilder-query-tasksetting-mapping.xml" />
 		<property name="targetClass" value="xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery" />
 	</bean>

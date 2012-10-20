@@ -2,6 +2,7 @@ package xquerysearch.domain.arbquery.tasksetting;
 
 import java.util.Set;
 
+import xquerysearch.domain.arbquery.InterestMeasureSetting;
 import xquerysearch.domain.arbquery.QuerySettings;
 
 /**
@@ -18,6 +19,7 @@ public class ArTsQuery {
 	private String antecedentSetting;
 	private String consequentSetting;
 	private String conditionSetting;
+	private InterestMeasureSetting imSetting;
 
 	/**
 	 * @return the querySettings
@@ -107,6 +109,21 @@ public class ArTsQuery {
 	 */
 	public void setConditionSetting(String conditionSetting) {
 		this.conditionSetting = conditionSetting;
+	}
+
+	/**
+	 * @return the imSetting
+	 */
+	public InterestMeasureSetting getImSetting() {
+		return imSetting;
+	}
+
+	/**
+	 * @param imSetting
+	 *            the imSetting to set
+	 */
+	public void setImSetting(InterestMeasureSetting imSetting) {
+		this.imSetting = imSetting;
 	}
 
 }

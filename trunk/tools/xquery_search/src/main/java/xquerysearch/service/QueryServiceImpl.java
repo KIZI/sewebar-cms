@@ -170,7 +170,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	 */
 	private QuerySettings getQuerySettings(ArTsBuilderQuery query) {
 		if (query != null) {
-			ArTsQuery arQuery = query.getArQuery();
+			ArTsQuery arQuery = query.getArTsQuery();
 			if (arQuery != null) {
 				return arQuery.getQuerySettings();
 			}

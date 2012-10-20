@@ -8,7 +8,7 @@ package xquerysearch.domain.arbquery.querysettings;
  */
 public enum QueryTarget {
 	
-	ASSOCIATION_RULE("AssociationRule"), TASK_SETTINGS("TaskSettings");
+	ASSOCIATION_RULE("AssociationRule"), TASK_SETTING("TaskSetting");
 	
 	private String text;
 	

@@ -3,10 +3,7 @@ package xquerysearch.transformation;
 import java.util.HashSet;
 import java.util.Set;
 
-import xquerysearch.domain.arbquery.ArBuilderQuery;
-import xquerysearch.domain.arbquery.BbaSetting;
-import xquerysearch.domain.arbquery.Coefficient;
-import xquerysearch.domain.arbquery.DbaSetting;
+import xquerysearch.domain.arbquery.tasksetting.Coefficient;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.arbquery.tasksetting.BBASetting;
@@ -36,22 +33,22 @@ public class QueryXpathTaskSettingTransformer {
 	public static String transformToXpath(ArTsBuilderQuery query, QuerySettings settings) {
 		StringBuffer xpath = new StringBuffer();
 
-		xpath.append("/PMML/AssociationRule[");
+		xpath.append("/PMML[TaskSetting[");
 
 		transformNormal(query, xpath);
-		xpath.append("]");
+		xpath.append("]]/AssociationRule");
 
 		System.out.println(xpath);
 		return xpath.toString();
 	}
 
 	private static void transformNormal(ArTsBuilderQuery query, StringBuffer xpath) {
-		String antecedentSetting = query.getArQuery().getAntecedentSetting();
-		String consequentSetting = query.getArQuery().getConsequentSetting();
-		String conditionSetting = query.getArQuery().getConditionSetting();
+		String antecedentSetting = query.getArTsQuery().getAntecedentSetting();
+		String consequentSetting = query.getArTsQuery().getConsequentSetting();
+		String conditionSetting = query.getArTsQuery().getConditionSetting();
 
-		Set<DBASetting> dbaSettings = query.getArQuery().getDbaSettings();
-		Set<BBASetting> bbaSettings = query.getArQuery().getBbaSettings();
+		Set<DBASetting> dbaSettings = query.getArTsQuery().getDbaSettings();
+		Set<BBASetting> bbaSettings = query.getArTsQuery().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("count(AntecedentSetting/" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
@@ -97,48 +94,64 @@ public class QueryXpathTaskSettingTransformer {
 
 		if (relatedBaRefs.size() == 0) {
 			for (BBASetting bbaSetting : bbaSettings) {
-//				if (bbaSetting.getId().equals(currentId)) {
-//
-//					if (bbaSetting.getFieldRef() != null) {
-//						xpath.append("/BBASetting[");
-//					} else {
-//						continue;
-//					}
-//
-//					// TODO set value some other way
-//
-//					xpath.append("FieldRef = \"" + bbaSetting.getFieldRef().getValue() + "\" and (");
-//
-//					Coefficient coefficient = bbaSetting.getCoefficient();
-//					if (coefficient.getCategories() != null) {
-//						String connective = "and";
-//						if (coefficient.getType().equals("At least one from listed")) {
-//							connective = "or";
-//						}
-//						int i = 0;
-//						for (String category : coefficient.getCategories()) {
-//							if (i > 0) {
-//								xpath.append(" " + connective + " ");
-//							}
-//							xpath.append("Coefficient = \"" + category + "\"");
-//						}
-//					}
-//					xpath.append(")]");
-//				}
+				if (bbaSetting.getId().equals(currentId)) {
+
+					if (bbaSetting.getFieldRef() != null) {
+						xpath.append("/BBASetting[");
+					} else {
+						continue;
+					}
+
+					// TODO set value some other way
+
+					xpath.append("FieldRef = \"" + bbaSetting.getFieldRef() + "\" and Coefficient[");
+
+					Coefficient coefficient = bbaSetting.getCoefficient();
+					if (coefficient != null) {
+    					xpath.append(processCoefficient(coefficient));
+					}
+					xpath.append("]]");
+				}
 			}
 		}
 
 		for (String baRef : relatedBaRefs) {
 			if (relatedBaRefs.size() == 1) {
-				xpath.append("/DBA");
+				xpath.append("/DBASetting");
 				xpath.append(processCedent(baRef, dbaSettings, bbaSettings));
 			} else if (relatedBaRefs.size() > 1) {
-				xpath.append("[DBA");
+				xpath.append("[DBASetting");
 				xpath.append(processCedent(baRef, dbaSettings, bbaSettings));
 				xpath.append("]");
 			}
 		}
 
 		return xpath.toString();
+	}
+	
+	private static String processCoefficient(Coefficient coefficient) {
+		String ret = "";
+		String connective = "";
+		String type = coefficient.getType();
+		if (type != null) {
+			ret += "Type = \"" + coefficient.getType() + "\"";
+			connective = " and ";
+		}
+		Integer minimalLength = coefficient.getMinimalLength();
+		if (minimalLength != null) {
+			ret += connective + "MinimalLength=" + minimalLength;
+			connective = " and ";
+		}
+		Integer maximalLength = coefficient.getMaximalLength();
+		if (maximalLength != null) {
+			ret += connective + "MaximalLength=" + maximalLength;
+			connective = " and ";
+		}
+		String category = coefficient.getCategory();
+		if (category != null) {
+			ret += connective + "Category = \"" + category + "\"";
+		}
+		
+		return ret;
 	}
 }
