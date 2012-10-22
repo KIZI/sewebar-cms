@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 
@@ -28,18 +29,43 @@ public class OutputTransformer {
 	 * @param resultSet
 	 * @return transformed ResultSet
 	 */
-	public static String transformResultSet(ResultSet resultSet, long queryTime, long docCount,
-			long arCount) {
-		if (resultSet == null || resultSet.getResults() == null) {
-			return null;
-		}
-
+	public static String transformResultSet(ResultSet resultSet, long queryTime, long docCount, long arCount) {
 		StringBuffer ret = new StringBuffer();
 		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
 
 		ret.append("<Hits>");
-		for (Result result : resultSet.getResults()) {
-			ret.append(transformResult(result));
+		if (resultSet == null || resultSet.getResults() == null) {
+			ret.append("");
+		} else {
+			for (Result result : resultSet.getResults()) {
+				ret.append(transformResult(result));
+			}
+		}
+		ret.append("</Hits></SearchResult>");
+		return ret.toString();
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param groups
+	 * @param queryTime
+	 * @param docCount
+	 * @param arCount
+	 * @return
+	 */
+	public static String transformResultGroups(List<Group> groups, long queryTime, long docCount, long arCount) {
+		StringBuffer ret = new StringBuffer();
+		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
+		ret.append("<Hits>");
+		if (groups == null) {
+			ret.append("");
+		} else {
+
+			for (Group group : groups) {
+				ret.append(group.toString());
+			}
+
 		}
 		ret.append("</Hits></SearchResult>");
 		return ret.toString();

@@ -25,6 +25,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import xquerysearch.domain.arbquery.ArBuilderQuery;
+import xquerysearch.domain.arbquery.ArQuery;
+import xquerysearch.domain.arbquery.QuerySettings;
+import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
+import xquerysearch.domain.arbquery.tasksetting.ArTsQuery;
+
 /**
  * Utilities for querying.
  * 
@@ -37,6 +43,40 @@ public class QueryUtils {
 	private static final String DICTIONARY = "TransformationDictionary";
 
 	private static final boolean shorter = true;
+	
+	/**
+	 * Helps retrieve {@link QuerySettings} from {@link ArBuilderQuery}.
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public static QuerySettings getQuerySettings(ArBuilderQuery query) {
+		if (query != null) {
+			ArQuery arQuery = query.getArQuery();
+			if (arQuery != null) {
+				return arQuery.getQuerySettings();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Helps retrieve {@link QuerySettings} from {@link ArTsBuilderQuery}.
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public static QuerySettings getQuerySettings(ArTsBuilderQuery query) {
+		if (query != null) {
+			ArTsQuery arQuery = query.getArTsQuery();
+			if (arQuery != null) {
+				return arQuery.getQuerySettings();
+			}
+		}
+		return null;
+	}
+
+	
 	/**
 	 * Provides removal of XML file declaration and oxygen declaration.
 	 * 
