@@ -103,18 +103,19 @@ public class ResultUtils {
 		if (bbas == null) {
 			return null;
 		}
-		
+
 		List<String> ret = new ArrayList<String>();
-		
+
 		for (BBA bba : bbas) {
-			if (bba.getTransformationDictionary() != null && bba.getTransformationDictionary().getCatNames() != null) {
+			if (bba.getTransformationDictionary() != null
+					&& bba.getTransformationDictionary().getCatNames() != null) {
 				ret.addAll(bba.getTransformationDictionary().getCatNames());
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	/**
 	 * TODO documentation
 	 * 
@@ -125,16 +126,38 @@ public class ResultUtils {
 		if (bbas == null) {
 			return null;
 		}
-		
+
 		List<String> ret = new ArrayList<String>();
-		
+
 		for (BBA bba : bbas) {
-			if (bba.getTransformationDictionary() != null && bba.getTransformationDictionary().getCatNames() != null && bba.getTransformationDictionary().getFieldName().equals(fieldRef)) {
+			if (bba.getTransformationDictionary() != null
+					&& bba.getTransformationDictionary().getCatNames() != null
+					&& bba.getTransformationDictionary().getFieldName().equals(fieldRef)) {
 				ret.addAll(bba.getTransformationDictionary().getCatNames());
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param bbas
+	 * @return
+	 */
+	public static List<String> getAllFieldRefsFromBbas(Collection<BBA> bbas) {
+		if (bbas == null) {
+			return null;
+		}
+		List<String> ret = new ArrayList<String>();
+		for (BBA bba : bbas) {
+			String fieldName = bba.getTransformationDictionary().getFieldName();
+			if (fieldName != null) {
+				ret.add(fieldName);
+			}
+		}
+		return ret;
+	}
+
 }

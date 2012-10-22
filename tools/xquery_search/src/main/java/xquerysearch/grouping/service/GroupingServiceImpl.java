@@ -31,14 +31,54 @@ public class GroupingServiceImpl implements GroupingService {
 
 		String groupBy = params.getGroupBy();
 
-		if (groupBy.equals(GroupingType.FIELDREF.getText())) {
-			return groupByFieldRef(results, params.getFieldRef());
+		if (groupBy.equals(GroupingType.CATEGORY.getText())) {
+			return groupByCategory(results, params.getFieldRef());
+		} else if (groupBy.equals(GroupingType.FIELDREF.getText())) {
+			return groupByFieldRef(results);
+		} else if (groupBy.equals(GroupingType.RULE_LENGTH.getText())) {
+			return groupByRuleLength(results);
 		}
-
 		return null;
 	}
 
-	private List<Group> groupByFieldRef(List<Result> results, String fieldRef) {
+	/**
+	 * TODO documentation
+	 * 
+	 * @param results
+	 * @return
+	 */
+	private List<Group> groupByFieldRef(List<Result> results) {
+		if (results == null) {
+			return null;
+		}
+		List<Group> groups = new ArrayList<Group>();
+		for (Result result : results) {
+			List<BBA> bbas = ResultUtils.getBbasFromResult(result);
+			List<String> fieldRefs = ResultUtils.getAllFieldRefsFromBbas(bbas);
+			Group group = GroupUtils.getGroupByFieldRef(groups, fieldRefs);
+			if (group == null) {
+				Group newGroup = new Group();
+				newGroup.getResults().add(result);
+				GroupDescription newDescription = new GroupDescription();
+				newDescription.getFieldRefs().addAll(fieldRefs);
+				newGroup.setDescription(newDescription);
+
+				groups.add(newGroup);
+			} else {
+				group.getResults().add(result);
+			}
+		}
+		return groups;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param results
+	 * @param fieldRef
+	 * @return
+	 */
+	private List<Group> groupByCategory(List<Result> results, String fieldRef) {
 		if (results == null || fieldRef == null) {
 			return null;
 		}
@@ -63,6 +103,65 @@ public class GroupingServiceImpl implements GroupingService {
 			}
 		}
 
+		return groups;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param results
+	 * @return
+	 */
+	private List<Group> groupByRuleLength(List<Result> results) {
+		if (results == null) {
+			return null;
+		}
+
+		List<Group> groups = new ArrayList<Group>();
+
+		for (Result result : results) {
+			List<BBA> bbas = ResultUtils.getBbasFromResult(result);
+			Group group = GroupUtils.getGroupByRuleLength(groups, bbas.size());
+			if (group == null) {
+				Group newGroup = new Group();
+				newGroup.getResults().add(result);
+				GroupDescription newDescription = new GroupDescription();
+				newDescription.setRuleLength(bbas.size());
+				newGroup.setDescription(newDescription);
+
+				groups.add(newGroup);
+			} else {
+				group.getResults().add(result);
+			}
+		}
+
+		return groups;
+	}
+	
+	/**
+	 * TODO documentation
+	 * 
+	 * @param results
+	 * @return
+	 */
+	private List<Group> groupByCedentLength(List<Result> results) {
+		if (results == null) {
+			return null;
+		}
+
+		List<Group> groups = new ArrayList<Group>();
+		
+		for (Result result : results) {
+			List<BBA> antecedentBbas = null;
+			List<BBA> consequentBbas = null;
+			List<BBA> conditionBbas = null;
+			
+			if (result.getRule() != null) {
+				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getAntecedent()));
+				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getConsequent()));
+				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getCondition()));
+			}
+		}
 		return groups;
 	}
 

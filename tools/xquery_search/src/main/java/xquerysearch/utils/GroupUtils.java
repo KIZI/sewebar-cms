@@ -32,7 +32,49 @@ public class GroupUtils {
 		}
 
 		for (Group group : groups) {
-			if (isSuitableGroup(group, categoryNames, fieldRef)) {
+			if (isSuitableGroupByCategories(group, categoryNames, fieldRef)) {
+				return group;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param groups
+	 * @param fieldRef
+	 * @return
+	 */
+	public static Group getGroupByFieldRef(List<Group> groups, List<String> fieldRefs) {
+		if (groups == null || fieldRefs == null) {
+			return null;
+		}
+
+		for (Group group : groups) {
+			if (isSuitableGroupByFieldRefs(group, fieldRefs)) {
+				return group;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param groups
+	 * @param ruleLength
+	 * @return
+	 */
+	public static Group getGroupByRuleLength(List<Group> groups, int ruleLength) {
+		if (groups == null) {
+			return null;
+		}
+
+		for (Group group : groups) {
+			if (group.getDescription() != null && group.getDescription().getRuleLength() != null
+					&& group.getDescription().getRuleLength() == ruleLength) {
 				return group;
 			}
 		}
@@ -47,7 +89,8 @@ public class GroupUtils {
 	 * @param categoryNames
 	 * @return
 	 */
-	private static boolean isSuitableGroup(Group group, List<String> categoryNames, String fieldRef) {
+	private static boolean isSuitableGroupByCategories(Group group, List<String> categoryNames,
+			String fieldRef) {
 		if (group == null || categoryNames == null) {
 			return false;
 		}
@@ -69,6 +112,35 @@ public class GroupUtils {
 			isSuitable = false;
 		}
 
+		return isSuitable;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param group
+	 * @param fieldRefs
+	 * @return
+	 */
+	private static boolean isSuitableGroupByFieldRefs(Group group, List<String> fieldRefs) {
+		if (group == null || fieldRefs == null) {
+			return false;
+		}
+
+		GroupDescription description = group.getDescription();
+		if (description == null) {
+			return false;
+		}
+
+		boolean isSuitable = true;
+		for (String fieldRef : fieldRefs) {
+			if (description.getFieldRefs().contains(fieldRef) == false) {
+				isSuitable = false;
+			}
+		}
+		if (isSuitable == false && (description.getFieldRefs().size() != fieldRefs.size())) {
+			return false;
+		}
 		return isSuitable;
 	}
 }

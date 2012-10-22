@@ -8,7 +8,7 @@ package xquerysearch.domain.arbquery.querysettings;
  */
 public enum GroupingType {
 
-	FIELDREF("FieldRef");
+	FIELDREF("FieldRef"), FIELDREF_BY_CEDENT("FieldRefByCedent"), CATEGORY("Category"), RULE_LENGTH("RuleLength"), RULE_LENGTH_BY_CEDENT("RuleLengthByCedent");
 	
 	private String text;
 	
