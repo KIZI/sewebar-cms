@@ -7,26 +7,20 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.stereotype.Service;
 
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
-import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.querysettings.QueryResultsAnalysis;
-import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
-import xquerysearch.domain.arbquery.tasksetting.ArTsQuery;
+import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
+import xquerysearch.grouping.service.GroupingService;
 import xquerysearch.sorting.OutputFuzzySorter;
-import xquerysearch.transformation.QueryArBuilderQueryTransformer;
-import xquerysearch.transformation.QueryArBuilderQueryTsTransformer;
-import xquerysearch.transformation.QueryXpathTaskSettingTransformer;
 import xquerysearch.transformation.QueryXpathTransformer;
 import xquerysearch.utils.QueryUtils;
 
@@ -46,18 +40,13 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	private ResultsDao dao;
 
 	@Autowired
-	@Qualifier("arbQueryCastor")
-	private CastorMarshaller arbQueryCastor;
+	private FuzzySearchService fuzzySearchService;
 	
 	@Autowired
-	@Qualifier("arbTsQueryCastor")
-	private CastorMarshaller arbTsQueryCastor;
-
-	@Autowired
-	private FuzzySearchService fuzzySearchService;
+	private GroupingService groupingService;
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ResultSet getResultSet(Query query) {
@@ -77,7 +66,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ResultSet getResultSet(String xpath, int maxResults) {
@@ -96,37 +85,35 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Result> getResultList(String query) {
-		ArBuilderQuery arbQuery = null;
-		ArTsBuilderQuery arbTsQuery = null;
-		String xpath = null;
-		QuerySettings settings = null;
-		if (query.contains("<Target>TaskSetting</Target>")) {
-			arbTsQuery = QueryArBuilderQueryTsTransformer.transform(arbTsQueryCastor, query);
-			settings = getQuerySettings(arbTsQuery);
-			xpath = QueryXpathTaskSettingTransformer.transformToXpath(arbTsQuery, settings);
-		} else {
-			arbQuery = QueryArBuilderQueryTransformer.transform(arbQueryCastor, query);
-			settings = getQuerySettings(arbQuery);
-			xpath = QueryXpathTransformer.transformToXpath(arbQuery, settings);
-		}
+	public List<Result> getResultList(ArBuilderQuery query, QuerySettings settings) {
+		String xpath = QueryXpathTransformer.transformToXpath(query, settings);
+		
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
 		Set<Result> results = resultSet.getResults();
 		if (settings != null) {
 			if (settings.getResultsAnalysis().equals(QueryResultsAnalysis.FUZZY.getText())) {
 				return OutputFuzzySorter.sortByCompliance(fuzzySearchService.evaluateResults(results,
-						arbQuery));
+						query));
 			}
 		}
 		return new ArrayList<Result>(results);
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Group> getResultsInGroups(ArBuilderQuery query, QuerySettings settings) {
+		List<Result> results = getResultList(query, settings);
+		return groupingService.groupBy(results, settings.getParams());
+	}
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String queryForSingleValue(String query) {
@@ -138,7 +125,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String query(String query) {
@@ -146,35 +133,4 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		return results.toString();
 	}
 
-	/**
-	 * Helps retrieve {@link QuerySettings} from {@link ArBuilderQuery}.
-	 * 
-	 * @param query
-	 * @return
-	 */
-	private QuerySettings getQuerySettings(ArBuilderQuery query) {
-		if (query != null) {
-			ArQuery arQuery = query.getArQuery();
-			if (arQuery != null) {
-				return arQuery.getQuerySettings();
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Helps retrieve {@link QuerySettings} from {@link ArTsBuilderQuery}.
-	 * 
-	 * @param query
-	 * @return
-	 */
-	private QuerySettings getQuerySettings(ArTsBuilderQuery query) {
-		if (query != null) {
-			ArTsQuery arQuery = query.getArTsQuery();
-			if (arQuery != null) {
-				return arQuery.getQuerySettings();
-			}
-		}
-		return null;
-	}
 }

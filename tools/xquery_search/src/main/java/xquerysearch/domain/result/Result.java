@@ -203,11 +203,13 @@ public class Result {
 	private String getQueryComplianceForOutput(Double[][] queryCompliance) {
 		StringBuffer ret = new StringBuffer();
 		ret.append("[");
-		for (int i = 0; i < queryCompliance.length; i++) {
-			if (i > 0) {
-				ret.append(", ");
+		if (queryCompliance != null) {
+			for (int i = 0; i < queryCompliance.length; i++) {
+				if (i > 0) {
+					ret.append(", ");
+				}
+				ret.append(getDoubleArrayForOutput(queryCompliance[i]));
 			}
-			ret.append(getDoubleArrayForOutput(queryCompliance[i]));
 		}
 		ret.append("]");
 		return ret.toString();

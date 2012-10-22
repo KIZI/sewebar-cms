@@ -11,6 +11,7 @@ public class QuerySettings {
 	private String type;
 	private String target;
 	private String resultsAnalysis;
+	private Params params;
 
 	/**
 	 * @return the type
@@ -55,6 +56,21 @@ public class QuerySettings {
 	 */
 	public void setResultsAnalysis(String resultsAnalysis) {
 		this.resultsAnalysis = resultsAnalysis;
+	}
+
+	/**
+	 * @return the params
+	 */
+	public Params getParams() {
+		return params;
+	}
+
+	/**
+	 * @param params
+	 *            the params to set
+	 */
+	public void setParams(Params params) {
+		this.params = params;
 	}
 
 }

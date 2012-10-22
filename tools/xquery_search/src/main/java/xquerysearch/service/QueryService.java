@@ -3,6 +3,9 @@ package xquerysearch.service;
 import java.util.List;
 
 import xquerysearch.domain.Query;
+import xquerysearch.domain.arbquery.ArBuilderQuery;
+import xquerysearch.domain.arbquery.QuerySettings;
+import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 
@@ -35,9 +38,19 @@ public interface QueryService {
 	 * Retrieves {@link Result}s as {@link List} from database by query.
 	 * 
 	 * @param query
+	 * @param settings
 	 * @return {@link List} of {@link Result}s
 	 */
-	public List<Result> getResultList(String query);
+	public List<Result> getResultList(ArBuilderQuery query, QuerySettings settings);
+
+	/**
+	 * Retrieves {@link Result}s grouped as specified in settings.
+	 * 
+	 * @param query
+	 * @param settings
+	 * @return
+	 */
+	public List<Group> getResultsInGroups(ArBuilderQuery query, QuerySettings settings);
 
 	/**
 	 * Queries database with given query and returns single result value as

@@ -212,7 +212,7 @@ public class QueryXpathTransformer {
 					Coefficient coefficient = bbaSetting.getCoefficient();
 					if (coefficient.getCategories() != null) {
 						String connective = "and";
-						if (coefficient.getType().equals("At least one from listed")) {
+						if (coefficient.getType().equals("At least one from listed") && queryType != 2) {
 							connective = "or";
 						}
 
