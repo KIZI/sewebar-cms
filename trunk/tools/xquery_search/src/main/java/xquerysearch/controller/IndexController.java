@@ -19,30 +19,31 @@ import xquerysearch.service.IndexService;
  * Controller for operations with indexes.
  * 
  * @author Tomas Marek
- *
+ * 
  */
 @Controller
 public class IndexController extends AbstractController {
 
 	@Autowired
 	private AggregationService aggregationService;
-	
+
 	@Autowired
 	private IndexService indexService;
-	
+
 	@RequestMapping(params = "action=listIndexes", method = RequestMethod.POST)
 	public ModelAndView showIndexes(HttpServletRequest request, HttpServletResponse response) {
 		List<String[]> indexes = aggregationService.getAllIndexes();
 		StringBuffer indexesToResponse = new StringBuffer();
 		indexesToResponse.append("<result>");
 		for (String[] index : indexes) {
-			indexesToResponse.append("<index><name>" + index[0] + "</name><content>" + index[1] + "</content></index>");
+			indexesToResponse.append("<index><name>" + index[0] + "</name><content>" + index[1]
+					+ "</content></index>");
 		}
 		indexesToResponse.append("</result>");
 		addResponseContent(indexesToResponse.toString(), response);
 		return null;
 	}
-	
+
 	@RequestMapping(params = "action=addIndex", method = RequestMethod.POST)
 	public ModelAndView addIndex(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
 		if (content.isEmpty()) {
@@ -57,8 +58,8 @@ public class IndexController extends AbstractController {
 		addResponseContent(message, response);
 		return null;
 	}
-	
-	@RequestMapping(params="action=delIndex", method = RequestMethod.POST)
+
+	@RequestMapping(params = "action=delIndex", method = RequestMethod.POST)
 	public ModelAndView delIndex(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
 		if (content.isEmpty()) {
 			addResponseContent("<error>Index has to be specified!</error>", response);

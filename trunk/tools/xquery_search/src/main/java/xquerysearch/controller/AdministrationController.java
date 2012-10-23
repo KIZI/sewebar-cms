@@ -16,7 +16,7 @@ public class AdministrationController {
 
 	@RequestMapping("/index.do")
 	public ModelAndView showPage() {
-		System.out.println("FUCK THIS SHIT");
+		System.out.println("Administration");
 		return new ModelAndView();
 	}
 }
