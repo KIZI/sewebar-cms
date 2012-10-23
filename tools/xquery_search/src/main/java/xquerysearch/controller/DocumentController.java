@@ -46,8 +46,7 @@ public class DocumentController extends AbstractController {
 	}
 
 	@RequestMapping(params = "action=getDocument", method = RequestMethod.POST)
-	public ModelAndView getDocument(@RequestParam String id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView getDocument(@RequestParam String id, HttpServletRequest request, HttpServletResponse response) {
 		if (id.isEmpty()) {
 			addResponseContent("<error>Document id cannot be empty!</error>", response);
 			return null;
@@ -63,8 +62,7 @@ public class DocumentController extends AbstractController {
 	}
 
 	@RequestMapping(params = "action=deleteDocument", method = RequestMethod.POST)
-	public ModelAndView deleteDocument(@RequestParam String id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView deleteDocument(@RequestParam String id, HttpServletRequest request, HttpServletResponse response) {
 		if (id.isEmpty()) {
 			addResponseContent("<error>Document id cannot be empty!</error>", response);
 			return null;
@@ -79,9 +77,7 @@ public class DocumentController extends AbstractController {
 	}
 
 	@RequestMapping(params = "action=addDocument", method = RequestMethod.POST)
-	public ModelAndView addDocument(@RequestParam String id, @RequestParam String docName,
-			@RequestParam String creationTime, @RequestParam String reportUri, @RequestParam String content,
-			HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView addDocument(@RequestParam String id, @RequestParam String docName, @RequestParam String creationTime, @RequestParam String reportUri, @RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
 		if (id.isEmpty()) {
 			addResponseContent("<error>Document id cannot be empty!</error>", response);
 			return null;

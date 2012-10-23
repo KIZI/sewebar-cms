@@ -53,7 +53,8 @@ public class GroupUtils {
 		}
 
 		for (Group group : groups) {
-			if (isSuitableGroupByFieldRefs(group, fieldRefs)) {
+			GroupDescription description = group.getDescription();
+			if (description != null && isSuitableGroupByFieldRefs(description.getFieldRefs(), fieldRefs)) {
 				return group;
 			}
 		}
@@ -85,12 +86,65 @@ public class GroupUtils {
 	/**
 	 * TODO documentation
 	 * 
+	 * @param groups
+	 * @param antecedentLength
+	 * @param consequentLength
+	 * @param conditionLength
+	 * @return
+	 */
+	public static Group getGroupByCedentsLength(List<Group> groups, int antecedentLength, int consequentLength, int conditionLength) {
+		if (groups == null) {
+			return null;
+		}
+
+		for (Group group : groups) {
+			if (isSuitableGroupByCedentsLength(group, antecedentLength, consequentLength, conditionLength)) {
+				return group;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param groups
+	 * @param antecedentFieldRefs
+	 * @param consequentFieldRefs
+	 * @param conditionFieldRefs
+	 * @return
+	 */
+	public static Group getGroupByCedentFieldRef(List<Group> groups, List<String> antecedentFieldRefs, List<String> consequentFieldRefs, List<String> conditionFieldRefs) {
+		if (groups == null || antecedentFieldRefs == null || consequentFieldRefs == null
+				|| conditionFieldRefs == null) {
+			return null;
+		}
+
+		for (Group group : groups) {
+			GroupDescription description = group.getDescription();
+			if (description != null) {
+				boolean isAntecedentSuitable = isSuitableGroupByFieldRefs(description.getAntecedentFieldRefs(), antecedentFieldRefs);
+				boolean isConsequentSuitable = isSuitableGroupByFieldRefs(description.getConsequentFieldRefs(), consequentFieldRefs);
+				boolean isConditionSuitable = isSuitableGroupByFieldRefs(description.getConditionFieldRefs(), conditionFieldRefs);
+				
+				if (isAntecedentSuitable == true && isConsequentSuitable == true && isConditionSuitable == true) {
+					return group;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
 	 * @param group
 	 * @param categoryNames
 	 * @return
 	 */
-	private static boolean isSuitableGroupByCategories(Group group, List<String> categoryNames,
-			String fieldRef) {
+	private static boolean isSuitableGroupByCategories(Group group, List<String> categoryNames, String fieldRef) {
 		if (group == null || categoryNames == null) {
 			return false;
 		}
@@ -118,27 +172,45 @@ public class GroupUtils {
 	/**
 	 * TODO documentation
 	 * 
-	 * @param group
+	 * @param antecedentLength
+	 * @param consequentLength
+	 * @param conditionLength
+	 * @return
+	 */
+	private static boolean isSuitableGroupByCedentsLength(Group group, int antecedentLength, int consequentLength, int conditionLength) {
+		if (group.getDescription() == null || group.getDescription().getAntecedentLength() == null
+				|| group.getDescription().getConsequentLength() == null
+				|| group.getDescription().getConditionLength() == null) {
+			return false;
+		} else {
+			if (group.getDescription().getAntecedentLength() == antecedentLength
+					&& group.getDescription().getConsequentLength() == consequentLength
+					&& group.getDescription().getConditionLength() == conditionLength) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * TODO documentation
+	 * 
+	 * @param groupFieldRefs
 	 * @param fieldRefs
 	 * @return
 	 */
-	private static boolean isSuitableGroupByFieldRefs(Group group, List<String> fieldRefs) {
-		if (group == null || fieldRefs == null) {
-			return false;
-		}
-
-		GroupDescription description = group.getDescription();
-		if (description == null) {
+	private static boolean isSuitableGroupByFieldRefs(List<String> groupFieldRefs, List<String> fieldRefs) {
+		if (groupFieldRefs == null || fieldRefs == null) {
 			return false;
 		}
 
 		boolean isSuitable = true;
 		for (String fieldRef : fieldRefs) {
-			if (description.getFieldRefs().contains(fieldRef) == false) {
+			if (groupFieldRefs.contains(fieldRef) == false) {
 				isSuitable = false;
 			}
 		}
-		if (isSuitable == false && (description.getFieldRefs().size() != fieldRefs.size())) {
+		if (isSuitable != false && (groupFieldRefs.size() != fieldRefs.size())) {
 			return false;
 		}
 		return isSuitable;

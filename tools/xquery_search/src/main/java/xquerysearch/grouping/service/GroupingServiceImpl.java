@@ -30,13 +30,18 @@ public class GroupingServiceImpl implements GroupingService {
 		}
 
 		String groupBy = params.getGroupBy();
-
-		if (groupBy.equals(GroupingType.CATEGORY.getText())) {
-			return groupByCategory(results, params.getFieldRef());
-		} else if (groupBy.equals(GroupingType.FIELDREF.getText())) {
-			return groupByFieldRef(results);
-		} else if (groupBy.equals(GroupingType.RULE_LENGTH.getText())) {
-			return groupByRuleLength(results);
+		
+		GroupingType type = GroupingType.convertToGroupingType(groupBy);
+		
+		if (type != null) {
+			switch (type) {
+				case CATEGORY : return groupByCategory(results, params.getFieldRef());
+				case FIELDREF : return groupByFieldRef(results);
+				case FIELDREF_BY_CEDENT : return groupByCedentFieldRef(results);
+				case RULE_LENGTH : return groupByRuleLength(results);
+				case RULE_LENGTH_BY_CEDENT : return groupByCedentLength(results);
+				default : return null;
+			}
 		}
 		return null;
 	}
@@ -152,17 +157,83 @@ public class GroupingServiceImpl implements GroupingService {
 		List<Group> groups = new ArrayList<Group>();
 		
 		for (Result result : results) {
-			List<BBA> antecedentBbas = null;
-			List<BBA> consequentBbas = null;
-			List<BBA> conditionBbas = null;
+			List<BBA> antecedentBbas = new ArrayList<BBA>();
+			List<BBA> consequentBbas = new ArrayList<BBA>();
+			List<BBA> conditionBbas = new ArrayList<BBA>();
 			
 			if (result.getRule() != null) {
 				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getAntecedent()));
 				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getConsequent()));
 				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getCondition()));
 			}
+			
+			int antecedentLength = antecedentBbas.size();
+			int consequentLength = consequentBbas.size();
+			int conditionLength = conditionBbas.size();
+			
+			Group group = GroupUtils.getGroupByCedentsLength(groups, antecedentLength, consequentLength, conditionLength);
+			if (group == null) {
+				Group newGroup = new Group();
+				newGroup.getResults().add(result);
+				
+				GroupDescription newDescription = new GroupDescription();
+				newDescription.setAntecedentLength(antecedentLength);
+				newDescription.setConsequentLength(consequentLength);
+				newDescription.setConditionLength(conditionLength);
+				newGroup.setDescription(newDescription);
+
+				groups.add(newGroup);
+			} else {
+				group.getResults().add(result);
+			}
 		}
 		return groups;
 	}
 
+	/**
+	 * TODO documentation
+	 * 
+	 * @param results
+	 * @return
+	 */
+	private List<Group> groupByCedentFieldRef(List<Result> results) {
+		if (results == null) {
+			return null;
+		}
+
+		List<Group> groups = new ArrayList<Group>();
+		
+		for (Result result : results) {
+			List<BBA> antecedentBbas = new ArrayList<BBA>();
+			List<BBA> consequentBbas = new ArrayList<BBA>();
+			List<BBA> conditionBbas = new ArrayList<BBA>();
+			
+			if (result.getRule() != null) {
+				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getAntecedent()));
+				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getConsequent()));
+				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getCondition()));
+			}
+			
+			List<String> antecedentFieldRefs = ResultUtils.getAllFieldRefsFromBbas(antecedentBbas);
+			List<String> consequentFieldRefs = ResultUtils.getAllFieldRefsFromBbas(consequentBbas);
+			List<String> conditionFieldRefs = ResultUtils.getAllFieldRefsFromBbas(conditionBbas);
+			
+			Group group = GroupUtils.getGroupByCedentFieldRef(groups, antecedentFieldRefs, consequentFieldRefs, conditionFieldRefs);
+			if (group == null) {
+				Group newGroup = new Group();
+				newGroup.getResults().add(result);
+				
+				GroupDescription newDescription = new GroupDescription();
+				newDescription.getAntecedentFieldRefs().addAll(antecedentFieldRefs);
+				newDescription.getConsequentFieldRefs().addAll(consequentFieldRefs);
+				newDescription.getConditionFieldRefs().addAll(conditionFieldRefs);
+				newGroup.setDescription(newDescription);
+
+				groups.add(newGroup);
+			} else {
+				group.getResults().add(result);
+			}
+		}
+		return groups;
+	}
 }

@@ -25,4 +25,19 @@ public enum GroupingType {
 	public String getText() {
 		return text;
 	}
+	
+	/**
+	 * Converts given {@link String} value to {@link GroupingType}.
+	 * 
+	 * @param value
+	 * @return {@link GroupingType} if found, <tt>null</tt> otherwise
+	 */
+	public static GroupingType convertToGroupingType(String value) {
+		for (GroupingType type : values()) {
+			if (type.getText().equals(value)) {
+				return type;
+			}
+		}
+		return null;
+	}
 }

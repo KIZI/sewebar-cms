@@ -52,8 +52,7 @@ public class QueryController extends AbstractController {
 
 	// TODO rename action in jsp
 	@RequestMapping(params = "action=useQuery", method = RequestMethod.POST)
-	public ModelAndView queryForResult(@RequestParam String content, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView queryForResult(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
 		if (content.isEmpty()) {
 			addResponseContent("<error>Query content has to be entered!</error>", response);
 			return null;
@@ -76,7 +75,8 @@ public class QueryController extends AbstractController {
 			settings = QueryUtils.getQuerySettings(arbQuery);
 		}
 		if (settings != null) {
-			if (settings.getResultsAnalysis() != null && settings.getResultsAnalysis().equals(QueryResultsAnalysis.GROUPING.getText())) {
+			if (settings.getResultsAnalysis() != null
+					&& settings.getResultsAnalysis().equals(QueryResultsAnalysis.GROUPING.getText())) {
 				processGrouping(response, arbQuery, settings, startTime);
 			} else {
 				processDefault(response, arbQuery, settings, startTime);
@@ -88,8 +88,7 @@ public class QueryController extends AbstractController {
 	}
 
 	@RequestMapping(params = "action=directQuery", method = RequestMethod.POST)
-	public ModelAndView directQuery(@RequestParam String content, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView directQuery(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
 		String results = queryService.query(content);
 		addResponseContent("<result>" + results + "</result>", response);
 		return null;
@@ -99,25 +98,38 @@ public class QueryController extends AbstractController {
 		StringBuffer responseMessage = new StringBuffer();
 		Long docCount = aggregationService.getDocumentsCount();
 		Long arCount = aggregationService.getAssociationRulesCount();
+
+		long queryStartTime = System.currentTimeMillis();
+
 		List<Result> results = queryService.getResultList(arbQuery, settings);
-		long queryTime = System.currentTimeMillis() - startTime;
-		responseMessage.append(OutputTransformer.transformResultsInList(results, queryTime, docCount,
-				arCount));
+
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+
+		responseMessage.append(OutputTransformer
+				.transformResultsInList(results, queryTime, docCount, arCount));
+
 		long fullTime = System.currentTimeMillis() - startTime;
+
 		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
 				+ "</result>", response);
-		
+
 	}
-	
+
 	private void processGrouping(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
 		StringBuffer responseMessage = new StringBuffer();
 		Long docCount = aggregationService.getDocumentsCount();
 		Long arCount = aggregationService.getAssociationRulesCount();
+
+		long queryStartTime = System.currentTimeMillis();
+
 		List<Group> groups = queryService.getResultsInGroups(arbQuery, settings);
-		long queryTime = System.currentTimeMillis() - startTime;
-		responseMessage.append(OutputTransformer.transformResultGroups(groups, queryTime, docCount,
-				arCount));
+
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+
+		responseMessage.append(OutputTransformer.transformResultGroups(groups, queryTime, docCount, arCount));
+
 		long fullTime = System.currentTimeMillis() - startTime;
+
 		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
 				+ "</result>", response);
 	}
