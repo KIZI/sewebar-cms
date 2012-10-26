@@ -1,7 +1,6 @@
 package xquerysearch.domain;
 
 import java.util.List;
-import java.util.Map;
 
 import xquerysearch.domain.result.Result;
 
@@ -13,38 +12,22 @@ import xquerysearch.domain.result.Result;
  */
 public class Cluster {
 
-	private long id;
-	private Map<String, Long> characteristics;
+	private Centroid centroid;
 	private List<Result> results;
 
 	/**
-	 * @return the id
+	 * @return the centroid
 	 */
-	public long getId() {
-		return id;
+	public Centroid getCentroid() {
+		return centroid;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param centroid
+	 *            the centroid to set
 	 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the characteristics
-	 */
-	public Map<String, Long> getCharacteristics() {
-		return characteristics;
-	}
-
-	/**
-	 * @param characteristics
-	 *            the characteristics to set
-	 */
-	public void setCharacteristics(Map<String, Long> characteristics) {
-		this.characteristics = characteristics;
+	public void setCentroid(Centroid centroid) {
+		this.centroid = centroid;
 	}
 
 	/**

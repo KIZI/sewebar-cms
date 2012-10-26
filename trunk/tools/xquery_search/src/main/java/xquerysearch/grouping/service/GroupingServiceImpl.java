@@ -3,12 +3,17 @@ package xquerysearch.grouping.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.Params;
+import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.querysettings.GroupingType;
 import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.grouping.GroupDescription;
 import xquerysearch.domain.result.BBA;
 import xquerysearch.domain.result.Result;
+import xquerysearch.service.QueryService;
 import xquerysearch.utils.GroupUtils;
 import xquerysearch.utils.ResultUtils;
 
@@ -20,6 +25,18 @@ import xquerysearch.utils.ResultUtils;
  */
 public class GroupingServiceImpl implements GroupingService {
 
+	@Autowired
+	private QueryService queryService;
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Group> getGroupsByQuery(ArBuilderQuery query, QuerySettings settings) {
+		List<Result> results = queryService.getResultList(query, settings);
+		return groupBy(results, settings.getParams());
+	}
+	
 	/**
 	 * @{inheritDoc
 	 */
@@ -31,7 +48,7 @@ public class GroupingServiceImpl implements GroupingService {
 
 		String groupBy = params.getGroupBy();
 		
-		GroupingType type = GroupingType.convertToGroupingType(groupBy);
+		GroupingType type = GroupingType.convert(groupBy);
 		
 		if (type != null) {
 			switch (type) {
