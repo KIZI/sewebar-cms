@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import xquerysearch.domain.Cluster;
 import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
@@ -100,6 +101,11 @@ public class OutputTransformer {
 		}
 		ret.append("</Hits></SearchResult>");
 		return ret.toString();
+	}
+	
+	public static String transformResultClusters(List<Cluster> groups, long queryTime, long docCount, long arCount) {
+		
+		return null;
 	}
 
 	/**

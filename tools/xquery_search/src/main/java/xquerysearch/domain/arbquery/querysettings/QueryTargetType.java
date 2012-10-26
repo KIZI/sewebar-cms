@@ -1,21 +1,21 @@
 package xquerysearch.domain.arbquery.querysettings;
 
 /**
- * Enum representing Results Analysis types stated in QuerySettings query element.
+ * Enum representing targets of query stated in QuerySettings element.
  * 
  * @author Tomas Marek
  *
  */
-public enum QueryResultsAnalysis {
-
-	NONE("None"), FUZZY("Fuzzy"), CLUSTERING("Clustering"), GROUPING("Grouping");
+public enum QueryTargetType {
+	
+	ASSOCIATION_RULE("AssociationRule"), TASK_SETTING("TaskSetting");
 	
 	private String text;
 	
 	/**
 	 * 
 	 */
-	private QueryResultsAnalysis(String text) {
+	private QueryTargetType(String text) {
 		this.text = text;
 	}
 	
@@ -25,4 +25,5 @@ public enum QueryResultsAnalysis {
 	public String getText() {
 		return text;
 	}
+
 }

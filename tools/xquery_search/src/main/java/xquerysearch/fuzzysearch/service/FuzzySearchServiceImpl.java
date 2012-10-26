@@ -1,14 +1,16 @@
 package xquerysearch.fuzzysearch.service;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import xquerysearch.domain.ArQueryInternal;
 import xquerysearch.domain.AssociationRuleInternal;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
+import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.result.Result;
 import xquerysearch.fuzzysearch.evaluator.FuzzySearchEvaluator;
+import xquerysearch.service.QueryService;
 import xquerysearch.transformation.ArQueryToInternalTransformer;
 import xquerysearch.transformation.AssociationRuleToInternalTransformer;
 
@@ -23,20 +25,24 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 	@Autowired
 	private FuzzySearchEvaluator evaluator;
 
+	@Autowired
+	private QueryService queryService;
+	
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<Result> evaluateResults(Set<Result> results, ArBuilderQuery query) {
+	public List<Result> getFuzzyResultsByQuery(ArBuilderQuery query, QuerySettings settings) {
+		List<Result> results = queryService.getResultList(query, settings);
 		ArQueryInternal aqi = ArQueryToInternalTransformer.transform(query.getArQuery());
 		if (results != null) {
 			for (Result result : results) {
-				AssociationRuleInternal ari = AssociationRuleToInternalTransformer.transform(result.getRule());
+				AssociationRuleInternal ari = AssociationRuleToInternalTransformer
+						.transform(result.getRule());
 				Double[][] compliance = evaluator.evaluate(ari, aqi);
 				result.setQueryCompliance(compliance);
 			}
 		}
 		return results;
 	}
-
 }

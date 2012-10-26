@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import xquerysearch.clustering.service.ClusteringService;
+import xquerysearch.domain.Cluster;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
-import xquerysearch.domain.arbquery.querysettings.QueryResultsAnalysis;
+import xquerysearch.domain.arbquery.querysettings.QueryResultsAnalysisType;
 import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
+import xquerysearch.fuzzysearch.service.FuzzySearchService;
+import xquerysearch.grouping.service.GroupingService;
 import xquerysearch.service.AggregationService;
 import xquerysearch.service.QueryService;
 import xquerysearch.transformation.OutputTransformer;
@@ -42,6 +46,15 @@ public class QueryController extends AbstractController {
 	@Autowired
 	private AggregationService aggregationService;
 
+	@Autowired
+	private FuzzySearchService fuzzyService;
+	
+	@Autowired
+	private ClusteringService clusteringService;
+	
+	@Autowired
+	private GroupingService groupingService;
+	
 	@Autowired
 	@Qualifier("arbQueryCastor")
 	private CastorMarshaller arbQueryCastor;
@@ -75,11 +88,12 @@ public class QueryController extends AbstractController {
 			settings = QueryUtils.getQuerySettings(arbQuery);
 		}
 		if (settings != null) {
-			if (settings.getResultsAnalysis() != null
-					&& settings.getResultsAnalysis().equals(QueryResultsAnalysis.GROUPING.getText())) {
-				processGrouping(response, arbQuery, settings, startTime);
-			} else {
-				processDefault(response, arbQuery, settings, startTime);
+			QueryResultsAnalysisType qraType = QueryResultsAnalysisType.convert(settings.getResultsAnalysis());
+			switch (qraType) {
+				case GROUPING : processGrouping(response, arbQuery, settings, startTime); break;
+				case FUZZY: processFuzzy(response, arbQuery, settings, startTime); break;
+				case CLUSTERING : processClustering(response, arbQuery, settings, startTime); break;
+				default : processDefault(response, arbQuery, settings, startTime); break;
 			}
 		} else {
 			processDefault(response, arbQuery, settings, startTime);
@@ -122,11 +136,51 @@ public class QueryController extends AbstractController {
 
 		long queryStartTime = System.currentTimeMillis();
 
-		List<Group> groups = queryService.getResultsInGroups(arbQuery, settings);
+		List<Group> groups = groupingService.getGroupsByQuery(arbQuery, settings);
 
 		long queryTime = System.currentTimeMillis() - queryStartTime;
 
 		responseMessage.append(OutputTransformer.transformResultGroups(groups, queryTime, docCount, arCount));
+
+		long fullTime = System.currentTimeMillis() - startTime;
+
+		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
+				+ "</result>", response);
+	}
+	
+	private void processFuzzy(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
+		StringBuffer responseMessage = new StringBuffer();
+		Long docCount = aggregationService.getDocumentsCount();
+		Long arCount = aggregationService.getAssociationRulesCount();
+
+		long queryStartTime = System.currentTimeMillis();
+
+		List<Result> results = fuzzyService.getFuzzyResultsByQuery(arbQuery, settings);
+
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+
+		responseMessage.append(OutputTransformer
+				.transformResultsInList(results, queryTime, docCount, arCount));
+
+		long fullTime = System.currentTimeMillis() - startTime;
+
+		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
+				+ "</result>", response);
+	}
+	
+	private void processClustering(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
+		StringBuffer responseMessage = new StringBuffer();
+		Long docCount = aggregationService.getDocumentsCount();
+		Long arCount = aggregationService.getAssociationRulesCount();
+
+		long queryStartTime = System.currentTimeMillis();
+
+		List<Cluster> results = clusteringService.getClustersByQuery(arbQuery, settings);
+
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+
+		responseMessage.append(OutputTransformer
+				.transformResultClusters(results, queryTime, docCount, arCount));
 
 		long fullTime = System.currentTimeMillis() - startTime;
 

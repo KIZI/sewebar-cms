@@ -32,7 +32,7 @@ public enum GroupingType {
 	 * @param value
 	 * @return {@link GroupingType} if found, <tt>null</tt> otherwise
 	 */
-	public static GroupingType convertToGroupingType(String value) {
+	public static GroupingType convert(String value) {
 		for (GroupingType type : values()) {
 			if (type.getText().equals(value)) {
 				return type;

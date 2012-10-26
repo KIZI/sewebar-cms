@@ -14,13 +14,10 @@ import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
-import xquerysearch.domain.arbquery.querysettings.QueryResultsAnalysis;
-import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
 import xquerysearch.grouping.service.GroupingService;
-import xquerysearch.sorting.OutputFuzzySorter;
 import xquerysearch.transformation.QueryXpathTransformer;
 import xquerysearch.utils.QueryUtils;
 
@@ -94,24 +91,9 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
 		Set<Result> results = resultSet.getResults();
-		if (settings != null) {
-			if (settings.getResultsAnalysis().equals(QueryResultsAnalysis.FUZZY.getText())) {
-				return OutputFuzzySorter.sortByCompliance(fuzzySearchService.evaluateResults(results,
-						query));
-			}
-		}
 		return new ArrayList<Result>(results);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Group> getResultsInGroups(ArBuilderQuery query, QuerySettings settings) {
-		List<Result> results = getResultList(query, settings);
-		return groupingService.groupBy(results, settings.getParams());
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
