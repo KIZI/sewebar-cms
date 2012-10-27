@@ -1,5 +1,6 @@
 package xquerysearch.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import xquerysearch.domain.result.Result;
@@ -13,7 +14,7 @@ import xquerysearch.domain.result.Result;
 public class Cluster {
 
 	private Centroid centroid;
-	private List<Result> results;
+	private List<Result> results = new ArrayList<Result>();
 
 	/**
 	 * @return the centroid
@@ -38,11 +39,16 @@ public class Cluster {
 	}
 
 	/**
-	 * @param results
-	 *            the results to set
+	 * {@inheritDoc}
 	 */
-	public void setResults(List<Result> results) {
-		this.results = results;
+	@Override
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Cluster centroid=\"" + centroid.toString() + "\" hitcount=\"" + results.size() + "\">");
+		for (Result result : results) {
+			ret.append(result.toString());
+		}
+		ret.append("</Cluster>");
+		return ret.toString();
 	}
-
 }

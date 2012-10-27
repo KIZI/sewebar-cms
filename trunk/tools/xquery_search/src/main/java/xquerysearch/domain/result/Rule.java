@@ -1,6 +1,6 @@
 package xquerysearch.domain.result;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing Rule from query result.
@@ -13,7 +13,7 @@ public class Rule {
 	private Cedent antecedent;
 	private Cedent consequent;
 	private Cedent condition;
-	private Set<ImValue> imValues;
+	private List<ImValue> imValues;
 	private Annotation annotation;
 	private FourFtTable fourFtTable;
 
@@ -65,7 +65,7 @@ public class Rule {
 	/**
 	 * @return the imValues
 	 */
-	public Set<ImValue> getImValues() {
+	public List<ImValue> getImValues() {
 		return imValues;
 	}
 
@@ -73,7 +73,7 @@ public class Rule {
 	 * @param imValues
 	 *            the imValues to set
 	 */
-	public void setImValues(Set<ImValue> imValues) {
+	public void setImValues(List<ImValue> imValues) {
 		this.imValues = imValues;
 	}
 

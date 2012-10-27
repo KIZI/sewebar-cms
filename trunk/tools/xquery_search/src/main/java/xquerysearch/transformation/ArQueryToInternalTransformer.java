@@ -2,7 +2,6 @@ package xquerysearch.transformation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import xquerysearch.domain.ArQueryInternal;
 import xquerysearch.domain.arbquery.ArQuery;
@@ -39,8 +38,8 @@ public class ArQueryToInternalTransformer {
 		String consequent = arQuery.getConsequentSetting();
 		String condition = arQuery.getConditionSetting();
 
-		Set<DbaSetting> dbaSettings = arQuery.getDbaSettings();
-		Set<BbaSetting> bbaSettings = arQuery.getBbaSettings();
+		List<DbaSetting> dbaSettings = arQuery.getDbaSettings();
+		List<BbaSetting> bbaSettings = arQuery.getBbaSettings();
 
 		aqi.setAntecedentBbaSettingList(getBbaSettingsForCedent(antecedent, dbaSettings, bbaSettings));
 		aqi.setConsequentBbaSettingList(getBbaSettingsForCedent(consequent, dbaSettings, bbaSettings));
@@ -60,8 +59,8 @@ public class ArQueryToInternalTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static List<BbaSetting> getBbaSettingsForCedent(String cedent, Set<DbaSetting> dbaSettings,
-			Set<BbaSetting> bbaSettings) {
+	private static List<BbaSetting> getBbaSettingsForCedent(String cedent, List<DbaSetting> dbaSettings,
+			List<BbaSetting> bbaSettings) {
 		List<BbaSetting> ret = new ArrayList<BbaSetting>();
 
 		List<DbaSetting> dbaList = new ArrayList<DbaSetting>();
@@ -90,8 +89,8 @@ public class ArQueryToInternalTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static List<BbaSetting> getBbaSettingsForDbaSetting(Set<String> baRefs, Set<DbaSetting> dbaSettings,
-			Set<BbaSetting> bbaSettings) {
+	private static List<BbaSetting> getBbaSettingsForDbaSetting(List<String> baRefs, List<DbaSetting> dbaSettings,
+			List<BbaSetting> bbaSettings) {
 		List<BbaSetting> ret = new ArrayList<BbaSetting>();
 
 		List<DbaSetting> dbaList = new ArrayList<DbaSetting>();

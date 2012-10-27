@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery.tasksetting;
 
-import java.util.Set;
+import java.util.List;
 
 import xquerysearch.domain.arbquery.InterestMeasureSetting;
 import xquerysearch.domain.arbquery.QuerySettings;
@@ -14,8 +14,8 @@ import xquerysearch.domain.arbquery.QuerySettings;
 public class ArTsQuery {
 
 	private QuerySettings querySettings;
-	private Set<BBASetting> bbaSettings;
-	private Set<DBASetting> dbaSettings;
+	private List<BBASetting> bbaSettings;
+	private List<DBASetting> dbaSettings;
 	private String antecedentSetting;
 	private String consequentSetting;
 	private String conditionSetting;
@@ -39,7 +39,7 @@ public class ArTsQuery {
 	/**
 	 * @return the bbaSettings
 	 */
-	public Set<BBASetting> getBbaSettings() {
+	public List<BBASetting> getBbaSettings() {
 		return bbaSettings;
 	}
 
@@ -47,14 +47,14 @@ public class ArTsQuery {
 	 * @param bbaSettings
 	 *            the bbaSettings to set
 	 */
-	public void setBbaSettings(Set<BBASetting> bbaSettings) {
+	public void setBbaSettings(List<BBASetting> bbaSettings) {
 		this.bbaSettings = bbaSettings;
 	}
 
 	/**
 	 * @return the dbaSettings
 	 */
-	public Set<DBASetting> getDbaSettings() {
+	public List<DBASetting> getDbaSettings() {
 		return dbaSettings;
 	}
 
@@ -62,7 +62,7 @@ public class ArTsQuery {
 	 * @param dbaSettings
 	 *            the dbaSettings to set
 	 */
-	public void setDbaSettings(Set<DBASetting> dbaSettings) {
+	public void setDbaSettings(List<DBASetting> dbaSettings) {
 		this.dbaSettings = dbaSettings;
 	}
 

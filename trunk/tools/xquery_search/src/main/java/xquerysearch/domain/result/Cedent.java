@@ -1,6 +1,6 @@
 package xquerysearch.domain.result;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing Antecedent, consequent or condition element from
@@ -11,12 +11,12 @@ import java.util.Set;
  */
 public class Cedent {
 
-	private Set<DBA> dbas;
+	private List<DBA> dbas;
 
 	/**
 	 * @return the dbas
 	 */
-	public Set<DBA> getDbas() {
+	public List<DBA> getDbas() {
 		return dbas;
 	}
 
@@ -24,7 +24,7 @@ public class Cedent {
 	 * @param dbas
 	 *            the dbas to set
 	 */
-	public void setDbas(Set<DBA> dbas) {
+	public void setDbas(List<DBA> dbas) {
 		this.dbas = dbas;
 	}
 

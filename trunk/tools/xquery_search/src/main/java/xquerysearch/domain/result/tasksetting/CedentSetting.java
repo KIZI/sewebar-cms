@@ -1,6 +1,6 @@
 package xquerysearch.domain.result.tasksetting;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing cedent setting (antecedent, consequent, condition)
@@ -11,12 +11,12 @@ import java.util.Set;
  */
 public class CedentSetting {
 
-	private Set<DBASetting> dbaSettings;
+	private List<DBASetting> dbaSettings;
 
 	/**
 	 * @return the dbaSettings
 	 */
-	public Set<DBASetting> getDbaSettings() {
+	public List<DBASetting> getDbaSettings() {
 		return dbaSettings;
 	}
 
@@ -24,7 +24,7 @@ public class CedentSetting {
 	 * @param dbaSettings
 	 *            the dbaSettings to set
 	 */
-	public void setDbaSettings(Set<DBASetting> dbaSettings) {
+	public void setDbaSettings(List<DBASetting> dbaSettings) {
 		this.dbaSettings = dbaSettings;
 	}
 

@@ -21,5 +21,5 @@ public interface FuzzySearchEvaluator {
 	 *         should be 1 if the result is completely the same as the given
 	 *         query. Otherwise the value should be < 1.
 	 */
-	public Double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi);
+	public double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi);
 }

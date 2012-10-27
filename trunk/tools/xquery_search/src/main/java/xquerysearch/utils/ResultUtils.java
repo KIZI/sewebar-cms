@@ -2,9 +2,7 @@ package xquerysearch.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import xquerysearch.domain.result.BBA;
 import xquerysearch.domain.result.Cedent;
@@ -53,10 +51,10 @@ public class ResultUtils {
 	 * @param cedent
 	 * @return
 	 */
-	public static Set<BBA> getBbasFromCedent(Cedent cedent) {
-		Set<BBA> ret = new HashSet<BBA>();
+	public static List<BBA> getBbasFromCedent(Cedent cedent) {
+		List<BBA> ret = new ArrayList<BBA>();
 		if (cedent != null) {
-			Set<DBA> dbas = cedent.getDbas();
+			List<DBA> dbas = cedent.getDbas();
 			if (dbas != null) {
 				for (DBA dba : dbas) {
 					ret.addAll(getBbasFromDba(dba));
@@ -72,11 +70,11 @@ public class ResultUtils {
 	 * @param dba
 	 * @return
 	 */
-	public static Set<BBA> getBbasFromDba(DBA dba) {
-		Set<BBA> ret = new HashSet<BBA>();
+	public static List<BBA> getBbasFromDba(DBA dba) {
+		List<BBA> ret = new ArrayList<BBA>();
 		if (dba != null) {
-			Set<BBA> bbas = dba.getBbas();
-			Set<DBA> dbas = dba.getDbas();
+			List<BBA> bbas = dba.getBbas();
+			List<DBA> dbas = dba.getDbas();
 
 			if (bbas != null) {
 				for (BBA bba : bbas) {

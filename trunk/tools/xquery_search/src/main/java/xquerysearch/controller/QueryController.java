@@ -48,13 +48,13 @@ public class QueryController extends AbstractController {
 
 	@Autowired
 	private FuzzySearchService fuzzyService;
-	
+
 	@Autowired
 	private ClusteringService clusteringService;
-	
+
 	@Autowired
 	private GroupingService groupingService;
-	
+
 	@Autowired
 	@Qualifier("arbQueryCastor")
 	private CastorMarshaller arbQueryCastor;
@@ -88,12 +88,21 @@ public class QueryController extends AbstractController {
 			settings = QueryUtils.getQuerySettings(arbQuery);
 		}
 		if (settings != null) {
-			QueryResultsAnalysisType qraType = QueryResultsAnalysisType.convert(settings.getResultsAnalysis());
+			QueryResultsAnalysisType qraType = QueryResultsAnalysisType
+					.convert(settings.getResultsAnalysis());
 			switch (qraType) {
-				case GROUPING : processGrouping(response, arbQuery, settings, startTime); break;
-				case FUZZY: processFuzzy(response, arbQuery, settings, startTime); break;
-				case CLUSTERING : processClustering(response, arbQuery, settings, startTime); break;
-				default : processDefault(response, arbQuery, settings, startTime); break;
+			case GROUPING:
+				processGrouping(response, arbQuery, settings, startTime);
+				break;
+			case FUZZY:
+				processFuzzy(response, arbQuery, settings, startTime);
+				break;
+			case CLUSTERING:
+				processClustering(response, arbQuery, settings, startTime);
+				break;
+			default:
+				processDefault(response, arbQuery, settings, startTime);
+				break;
 			}
 		} else {
 			processDefault(response, arbQuery, settings, startTime);
@@ -147,7 +156,7 @@ public class QueryController extends AbstractController {
 		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
 				+ "</result>", response);
 	}
-	
+
 	private void processFuzzy(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
 		StringBuffer responseMessage = new StringBuffer();
 		Long docCount = aggregationService.getDocumentsCount();
@@ -167,7 +176,7 @@ public class QueryController extends AbstractController {
 		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
 				+ "</result>", response);
 	}
-	
+
 	private void processClustering(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
 		StringBuffer responseMessage = new StringBuffer();
 		Long docCount = aggregationService.getDocumentsCount();
@@ -179,8 +188,8 @@ public class QueryController extends AbstractController {
 
 		long queryTime = System.currentTimeMillis() - queryStartTime;
 
-		responseMessage.append(OutputTransformer
-				.transformResultClusters(results, queryTime, docCount, arCount));
+		responseMessage.append(OutputTransformer.transformResultClusters(results, queryTime, docCount,
+				arCount));
 
 		long fullTime = System.currentTimeMillis() - startTime;
 

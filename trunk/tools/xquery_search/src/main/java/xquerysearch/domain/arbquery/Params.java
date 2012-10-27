@@ -9,6 +9,7 @@ package xquerysearch.domain.arbquery;
 public class Params {
 	private String groupBy;
 	private String fieldRef;
+	private double clusterBelongingLimit;
 
 	/**
 	 * @return the groupBy
@@ -38,6 +39,21 @@ public class Params {
 	 */
 	public void setFieldRef(String fieldRef) {
 		this.fieldRef = fieldRef;
+	}
+
+	/**
+	 * @return the clusterBelongingLimit
+	 */
+	public double getClusterBelongingLimit() {
+		return clusterBelongingLimit;
+	}
+
+	/**
+	 * @param clusterBelongingLimit
+	 *            the clusterBelongingLimit to set
+	 */
+	public void setClusterBelongingLimit(double clusterBelongingLimit) {
+		this.clusterBelongingLimit = clusterBelongingLimit;
 	}
 
 }

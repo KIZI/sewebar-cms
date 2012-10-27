@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing Coefficient element from ARBuilder query.
@@ -11,7 +11,7 @@ import java.util.Set;
 public class Coefficient {
 
 	private String type;
-	private Set<String> categories;
+	private List<String> categories;
 
 	/**
 	 * @return the type
@@ -31,7 +31,7 @@ public class Coefficient {
 	/**
 	 * @return the categories
 	 */
-	public Set<String> getCategories() {
+	public List<String> getCategories() {
 		return categories;
 	}
 
@@ -39,7 +39,7 @@ public class Coefficient {
 	 * @param categories
 	 *            the categories to set
 	 */
-	public void setCategories(Set<String> categories) {
+	public void setCategories(List<String> categories) {
 		this.categories = categories;
 	}
 

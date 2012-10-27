@@ -2,9 +2,7 @@ package xquerysearch.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,8 +88,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
-		Set<Result> results = resultSet.getResults();
-		return new ArrayList<Result>(results);
+		return resultSet.getResults();
 	}
 
 	/**
