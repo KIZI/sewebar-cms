@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing InterestMeasureSetting element from ARBuilder
@@ -11,12 +11,12 @@ import java.util.Set;
  */
 public class InterestMeasureSetting {
 
-	Set<InterestMeasureThreshold> imThresholds;
+	List<InterestMeasureThreshold> imThresholds;
 
 	/**
 	 * @return the imThresholds
 	 */
-	public Set<InterestMeasureThreshold> getImThresholds() {
+	public List<InterestMeasureThreshold> getImThresholds() {
 		return imThresholds;
 	}
 
@@ -24,7 +24,7 @@ public class InterestMeasureSetting {
 	 * @param imThresholds
 	 *            the imThresholds to set
 	 */
-	public void setImThresholds(Set<InterestMeasureThreshold> imThresholds) {
+	public void setImThresholds(List<InterestMeasureThreshold> imThresholds) {
 		this.imThresholds = imThresholds;
 	}
 

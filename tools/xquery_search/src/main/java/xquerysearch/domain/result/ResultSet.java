@@ -1,7 +1,7 @@
 package xquerysearch.domain.result;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Domain object representing set of {@link Result}s.
@@ -11,12 +11,12 @@ import java.util.Set;
  */
 public class ResultSet {
 
-	private Set<Result> results = new HashSet<Result>();
+	private List<Result> results = new ArrayList<Result>();
 
 	/**
 	 * @return the results
 	 */
-	public Set<Result> getResults() {
+	public List<Result> getResults() {
 		return results;
 	}
 
@@ -24,7 +24,7 @@ public class ResultSet {
 	 * @param results
 	 *            the results to set
 	 */
-	public void setResults(Set<Result> results) {
+	public void setResults(List<Result> results) {
 		this.results = results;
 	}
 

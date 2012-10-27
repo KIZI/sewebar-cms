@@ -1,7 +1,7 @@
 package xquerysearch.transformation;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.BbaSetting;
@@ -51,8 +51,8 @@ public class QueryXpathTransformer {
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();
 
-		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
-		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
+		List<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
+		List<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
@@ -80,8 +80,8 @@ public class QueryXpathTransformer {
 		String consequentSetting = query.getArQuery().getConsequentSetting();
 		String conditionSetting = query.getArQuery().getConditionSetting();
 
-		Set<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
-		Set<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
+		List<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
+		List<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("("
@@ -116,9 +116,9 @@ public class QueryXpathTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static String processCedentShorter(String currentId, Set<DbaSetting> dbaSettings,
-			Set<BbaSetting> bbaSettings, String cedentName, int step, int queryType) {
-		Set<String> relatedBaRefs = new HashSet<String>();
+	private static String processCedentShorter(String currentId, List<DbaSetting> dbaSettings,
+			List<BbaSetting> bbaSettings, String cedentName, int step, int queryType) {
+		List<String> relatedBaRefs = new ArrayList<String>();
 		StringBuffer xpath = new StringBuffer();
 
 		for (DbaSetting dbaSetting : dbaSettings) {
@@ -188,7 +188,7 @@ public class QueryXpathTransformer {
 		return xpath.toString();
 	}
 
-	private static StringBuffer processBbas(String currentId, Set<BbaSetting> bbaSettings,
+	private static StringBuffer processBbas(String currentId, List<BbaSetting> bbaSettings,
 			StringBuffer xpath, int queryType) {
 		for (BbaSetting bbaSetting : bbaSettings) {
 			if (bbaSetting.getId().equals(currentId)) {
@@ -248,9 +248,9 @@ public class QueryXpathTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static String processCedent(String currentId, Set<DbaSetting> dbaSettings,
-			Set<BbaSetting> bbaSettings) {
-		Set<String> relatedBaRefs = new HashSet<String>();
+	private static String processCedent(String currentId, List<DbaSetting> dbaSettings,
+			List<BbaSetting> bbaSettings) {
+		List<String> relatedBaRefs = new ArrayList<String>();
 		StringBuffer xpath = new StringBuffer();
 
 		for (DbaSetting dbaSetting : dbaSettings) {

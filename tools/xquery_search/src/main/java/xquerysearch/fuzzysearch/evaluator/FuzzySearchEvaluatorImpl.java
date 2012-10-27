@@ -34,7 +34,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @{inheritDoc
 	 */
 	@Override
-	public Double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
+	public double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
 		Double resultCompliance = DEFAULT_COMPLIANCE;
 
 		Map<String, Integer> resultAnalysis = ResultAnalyzer.analyze(ari);
@@ -46,10 +46,10 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 			resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
 		}
 
-		Double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(), aqi.getAntecedentBbaSettingList());
-		Double[] consequentBbaVector = evaluateBbas(ari.getConsequentBbas(), aqi.getConsequentBbaSettingList());
+		double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(), aqi.getAntecedentBbaSettingList());
+		double[] consequentBbaVector = evaluateBbas(ari.getConsequentBbas(), aqi.getConsequentBbaSettingList());
 
-		return new Double[][]{antecedentBbaVector, consequentBbaVector, new Double[]{resultCompliance}};
+		return new double[][]{antecedentBbaVector, consequentBbaVector, new double[]{resultCompliance}};
 	}
 
 	/**
@@ -92,8 +92,8 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static Double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
-		Double[] ret = new Double[bbaSettings.size()];
+	private static double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
+		double[] ret = new double[bbaSettings.size()];
 
 		for (int i = 0; i < bbaSettings.size(); i++) {
 			BbaSetting bbaSetting = bbaSettings.get(i);
@@ -146,7 +146,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettingCategories
 	 * @return
 	 */
-	private static double evaluatesCategories(Set<String> bbaCategories, Set<String> bbaSettingCategories) {
+	private static double evaluatesCategories(List<String> bbaCategories, List<String> bbaSettingCategories) {
 		double compliance = DEFAULT_COMPLIANCE;
 		if (bbaCategories != null && bbaSettingCategories != null) {
 			for (String bbaSetCategory : bbaSettingCategories) {
@@ -168,7 +168,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaCategories
 	 * @return
 	 */
-	private static boolean hasCorrespondingCategory(String category, Set<String> bbaCategories) {
+	private static boolean hasCorrespondingCategory(String category, List<String> bbaCategories) {
 		for (String loopCategory : bbaCategories) {
 			if (loopCategory.equals(category)) {
 				return true;
@@ -185,7 +185,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaCategories
 	 * @return
 	 */
-	private static int getLeftoverCategoriesCount(Set<String> bbaSetCategories, Set<String> bbaCategories) {
+	private static int getLeftoverCategoriesCount(List<String> bbaSetCategories, List<String> bbaCategories) {
 		Set<String> bbaCategoriesTemp = new HashSet<String>(bbaCategories);
 		for (String bbaSetCategory : bbaSetCategories) {
 			bbaCategoriesTemp.remove(bbaSetCategory);

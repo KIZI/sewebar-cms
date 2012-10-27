@@ -14,7 +14,7 @@
 
 	<class name="xquerysearch.domain.arbquery.datadescription.DataDescription">
 		<map-to xml="DataDescription" />
-		<field name="dictionaries" collection="set" type="xquerysearch.domain.arbquery.datadescription.Dictionary">
+		<field name="dictionaries" collection="arraylist" type="xquerysearch.domain.arbquery.datadescription.Dictionary">
 			<bind-xml name="Dictionary " node="element" />
 		</field>
 	</class>
@@ -39,10 +39,10 @@
 		<field name="isDefault" type="boolean" get-method="isDefault" set-method="setDefault">
 			<bind-xml name="isDefault" node="attribute" />
 		</field>
-		<field name="identifiers" collection="set" type="xquerysearch.domain.arbquery.datadescription.Identifier">
+		<field name="identifiers" collection="arraylist" type="xquerysearch.domain.arbquery.datadescription.Identifier">
 			<bind-xml name="Identifier" node="element" />
 		</field>
-		<field name="fields" collection="set" type="xquerysearch.domain.arbquery.datadescription.Field">
+		<field name="fields" collection="arraylist" type="xquerysearch.domain.arbquery.datadescription.Field">
 			<bind-xml name="Field" node="element" />
 		</field>
 	</class>
@@ -65,7 +65,7 @@
 		<field name="dataType" type="string">
 			<bind-xml name="dataType" node="attribute" />
 		</field>
-		<field name="categories" collection="set" type="string">
+		<field name="categories" collection="arraylist" type="string">
 			<bind-xml name="Category" node="element" />
 		</field>
 	</class>
@@ -75,10 +75,10 @@
 		<field name="querySettings" type="xquerysearch.domain.arbquery.QuerySettings">
 			<bind-xml name="QuerySettings" node="element" />
 		</field>
-		<field name="bbaSettings" collection="set" type="xquerysearch.domain.arbquery.BbaSetting">
+		<field name="bbaSettings" collection="arraylist" type="xquerysearch.domain.arbquery.BbaSetting">
 			<bind-xml name="BBASetting" location="BBASettings" node="element" />
 		</field>
-		<field name="dbaSettings" collection="set" type="xquerysearch.domain.arbquery.DbaSetting">
+		<field name="dbaSettings" collection="arraylist" type="xquerysearch.domain.arbquery.DbaSetting">
 			<bind-xml name="DBASetting" location="DBASettings" node="element" />
 		</field>
 		<field name="antecedentSetting" type="string">
@@ -112,12 +112,15 @@
 	</class>
 
 	<class name="xquerysearch.domain.arbquery.Params">
-		<map-to xml="Params"/>
+		<map-to xml="Params" />
 		<field name="groupBy" type="string">
 			<bind-xml name="GroupBy" node="element" />
 		</field>
 		<field name="fieldRef" type="string">
 			<bind-xml name="FieldRef" node="element" />
+		</field>
+		<field name="clusterBelongingLimit" type="double">
+			<bind-xml name="ClusterBelongingLimit" node="element" />
 		</field>
 	</class>
 
@@ -152,7 +155,7 @@
 		<field name="type" type="string">
 			<bind-xml name="Type" node="element" />
 		</field>
-		<field name="categories" collection="set" type="string">
+		<field name="categories" collection="arraylist" type="string">
 			<bind-xml name="Category" node="element" />
 		</field>
 	</class>
@@ -168,7 +171,7 @@
 		<field name="match" type="string">
 			<bind-xml name="match" node="attribute" />
 		</field>
-		<field name="baSettingRefs" collection="set" type="string">
+		<field name="baSettingRefs" collection="arraylist" type="string">
 			<bind-xml name="BASettingRef" node="element" />
 		</field>
 		<field name="literalSign" type="string">
@@ -178,7 +181,7 @@
 
 	<class name="xquerysearch.domain.arbquery.InterestMeasureSetting">
 		<map-to xml="InterestMeasureSetting" />
-		<field name="imThresholds" collection="set" type="xquerysearch.domain.arbquery.InterestMeasureThreshold">
+		<field name="imThresholds" collection="arraylist" type="xquerysearch.domain.arbquery.InterestMeasureThreshold">
 			<bind-xml name="InterestMeasureThreshold" node="element" />
 		</field>
 	</class>

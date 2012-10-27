@@ -103,9 +103,21 @@ public class OutputTransformer {
 		return ret.toString();
 	}
 	
-	public static String transformResultClusters(List<Cluster> groups, long queryTime, long docCount, long arCount) {
+	public static String transformResultClusters(List<Cluster> clusters, long queryTime, long docCount, long arCount) {
+		StringBuffer ret = new StringBuffer();
+		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
+		ret.append("<Hits>");
+		if (clusters == null) {
+			ret.append("");
+		} else {
+
+			for (Cluster cluster : clusters) {
+				ret.append(cluster.toString());
+			}
 		
-		return null;
+		}
+		ret.append("</Hits></SearchResult>");
+		return ret.toString();
 	}
 
 	/**

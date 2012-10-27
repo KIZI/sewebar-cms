@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery.datadescription;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing DataDescription element from ARBuilder query.
@@ -10,12 +10,12 @@ import java.util.Set;
  */
 public class DataDescription {
 
-	private Set<Dictionary> dictionaries;
+	private List<Dictionary> dictionaries;
 
 	/**
 	 * @return the dictionaries
 	 */
-	public Set<Dictionary> getDictionaries() {
+	public List<Dictionary> getDictionaries() {
 		return dictionaries;
 	}
 
@@ -23,7 +23,7 @@ public class DataDescription {
 	 * @param dictionaries
 	 *            the dictionaries to set
 	 */
-	public void setDictionaries(Set<Dictionary> dictionaries) {
+	public void setDictionaries(List<Dictionary> dictionaries) {
 		this.dictionaries = dictionaries;
 	}
 

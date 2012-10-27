@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing ARQuery Element from ARBuilder query.
@@ -11,8 +11,8 @@ import java.util.Set;
 public class ArQuery {
 
 	private QuerySettings querySettings;
-	private Set<BbaSetting> bbaSettings;
-	private Set<DbaSetting> dbaSettings;
+	private List<BbaSetting> bbaSettings;
+	private List<DbaSetting> dbaSettings;
 	private String antecedentSetting;
 	private String consequentSetting;
 	private String conditionSetting;
@@ -36,7 +36,7 @@ public class ArQuery {
 	/**
 	 * @return the bbaSettings
 	 */
-	public Set<BbaSetting> getBbaSettings() {
+	public List<BbaSetting> getBbaSettings() {
 		return bbaSettings;
 	}
 
@@ -44,14 +44,14 @@ public class ArQuery {
 	 * @param bbaSettings
 	 *            the bbaSettings to set
 	 */
-	public void setBbaSettings(Set<BbaSetting> bbaSettings) {
+	public void setBbaSettings(List<BbaSetting> bbaSettings) {
 		this.bbaSettings = bbaSettings;
 	}
 
 	/**
 	 * @return the dbaSettings
 	 */
-	public Set<DbaSetting> getDbaSettings() {
+	public List<DbaSetting> getDbaSettings() {
 		return dbaSettings;
 	}
 
@@ -59,7 +59,7 @@ public class ArQuery {
 	 * @param dbaSettings
 	 *            the dbaSettings to set
 	 */
-	public void setDbaSettings(Set<DbaSetting> dbaSettings) {
+	public void setDbaSettings(List<DbaSetting> dbaSettings) {
 		this.dbaSettings = dbaSettings;
 	}
 

@@ -1,12 +1,12 @@
 package xquerysearch.transformation;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import xquerysearch.domain.arbquery.tasksetting.Coefficient;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.arbquery.tasksetting.BBASetting;
+import xquerysearch.domain.arbquery.tasksetting.Coefficient;
 import xquerysearch.domain.arbquery.tasksetting.DBASetting;
 
 /**
@@ -47,8 +47,8 @@ public class QueryXpathTaskSettingTransformer {
 		String consequentSetting = query.getArTsQuery().getConsequentSetting();
 		String conditionSetting = query.getArTsQuery().getConditionSetting();
 
-		Set<DBASetting> dbaSettings = query.getArTsQuery().getDbaSettings();
-		Set<BBASetting> bbaSettings = query.getArTsQuery().getBbaSettings();
+		List<DBASetting> dbaSettings = query.getArTsQuery().getDbaSettings();
+		List<BBASetting> bbaSettings = query.getArTsQuery().getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("count(AntecedentSetting/" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
@@ -78,9 +78,9 @@ public class QueryXpathTaskSettingTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static String processCedent(String currentId, Set<DBASetting> dbaSettings,
-			Set<BBASetting> bbaSettings) {
-		Set<String> relatedBaRefs = new HashSet<String>();
+	private static String processCedent(String currentId, List<DBASetting> dbaSettings,
+			List<BBASetting> bbaSettings) {
+		List<String> relatedBaRefs = new ArrayList<String>();
 		StringBuffer xpath = new StringBuffer();
 
 		for (DBASetting dbaSetting : dbaSettings) {

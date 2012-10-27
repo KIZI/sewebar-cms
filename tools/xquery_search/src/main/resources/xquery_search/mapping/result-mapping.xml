@@ -45,7 +45,7 @@
 		<field name="condition" type="xquerysearch.domain.result.Condition">
 			<bind-xml name="Condition" node="element" />
 		</field>
-		<field name="imValues" collection="set" type="xquerysearch.domain.result.ImValue">
+		<field name="imValues" collection="arraylist" type="xquerysearch.domain.result.ImValue">
 			<bind-xml name="IMValue" node="element" />
 		</field>
 		<field name="annotation" type="xquerysearch.domain.result.Annotation">
@@ -58,21 +58,21 @@
 
 	<class name="xquerysearch.domain.result.Antecedent">
 		<map-to xml="Antecedent" />
-		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+		<field name="dbas" collection="arraylist" type="xquerysearch.domain.result.DBA">
 			<bind-xml name="DBA" node="element" />
 		</field>
 	</class>
 
 	<class name="xquerysearch.domain.result.Consequent">
 		<map-to xml="Consequent" />
-		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+		<field name="dbas" collection="arraylist" type="xquerysearch.domain.result.DBA">
 			<bind-xml name="DBA" node="element" />
 		</field>
 	</class>
 
 	<class name="xquerysearch.domain.result.Condition">
 		<map-to xml="Condition" />
-		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+		<field name="dbas" collection="arraylist" type="xquerysearch.domain.result.DBA">
 			<bind-xml name="DBA" node="element" />
 		</field>
 	</class>
@@ -82,10 +82,10 @@
 		<field name="connective" type="string">
 			<bind-xml name="connective" node="attribute" />
 		</field>
-		<field name="dbas" collection="set" type="xquerysearch.domain.result.DBA">
+		<field name="dbas" collection="arraylist" type="xquerysearch.domain.result.DBA">
 			<bind-xml name="DBA" node="element" />
 		</field>
-		<field name="bbas" collection="set" type="xquerysearch.domain.result.BBA">
+		<field name="bbas" collection="arraylist" type="xquerysearch.domain.result.BBA">
 			<bind-xml name="BBA" node="element" />
 		</field>
 	</class>
@@ -108,7 +108,7 @@
 		<field name="fieldName" type="string">
 			<bind-xml name="FieldName" node="element" />
 		</field>
-		<field name="catNames" collection="set" type="string">
+		<field name="catNames" collection="arraylist" type="string">
 			<bind-xml name="CatName" node="element" />
 		</field>
 	</class>
@@ -217,21 +217,21 @@
 
 	<class name="xquerysearch.domain.result.tasksetting.AntecedentSetting">
 		<map-to xml="AntecedentSetting" />
-		<field name="dbaSettings" collection="set" type="xquerysearch.domain.result.tasksetting.DBASetting">
+		<field name="dbaSettings" collection="arraylist" type="xquerysearch.domain.result.tasksetting.DBASetting">
 			<bind-xml name="DBASetting" node="element" />
 		</field>
 	</class>
 
 	<class name="xquerysearch.domain.result.tasksetting.ConsequentSetting">
 		<map-to xml="ConsequentSetting" />
-		<field name="dbaSettings" collection="set" type="xquerysearch.domain.result.tasksetting.DBASetting">
+		<field name="dbaSettings" collection="arraylist" type="xquerysearch.domain.result.tasksetting.DBASetting">
 			<bind-xml name="DBASetting" node="element" />
 		</field>
 	</class>
 
 	<class name="xquerysearch.domain.result.tasksetting.ConditionSetting">
 		<map-to xml="ConditionSetting" />
-		<field name="dbaSettings" collection="set" type="xquerysearch.domain.result.tasksetting.DBASetting">
+		<field name="dbaSettings" collection="arraylist" type="xquerysearch.domain.result.tasksetting.DBASetting">
 			<bind-xml name="DBASetting" node="element" />
 		</field>
 	</class>
@@ -247,7 +247,7 @@
 		<field name="name" type="string">
 			<bind-xml name="Name" node="element" />
 		</field>
-		<field name="baSettingRefs" collection="set" type="string">
+		<field name="baSettingRefs" collection="arraylist" type="string">
 			<bind-xml name="BASettingRef" node="element" />
 		</field>
 		<field name="minimalLength" type="integer">
@@ -265,10 +265,10 @@
 		<field name="equivalenceClass" type="string">
 			<bind-xml name="EquivalenceClass" node="element" />
 		</field>
-		<field name="dbaSettings" collection="set" type="xquerysearch.domain.result.tasksetting.DBASetting">
+		<field name="dbaSettings" collection="arraylist" type="xquerysearch.domain.result.tasksetting.DBASetting">
 			<bind-xml name="DBASetting" node="element" />
 		</field>
-		<field name="bbaSettings" collection="set" type="xquerysearch.domain.result.tasksetting.BBASetting">
+		<field name="bbaSettings" collection="arraylist" type="xquerysearch.domain.result.tasksetting.BBASetting">
 			<bind-xml name="BBASetting" node="element" />
 		</field>
 	</class>

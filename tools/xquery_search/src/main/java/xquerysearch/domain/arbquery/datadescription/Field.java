@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery.datadescription;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Tomas
@@ -10,7 +10,7 @@ public class Field {
 
 	private String name;
 	private String dataType;
-	private Set<String> categories;
+	private List<String> categories;
 
 	/**
 	 * @return the name
@@ -45,7 +45,7 @@ public class Field {
 	/**
 	 * @return the categories
 	 */
-	public Set<String> getCategories() {
+	public List<String> getCategories() {
 		return categories;
 	}
 
@@ -53,7 +53,7 @@ public class Field {
 	 * @param categories
 	 *            the categories to set
 	 */
-	public void setCategories(Set<String> categories) {
+	public void setCategories(List<String> categories) {
 		this.categories = categories;
 	}
 

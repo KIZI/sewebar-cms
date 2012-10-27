@@ -1,6 +1,6 @@
 package xquerysearch.domain.result;
 
-import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class TransformationDictionary {
 
 	private String fieldName;
-	private Set<String> catNames;
+	private List<String> catNames;
 
 	/**
 	 * @return the fieldName
@@ -34,7 +34,7 @@ public class TransformationDictionary {
 	/**
 	 * @return the catNames
 	 */
-	public Set<String> getCatNames() {
+	public List<String> getCatNames() {
 		return catNames;
 	}
 
@@ -42,7 +42,7 @@ public class TransformationDictionary {
 	 * @param catNames
 	 *            the catNames to set
 	 */
-	public void setCatNames(Set<String> catNames) {
+	public void setCatNames(List<String> catNames) {
 		this.catNames = catNames;
 	}
 	

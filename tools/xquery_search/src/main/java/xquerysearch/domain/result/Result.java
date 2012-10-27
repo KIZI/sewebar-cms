@@ -20,7 +20,7 @@ public class Result {
 	private Rule rule;
 	private TaskSetting taskSetting;
 
-	private Double[][] array;
+	private double[][] array;
 
 	/**
 	 * @return the ruleId
@@ -145,7 +145,7 @@ public class Result {
 	/**
 	 * @return the queryComplience
 	 */
-	public Double[][] getQueryCompliance() {
+	public double[][] getQueryCompliance() {
 		return array;
 	}
 
@@ -153,7 +153,7 @@ public class Result {
 	 * @param queryCompliance
 	 *            the queryComplience to set
 	 */
-	public void setQueryCompliance(Double[][] queryCompliance) {
+	public void setQueryCompliance(double[][] queryCompliance) {
 		this.array = queryCompliance;
 	}
 
@@ -200,7 +200,7 @@ public class Result {
 	 * @param queryCompliance
 	 * @return
 	 */
-	private String getQueryComplianceForOutput(Double[][] queryCompliance) {
+	private String getQueryComplianceForOutput(double[][] queryCompliance) {
 		StringBuffer ret = new StringBuffer();
 		ret.append("[");
 		if (queryCompliance != null) {
@@ -221,7 +221,7 @@ public class Result {
 	 * @param array
 	 * @return
 	 */
-	private String getDoubleArrayForOutput(Double[] array) {
+	private String getDoubleArrayForOutput(double[] array) {
 		StringBuffer ret = new StringBuffer();
 		ret.append("[");
 		for (int i = 0; i < array.length; i++) {

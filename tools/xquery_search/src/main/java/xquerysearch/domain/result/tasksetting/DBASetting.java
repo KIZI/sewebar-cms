@@ -1,6 +1,6 @@
 package xquerysearch.domain.result.tasksetting;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing DBASetting element from TaskSetting from query
@@ -14,14 +14,14 @@ public class DBASetting {
 	private String id;
 	private String type;
 	private String name;
-	private Set<String> baSettingRefs;
+	private List<String> baSettingRefs;
 	private Integer minimalLength;
 	private Integer maximalLength;
 	private String literalSign;
 	private String literalType;
 	private String equivalenceClass;
-	private Set<DBASetting> dbaSettings;
-	private Set<BBASetting> bbaSettings;
+	private List<DBASetting> dbaSettings;
+	private List<BBASetting> bbaSettings;
 
 	/**
 	 * @return the id
@@ -71,7 +71,7 @@ public class DBASetting {
 	/**
 	 * @return the baSettingRefs
 	 */
-	public Set<String> getBaSettingRefs() {
+	public List<String> getBaSettingRefs() {
 		return baSettingRefs;
 	}
 
@@ -79,7 +79,7 @@ public class DBASetting {
 	 * @param baSettingRefs
 	 *            the baSettingRefs to set
 	 */
-	public void setBaSettingRefs(Set<String> baSettingRefs) {
+	public void setBaSettingRefs(List<String> baSettingRefs) {
 		this.baSettingRefs = baSettingRefs;
 	}
 
@@ -161,7 +161,7 @@ public class DBASetting {
 	/**
 	 * @return the dbaSettings
 	 */
-	public Set<DBASetting> getDbaSettings() {
+	public List<DBASetting> getDbaSettings() {
 		return dbaSettings;
 	}
 
@@ -169,14 +169,14 @@ public class DBASetting {
 	 * @param dbaSettings
 	 *            the dbaSettings to set
 	 */
-	public void setDbaSettings(Set<DBASetting> dbaSettings) {
+	public void setDbaSettings(List<DBASetting> dbaSettings) {
 		this.dbaSettings = dbaSettings;
 	}
 
 	/**
 	 * @return the bbaSettings
 	 */
-	public Set<BBASetting> getBbaSettings() {
+	public List<BBASetting> getBbaSettings() {
 		return bbaSettings;
 	}
 
@@ -184,7 +184,7 @@ public class DBASetting {
 	 * @param bbaSettings
 	 *            the bbaSettings to set
 	 */
-	public void setBbaSettings(Set<BBASetting> bbaSettings) {
+	public void setBbaSettings(List<BBASetting> bbaSettings) {
 		this.bbaSettings = bbaSettings;
 	}
 

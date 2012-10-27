@@ -1,6 +1,6 @@
 package xquerysearch.domain.result;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Domain object representing DBA element from query result.
@@ -11,8 +11,8 @@ import java.util.Set;
 public class DBA {
 
 	private String connective;
-	private Set<DBA> dbas;
-	private Set<BBA> bbas;
+	private List<DBA> dbas;
+	private List<BBA> bbas;
 
 	/**
 	 * @return the connective
@@ -32,7 +32,7 @@ public class DBA {
 	/**
 	 * @return the dbas
 	 */
-	public Set<DBA> getDbas() {
+	public List<DBA> getDbas() {
 		return dbas;
 	}
 
@@ -40,14 +40,14 @@ public class DBA {
 	 * @param dbas
 	 *            the dbas to set
 	 */
-	public void setDbas(Set<DBA> dbas) {
+	public void setDbas(List<DBA> dbas) {
 		this.dbas = dbas;
 	}
 
 	/**
 	 * @return the bbas
 	 */
-	public Set<BBA> getBbas() {
+	public List<BBA> getBbas() {
 		return bbas;
 	}
 
@@ -55,7 +55,7 @@ public class DBA {
 	 * @param bbas
 	 *            the bbas to set
 	 */
-	public void setBbas(Set<BBA> bbas) {
+	public void setBbas(List<BBA> bbas) {
 		this.bbas = bbas;
 	}
 

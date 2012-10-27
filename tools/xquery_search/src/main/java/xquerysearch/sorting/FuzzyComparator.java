@@ -35,7 +35,7 @@ public class FuzzyComparator implements Comparator<Result> {
 	 * @param array
 	 * @return
 	 */
-	private double getAverageForArray(Double[][] array) {
+	private double getAverageForArray(double[][] array) {
 		if (array != null) {
 			double sum = 0.0;
 			for (int i = 0; i < array.length; i++) {
@@ -52,7 +52,7 @@ public class FuzzyComparator implements Comparator<Result> {
 	 * @param innerArray
 	 * @return
 	 */
-	private double getAverageForInnerArray(Double[] innerArray) {
+	private double getAverageForInnerArray(double[] innerArray) {
 		int arrayLength = innerArray.length;
 		if (innerArray != null && arrayLength > 0) {
 			double sum = 0.0;

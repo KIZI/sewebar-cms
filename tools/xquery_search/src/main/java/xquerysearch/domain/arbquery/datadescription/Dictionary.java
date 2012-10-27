@@ -1,6 +1,6 @@
 package xquerysearch.domain.arbquery.datadescription;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Tomas
@@ -14,8 +14,8 @@ public class Dictionary {
 	private String sourceDictType;
 	private String sourceName;
 	private boolean isDefault;
-	private Set<Identifier> identifiers;
-	private Set<Field> fields;
+	private List<Identifier> identifiers;
+	private List<Field> fields;
 
 	/**
 	 * @return the id
@@ -110,7 +110,7 @@ public class Dictionary {
 	/**
 	 * @return the identifiers
 	 */
-	public Set<Identifier> getIdentifiers() {
+	public List<Identifier> getIdentifiers() {
 		return identifiers;
 	}
 
@@ -118,14 +118,14 @@ public class Dictionary {
 	 * @param identifiers
 	 *            the identifiers to set
 	 */
-	public void setIdentifiers(Set<Identifier> identifiers) {
+	public void setIdentifiers(List<Identifier> identifiers) {
 		this.identifiers = identifiers;
 	}
 
 	/**
 	 * @return the fields
 	 */
-	public Set<Field> getFields() {
+	public List<Field> getFields() {
 		return fields;
 	}
 
@@ -133,7 +133,7 @@ public class Dictionary {
 	 * @param fields
 	 *            the fields to set
 	 */
-	public void setFields(Set<Field> fields) {
+	public void setFields(List<Field> fields) {
 		this.fields = fields;
 	}
 
