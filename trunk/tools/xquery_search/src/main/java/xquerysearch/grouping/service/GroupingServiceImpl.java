@@ -27,7 +27,7 @@ public class GroupingServiceImpl implements GroupingService {
 
 	@Autowired
 	private QueryService queryService;
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -36,7 +36,7 @@ public class GroupingServiceImpl implements GroupingService {
 		List<Result> results = queryService.getResultList(query, settings);
 		return groupBy(results, settings.getParams());
 	}
-	
+
 	/**
 	 * @{inheritDoc
 	 */
@@ -47,24 +47,30 @@ public class GroupingServiceImpl implements GroupingService {
 		}
 
 		String groupBy = params.getGroupBy();
-		
+
 		GroupingType type = GroupingType.convert(groupBy);
-		
+
 		if (type != null) {
 			switch (type) {
-				case CATEGORY : return groupByCategory(results, params.getFieldRef());
-				case FIELDREF : return groupByFieldRef(results);
-				case FIELDREF_BY_CEDENT : return groupByCedentFieldRef(results);
-				case RULE_LENGTH : return groupByRuleLength(results);
-				case RULE_LENGTH_BY_CEDENT : return groupByCedentLength(results);
-				default : return null;
+			case CATEGORY:
+				return groupByCategory(results, params.getFieldRef());
+			case FIELDREF:
+				return groupByFieldRef(results);
+			case FIELDREF_BY_CEDENT:
+				return groupByCedentFieldRef(results);
+			case RULE_LENGTH:
+				return groupByRuleLength(results);
+			case RULE_LENGTH_BY_CEDENT:
+				return groupByCedentLength(results);
+			default:
+				return null;
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * TODO documentation
+	 * Groups results by its FieldRefs.
 	 * 
 	 * @param results
 	 * @return
@@ -94,7 +100,7 @@ public class GroupingServiceImpl implements GroupingService {
 	}
 
 	/**
-	 * TODO documentation
+	 * Groups results by specified FieldRef's categories.
 	 * 
 	 * @param results
 	 * @param fieldRef
@@ -129,7 +135,7 @@ public class GroupingServiceImpl implements GroupingService {
 	}
 
 	/**
-	 * TODO documentation
+	 * Groups results by length of rule.
 	 * 
 	 * @param results
 	 * @return
@@ -159,9 +165,9 @@ public class GroupingServiceImpl implements GroupingService {
 
 		return groups;
 	}
-	
+
 	/**
-	 * TODO documentation
+	 * Groups results by length of its cedents.
 	 * 
 	 * @param results
 	 * @return
@@ -172,27 +178,31 @@ public class GroupingServiceImpl implements GroupingService {
 		}
 
 		List<Group> groups = new ArrayList<Group>();
-		
+
 		for (Result result : results) {
 			List<BBA> antecedentBbas = new ArrayList<BBA>();
 			List<BBA> consequentBbas = new ArrayList<BBA>();
 			List<BBA> conditionBbas = new ArrayList<BBA>();
-			
+
 			if (result.getRule() != null) {
-				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getAntecedent()));
-				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getConsequent()));
-				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getCondition()));
+				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule()
+						.getAntecedent()));
+				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule()
+						.getConsequent()));
+				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule()
+						.getCondition()));
 			}
-			
+
 			int antecedentLength = antecedentBbas.size();
 			int consequentLength = consequentBbas.size();
 			int conditionLength = conditionBbas.size();
-			
-			Group group = GroupUtils.getGroupByCedentsLength(groups, antecedentLength, consequentLength, conditionLength);
+
+			Group group = GroupUtils.getGroupByCedentsLength(groups, antecedentLength, consequentLength,
+					conditionLength);
 			if (group == null) {
 				Group newGroup = new Group();
 				newGroup.getResults().add(result);
-				
+
 				GroupDescription newDescription = new GroupDescription();
 				newDescription.setAntecedentLength(antecedentLength);
 				newDescription.setConsequentLength(consequentLength);
@@ -208,7 +218,7 @@ public class GroupingServiceImpl implements GroupingService {
 	}
 
 	/**
-	 * TODO documentation
+	 * Groups results by cedent's FieldRefs.
 	 * 
 	 * @param results
 	 * @return
@@ -219,27 +229,31 @@ public class GroupingServiceImpl implements GroupingService {
 		}
 
 		List<Group> groups = new ArrayList<Group>();
-		
+
 		for (Result result : results) {
 			List<BBA> antecedentBbas = new ArrayList<BBA>();
 			List<BBA> consequentBbas = new ArrayList<BBA>();
 			List<BBA> conditionBbas = new ArrayList<BBA>();
-			
+
 			if (result.getRule() != null) {
-				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getAntecedent()));
-				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getConsequent()));
-				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule().getCondition()));
+				antecedentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule()
+						.getAntecedent()));
+				consequentBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule()
+						.getConsequent()));
+				conditionBbas = new ArrayList<BBA>(ResultUtils.getBbasFromCedent(result.getRule()
+						.getCondition()));
 			}
-			
+
 			List<String> antecedentFieldRefs = ResultUtils.getAllFieldRefsFromBbas(antecedentBbas);
 			List<String> consequentFieldRefs = ResultUtils.getAllFieldRefsFromBbas(consequentBbas);
 			List<String> conditionFieldRefs = ResultUtils.getAllFieldRefsFromBbas(conditionBbas);
-			
-			Group group = GroupUtils.getGroupByCedentFieldRef(groups, antecedentFieldRefs, consequentFieldRefs, conditionFieldRefs);
+
+			Group group = GroupUtils.getGroupByCedentFieldRef(groups, antecedentFieldRefs,
+					consequentFieldRefs, conditionFieldRefs);
 			if (group == null) {
 				Group newGroup = new Group();
 				newGroup.getResults().add(result);
-				
+
 				GroupDescription newDescription = new GroupDescription();
 				newDescription.getAntecedentFieldRefs().addAll(antecedentFieldRefs);
 				newDescription.getConsequentFieldRefs().addAll(consequentFieldRefs);

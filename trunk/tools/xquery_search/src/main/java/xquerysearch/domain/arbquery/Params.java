@@ -10,6 +10,7 @@ public class Params {
 	private String groupBy;
 	private String fieldRef;
 	private double clusterBelongingLimit;
+	private String clusterDistanceFormula;
 
 	/**
 	 * @return the groupBy
@@ -54,6 +55,21 @@ public class Params {
 	 */
 	public void setClusterBelongingLimit(double clusterBelongingLimit) {
 		this.clusterBelongingLimit = clusterBelongingLimit;
+	}
+
+	/**
+	 * @return the clusterDistanceFormula
+	 */
+	public String getClusterDistanceFormula() {
+		return clusterDistanceFormula;
+	}
+
+	/**
+	 * @param clusterDistanceFormula
+	 *            the clusterDistanceFormula to set
+	 */
+	public void setClusterDistanceFormula(String clusterDistanceFormula) {
+		this.clusterDistanceFormula = clusterDistanceFormula;
 	}
 
 }

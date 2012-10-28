@@ -22,20 +22,22 @@ public class ClusterCharacteristicsComputer {
 	}
 
 	/**
-	 * TODO documentation
+	 * Updates cluster by recomputing its centroid.
 	 * 
 	 * @param cluster
 	 */
-	public static void compute(Cluster cluster) {
-
-	}
-
 	public static void updateCluster(Cluster cluster) {
 		if (cluster != null) {
 			updateCentroid(cluster.getCentroid(), cluster.getResults());
 		}
 	}
 
+	/**
+	 * Recomputes centroid's vector.
+	 * 
+	 * @param centroid
+	 * @param results
+	 */
 	private static void updateCentroid(Centroid centroid, List<Result> results) {
 		if (centroid != null && results != null) {
 			List<double[][]> vectors = new ArrayList<double[][]>();
@@ -47,6 +49,12 @@ public class ClusterCharacteristicsComputer {
 		}
 	}
 
+	/**
+	 * Returns vector with average values from given vectors.
+	 * 
+	 * @param vectors
+	 * @return
+	 */
 	private static double[][] getAverageVector(List<double[][]> vectors) {
 		double[][] avgVector = null;
 		for (int i = 0; i < vectors.size(); i++) {
@@ -59,6 +67,13 @@ public class ClusterCharacteristicsComputer {
 		return avgVector;
 	}
 
+	/**
+	 * Combines 2 given vectors into single vector using average values.
+	 * 
+	 * @param vector1
+	 * @param vector2
+	 * @return
+	 */
 	private static double[][] combineVectors(double[][] vector1, double[][] vector2) {
 		double[][] ret = new double[vector1.length][];
 		for (int i = 0; i < vector1.length; i++) {

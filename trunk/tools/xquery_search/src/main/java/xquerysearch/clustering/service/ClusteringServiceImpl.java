@@ -56,7 +56,7 @@ public class ClusteringServiceImpl implements ClusteringService {
 				double[] distances = new double[clusters.size()];
 				
 				for (int i = 0; i < clusters.size(); i++) {
-					distances[i] = ResultCharacteristicsComputer.compare(clusters.get(i).getCentroid(), result);
+					distances[i] = ResultCharacteristicsComputer.compare(clusters.get(i).getCentroid(), result, params.getClusterDistanceFormula());
 				}
 				
 				int positionWithMaxDistance = getPositionWithMaxValue(distances);
@@ -71,6 +71,15 @@ public class ClusteringServiceImpl implements ClusteringService {
 				
 			}
 		}
+		
+		List<Result> resultsToReprocess = getResultsToReproces(clusters, belongingLimit, params.getClusterDistanceFormula());
+		System.out.println("TO REPROCESS SIZE: " + resultsToReprocess.size());
+		
+		if (resultsToReprocess.size() > 0) {
+			System.out.println("CLUSTER REPROCESSING");
+			clusters = clusterResults(resultsToReprocess, params);
+		}
+		
 		return clusters;
 	}
 	
@@ -95,5 +104,25 @@ public class ClusteringServiceImpl implements ClusteringService {
 			}
 		}
 		return position;
+	}
+	
+	private List<Result> getResultsToReproces(List<Cluster> clusters, double belongingLimit, String formulaType) {
+		List<Result> ret = new ArrayList<Result>();
+		if (clusters == null) {
+			return ret;
+		}
+		for(Cluster cluster : clusters) {
+			List<Result> clusterResults = cluster.getResults();
+			Centroid centroid = cluster.getCentroid();
+			if (clusterResults != null && centroid != null) {
+				for (Result result : clusterResults) {
+					double distance = ResultCharacteristicsComputer.compare(centroid, result, formulaType);
+					if (distance < belongingLimit) {
+						ret.add(result);
+					}
+				}
+			}
+		}
+		return ret;
 	}
 }
