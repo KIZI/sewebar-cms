@@ -122,6 +122,9 @@
 		<field name="clusterBelongingLimit" type="double">
 			<bind-xml name="ClusterBelongingLimit" node="element" />
 		</field>
+		<field name="clusterDistanceFormula" type="string">
+			<bind-xml name="ClusterDistanceFormula" node="element" />
+		</field>
 	</class>
 
 	<class name="xquerysearch.domain.arbquery.BbaSetting">

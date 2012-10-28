@@ -47,7 +47,8 @@ public class OutputTransformer {
 	}
 
 	/**
-	 * TODO documentation
+	 * Transforms {@link Groups}s to response-friendly form represented as
+	 * String.
 	 * 
 	 * @param groups
 	 * @param queryTime
@@ -86,8 +87,7 @@ public class OutputTransformer {
 		return result.toString();
 	}
 
-	public static String transformResultsInList(List<Result> results, long queryTime, long docCount,
-			long arCount) {
+	public static String transformResultsInList(List<Result> results, long queryTime, long docCount, long arCount) {
 		if (results == null) {
 			return null;
 		}
@@ -102,7 +102,7 @@ public class OutputTransformer {
 		ret.append("</Hits></SearchResult>");
 		return ret.toString();
 	}
-	
+
 	public static String transformResultClusters(List<Cluster> clusters, long queryTime, long docCount, long arCount) {
 		StringBuffer ret = new StringBuffer();
 		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
@@ -114,7 +114,7 @@ public class OutputTransformer {
 			for (Cluster cluster : clusters) {
 				ret.append(cluster.toString());
 			}
-		
+
 		}
 		ret.append("</Hits></SearchResult>");
 		return ret.toString();

@@ -24,7 +24,7 @@ public class ResultUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves all {@link BBA}s from given {@link Result}.
 	 * 
 	 * @param result
 	 * @return
@@ -92,7 +92,7 @@ public class ResultUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves all categories from given {@link BBA}s.
 	 * 
 	 * @param bbas
 	 * @return
@@ -115,7 +115,8 @@ public class ResultUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves all categories from given {@link BBA}s having specified
+	 * FieldRef.
 	 * 
 	 * @param bbas
 	 * @return
@@ -139,7 +140,7 @@ public class ResultUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves all categories from given {@link BBA}s.
 	 * 
 	 * @param bbas
 	 * @return

@@ -20,7 +20,8 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves suitable group for given categories or <tt>null</tt> if none is
+	 * found.
 	 * 
 	 * @param groups
 	 * @param categoryNames
@@ -41,7 +42,8 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves suitable group for given FieldRefs or <tt>null</tt> if none is
+	 * found.
 	 * 
 	 * @param groups
 	 * @param fieldRef
@@ -62,7 +64,8 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves suitable group for given length of rule or <tt>null</tt> if
+	 * none is found.
 	 * 
 	 * @param groups
 	 * @param ruleLength
@@ -84,7 +87,8 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves suitable group for given lengths of cedents or <tt>null</tt> if
+	 * none is found.
 	 * 
 	 * @param groups
 	 * @param antecedentLength
@@ -107,7 +111,8 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Retrieves suitable group for given cedent's FieldRefs or <tt>null</tt> if
+	 * none is found.
 	 * 
 	 * @param groups
 	 * @param antecedentFieldRefs
@@ -124,11 +129,15 @@ public class GroupUtils {
 		for (Group group : groups) {
 			GroupDescription description = group.getDescription();
 			if (description != null) {
-				boolean isAntecedentSuitable = isSuitableGroupByFieldRefs(description.getAntecedentFieldRefs(), antecedentFieldRefs);
-				boolean isConsequentSuitable = isSuitableGroupByFieldRefs(description.getConsequentFieldRefs(), consequentFieldRefs);
-				boolean isConditionSuitable = isSuitableGroupByFieldRefs(description.getConditionFieldRefs(), conditionFieldRefs);
-				
-				if (isAntecedentSuitable == true && isConsequentSuitable == true && isConditionSuitable == true) {
+				boolean isAntecedentSuitable = isSuitableGroupByFieldRefs(
+						description.getAntecedentFieldRefs(), antecedentFieldRefs);
+				boolean isConsequentSuitable = isSuitableGroupByFieldRefs(
+						description.getConsequentFieldRefs(), consequentFieldRefs);
+				boolean isConditionSuitable = isSuitableGroupByFieldRefs(description.getConditionFieldRefs(),
+						conditionFieldRefs);
+
+				if (isAntecedentSuitable == true && isConsequentSuitable == true
+						&& isConditionSuitable == true) {
 					return group;
 				}
 			}
@@ -138,7 +147,7 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Checks if given group is suitable for given categories.
 	 * 
 	 * @param group
 	 * @param categoryNames
@@ -170,7 +179,7 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Checks if given group is suitable for given cedent's lengths.
 	 * 
 	 * @param antecedentLength
 	 * @param consequentLength
@@ -193,7 +202,7 @@ public class GroupUtils {
 	}
 
 	/**
-	 * TODO documentation
+	 * Checks if given group is suitable for given FieldRefs.
 	 * 
 	 * @param groupFieldRefs
 	 * @param fieldRefs
