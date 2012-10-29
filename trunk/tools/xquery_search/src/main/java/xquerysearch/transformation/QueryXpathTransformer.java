@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xquerysearch.domain.arbquery.ArBuilderQuery;
+import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.arbquery.Coefficient;
 import xquerysearch.domain.arbquery.DbaSetting;
@@ -26,33 +27,46 @@ public class QueryXpathTransformer {
 
 	/**
 	 * Transforms {@link ArBuilderQuery} to XPath query.
+	 * Return value is wrapped by <tt>AssociationRule[</tt> and <tt>]</tt> strings.
 	 * 
 	 * @param query
-	 * @return XPath query, <code>null</code> if error occurred
+	 * @return XPath query, empty string if error occurred
 	 */
 	public static String transformToXpath(ArBuilderQuery query, QuerySettings settings) {
-		StringBuffer xpath = new StringBuffer();
-
-		xpath.append("/PMML/AssociationRule[");
-
-		if (settings != null && settings.getType().equals(QueryType.NORMAL.getText()) == false) {
-			transformShorter(query, xpath);
-		} else {
-			transformNormal(query, xpath);
+		if (query == null) {
+			return "";
 		}
-		xpath.append("]");
-
-		System.out.println(xpath);
-		return xpath.toString();
+		return "AssociationRule[" + transformToXpath(query.getArQuery(), settings) + "]";
+	}
+	
+	/**
+	 * Transforms {@link ArQuery} to XPath query.
+	 * Return value is NOT wrapped by any string.
+	 * 
+	 * @param query
+	 * @return XPath query, empty string if error occurred
+	 */
+	public static String transformToXpath(ArQuery query, QuerySettings settings) {
+		if (query == null) {
+			return "";
+		}
+		
+		if (settings != null && settings.getType().equals(QueryType.NORMAL.getText()) == false) {
+			return transformShorter(query);
+		} else {
+			return transformNormal(query);
+		}
 	}
 
-	private static void transformNormal(ArBuilderQuery query, StringBuffer xpath) {
-		String antecedentSetting = query.getArQuery().getAntecedentSetting();
-		String consequentSetting = query.getArQuery().getConsequentSetting();
-		String conditionSetting = query.getArQuery().getConditionSetting();
+	private static String transformNormal(ArQuery query) {
+		StringBuffer xpath = new StringBuffer();
+		
+		String antecedentSetting = query.getAntecedentSetting();
+		String consequentSetting = query.getConsequentSetting();
+		String conditionSetting = query.getConditionSetting();
 
-		List<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
-		List<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
+		List<DbaSetting> dbaSettings = query.getDbaSettings();
+		List<BbaSetting> bbaSettings = query.getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
@@ -73,15 +87,19 @@ public class QueryXpathTransformer {
 			xpath.append("count(Condition" + processCedent(conditionSetting, dbaSettings, bbaSettings)
 					+ ") > 0");
 		}
+		
+		return xpath.toString();
 	}
 
-	private static void transformShorter(ArBuilderQuery query, StringBuffer xpath) {
-		String antecedentSetting = query.getArQuery().getAntecedentSetting();
-		String consequentSetting = query.getArQuery().getConsequentSetting();
-		String conditionSetting = query.getArQuery().getConditionSetting();
+	private static String transformShorter(ArQuery query) {
+		StringBuffer xpath = new StringBuffer();
+		
+		String antecedentSetting = query.getAntecedentSetting();
+		String consequentSetting = query.getConsequentSetting();
+		String conditionSetting = query.getConditionSetting();
 
-		List<DbaSetting> dbaSettings = query.getArQuery().getDbaSettings();
-		List<BbaSetting> bbaSettings = query.getArQuery().getBbaSettings();
+		List<DbaSetting> dbaSettings = query.getDbaSettings();
+		List<BbaSetting> bbaSettings = query.getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
 			xpath.append("("
@@ -105,17 +123,10 @@ public class QueryXpathTransformer {
 					+ processCedentShorter(conditionSetting, dbaSettings, bbaSettings, "Condition", 0, 0)
 					+ ")");
 		}
-
+		
+		return xpath.toString();
 	}
 
-	/**
-	 * !!! USED ONLY WHEN SHORTER_QUERYING_TYPE IS TRUE !!!
-	 * 
-	 * @param currentId
-	 * @param dbaSettings
-	 * @param bbaSettings
-	 * @return
-	 */
 	private static String processCedentShorter(String currentId, List<DbaSetting> dbaSettings,
 			List<BbaSetting> bbaSettings, String cedentName, int step, int queryType) {
 		List<String> relatedBaRefs = new ArrayList<String>();

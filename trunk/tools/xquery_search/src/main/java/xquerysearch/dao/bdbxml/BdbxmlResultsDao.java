@@ -33,7 +33,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 	@Qualifier("resultCastor")
 	private CastorMarshaller resultCastor;
 
-	/*
+	/**
 	 * @inheritDoc
 	 */
 	@Override
@@ -62,7 +62,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 		}
 	}
 
-	/*
+	/**
 	 * @{InheritDoc}
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 		}
 	}
 
-	/*
+	/**
 	 * @{InheritDoc}
 	 */
 	@Override
@@ -118,7 +118,7 @@ public class BdbxmlResultsDao extends AbstractDao implements ResultsDao {
 		}
 	}
 
-	/*
+	/**
 	 * @{InheritDoc}
 	 */
 	@Override

@@ -45,7 +45,7 @@ public class ResultCharacteristicsComputer {
 				} else {
 					double localSumCentroid = 0.0;
 					double localSumResult = 0.0;
-					for (int j = 0; i < centroidVector[i].length; j++) {
+					for (int j = 0; j < centroidVector[i].length; j++) {
 						localSumCentroid += centroidVector[i][j];
 						localSumResult += resultCompliance[i][j];
 					}

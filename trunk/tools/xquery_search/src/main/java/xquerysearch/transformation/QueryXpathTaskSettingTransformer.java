@@ -5,6 +5,7 @@ import java.util.List;
 
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
+import xquerysearch.domain.arbquery.tasksetting.ArTsQuery;
 import xquerysearch.domain.arbquery.tasksetting.BBASetting;
 import xquerysearch.domain.arbquery.tasksetting.Coefficient;
 import xquerysearch.domain.arbquery.tasksetting.DBASetting;
@@ -26,49 +27,65 @@ public class QueryXpathTaskSettingTransformer {
 
 	/**
 	 * Transforms {@link ArTsBuilderQuery} to XPath query.
+	 * Return is wrapped by <tt>TaskSetting[</tt> and <tt>]</tt> strings.
 	 * 
 	 * @param query
-	 * @return XPath query, <code>null</code> if error occurred
+	 * @param settings
+	 * @return XPath query, empty string if error occurred
 	 */
 	public static String transformToXpath(ArTsBuilderQuery query, QuerySettings settings) {
-		StringBuffer xpath = new StringBuffer();
-
-		xpath.append("/PMML[TaskSetting[");
-
-		transformNormal(query, xpath);
-		xpath.append("]]/AssociationRule");
-
-		System.out.println(xpath);
-		return xpath.toString();
+		if (query == null) {
+			return "";
+		}
+		return "TaskSetting[" + transformToXpath(query.getArTsQuery(), settings) + "]";
 	}
 
-	private static void transformNormal(ArTsBuilderQuery query, StringBuffer xpath) {
-		String antecedentSetting = query.getArTsQuery().getAntecedentSetting();
-		String consequentSetting = query.getArTsQuery().getConsequentSetting();
-		String conditionSetting = query.getArTsQuery().getConditionSetting();
+	/**
+	 * Transforms {@link ArTsQuery} to XPath query.
+	 * Return is NOT wrapped by any strings.
+	 * 
+	 * @param query
+	 * @param settings
+	 * @return XPath query, empty string if error occurred
+	 */
+	public static String transformToXpath(ArTsQuery query, QuerySettings settings) {
+		if (query != null) {
+			return transformNormal(query);
+		}
+		return "";
+	}
+	
+	private static String transformNormal(ArTsQuery query) {
+		StringBuffer xpath = new StringBuffer();
+		
+		String antecedentSetting = query.getAntecedentSetting();
+		String consequentSetting = query.getConsequentSetting();
+		String conditionSetting = query.getConditionSetting();
 
-		List<DBASetting> dbaSettings = query.getArTsQuery().getDbaSettings();
-		List<BBASetting> bbaSettings = query.getArTsQuery().getBbaSettings();
+		List<DBASetting> dbaSettings = query.getDbaSettings();
+		List<BBASetting> bbaSettings = query.getBbaSettings();
 
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
-			xpath.append("count(AntecedentSetting/" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
-					+ ") > 0");
+			xpath.append("count(AntecedentSetting/"
+					+ processCedent(antecedentSetting, dbaSettings, bbaSettings) + ") > 0");
 			if ((consequentSetting != null && consequentSetting.isEmpty() == false)
 					|| (conditionSetting != null && conditionSetting.isEmpty() == false)) {
 				xpath.append(" and ");
 			}
 		}
 		if (consequentSetting != null && consequentSetting.isEmpty() == false) {
-			xpath.append("count(ConsequentSetting/" + processCedent(consequentSetting, dbaSettings, bbaSettings)
-					+ ") > 0");
+			xpath.append("count(ConsequentSetting/"
+					+ processCedent(consequentSetting, dbaSettings, bbaSettings) + ") > 0");
 			if (conditionSetting != null && conditionSetting.isEmpty() == false) {
 				xpath.append(" and ");
 			}
 		}
 		if (conditionSetting != null && conditionSetting.isEmpty() == false) {
-			xpath.append("count(ConditionSetting/" + processCedent(conditionSetting, dbaSettings, bbaSettings)
-					+ ") > 0");
+			xpath.append("count(ConditionSetting/"
+					+ processCedent(conditionSetting, dbaSettings, bbaSettings) + ") > 0");
 		}
+		
+		return xpath.toString();
 	}
 
 	/**
@@ -78,8 +95,7 @@ public class QueryXpathTaskSettingTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static String processCedent(String currentId, List<DBASetting> dbaSettings,
-			List<BBASetting> bbaSettings) {
+	private static String processCedent(String currentId, List<DBASetting> dbaSettings, List<BBASetting> bbaSettings) {
 		List<String> relatedBaRefs = new ArrayList<String>();
 		StringBuffer xpath = new StringBuffer();
 
@@ -108,7 +124,7 @@ public class QueryXpathTaskSettingTransformer {
 
 					Coefficient coefficient = bbaSetting.getCoefficient();
 					if (coefficient != null) {
-    					xpath.append(processCoefficient(coefficient));
+						xpath.append(processCoefficient(coefficient));
 					}
 					xpath.append("]]");
 				}
@@ -128,7 +144,7 @@ public class QueryXpathTaskSettingTransformer {
 
 		return xpath.toString();
 	}
-	
+
 	private static String processCoefficient(Coefficient coefficient) {
 		String ret = "";
 		String connective = "";
@@ -151,7 +167,7 @@ public class QueryXpathTaskSettingTransformer {
 		if (category != null) {
 			ret += connective + "Category = \"" + category + "\"";
 		}
-		
+
 		return ret;
 	}
 }

@@ -4,18 +4,48 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="arbQueryCastor" class="org.springframework.oxm.castor.CastorMarshaller">
-		<property name="mappingLocation" value="classpath:xquery_search/mapping/arbuilder-query-mapping.xml" />
+		<property name="mappingLocations">
+			<array>
+				<value>classpath:xquerysearch/mapping/arbuilder-query-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/datadescription-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/arquery-associationrules-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/querysettings-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/interestmeasure-mapping.xml</value>
+			</array>
+		</property>
 		<property name="targetClass" value="xquerysearch.domain.arbquery.ArBuilderQuery" />
 	</bean>
-	
+
 	<bean id="arbTsQueryCastor" class="org.springframework.oxm.castor.CastorMarshaller">
-		<property name="mappingLocation" value="classpath:xquery_search/mapping/arbuilder-query-tasksetting-mapping.xml" />
+		<property name="mappingLocations">
+			<array>
+				<value>classpath:xquerysearch/mapping/arbuilder-query-tasksetting-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/datadescription-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/arquery-tasksetting-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/querysettings-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/interestmeasure-mapping.xml</value>
+			</array>
+		</property>
 		<property name="targetClass" value="xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery" />
 	</bean>
 	
+	<bean id="hybridQueryCastor" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocations">
+			<array>
+				<value>classpath:xquerysearch/mapping/arbuilder-query-hybrid-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/datadescription-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/arquery-associationrules-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/arquery-tasksetting-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/querysettings-mapping.xml</value>
+				<value>classpath:xquerysearch/mapping/interestmeasure-mapping.xml</value>
+			</array>
+		</property>
+		<property name="targetClass" value="xquerysearch.domain.arbquery.hybridquery.ArHybridBuilderQuery" />
+	</bean>
+
 	<bean id="resultCastor" class="org.springframework.oxm.castor.CastorMarshaller">
-		<property name="mappingLocation" value="classpath:xquery_search/mapping/result-mapping.xml" />
+		<property name="mappingLocations" value="classpath:xquerysearch/mapping/result-mapping.xml" />
 		<property name="targetClass" value="xquerysearch.domain.result.Result" />
 	</bean>
-	
+
 </beans>
