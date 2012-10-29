@@ -5,6 +5,8 @@ import java.util.List;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
+import xquerysearch.domain.arbquery.hybridquery.ArHybridBuilderQuery;
+import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 
@@ -15,14 +17,6 @@ import xquerysearch.domain.result.ResultSet;
  * 
  */
 public interface QueryService {
-
-	/**
-	 * Gets results from database by query.
-	 * 
-	 * @param query
-	 * @return {@link ResultSet} including found results
-	 */
-	public ResultSet getResultSet(Query query);
 
 	/**
 	 * Gets {@link ResultSet} from database by XPath query as String.
@@ -41,6 +35,24 @@ public interface QueryService {
 	 * @return {@link List} of {@link Result}s
 	 */
 	public List<Result> getResultList(ArBuilderQuery query, QuerySettings settings);
+
+	/**
+	 * Retrieves {@link Result}s as {@link List} from database by TaskSetting
+	 * query.
+	 * 
+	 * @param query
+	 * @param settings
+	 * @return {@link List} of {@link Result}s
+	 */
+	public List<Result> getResultListByTsQuery(ArTsBuilderQuery query, QuerySettings settings);
+
+	/**
+	 * Retrieves {@link Result}s as {@link List} from database by hybrid query.
+	 * 
+	 * @param query
+	 * @return {@link List} of {@link Result}s
+	 */
+	public List<Result> getResultListByHybridQuery(ArHybridBuilderQuery query);
 
 	/**
 	 * Queries database with given query and returns single result value as

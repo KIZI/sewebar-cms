@@ -7,7 +7,6 @@ import java.util.List;
 import xquerysearch.domain.Cluster;
 import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
-import xquerysearch.domain.result.ResultSet;
 
 /**
  * Transformer used to transform result data to response-friendly form.
@@ -24,31 +23,9 @@ public class OutputTransformer {
 	}
 
 	/**
-	 * Transforms {@link ResultSet} to response-friendly form represented as
-	 * String.
-	 * 
-	 * @param resultSet
-	 * @return transformed ResultSet
-	 */
-	public static String transformResultSet(ResultSet resultSet, long queryTime, long docCount, long arCount) {
-		StringBuffer ret = new StringBuffer();
-		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
-
-		ret.append("<Hits>");
-		if (resultSet == null || resultSet.getResults() == null) {
-			ret.append("");
-		} else {
-			for (Result result : resultSet.getResults()) {
-				ret.append(transformResult(result));
-			}
-		}
-		ret.append("</Hits></SearchResult>");
-		return ret.toString();
-	}
-
-	/**
-	 * Transforms {@link Groups}s to response-friendly form represented as
-	 * String.
+	 * Transforms list of items (being instance of {@link Result},
+	 * {@link Groups} or {@link Cluster}) to response-friendly form represented
+	 * as String.
 	 * 
 	 * @param groups
 	 * @param queryTime
@@ -56,65 +33,20 @@ public class OutputTransformer {
 	 * @param arCount
 	 * @return
 	 */
-	public static String transformResultGroups(List<Group> groups, long queryTime, long docCount, long arCount) {
+	public static String transformObjectsList(List<? extends Object> list, long queryTime, long docCount, long arCount) {
 		StringBuffer ret = new StringBuffer();
 		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
 		ret.append("<Hits>");
-		if (groups == null) {
-			ret.append("");
-		} else {
-
-			for (Group group : groups) {
-				ret.append(group.toString());
+		if (list != null) {
+			for (Object item : list) {
+				if (item != null && item instanceof Result) {
+					ret.append(((Result) item).toString());
+				} else if (item != null && item instanceof Group) {
+					ret.append(((Group) item).toString());
+				} else if (item != null && item instanceof Cluster) {
+					ret.append(((Cluster) item).toString());
+				}
 			}
-
-		}
-		ret.append("</Hits></SearchResult>");
-		return ret.toString();
-	}
-
-	/**
-	 * Transforms {@link Result} to response-friendly form represented as
-	 * String.
-	 * 
-	 * @param result
-	 * @return transformed Result
-	 */
-	public static String transformResult(Result result) {
-		if (result == null) {
-			return "";
-		}
-		return result.toString();
-	}
-
-	public static String transformResultsInList(List<Result> results, long queryTime, long docCount, long arCount) {
-		if (results == null) {
-			return null;
-		}
-
-		StringBuffer ret = new StringBuffer();
-		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
-
-		ret.append("<Hits>");
-		for (Result result : results) {
-			ret.append(transformResult(result));
-		}
-		ret.append("</Hits></SearchResult>");
-		return ret.toString();
-	}
-
-	public static String transformResultClusters(List<Cluster> clusters, long queryTime, long docCount, long arCount) {
-		StringBuffer ret = new StringBuffer();
-		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
-		ret.append("<Hits>");
-		if (clusters == null) {
-			ret.append("");
-		} else {
-
-			for (Cluster cluster : clusters) {
-				ret.append(cluster.toString());
-			}
-
 		}
 		ret.append("</Hits></SearchResult>");
 		return ret.toString();

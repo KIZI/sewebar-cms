@@ -18,6 +18,7 @@ import xquerysearch.clustering.service.ClusteringService;
 import xquerysearch.domain.Cluster;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
+import xquerysearch.domain.arbquery.hybridquery.ArHybridBuilderQuery;
 import xquerysearch.domain.arbquery.querysettings.QueryResultsAnalysisType;
 import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.grouping.Group;
@@ -27,6 +28,7 @@ import xquerysearch.grouping.service.GroupingService;
 import xquerysearch.service.AggregationService;
 import xquerysearch.service.QueryService;
 import xquerysearch.transformation.OutputTransformer;
+import xquerysearch.transformation.QueryArBuilderQueryHybridTransformer;
 import xquerysearch.transformation.QueryArBuilderQueryTransformer;
 import xquerysearch.transformation.QueryArBuilderQueryTsTransformer;
 import xquerysearch.utils.QueryUtils;
@@ -63,6 +65,10 @@ public class QueryController extends AbstractController {
 	@Qualifier("arbTsQueryCastor")
 	private CastorMarshaller arbTsQueryCastor;
 
+	@Autowired
+	@Qualifier("hybridQueryCastor")
+	private CastorMarshaller hybridQueryCastor;
+
 	// TODO rename action in jsp
 	@RequestMapping(params = "action=useQuery", method = RequestMethod.POST)
 	public ModelAndView queryForResult(@RequestParam String content, HttpServletRequest request, HttpServletResponse response) {
@@ -75,14 +81,18 @@ public class QueryController extends AbstractController {
 
 		ArBuilderQuery arbQuery = null;
 		ArTsBuilderQuery arbTsQuery = null;
+		ArHybridBuilderQuery arbHybridQuery = null;
 		QuerySettings settings = null;
 
 		if (content.contains("<Target>TaskSetting</Target>")) {
 			arbTsQuery = QueryArBuilderQueryTsTransformer.transform(arbTsQueryCastor, content);
 			settings = QueryUtils.getQuerySettings(arbTsQuery);
-			// xpath =
-			// QueryXpathTaskSettingTransformer.transformToXpath(arbTsQuery,
-			// settings);
+			processTsQuery(response, arbTsQuery, settings, startTime);
+			return null;
+		} else if (content.contains("<HybridQuery>")) {
+			arbHybridQuery = QueryArBuilderQueryHybridTransformer.transform(hybridQueryCastor, content);
+			processHybridQuery(response, arbHybridQuery, startTime);
+			return null;
 		} else {
 			arbQuery = QueryArBuilderQueryTransformer.transform(arbQueryCastor, content);
 			settings = QueryUtils.getQuerySettings(arbQuery);
@@ -118,78 +128,63 @@ public class QueryController extends AbstractController {
 	}
 
 	private void processDefault(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
-		StringBuffer responseMessage = new StringBuffer();
-		Long docCount = aggregationService.getDocumentsCount();
-		Long arCount = aggregationService.getAssociationRulesCount();
-
 		long queryStartTime = System.currentTimeMillis();
-
 		List<Result> results = queryService.getResultList(arbQuery, settings);
-
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-
-		responseMessage.append(OutputTransformer
-				.transformResultsInList(results, queryTime, docCount, arCount));
-
-		long fullTime = System.currentTimeMillis() - startTime;
-
-		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
-				+ "</result>", response);
-
+		processListOfObjects(results, response, queryTime, startTime);
 	}
 
 	private void processGrouping(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
-		StringBuffer responseMessage = new StringBuffer();
-		Long docCount = aggregationService.getDocumentsCount();
-		Long arCount = aggregationService.getAssociationRulesCount();
-
 		long queryStartTime = System.currentTimeMillis();
-
 		List<Group> groups = groupingService.getGroupsByQuery(arbQuery, settings);
-
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-
-		responseMessage.append(OutputTransformer.transformResultGroups(groups, queryTime, docCount, arCount));
-
-		long fullTime = System.currentTimeMillis() - startTime;
-
-		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
-				+ "</result>", response);
+		processListOfObjects(groups, response, queryTime, startTime);
 	}
 
 	private void processFuzzy(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
-		StringBuffer responseMessage = new StringBuffer();
-		Long docCount = aggregationService.getDocumentsCount();
-		Long arCount = aggregationService.getAssociationRulesCount();
-
 		long queryStartTime = System.currentTimeMillis();
-
 		List<Result> results = fuzzyService.getFuzzyResultsByQuery(arbQuery, settings);
-
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-
-		responseMessage.append(OutputTransformer
-				.transformResultsInList(results, queryTime, docCount, arCount));
-
-		long fullTime = System.currentTimeMillis() - startTime;
-
-		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
-				+ "</result>", response);
+		processListOfObjects(results, response, queryTime, startTime);
 	}
 
 	private void processClustering(HttpServletResponse response, ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
+		long queryStartTime = System.currentTimeMillis();
+		List<Cluster> results = clusteringService.getClustersByQuery(arbQuery, settings);
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+		processListOfObjects(results, response, queryTime, startTime);
+	}
+
+	private void processHybridQuery(HttpServletResponse response, ArHybridBuilderQuery hybridQuery, long startTime) {
+		long queryStartTime = System.currentTimeMillis();
+		List<Result> results = queryService.getResultListByHybridQuery(hybridQuery);
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+		processListOfObjects(results, response, queryTime, startTime);
+	}
+
+	private void processTsQuery(HttpServletResponse response, ArTsBuilderQuery tsQuery, QuerySettings settings, long startTime) {
+		long queryStartTime = System.currentTimeMillis();
+		List<Result> results = queryService.getResultListByTsQuery(tsQuery, settings);
+		long queryTime = System.currentTimeMillis() - queryStartTime;
+		processListOfObjects(results, response, queryTime, startTime);
+	}
+
+	/**
+	 * Helping method for transforming given list of objects to
+	 * response-friendly form. Result of transformation is appended to
+	 * {@link HttpServletResponse}.
+	 * 
+	 * @param list
+	 * @param response
+	 * @param queryTime
+	 * @param startTime
+	 */
+	private void processListOfObjects(List<? extends Object> list, HttpServletResponse response, long queryTime, long startTime) {
 		StringBuffer responseMessage = new StringBuffer();
 		Long docCount = aggregationService.getDocumentsCount();
 		Long arCount = aggregationService.getAssociationRulesCount();
 
-		long queryStartTime = System.currentTimeMillis();
-
-		List<Cluster> results = clusteringService.getClustersByQuery(arbQuery, settings);
-
-		long queryTime = System.currentTimeMillis() - queryStartTime;
-
-		responseMessage.append(OutputTransformer.transformResultClusters(results, queryTime, docCount,
-				arCount));
+		responseMessage.append(OutputTransformer.transformObjectsList(list, queryTime, docCount, arCount));
 
 		long fullTime = System.currentTimeMillis() - startTime;
 

@@ -52,10 +52,7 @@ public class QueryUtils {
 	 */
 	public static QuerySettings getQuerySettings(ArBuilderQuery query) {
 		if (query != null) {
-			ArQuery arQuery = query.getArQuery();
-			if (arQuery != null) {
-				return arQuery.getQuerySettings();
-			}
+			getQuerySettings(query.getArQuery());
 		}
 		return null;
 	}
@@ -68,14 +65,36 @@ public class QueryUtils {
 	 */
 	public static QuerySettings getQuerySettings(ArTsBuilderQuery query) {
 		if (query != null) {
-			ArTsQuery arQuery = query.getArTsQuery();
-			if (arQuery != null) {
-				return arQuery.getQuerySettings();
-			}
+			getQuerySettings(query.getArTsQuery());
 		}
 		return null;
 	}
 
+	/**
+	 * Helps retrieve {@link QuerySettings} from {@link ArTsQuery}.
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public static QuerySettings getQuerySettings(ArTsQuery query) {
+		if (query != null) {
+			return query.getQuerySettings();
+		}
+		return null;
+	}
+	
+	/**
+	 * Helps retrieve {@link QuerySettings} from {@link ArQuery}.
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public static QuerySettings getQuerySettings(ArQuery query) {
+		if (query != null) {
+			return query.getQuerySettings();
+		}
+		return null;
+	}
 	
 	/**
 	 * Provides removal of XML file declaration and oxygen declaration.

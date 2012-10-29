@@ -1,7 +1,5 @@
 package xquerysearch.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +9,16 @@ import org.springframework.stereotype.Service;
 import xquerysearch.dao.ResultsDao;
 import xquerysearch.domain.Query;
 import xquerysearch.domain.arbquery.ArBuilderQuery;
+import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
+import xquerysearch.domain.arbquery.hybridquery.ArHybridBuilderQuery;
+import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
+import xquerysearch.domain.arbquery.tasksetting.ArTsQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
 import xquerysearch.grouping.service.GroupingService;
+import xquerysearch.transformation.QueryXpathTaskSettingTransformer;
 import xquerysearch.transformation.QueryXpathTransformer;
 import xquerysearch.utils.QueryUtils;
 
@@ -36,29 +39,9 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 
 	@Autowired
 	private FuzzySearchService fuzzySearchService;
-	
+
 	@Autowired
 	private GroupingService groupingService;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResultSet getResultSet(Query query) {
-		ByteArrayOutputStream preparedQuery = QueryUtils.queryPrepare(query.getQueryBody());
-		String xpath = QueryUtils.makeXPath(new ByteArrayInputStream(preparedQuery.toByteArray()), false,
-				containerName);
-		String xquery = ""
-				+ "for $ar in subsequence("
-				+ xpath
-				+ ", 1, "
-				+ 100
-				+ ")"
-				+ "\n return"
-				+ "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
-				+ "\n {$ar/Text}" + "<Detail>{$ar/child::node() except $ar/Text}</Detail>" + "\n </Hit>" + "";
-		return dao.getResultSetByXpath(xquery);
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -74,8 +57,8 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 				+ ")"
 				+ "\n return"
 				+ "\n <Hit docID=\"{$ar/parent::node()/@joomlaID}\" ruleID=\"{$ar/@id}\" docName=\"{base-uri($ar)}\" reportURI=\"{$ar/parent::node()/@reportURI}\" database=\"{$ar/parent::node()/@database}\" table=\"{$ar/parent::node()/@table}\">"
-				+ "\n {$ar/parent::node()/TaskSetting}"
-				+ "\n {$ar/Text}" + "<Detail>{$ar/child::node() except $ar/Text}</Detail>" + "\n </Hit>";
+				+ "\n {$ar/parent::node()/TaskSetting}" + "\n {$ar/Text}"
+				+ "<Detail>{$ar/child::node() except $ar/Text}</Detail>" + "\n </Hit>";
 		return dao.getResultSetByXpath(xpath);
 	}
 
@@ -85,10 +68,64 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	@Override
 	public List<Result> getResultList(ArBuilderQuery query, QuerySettings settings) {
 		String xpath = QueryXpathTransformer.transformToXpath(query, settings);
-		
+		xpath = "/PMML/" + xpath;
+
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
-		return resultSet.getResults();
+		
+		if (resultSet != null) {
+			return resultSet.getResults();
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Result> getResultListByTsQuery(ArTsBuilderQuery query, QuerySettings settings) {
+		String xpath = QueryXpathTaskSettingTransformer.transformToXpath(query, settings);
+		xpath = "/PMML[" + xpath + "]/AssociationRule";
+
+		// TODO Max Results retrieve from query
+		ResultSet resultSet = getResultSet(xpath, 100);
+		
+		if (resultSet != null) {
+			return resultSet.getResults();
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Result> getResultListByHybridQuery(ArHybridBuilderQuery query) {
+		if (query == null) {
+			return null;
+		}
+
+		ArTsQuery arTsQuery = query.getArTsQuery();
+		ArQuery arQuery = query.getArQuery();
+
+		if (arTsQuery != null && arQuery != null) {
+			QuerySettings arTsSettings = QueryUtils.getQuerySettings(arTsQuery);
+			QuerySettings arSettings = QueryUtils.getQuerySettings(arQuery);
+
+			String arTsXpath = QueryXpathTaskSettingTransformer.transformToXpath(arTsQuery, arTsSettings);
+			String arXpath = QueryXpathTransformer.transformToXpath(arQuery, arSettings);
+
+			String xpath = "/PMML[TaskSetting[" + arTsXpath + "] and AssociationRule[" + arXpath
+					+ "]]/AssociationRule";
+
+			// TODO Max Results retrieve from query
+			ResultSet resultSet = getResultSet(xpath, 100);
+
+			if (resultSet != null) {
+				return resultSet.getResults();
+			}
+		}
+		return null;
 	}
 
 	/**

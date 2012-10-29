@@ -20,12 +20,4 @@ public class ResultSet {
 		return results;
 	}
 
-	/**
-	 * @param results
-	 *            the results to set
-	 */
-	public void setResults(List<Result> results) {
-		this.results = results;
-	}
-
 }
