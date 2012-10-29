@@ -25,6 +25,7 @@ import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
 import xquerysearch.grouping.service.GroupingService;
+import xquerysearch.logging.SearchLogger;
 import xquerysearch.service.AggregationService;
 import xquerysearch.service.QueryService;
 import xquerysearch.transformation.OutputTransformer;
@@ -68,6 +69,9 @@ public class QueryController extends AbstractController {
 	@Autowired
 	@Qualifier("hybridQueryCastor")
 	private CastorMarshaller hybridQueryCastor;
+	
+	@Autowired
+	private SearchLogger searchLogger;
 
 	// TODO rename action in jsp
 	@RequestMapping(params = "action=useQuery", method = RequestMethod.POST)
@@ -78,7 +82,9 @@ public class QueryController extends AbstractController {
 		}
 
 		long startTime = System.currentTimeMillis();
-
+		
+		searchLogger.logQuery(content, startTime);
+		
 		ArBuilderQuery arbQuery = null;
 		ArTsBuilderQuery arbTsQuery = null;
 		ArHybridBuilderQuery arbHybridQuery = null;
@@ -186,6 +192,8 @@ public class QueryController extends AbstractController {
 
 		responseMessage.append(OutputTransformer.transformObjectsList(list, queryTime, docCount, arCount));
 
+		searchLogger.logResult(responseMessage.toString(), startTime);
+		
 		long fullTime = System.currentTimeMillis() - startTime;
 
 		addResponseContent("<result milisecs=\"" + fullTime + "\">" + responseMessage.toString()
