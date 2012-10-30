@@ -90,14 +90,14 @@ public class QueryController extends AbstractController {
 		ArHybridBuilderQuery arbHybridQuery = null;
 		QuerySettings settings = null;
 
-		if (content.contains("<Target>TaskSetting</Target>")) {
+		if (content.contains("<HybridQuery>")) {
+			arbHybridQuery = QueryArBuilderQueryHybridTransformer.transform(hybridQueryCastor, content);
+			processHybridQuery(response, arbHybridQuery, startTime);
+			return null;
+		} else if (content.contains("<Target>TaskSetting</Target>")) {
 			arbTsQuery = QueryArBuilderQueryTsTransformer.transform(arbTsQueryCastor, content);
 			settings = QueryUtils.getQuerySettings(arbTsQuery);
 			processTsQuery(response, arbTsQuery, settings, startTime);
-			return null;
-		} else if (content.contains("<HybridQuery>")) {
-			arbHybridQuery = QueryArBuilderQueryHybridTransformer.transform(hybridQueryCastor, content);
-			processHybridQuery(response, arbHybridQuery, startTime);
 			return null;
 		} else {
 			arbQuery = QueryArBuilderQueryTransformer.transform(arbQueryCastor, content);
