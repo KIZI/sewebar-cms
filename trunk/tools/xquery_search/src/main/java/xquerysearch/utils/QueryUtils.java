@@ -52,7 +52,7 @@ public class QueryUtils {
 	 */
 	public static QuerySettings getQuerySettings(ArBuilderQuery query) {
 		if (query != null) {
-			getQuerySettings(query.getArQuery());
+			return getQuerySettings(query.getArQuery());
 		}
 		return null;
 	}
@@ -65,7 +65,7 @@ public class QueryUtils {
 	 */
 	public static QuerySettings getQuerySettings(ArTsBuilderQuery query) {
 		if (query != null) {
-			getQuerySettings(query.getArTsQuery());
+			return getQuerySettings(query.getArTsQuery());
 		}
 		return null;
 	}

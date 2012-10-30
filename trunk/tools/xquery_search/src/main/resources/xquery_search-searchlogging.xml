@@ -6,30 +6,6 @@
 						http://www.springframework.org/schema/context 
 						http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="searchLogger" class="xquerysearch.logging.SearchLoggerImpl" />
-
-	<bean id="logRemoverJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="xquerysearch.logging.SearchLoggingRemoverJob" />
-	</bean>
-
-	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail" ref="logRemoverJob" />
-		<property name="cronExpression" value="${logging.remove.cron.expression}" />
-	</bean>
-
-	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="jobDetails">
-			<list>
-				<ref bean="logRemoverJob" />
-			</list>
-		</property>
-		<property name="triggers">
-			<list>
-				<ref bean="cronTrigger" />
-			</list>
-		</property>
-	</bean>
-
 	<beans profile="devel">
 		<context:property-placeholder location="${xquery_search.config.location:classpath:}logging-devel.properties"
 			ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
@@ -39,4 +15,40 @@
 		<context:property-placeholder location="${xquery_search.config.location:classpath:}logging-prod.properties"
 			ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
 	</beans>
+
+	<beans>
+		<bean id="searchLogger" class="xquerysearch.logging.SearchLoggerImpl" />
+
+		<bean id="loggingRemover" class="xquerysearch.logging.SearchLoggingRemover" />
+
+		<bean id="logRemoveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+			<property name="jobClass" value="xquerysearch.logging.SearchLoggingRemoveJob" />
+			<property name="jobDataAsMap">
+				<map>
+					<entry key="remover" value-ref="loggingRemover" />
+					<entry key="targetDirPath" value="${logging.target.dir}" />
+					<entry key="keepMinutes" value="${logging.remove.keep.minutes}" />
+				</map>
+			</property>
+		</bean>
+
+		<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+			<property name="jobDetail" ref="logRemoveJob" />
+			<property name="cronExpression" value="${logging.remove.cron.expression}" />
+		</bean>
+
+		<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+			<property name="jobDetails">
+				<list>
+					<ref bean="logRemoveJob" />
+				</list>
+			</property>
+			<property name="triggers">
+				<list>
+					<ref bean="cronTrigger" />
+				</list>
+			</property>
+		</bean>
+	</beans>
+
 </beans>
