@@ -122,7 +122,7 @@ public class ArQueryToInternalTransformer {
 	}
 	
 	/**
-	 * Used for retrive {@link InterestMeasureThreshold}s from {@link InterestMeasureSetting}.
+	 * Used for retrieve {@link InterestMeasureThreshold}s from {@link InterestMeasureSetting}.
 	 * 
 	 * @param imSettings
 	 * @return
