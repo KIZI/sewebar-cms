@@ -2,15 +2,18 @@ package xquerysearch.fuzzysearch.evaluator;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 
 import xquerysearch.analysis.ArQueryAnalyzer;
-import xquerysearch.analysis.ResultAnalyzer;
+import xquerysearch.analysis.AssocitaionRuleAnalyzer;
 import xquerysearch.domain.ArQueryInternal;
+import xquerysearch.domain.ArTsQueryInternal;
 import xquerysearch.domain.AssociationRuleInternal;
+import xquerysearch.domain.TaskSettingInternal;
+import xquerysearch.domain.analysis.ArQueryAnalysisOutput;
+import xquerysearch.domain.analysis.ResultAnalysisOutput;
 import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.result.BBA;
 
@@ -31,56 +34,56 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	private static int leftoverCategoryPenalty;
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
 	 */
 	@Override
 	public double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
 		Double resultCompliance = DEFAULT_COMPLIANCE;
 
-		Map<String, Integer> resultAnalysis = ResultAnalyzer.analyze(ari);
+		ResultAnalysisOutput resultAnalysis = AssocitaionRuleAnalyzer.analyze(ari);
 		// TODO move one level up? - performance
-		Map<String, Integer> queryAnalysis = ArQueryAnalyzer.analyze(aqi);
+		ArQueryAnalysisOutput queryAnalysis = ArQueryAnalyzer.analyze(aqi);
 
 		Double bbaCountPenalty = checkBbaCounts(resultAnalysis, queryAnalysis);
 		if (bbaCountPenalty != null) {
 			resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
 		}
 
-		double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(), aqi.getAntecedentBbaSettingList());
-		double[] consequentBbaVector = evaluateBbas(ari.getConsequentBbas(), aqi.getConsequentBbaSettingList());
+		double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(),
+				aqi.getAntecedentBbaSettingList());
+		double[] consequentBbaVector = evaluateBbas(ari.getConsequentBbas(),
+				aqi.getConsequentBbaSettingList());
 
-		return new double[][]{antecedentBbaVector, consequentBbaVector, new double[]{resultCompliance}};
+		return new double[][] { antecedentBbaVector, consequentBbaVector, new double[] { resultCompliance } };
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double[][] evaluate(TaskSettingInternal tsi, ArTsQueryInternal atqi) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	/**
 	 * Evaluates counts of BBAs.
 	 * 
 	 * @return
 	 */
-	private static double checkBbaCounts(Map<String, Integer> resultAnalysis,
-			Map<String, Integer> queryAnalysis) {
+	private static double checkBbaCounts(ResultAnalysisOutput resultAnalysis, ArQueryAnalysisOutput queryAnalysis) {
 
-		double[] valuesPairAntecedent = getValuesPair("antecedentBbaCount", "antecedentBbaCount",
-				resultAnalysis, queryAnalysis);
+		double antecedentPenalty = Math.abs(resultAnalysis.getAntecedentBbaCount()
+				- queryAnalysis.getAntecedentBbaCount())
+				* bbaCountPenalty;
+		;
+		double consequentPenalty = Math.abs(resultAnalysis.getConsequentBbaCount()
+				- queryAnalysis.getConsequentBbaCount())
+				* bbaCountPenalty;
+		double conditionPenalty = Math.abs(resultAnalysis.getConditionBbaCount()
+				- queryAnalysis.getConditionBbaCount())
+				* bbaCountPenalty;
 
-		double[] valuesPairConsequent = getValuesPair("consequentBbaCount", "consequentBbaCount",
-				resultAnalysis, queryAnalysis);
-
-		double[] valuesPairCondition = getValuesPair("conditionBbaCount", "conditionBbaCount",
-				resultAnalysis, queryAnalysis);
-
-		double antecedentPenalty = 0.0;
-		double consequentPenalty = 0.0;
-		double conditionPenalty = 0.0;
-		if (valuesPairAntecedent != null) {
-			antecedentPenalty = Math.abs(valuesPairAntecedent[0] - valuesPairAntecedent[1]) * bbaCountPenalty;
-		}
-		if (valuesPairConsequent != null) {
-			consequentPenalty = Math.abs(valuesPairConsequent[0] - valuesPairConsequent[1]) * bbaCountPenalty;
-		}
-		if (valuesPairCondition != null) {
-			conditionPenalty = Math.abs(valuesPairCondition[0] - valuesPairCondition[1]) * bbaCountPenalty;
-		}
 		return antecedentPenalty + consequentPenalty + conditionPenalty;
 	}
 
@@ -191,33 +194,6 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 			bbaCategoriesTemp.remove(bbaSetCategory);
 		}
 		return bbaCategoriesTemp.size();
-	}
-
-	/**
-	 * Retrieves values pair for variable from found AR and from ArQuery.
-	 * 
-	 * @return
-	 */
-	private static double[] getValuesPair(String resultMapId, String queryMapId,
-			Map<String, Integer> resultAnalysis, Map<String, Integer> queryAnalysis) {
-		if (resultMapId == null || resultMapId.isEmpty()) {
-			return null;
-		}
-		if (queryMapId == null || queryMapId.isEmpty()) {
-			return null;
-		}
-		if (queryAnalysis == null || resultAnalysis == null) {
-			return null;
-		}
-
-		Integer resultValue = resultAnalysis.get(resultMapId);
-		Integer queryValue = queryAnalysis.get(queryMapId);
-
-		if (resultValue == null || queryValue == null) {
-			return null;
-		}
-
-		return new double[] { resultValue, queryValue };
 	}
 
 	/**
