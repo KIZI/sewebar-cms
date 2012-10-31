@@ -2,10 +2,10 @@ package xquerysearch.analysis;
 
 import xquerysearch.domain.AssociationRuleInternal;
 import xquerysearch.domain.analysis.ResultAnalysisOutput;
-import xquerysearch.domain.result.Result;
+import xquerysearch.domain.result.Rule;
 
 /**
- * Analyzes {@link AssociationRuleInternal}.
+ * Analyzer for {@link AssociationRuleInternal}.
  * 
  * @author Tomas Marek
  * 
@@ -19,11 +19,11 @@ public class AssocitaionRuleAnalyzer {
 	}
 
 	/**
-	 * Analyzes {@link AssociationRuleInternal} represented by
+	 * Analyzes {@link Rule} represented by
 	 * {@link AssociationRuleInternal}.
 	 * 
 	 * @param ari
-	 * @return {@link ResultAnalysisOutput} describing {@link Result}
+	 * @return {@link ResultAnalysisOutput} describing {@link Rule}
 	 */
 	public static ResultAnalysisOutput analyze(AssociationRuleInternal ari) {
 		ResultAnalysisOutput output = new ResultAnalysisOutput();
