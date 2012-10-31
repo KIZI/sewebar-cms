@@ -6,7 +6,7 @@ import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.ArQuery;
 
 /**
- * Analyzes {@link ArQuery}.
+ * Analyzer for {@link ArQuery}.
  * 
  * @author Tomas Marek
  * 

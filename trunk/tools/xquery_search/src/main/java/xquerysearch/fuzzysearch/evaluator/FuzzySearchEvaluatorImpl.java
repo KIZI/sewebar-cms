@@ -7,13 +7,17 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 
 import xquerysearch.analysis.ArQueryAnalyzer;
+import xquerysearch.analysis.ArTsQueryAnalyzer;
 import xquerysearch.analysis.AssocitaionRuleAnalyzer;
+import xquerysearch.analysis.TaskSettingAnalyzer;
 import xquerysearch.domain.ArQueryInternal;
 import xquerysearch.domain.ArTsQueryInternal;
 import xquerysearch.domain.AssociationRuleInternal;
 import xquerysearch.domain.TaskSettingInternal;
 import xquerysearch.domain.analysis.ArQueryAnalysisOutput;
+import xquerysearch.domain.analysis.ArTsQueryAnalysisOutput;
 import xquerysearch.domain.analysis.ResultAnalysisOutput;
+import xquerysearch.domain.analysis.TaskSettingAnalysisOutput;
 import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.result.BBA;
 
@@ -44,17 +48,16 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 		// TODO move one level up? - performance
 		ArQueryAnalysisOutput queryAnalysis = ArQueryAnalyzer.analyze(aqi);
 
-		Double bbaCountPenalty = checkBbaCounts(resultAnalysis, queryAnalysis);
-		if (bbaCountPenalty != null) {
-			resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
-		}
+		resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
 
 		double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(),
 				aqi.getAntecedentBbaSettingList());
 		double[] consequentBbaVector = evaluateBbas(ari.getConsequentBbas(),
 				aqi.getConsequentBbaSettingList());
+		double[] conditionBbaVector = evaluateBbas(ari.getConditionBbas(), aqi.getConditionBbaSettingList());
 
-		return new double[][] { antecedentBbaVector, consequentBbaVector, new double[] { resultCompliance } };
+		return new double[][] { antecedentBbaVector, consequentBbaVector, conditionBbaVector,
+				new double[] { resultCompliance } };
 	}
 
 	/**
@@ -62,10 +65,16 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 */
 	@Override
 	public double[][] evaluate(TaskSettingInternal tsi, ArTsQueryInternal atqi) {
-		// TODO Auto-generated method stub
-		return null;
+		Double compliance = DEFAULT_COMPLIANCE;
+
+		TaskSettingAnalysisOutput tsAnalysis = TaskSettingAnalyzer.analyze(tsi);
+		ArTsQueryAnalysisOutput queryAnalysis = ArTsQueryAnalyzer.analyze(atqi);
+
+		compliance -= checkBbaCounts(tsAnalysis, queryAnalysis);
+		
+		return new double[][] { new double[] { compliance } };
 	}
-	
+
 	/**
 	 * Evaluates counts of BBAs.
 	 * 
@@ -76,12 +85,22 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 		double antecedentPenalty = Math.abs(resultAnalysis.getAntecedentBbaCount()
 				- queryAnalysis.getAntecedentBbaCount())
 				* bbaCountPenalty;
-		;
 		double consequentPenalty = Math.abs(resultAnalysis.getConsequentBbaCount()
 				- queryAnalysis.getConsequentBbaCount())
 				* bbaCountPenalty;
 		double conditionPenalty = Math.abs(resultAnalysis.getConditionBbaCount()
 				- queryAnalysis.getConditionBbaCount())
+				* bbaCountPenalty;
+
+		return antecedentPenalty + consequentPenalty + conditionPenalty;
+	}
+
+	private static double checkBbaCounts(TaskSettingAnalysisOutput tsao, ArTsQueryAnalysisOutput atqao) {
+		double antecedentPenalty = Math.abs(tsao.getAntecedentBbaCount() - atqao.getAntecedentBbaCount())
+				* bbaCountPenalty;
+		double consequentPenalty = Math.abs(tsao.getConsequentBbaCount() - atqao.getConsequentBbaCount())
+				* bbaCountPenalty;
+		double conditionPenalty = Math.abs(tsao.getConditionBbaCount() - atqao.getConditionBbaCount())
 				* bbaCountPenalty;
 
 		return antecedentPenalty + consequentPenalty + conditionPenalty;

@@ -9,6 +9,7 @@ import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.Params;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.querysettings.GroupingType;
+import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.grouping.GroupDescription;
 import xquerysearch.domain.result.BBA;
@@ -36,9 +37,18 @@ public class GroupingServiceImpl implements GroupingService {
 		List<Result> results = queryService.getResultList(query, settings);
 		return groupBy(results, settings.getParams());
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Group> getGroupsByQuery(ArTsBuilderQuery query, QuerySettings settings) {
+		List<Result> results = queryService.getResultListByTsQuery(query, settings);
+		return groupBy(results, settings.getParams());
+	}
 
 	/**
-	 * @{inheritDoc
+	 * @{inheritDoc}
 	 */
 	@Override
 	public List<Group> groupBy(List<Result> results, Params params) {
