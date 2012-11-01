@@ -11,6 +11,7 @@ public class QuerySettings {
 	private String type;
 	private String target;
 	private String resultsAnalysis;
+	private boolean useLegacyOutput;
 	private Params params;
 
 	/**
@@ -71,6 +72,21 @@ public class QuerySettings {
 	 */
 	public void setParams(Params params) {
 		this.params = params;
+	}
+
+	/**
+	 * @return the useLegacyOutput
+	 */
+	public boolean getUseLegacyOutput() {
+		return useLegacyOutput;
+	}
+
+	/**
+	 * @param useLegacyOutput
+	 *            the useLegacyOutput to set
+	 */
+	public void setUseLegacyOutput(boolean useLegacyOutput) {
+		this.useLegacyOutput = useLegacyOutput;
 	}
 
 }

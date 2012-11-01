@@ -38,6 +38,6 @@ public enum GroupingType {
 				return type;
 			}
 		}
-		return null;
+		return RULE_LENGTH;
 	}
 }

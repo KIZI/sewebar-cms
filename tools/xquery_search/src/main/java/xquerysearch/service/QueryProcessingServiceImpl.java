@@ -100,7 +100,8 @@ public class QueryProcessingServiceImpl implements QueryProcessingService {
 					return processGrouping(arbTsQuery, settings, startTime);
 				case FUZZY:
 					return processFuzzy(arbTsQuery, settings, startTime);
-				default : return processTsQuery(arbTsQuery, settings, startTime); 
+				default:
+					return processTsQuery(arbTsQuery, settings, startTime);
 				}
 			}
 			return processTsQuery(arbTsQuery, settings, startTime);
@@ -129,56 +130,58 @@ public class QueryProcessingServiceImpl implements QueryProcessingService {
 		long queryStartTime = System.currentTimeMillis();
 		List<Result> results = queryService.getResultList(arbQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(results, queryTime, startTime);
+		return processListOfObjects(results, queryTime, startTime, settings.getUseLegacyOutput());
 	}
 
 	private String processGrouping(ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Group> groups = groupingService.getGroupsByQuery(arbQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(groups, queryTime, startTime);
+		return processListOfObjects(groups, queryTime, startTime, settings.getUseLegacyOutput());
 	}
-	
+
 	private String processGrouping(ArTsBuilderQuery arbTsQuery, QuerySettings settings, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Group> groups = groupingService.getGroupsByQuery(arbTsQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(groups, queryTime, startTime);
+		return processListOfObjects(groups, queryTime, startTime, settings.getUseLegacyOutput());
 	}
 
 	private String processFuzzy(ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Result> results = fuzzyService.getFuzzyResultsByQuery(arbQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(results, queryTime, startTime);
+		return processListOfObjects(results, queryTime, startTime, settings.getUseLegacyOutput());
 	}
 
 	private String processFuzzy(ArTsBuilderQuery arbTsQuery, QuerySettings settings, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Result> results = fuzzyService.getFuzzyResultsByQuery(arbTsQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(results, queryTime, startTime);
+		return processListOfObjects(results, queryTime, startTime, settings.getUseLegacyOutput());
 	}
 
 	private String processClustering(ArBuilderQuery arbQuery, QuerySettings settings, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Cluster> results = clusteringService.getClustersByQuery(arbQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(results, queryTime, startTime);
+		return processListOfObjects(results, queryTime, startTime, settings.getUseLegacyOutput());
 	}
 
 	private String processHybridQuery(ArHybridBuilderQuery hybridQuery, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Result> results = queryService.getResultListByHybridQuery(hybridQuery);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(results, queryTime, startTime);
+		
+		// TODO set legacy output based on received query?
+		return processListOfObjects(results, queryTime, startTime, false);
 	}
 
 	private String processTsQuery(ArTsBuilderQuery tsQuery, QuerySettings settings, long startTime) {
 		long queryStartTime = System.currentTimeMillis();
 		List<Result> results = queryService.getResultListByTsQuery(tsQuery, settings);
 		long queryTime = System.currentTimeMillis() - queryStartTime;
-		return processListOfObjects(results, queryTime, startTime);
+		return processListOfObjects(results, queryTime, startTime, settings.getUseLegacyOutput());
 	}
 
 	/**
@@ -191,12 +194,18 @@ public class QueryProcessingServiceImpl implements QueryProcessingService {
 	 * @param queryTime
 	 * @param startTime
 	 */
-	private String processListOfObjects(List<? extends Object> list, long queryTime, long startTime) {
+	private String processListOfObjects(List<? extends Object> list, long queryTime, long startTime, boolean useLegacyOutput) {
 		StringBuffer responseMessage = new StringBuffer();
 		Long docCount = aggregationService.getDocumentsCount();
 		Long arCount = aggregationService.getAssociationRulesCount();
 
-		responseMessage.append(OutputTransformer.transformObjectsList(list, queryTime, docCount, arCount));
+		if (useLegacyOutput == true) {
+			responseMessage.append(OutputTransformer.transformObjectsListToLegacy(list, queryTime, docCount,
+					arCount));
+		} else {
+			responseMessage
+					.append(OutputTransformer.transformObjectsList(list, queryTime, docCount, arCount));
+		}
 
 		searchLogger.logResult(responseMessage.toString(), startTime);
 
