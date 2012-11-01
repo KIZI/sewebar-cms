@@ -1,12 +1,17 @@
 package xquerysearch.transformation;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import xquerysearch.domain.Cluster;
 import xquerysearch.domain.grouping.Group;
+import xquerysearch.domain.output.BBA;
+import xquerysearch.domain.output.DBA;
+import xquerysearch.domain.output.Hit;
 import xquerysearch.domain.result.Result;
+import xquerysearch.outputconverting.OutputConverter;
 
 /**
  * Transformer used to transform result data to response-friendly form.
@@ -33,7 +38,7 @@ public class OutputTransformer {
 	 * @param arCount
 	 * @return
 	 */
-	public static String transformObjectsList(List<? extends Object> list, long queryTime, long docCount, long arCount) {
+	public static String transformObjectsListToLegacy(List<? extends Object> list, long queryTime, long docCount, long arCount) {
 		StringBuffer ret = new StringBuffer();
 		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
 		ret.append("<Hits>");
@@ -48,6 +53,43 @@ public class OutputTransformer {
 				}
 			}
 		}
+		ret.append("</Hits></SearchResult>");
+		return ret.toString();
+	}
+
+	public static String transformObjectsList(List<? extends Object> list, long queryTime, long docCount, long arCount) {
+		StringBuffer ret = new StringBuffer();
+		appendHeaderOfSearch(ret, queryTime, docCount, arCount);
+		ret.append("<Hits>");
+
+		List<BBA> bbas = new ArrayList<BBA>();
+		List<DBA> dbas = new ArrayList<DBA>();
+		List<Hit> hits = new ArrayList<Hit>();
+
+		if (list != null) {
+			for (Object item : list) {
+				if (item != null && item instanceof Result) {
+					OutputConverter.convertResult(bbas, dbas, hits, (Result) item);
+				} else if (item != null && item instanceof Group) {
+					ret.append(((Group) item).toString());
+				} else if (item != null && item instanceof Cluster) {
+					ret.append(((Cluster) item).toString());
+				}
+			}
+		}
+
+		for (BBA bba : bbas) {
+			ret.append(bba.toString());
+		}
+
+		for (DBA dba : dbas) {
+			ret.append(dba.toString());
+		}
+
+		for (Hit hit : hits) {
+			ret.append(hit.toString());
+		}
+
 		ret.append("</Hits></SearchResult>");
 		return ret.toString();
 	}

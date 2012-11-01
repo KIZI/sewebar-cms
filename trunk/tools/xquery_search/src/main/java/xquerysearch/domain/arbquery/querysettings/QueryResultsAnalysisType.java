@@ -38,6 +38,6 @@ public enum QueryResultsAnalysisType {
 				return type;
 			}
 		}
-		return null;
+		return NONE;
 	}
 }
