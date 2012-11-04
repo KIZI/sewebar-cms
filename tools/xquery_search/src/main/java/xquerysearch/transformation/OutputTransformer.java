@@ -66,11 +66,13 @@ public class OutputTransformer {
 		List<DBA> dbas = new ArrayList<DBA>();
 		List<Hit> hits = new ArrayList<Hit>();
 
-		if (list != null) {
+		if (list != null && list.get(0) != null) {
+			if (list.get(0) instanceof Result) {
+				OutputConverter.convertObjects(bbas, dbas, hits, list);
+			}
+		} else {
 			for (Object item : list) {
-				if (item != null && item instanceof Result) {
-					OutputConverter.convertResult(bbas, dbas, hits, (Result) item);
-				} else if (item != null && item instanceof Group) {
+				if (item != null && item instanceof Group) {
 					ret.append(((Group) item).toString());
 				} else if (item != null && item instanceof Cluster) {
 					ret.append(((Cluster) item).toString());
