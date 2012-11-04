@@ -66,7 +66,7 @@ public class OutputTransformer {
 		List<DBA> dbas = new ArrayList<DBA>();
 		List<Hit> hits = new ArrayList<Hit>();
 
-		if (list != null && list.get(0) != null) {
+		if (list != null && list.size() > 0 && list.get(0) != null) {
 			if (list.get(0) instanceof Result) {
 				OutputConverter.convertObjects(bbas, dbas, hits, list);
 			}

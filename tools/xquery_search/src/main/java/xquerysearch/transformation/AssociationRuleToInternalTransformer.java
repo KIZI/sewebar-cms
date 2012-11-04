@@ -43,6 +43,17 @@ public class AssociationRuleToInternalTransformer {
 
 		ari.setImValues(new ArrayList<ImValue>(rule.getImValues()));
 
+		if (rule.getAnnotation() != null) {
+			String interestingness = rule.getAnnotation().getInterestingness();
+			if (interestingness.equals("interesting")) {
+				ari.setInteresting(true);
+			} else if (interestingness.equals("not interesting")) {
+				ari.setInteresting(false);
+			} else {
+				ari.setImValues(null);
+			}
+		}
+		
 		return ari;
 	}
 
