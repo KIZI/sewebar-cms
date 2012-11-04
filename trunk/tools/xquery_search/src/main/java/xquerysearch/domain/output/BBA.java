@@ -3,6 +3,8 @@ package xquerysearch.domain.output;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Domain object representing BBA element in output.
  * 
@@ -80,7 +82,7 @@ public class BBA {
 		ret.append("<FieldRef>" + fieldRef + "</FieldRef>");
 		
 		for (String category : catRefs) {
-			ret.append("<CatRef>" + category + "</CatRef>");
+			ret.append("<CatRef>" + StringEscapeUtils.escapeXml(category) + "</CatRef>");
 		}
 		
 		ret.append("</BBA>");

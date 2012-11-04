@@ -34,7 +34,7 @@ public class OutputConverter {
 	 * @param results
 	 */
 	public static void convertResult(List<BBA> bbas, List<DBA> dbas, List<Hit> hits, Result result) {
-		int id = 0;
+		Integer id = 0;
 
 		Hit hit = ResultForOutputObjectConverter.convert(result);
 
@@ -50,19 +50,22 @@ public class OutputConverter {
 			Cedent condition = rule.getCondition();
 
 			if (antecedent != null) {
-				antecedentId = Integer.toString(++id);
+				id++;
+				antecedentId = id.toString();
 
-				id += convertDbaList(antecedent.getDbas(), dbas, bbas, id).size();
+				convertDbaListFirstLevel(antecedent.getDbas(), dbas, bbas, id);
 			}
 			if (consequent != null) {
-				consequentId = Integer.toString(++id);
+				id++;
+				consequentId = id.toString();
 
-				id += convertDbaList(consequent.getDbas(), dbas, bbas, id).size();
+				convertDbaListFirstLevel(consequent.getDbas(), dbas, bbas, id);
 			}
 			if (condition != null) {
-				conditionId = Integer.toString(++id);
+				id++;
+				conditionId = id.toString();
 
-				id += convertDbaList(condition.getDbas(), dbas, bbas, id).size();
+				convertDbaListFirstLevel(condition.getDbas(), dbas, bbas, id);
 			}
 
 			hit.setAssociationRule(ResultForOutputObjectConverter.convert(rule, antecedentId, consequentId,
@@ -71,45 +74,48 @@ public class OutputConverter {
 		hits.add(hit);
 	}
 
-	private static List<String> convertDbaList(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, int id) {
+	private static void convertDbaListFirstLevel(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, Integer id) {
+		List<String> baRefs = convertDbaList(dbasResult, dbas, bbas, id);
+		dbas.add(ResultForOutputObjectConverter.convert("Conjunction", id.toString(), baRefs));
+	}
+
+	private static List<String> convertDbaList(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, Integer id) {
 		List<String> localBaRefs = new ArrayList<String>();
 
 		if (dbasResult == null || dbas == null) {
 			return localBaRefs;
 		}
-
+		
 		for (xquerysearch.domain.result.DBA dba : dbasResult) {
-			int dbaId = id++;
-
+			id++;
 			List<String> loopBaRefs = new ArrayList<String>();
 
 			if (dba.getDbas() != null && dba.getDbas().size() > 0) {
-				loopBaRefs = convertDbaList(dba.getDbas(), dbas, bbas, dbaId);
-				dbaId += loopBaRefs.size();
+				loopBaRefs = convertDbaList(dba.getDbas(), dbas, bbas, id);
+				id += loopBaRefs.size();
 			} else if (dba.getBbas() != null && dba.getBbas().size() > 0) {
-				loopBaRefs = convertBbaList(bbas, dba.getBbas(), dbaId);
-				dbaId += loopBaRefs.size();
+				loopBaRefs = convertBbaList(bbas, dba.getBbas(), id);
+				id += loopBaRefs.size();
 			}
 
-			DBA dbaOut = ResultForOutputObjectConverter.convert(dba.getConnective(), Integer.toString(dbaId),
+			DBA dbaOut = ResultForOutputObjectConverter.convert(dba.getConnective(), id.toString(),
 					loopBaRefs);
 
 			dbas.add(dbaOut);
-			localBaRefs.add(Integer.toString(dbaId));
+			localBaRefs.add(id.toString());
 		}
 
 		return localBaRefs;
 	}
 
-	private static List<String> convertBbaList(List<BBA> bbas, List<xquerysearch.domain.result.BBA> bbasResult, int id) {
+	private static List<String> convertBbaList(List<BBA> bbas, List<xquerysearch.domain.result.BBA> bbasResult, Integer id) {
 		List<String> localBaRefs = new ArrayList<String>();
 
 		for (xquerysearch.domain.result.BBA resultBba : bbasResult) {
-			String localId = Integer.toString(++id);
-			BBA bbaOut = ResultForOutputObjectConverter.convert(resultBba, localId);
-			bbaOut.setId(localId);
+			BBA bbaOut = ResultForOutputObjectConverter.convert(resultBba, id.toString());
+			bbaOut.setId(id.toString());
 			bbas.add(bbaOut);
-			localBaRefs.add(localId);
+			localBaRefs.add(id.toString());
 		}
 
 		return localBaRefs;
