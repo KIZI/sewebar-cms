@@ -25,6 +25,26 @@ public class OutputConverter {
 	private OutputConverter() {
 	}
 
+	public static void convertObjects(List<BBA> bbas, List<DBA> dbas, List<Hit> hits, List<? extends Object> objects) {
+		IdCounter id = new IdCounter(1);
+		if (objects != null) {
+			for (Object object : objects) {
+				if (object instanceof Result) {
+					convertResult(bbas, dbas, hits, ((Result) object), id);
+				}
+			}
+		}
+	}
+
+	public static void convertResults(List<BBA> bbas, List<DBA> dbas, List<Hit> hits, List<Result> results) {
+		IdCounter id = new IdCounter(1);
+		if (results != null) {
+			for (Result result : results) {
+				convertResult(bbas, dbas, hits, result, id);
+			}
+		}
+	}
+
 	/**
 	 * Fills given lists with data from given list of {@link Result}.
 	 * 
@@ -33,8 +53,7 @@ public class OutputConverter {
 	 * @param hits
 	 * @param results
 	 */
-	public static void convertResult(List<BBA> bbas, List<DBA> dbas, List<Hit> hits, Result result) {
-		Integer id = 0;
+	private static void convertResult(List<BBA> bbas, List<DBA> dbas, List<Hit> hits, Result result, IdCounter id) {
 
 		Hit hit = ResultForOutputObjectConverter.convert(result);
 
@@ -50,22 +69,19 @@ public class OutputConverter {
 			Cedent condition = rule.getCondition();
 
 			if (antecedent != null) {
-				id++;
-				antecedentId = id.toString();
-
+				// id.increment();
 				convertDbaListFirstLevel(antecedent.getDbas(), dbas, bbas, id);
+				antecedentId = id.toString();
 			}
 			if (consequent != null) {
-				id++;
-				consequentId = id.toString();
-
+				// id.increment();
 				convertDbaListFirstLevel(consequent.getDbas(), dbas, bbas, id);
+				consequentId = id.toString();
 			}
 			if (condition != null) {
-				id++;
-				conditionId = id.toString();
-
+				// id.increment();
 				convertDbaListFirstLevel(condition.getDbas(), dbas, bbas, id);
+				conditionId = id.toString();
 			}
 
 			hit.setAssociationRule(ResultForOutputObjectConverter.convert(rule, antecedentId, consequentId,
@@ -74,28 +90,25 @@ public class OutputConverter {
 		hits.add(hit);
 	}
 
-	private static void convertDbaListFirstLevel(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, Integer id) {
+	private static void convertDbaListFirstLevel(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, IdCounter id) {
 		List<String> baRefs = convertDbaList(dbasResult, dbas, bbas, id);
 		dbas.add(ResultForOutputObjectConverter.convert("Conjunction", id.toString(), baRefs));
 	}
 
-	private static List<String> convertDbaList(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, Integer id) {
+	private static List<String> convertDbaList(List<xquerysearch.domain.result.DBA> dbasResult, List<DBA> dbas, List<BBA> bbas, IdCounter id) {
 		List<String> localBaRefs = new ArrayList<String>();
 
 		if (dbasResult == null || dbas == null) {
 			return localBaRefs;
 		}
-		
+
 		for (xquerysearch.domain.result.DBA dba : dbasResult) {
-			id++;
 			List<String> loopBaRefs = new ArrayList<String>();
 
 			if (dba.getDbas() != null && dba.getDbas().size() > 0) {
 				loopBaRefs = convertDbaList(dba.getDbas(), dbas, bbas, id);
-				id += loopBaRefs.size();
 			} else if (dba.getBbas() != null && dba.getBbas().size() > 0) {
 				loopBaRefs = convertBbaList(bbas, dba.getBbas(), id);
-				id += loopBaRefs.size();
 			}
 
 			DBA dbaOut = ResultForOutputObjectConverter.convert(dba.getConnective(), id.toString(),
@@ -103,12 +116,13 @@ public class OutputConverter {
 
 			dbas.add(dbaOut);
 			localBaRefs.add(id.toString());
+			id.increment();
 		}
 
 		return localBaRefs;
 	}
 
-	private static List<String> convertBbaList(List<BBA> bbas, List<xquerysearch.domain.result.BBA> bbasResult, Integer id) {
+	private static List<String> convertBbaList(List<BBA> bbas, List<xquerysearch.domain.result.BBA> bbasResult, IdCounter id) {
 		List<String> localBaRefs = new ArrayList<String>();
 
 		for (xquerysearch.domain.result.BBA resultBba : bbasResult) {
@@ -116,6 +130,7 @@ public class OutputConverter {
 			bbaOut.setId(id.toString());
 			bbas.add(bbaOut);
 			localBaRefs.add(id.toString());
+			id.increment();
 		}
 
 		return localBaRefs;
