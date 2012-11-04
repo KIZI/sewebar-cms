@@ -18,5 +18,11 @@
 		<field name="interestMeasure" type="string">
 			<bind-xml name="InterestMeasure" node="element" />
 		</field>
+		<field name="compareType" type="string">
+			<bind-xml name="CompareType" node="element" />
+		</field>
+		<field name="significanceLevel" type="double">
+			<bind-xml name="SignificanceLevel" node="element" />
+		</field>
 	</class>
 </mapping>

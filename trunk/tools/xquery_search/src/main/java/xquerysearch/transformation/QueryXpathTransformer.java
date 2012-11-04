@@ -8,11 +8,13 @@ import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.arbquery.Coefficient;
 import xquerysearch.domain.arbquery.DbaSetting;
+import xquerysearch.domain.arbquery.InterestMeasureThreshold;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.querysettings.QueryType;
 
 /**
- * Transformer used to transform query as object to XPath stored as String - for searching in Association Rules.
+ * Transformer used to transform query as object to XPath stored as String - for
+ * searching in Association Rules.
  * 
  * @author Tomas Marek
  * 
@@ -26,8 +28,8 @@ public class QueryXpathTransformer {
 	}
 
 	/**
-	 * Transforms {@link ArBuilderQuery} to XPath query.
-	 * Return value is wrapped by <tt>AssociationRule[</tt> and <tt>]</tt> strings.
+	 * Transforms {@link ArBuilderQuery} to XPath query. Return value is wrapped
+	 * by <tt>AssociationRule[</tt> and <tt>]</tt> strings.
 	 * 
 	 * @param query
 	 * @return XPath query, empty string if error occurred
@@ -38,10 +40,10 @@ public class QueryXpathTransformer {
 		}
 		return "AssociationRule[" + transformToXpath(query.getArQuery(), settings) + "]";
 	}
-	
+
 	/**
-	 * Transforms {@link ArQuery} to XPath query.
-	 * Return value is NOT wrapped by any string.
+	 * Transforms {@link ArQuery} to XPath query. Return value is NOT wrapped by
+	 * any string.
 	 * 
 	 * @param query
 	 * @return XPath query, empty string if error occurred
@@ -50,7 +52,7 @@ public class QueryXpathTransformer {
 		if (query == null) {
 			return "";
 		}
-		
+
 		if (settings != null && settings.getType().equals(QueryType.NORMAL.getText()) == false) {
 			return transformShorter(query);
 		} else {
@@ -60,7 +62,7 @@ public class QueryXpathTransformer {
 
 	private static String transformNormal(ArQuery query) {
 		StringBuffer xpath = new StringBuffer();
-		
+
 		String antecedentSetting = query.getAntecedentSetting();
 		String consequentSetting = query.getConsequentSetting();
 		String conditionSetting = query.getConditionSetting();
@@ -68,32 +70,40 @@ public class QueryXpathTransformer {
 		List<DbaSetting> dbaSettings = query.getDbaSettings();
 		List<BbaSetting> bbaSettings = query.getBbaSettings();
 
+		String connector = "";
+
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
+			xpath.append(connector);
 			xpath.append("count(Antecedent" + processCedent(antecedentSetting, dbaSettings, bbaSettings)
 					+ ") > 0");
-			if ((consequentSetting != null && consequentSetting.isEmpty() == false)
-					|| (conditionSetting != null && conditionSetting.isEmpty() == false)) {
-				xpath.append(" and ");
-			}
+			connector = " and ";
 		}
 		if (consequentSetting != null && consequentSetting.isEmpty() == false) {
+			xpath.append(connector);
 			xpath.append("count(Consequent" + processCedent(consequentSetting, dbaSettings, bbaSettings)
 					+ ") > 0");
-			if (conditionSetting != null && conditionSetting.isEmpty() == false) {
-				xpath.append(" and ");
-			}
+			connector = " and ";
 		}
 		if (conditionSetting != null && conditionSetting.isEmpty() == false) {
+			xpath.append(connector);
 			xpath.append("count(Condition" + processCedent(conditionSetting, dbaSettings, bbaSettings)
 					+ ") > 0");
+			connector = " and ";
 		}
+
+		if (query.getInterestMeasureSetting() != null) {
+			xpath.append(processImSetting(query.getInterestMeasureSetting().getImThresholds(), connector));
+			connector = " and ";
+		}
+
+		System.out.println(xpath.toString());
 		
 		return xpath.toString();
 	}
 
 	private static String transformShorter(ArQuery query) {
 		StringBuffer xpath = new StringBuffer();
-		
+
 		String antecedentSetting = query.getAntecedentSetting();
 		String consequentSetting = query.getConsequentSetting();
 		String conditionSetting = query.getConditionSetting();
@@ -101,34 +111,39 @@ public class QueryXpathTransformer {
 		List<DbaSetting> dbaSettings = query.getDbaSettings();
 		List<BbaSetting> bbaSettings = query.getBbaSettings();
 
+		String connector = "";
+
 		if (antecedentSetting != null && antecedentSetting.isEmpty() == false) {
+			xpath.append(connector);
 			xpath.append("("
 					+ processCedentShorter(antecedentSetting, dbaSettings, bbaSettings, "Antecedent", 0, 0)
 					+ ")");
-			if ((consequentSetting != null && consequentSetting.isEmpty() == false)
-					|| (conditionSetting != null && conditionSetting.isEmpty() == false)) {
-				xpath.append(" and ");
-			}
+			connector = " and ";
 		}
 		if (consequentSetting != null && consequentSetting.isEmpty() == false) {
+			xpath.append(connector);
 			xpath.append("("
 					+ processCedentShorter(consequentSetting, dbaSettings, bbaSettings, "Consequent", 0, 0)
 					+ ")");
-			if (conditionSetting != null && conditionSetting.isEmpty() == false) {
-				xpath.append(" and ");
-			}
+			connector = " and ";
 		}
 		if (conditionSetting != null && conditionSetting.isEmpty() == false) {
+			xpath.append(connector);
 			xpath.append("("
 					+ processCedentShorter(conditionSetting, dbaSettings, bbaSettings, "Condition", 0, 0)
 					+ ")");
+			connector = " and ";
 		}
-		
+
+		if (query.getInterestMeasureSetting() != null) {
+			xpath.append(processImSetting(query.getInterestMeasureSetting().getImThresholds(), connector));
+			connector = " and ";
+		}
+
 		return xpath.toString();
 	}
 
-	private static String processCedentShorter(String currentId, List<DbaSetting> dbaSettings,
-			List<BbaSetting> bbaSettings, String cedentName, int step, int queryType) {
+	private static String processCedentShorter(String currentId, List<DbaSetting> dbaSettings, List<BbaSetting> bbaSettings, String cedentName, int step, int queryType) {
 		List<String> relatedBaRefs = new ArrayList<String>();
 		StringBuffer xpath = new StringBuffer();
 
@@ -147,7 +162,6 @@ public class QueryXpathTransformer {
 		StringBuffer noOthersCondition = new StringBuffer();
 		noOthersCondition.append(" and count(" + cedentName + "//DBA/BBA[");
 
-		// if (relatedBaRefs.size() == 1) {
 		int loopCount = 0;
 		for (String baRef : relatedBaRefs) {
 			if (step == 0) {
@@ -181,26 +195,11 @@ public class QueryXpathTransformer {
 		if (step == 0) {
 			xpath.append(noOthersCondition);
 		}
-		// }
-		// if (relatedBaRefs.size() > 1) {
-		// xpath.append("[");
-		// int loopCount = 0;
-		// for (String baRef : relatedBaRefs) {
-		// if (loopCount > 0) {
-		// xpath.append(" or ");
-		// }
-		// xpath.append("DBA");
-		// xpath.append(processCedentShorter(baRef, dbaSettings, bbaSettings,
-		// cedentName, ++step, queryType));
-		// }
-		// xpath.append("]");
-		// }
 
 		return xpath.toString();
 	}
 
-	private static StringBuffer processBbas(String currentId, List<BbaSetting> bbaSettings,
-			StringBuffer xpath, int queryType) {
+	private static StringBuffer processBbas(String currentId, List<BbaSetting> bbaSettings, StringBuffer xpath, int queryType) {
 		for (BbaSetting bbaSetting : bbaSettings) {
 			if (bbaSetting.getId().equals(currentId)) {
 
@@ -259,8 +258,7 @@ public class QueryXpathTransformer {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static String processCedent(String currentId, List<DbaSetting> dbaSettings,
-			List<BbaSetting> bbaSettings) {
+	private static String processCedent(String currentId, List<DbaSetting> dbaSettings, List<BbaSetting> bbaSettings) {
 		List<String> relatedBaRefs = new ArrayList<String>();
 		StringBuffer xpath = new StringBuffer();
 
@@ -298,5 +296,50 @@ public class QueryXpathTransformer {
 		}
 
 		return xpath.toString();
+	}
+
+	private static String processImSetting(List<InterestMeasureThreshold> imThresholds, String mainConnector) {
+		if (imThresholds == null) {
+			return "";
+		}
+
+		StringBuffer ret = new StringBuffer();
+
+		String connector = "";
+		for (InterestMeasureThreshold threshold : imThresholds) {
+			if (threshold.getInterestMeasure() != null
+					&& threshold.getInterestMeasure().equals("Any Interest Measure") == false) {
+				ret.append(connector);
+				ret.append("count(IMValue");
+				ret.append("[@name = \"" + threshold.getInterestMeasure() + "\"");
+				ret.append(" and . " + getThresholdCompareType(threshold.getCompareType())
+						+ threshold.getSignificanceLevel());
+				ret.append("]) > 0");
+				connector = " and ";
+			}
+		}
+
+		if (ret.length() > 0) {
+			return mainConnector + "(" + ret.toString() + ")";
+		}
+		return "";
+	}
+
+	private static String getThresholdCompareType(String compareType) {
+		if (compareType != null) {
+			if (compareType.equals("Greater than or equal")) {
+				return ">=";
+			} else if (compareType.equals("Less than or equal")) {
+				return "<=";
+			} else if (compareType.equals("Greater than")) {
+				return ">";
+			} else if (compareType.equals("Less than")) {
+				return "<";
+			} else if (compareType.equals("Equal")) {
+				return "=";
+			}
+
+		}
+		return ">=";
 	}
 }

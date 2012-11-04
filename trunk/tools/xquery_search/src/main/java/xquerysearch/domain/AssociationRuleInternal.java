@@ -13,10 +13,11 @@ import xquerysearch.domain.result.ImValue;
  */
 public class AssociationRuleInternal {
 
-	List<BBA> antecedentBbas;
-	List<BBA> consequentBbas;
-	List<BBA> conditionBbas;
-	List<ImValue> imValues;
+	private List<BBA> antecedentBbas;
+	private List<BBA> consequentBbas;
+	private List<BBA> conditionBbas;
+	private List<ImValue> imValues;
+	private Boolean interesting;
 
 	/**
 	 * @return the antecedentBbas
@@ -76,6 +77,21 @@ public class AssociationRuleInternal {
 	 */
 	public void setImValues(List<ImValue> imValues) {
 		this.imValues = imValues;
+	}
+
+	/**
+	 * @return the interesting
+	 */
+	public Boolean getInteresting() {
+		return interesting;
+	}
+
+	/**
+	 * @param interesting
+	 *            the interesting to set
+	 */
+	public void setInteresting(Boolean interesting) {
+		this.interesting = interesting;
 	}
 
 }

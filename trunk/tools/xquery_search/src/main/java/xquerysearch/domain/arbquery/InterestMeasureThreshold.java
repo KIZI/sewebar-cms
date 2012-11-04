@@ -10,6 +10,8 @@ public class InterestMeasureThreshold {
 
 	private String id;
 	private String interestMeasure;
+	private String compareType;
+	private double significanceLevel;
 
 	/**
 	 * @return the id
@@ -39,6 +41,36 @@ public class InterestMeasureThreshold {
 	 */
 	public void setInterestMeasure(String interestMeasure) {
 		this.interestMeasure = interestMeasure;
+	}
+
+	/**
+	 * @return the compareType
+	 */
+	public String getCompareType() {
+		return compareType;
+	}
+
+	/**
+	 * @param compareType
+	 *            the compareType to set
+	 */
+	public void setCompareType(String compareType) {
+		this.compareType = compareType;
+	}
+
+	/**
+	 * @return the significanceLevel
+	 */
+	public double getSignificanceLevel() {
+		return significanceLevel;
+	}
+
+	/**
+	 * @param significanceLevel
+	 *            the significanceLevel to set
+	 */
+	public void setSignificanceLevel(double significanceLevel) {
+		this.significanceLevel = significanceLevel;
 	}
 
 }
