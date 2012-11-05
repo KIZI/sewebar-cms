@@ -40,6 +40,7 @@ public class ResultForOutputObjectConverter {
 			hit.setDocName(result.getDocName());
 			hit.setDatabase(result.getDatabase());
 			hit.setReportUri(result.getReportUri());
+			hit.setQueryCompliance(result.getQueryCompliance());
 		}
 
 		return hit;

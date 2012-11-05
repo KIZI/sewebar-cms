@@ -37,6 +37,8 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 
 	private static int leftoverCategoryPenalty;
 
+	private static int notInterestingPenalty;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -49,6 +51,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 		ArQueryAnalysisOutput queryAnalysis = ArQueryAnalyzer.analyze(aqi);
 
 		resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
+		resultCompliance -= checkInterestingness(ari);
 
 		double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(),
 				aqi.getAntecedentBbaSettingList());
@@ -71,7 +74,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 		ArTsQueryAnalysisOutput queryAnalysis = ArTsQueryAnalyzer.analyze(atqi);
 
 		compliance -= checkBbaCounts(tsAnalysis, queryAnalysis);
-		
+
 		return new double[][] { new double[] { compliance } };
 	}
 
@@ -80,7 +83,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * 
 	 * @return
 	 */
-	private static double checkBbaCounts(ResultAnalysisOutput resultAnalysis, ArQueryAnalysisOutput queryAnalysis) {
+	private double checkBbaCounts(ResultAnalysisOutput resultAnalysis, ArQueryAnalysisOutput queryAnalysis) {
 
 		double antecedentPenalty = Math.abs(resultAnalysis.getAntecedentBbaCount()
 				- queryAnalysis.getAntecedentBbaCount())
@@ -95,7 +98,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 		return antecedentPenalty + consequentPenalty + conditionPenalty;
 	}
 
-	private static double checkBbaCounts(TaskSettingAnalysisOutput tsao, ArTsQueryAnalysisOutput atqao) {
+	private double checkBbaCounts(TaskSettingAnalysisOutput tsao, ArTsQueryAnalysisOutput atqao) {
 		double antecedentPenalty = Math.abs(tsao.getAntecedentBbaCount() - atqao.getAntecedentBbaCount())
 				* bbaCountPenalty;
 		double consequentPenalty = Math.abs(tsao.getConsequentBbaCount() - atqao.getConsequentBbaCount())
@@ -114,7 +117,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private static double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
+	private double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
 		double[] ret = new double[bbaSettings.size()];
 
 		for (int i = 0; i < bbaSettings.size(); i++) {
@@ -134,7 +137,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSetting
 	 * @return
 	 */
-	private static double evaluateBba(BBA bba, BbaSetting bbaSetting) {
+	private double evaluateBba(BBA bba, BbaSetting bbaSetting) {
 		if (bba != null && bbaSetting != null) {
 			return evaluatesCategories(bba.getTransformationDictionary().getCatNames(), bbaSetting
 					.getCoefficient().getCategories());
@@ -150,7 +153,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbas
 	 * @return
 	 */
-	private static BBA getCorrespondingBba(String fieldRef, List<BBA> bbas) {
+	private BBA getCorrespondingBba(String fieldRef, List<BBA> bbas) {
 		if (fieldRef != null && bbas != null) {
 			for (BBA bba : bbas) {
 				if (bba.getTransformationDictionary().getFieldName().equals(fieldRef)) {
@@ -168,7 +171,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettingCategories
 	 * @return
 	 */
-	private static double evaluatesCategories(List<String> bbaCategories, List<String> bbaSettingCategories) {
+	private double evaluatesCategories(List<String> bbaCategories, List<String> bbaSettingCategories) {
 		double compliance = DEFAULT_COMPLIANCE;
 		if (bbaCategories != null && bbaSettingCategories != null) {
 			for (String bbaSetCategory : bbaSettingCategories) {
@@ -190,7 +193,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaCategories
 	 * @return
 	 */
-	private static boolean hasCorrespondingCategory(String category, List<String> bbaCategories) {
+	private boolean hasCorrespondingCategory(String category, List<String> bbaCategories) {
 		for (String loopCategory : bbaCategories) {
 			if (loopCategory.equals(category)) {
 				return true;
@@ -207,12 +210,26 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaCategories
 	 * @return
 	 */
-	private static int getLeftoverCategoriesCount(List<String> bbaSetCategories, List<String> bbaCategories) {
+	private int getLeftoverCategoriesCount(List<String> bbaSetCategories, List<String> bbaCategories) {
 		Set<String> bbaCategoriesTemp = new HashSet<String>(bbaCategories);
 		for (String bbaSetCategory : bbaSetCategories) {
 			bbaCategoriesTemp.remove(bbaSetCategory);
 		}
 		return bbaCategoriesTemp.size();
+	}
+
+	/**
+	 * Returns penalty for non-interesting association rule if the rule is not
+	 * interesting. Value is (and should be) positive.
+	 * 
+	 * @param ari
+	 * @return
+	 */
+	private int checkInterestingness(AssociationRuleInternal ari) {
+		if (ari.getInteresting() != null && ari.getInteresting() == false) {
+			return notInterestingPenalty;
+		}
+		return 0;
 	}
 
 	/**
@@ -229,20 +246,26 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param missingCategoryPenalty
 	 *            the missingCategoryPenalty to set
 	 */
-	@SuppressWarnings("static-access")
 	@Value("${penalty.missingCategory}")
 	public void setMissingCategoryPenalty(int missingCategoryPenalty) {
-		this.missingCategoryPenalty = missingCategoryPenalty;
+		FuzzySearchEvaluatorImpl.missingCategoryPenalty = missingCategoryPenalty;
 	}
 
 	/**
 	 * @param leftoverCategoryPenalty
 	 *            the leftoverCategoryPenalty to set
 	 */
-	@SuppressWarnings("static-access")
 	@Value("${penalty.leftoverCategory}")
 	public void setLeftoverCategoryPenalty(int leftoverCategoryPenalty) {
-		this.leftoverCategoryPenalty = leftoverCategoryPenalty;
+		FuzzySearchEvaluatorImpl.leftoverCategoryPenalty = leftoverCategoryPenalty;
 	}
 
+	/**
+	 * @param notInterestingPenalty
+	 *            the notInterestingPenalty to set
+	 */
+	@Value("${penalty.notInteresting}")
+	public void setNotInterestingPenalty(int notInterestingPenalty) {
+		FuzzySearchEvaluatorImpl.notInterestingPenalty = notInterestingPenalty;
+	}
 }
