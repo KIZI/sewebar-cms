@@ -96,8 +96,6 @@ public class QueryXpathTransformer {
 			connector = " and ";
 		}
 
-		System.out.println(xpath.toString());
-		
 		return xpath.toString();
 	}
 

@@ -69,17 +69,17 @@ public class OutputTransformer {
 		if (list != null && list.size() > 0 && list.get(0) != null) {
 			if (list.get(0) instanceof Result) {
 				OutputConverter.convertObjects(bbas, dbas, hits, list);
-			}
-		} else {
-			for (Object item : list) {
-				if (item != null && item instanceof Group) {
-					ret.append(((Group) item).toString());
-				} else if (item != null && item instanceof Cluster) {
-					ret.append(((Cluster) item).toString());
+			} else {
+				for (Object item : list) {
+					if (item != null && item instanceof Group) {
+						ret.append(((Group) item).toString());
+					} else if (item != null && item instanceof Cluster) {
+						ret.append(((Cluster) item).toString());
+					}
 				}
 			}
 		}
-
+		
 		for (BBA bba : bbas) {
 			ret.append(bba.toString());
 		}

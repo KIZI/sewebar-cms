@@ -1,6 +1,7 @@
 package xquerysearch.domain.result;
 
 import xquerysearch.domain.result.tasksetting.TaskSetting;
+import xquerysearch.utils.OutputUtils;
 
 /**
  * Domain object representing result of query.
@@ -180,7 +181,7 @@ public class Result {
 		StringBuffer ret = new StringBuffer();
 		ret.append("<Hit docID=\"" + docId + "\" ruleID=\"" + ruleId + "\" docName=\"" + docName
 				+ "\" reportURI=\"" + reportUri + "\" database=\"" + database + "\" table=\"" + table
-				+ "\" queryCompliance=\"" + getQueryComplianceForOutput(queryCompliance) + "\" >");
+				+ "\" queryCompliance=\"" + OutputUtils.getQueryComplianceForOutput(queryCompliance) + "\" >");
 		if (text != null) {
 			ret.append("<Text><![CDATA[" + text + "]]></Text>");
 		}
@@ -191,34 +192,6 @@ public class Result {
 			ret.append(taskSetting.toString());
 		}
 		ret.append("</Hit>");
-		return ret.toString();
-	}
-
-	/**
-	 * Helps convert 2-dimension array of doubles to string.
-	 * 
-	 * @param queryCompliance
-	 * @return
-	 */
-	private String getQueryComplianceForOutput(double[][] queryCompliance) {
-		StringBuffer ret = new StringBuffer();
-		ret.append("[");
-		if (queryCompliance != null) {
-			for (int i = 0; i < queryCompliance.length; i++) {
-				if (i > 0) {
-					ret.append(", ");
-				}
-				ret.append("[");
-				for (int j = 0; j < queryCompliance[i].length; j++) {
-					if (j > 0) {
-						ret.append(", ");
-					}
-					ret.append(queryCompliance[i][j]);
-				}
-				ret.append("]");
-			}
-		}
-		ret.append("]");
 		return ret.toString();
 	}
 

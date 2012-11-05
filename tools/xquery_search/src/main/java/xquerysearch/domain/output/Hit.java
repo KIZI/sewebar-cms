@@ -1,5 +1,7 @@
 package xquerysearch.domain.output;
 
+import xquerysearch.utils.OutputUtils;
+
 /**
  * Domain object representing Hit element in output.
  * 
@@ -13,6 +15,7 @@ public class Hit {
 	private String docName;
 	private String database;
 	private String reportUri;
+	private double[][] queryCompliance;
 	private AssociationRule associationRule;
 
 	/**
@@ -106,12 +109,28 @@ public class Hit {
 	}
 
 	/**
+	 * @return the queryCompliance
+	 */
+	public double[][] getQueryCompliance() {
+		return queryCompliance;
+	}
+
+	/**
+	 * @param queryCompliance
+	 *            the queryCompliance to set
+	 */
+	public void setQueryCompliance(double[][] queryCompliance) {
+		this.queryCompliance = queryCompliance;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		String ret = "<Hit ruleId=\"" + ruleId + "\" docId=\"" + docId + "\" docName=\"" + docName
-				+ "\" database=\"" + database + "\" reportURI=\"" + reportUri + "\">";
+				+ "\" database=\"" + database + "\" reportURI=\"" + reportUri + "\" queryCompliance=\""
+				+ OutputUtils.getQueryComplianceForOutput(queryCompliance) + "\">";
 
 		if (associationRule != null) {
 			ret += associationRule.toString();
