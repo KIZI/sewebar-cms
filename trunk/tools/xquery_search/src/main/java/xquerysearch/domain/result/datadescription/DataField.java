@@ -1,15 +1,18 @@
-package xquerysearch.domain.arbquery.datadescription;
+package xquerysearch.domain.result.datadescription;
 
 import java.util.List;
 
 /**
+ * Domain object representing DataField element from data description of stored
+ * document.
+ * 
  * @author Tomas Marek
  * 
  */
-public class Field {
+public class DataField {
 
 	private String name;
-	private String dataType;
+	private String type;
 	private List<String> categories;
 
 	/**
@@ -28,18 +31,18 @@ public class Field {
 	}
 
 	/**
-	 * @return the dataType
+	 * @return the type
 	 */
-	public String getDataType() {
-		return dataType;
+	public String getType() {
+		return type;
 	}
 
 	/**
-	 * @param dataType
-	 *            the dataType to set
+	 * @param type
+	 *            the type to set
 	 */
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**

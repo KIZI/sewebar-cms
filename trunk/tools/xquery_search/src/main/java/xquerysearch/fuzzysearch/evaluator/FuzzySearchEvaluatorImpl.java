@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import xquerysearch.analysis.ArQueryAnalyzer;
 import xquerysearch.analysis.ArTsQueryAnalyzer;
-import xquerysearch.analysis.AssocitaionRuleAnalyzer;
+import xquerysearch.analysis.AssociationRuleAnalyzer;
 import xquerysearch.analysis.TaskSettingAnalyzer;
 import xquerysearch.domain.ArQueryInternal;
 import xquerysearch.domain.ArTsQueryInternal;
@@ -46,7 +46,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	public double[][] evaluate(AssociationRuleInternal ari, ArQueryInternal aqi) {
 		Double resultCompliance = DEFAULT_COMPLIANCE;
 
-		ResultAnalysisOutput resultAnalysis = AssocitaionRuleAnalyzer.analyze(ari);
+		ResultAnalysisOutput resultAnalysis = AssociationRuleAnalyzer.analyze(ari);
 		// TODO move one level up? - performance
 		ArQueryAnalysisOutput queryAnalysis = ArQueryAnalyzer.analyze(aqi);
 

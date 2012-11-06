@@ -10,12 +10,12 @@ import xquerysearch.domain.result.Rule;
  * @author Tomas Marek
  * 
  */
-public class AssocitaionRuleAnalyzer {
+public class AssociationRuleAnalyzer {
 
 	/**
 	 * Default constructor - made private, class provides only static methods
 	 */
-	private AssocitaionRuleAnalyzer() {
+	private AssociationRuleAnalyzer() {
 	}
 
 	/**

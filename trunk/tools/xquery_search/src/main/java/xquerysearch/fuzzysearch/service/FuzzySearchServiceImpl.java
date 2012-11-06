@@ -12,7 +12,9 @@ import xquerysearch.domain.arbquery.ArBuilderQuery;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.result.Result;
+import xquerysearch.domain.result.datadescription.ResultDataDescription;
 import xquerysearch.fuzzysearch.evaluator.FuzzySearchEvaluator;
+import xquerysearch.service.DocumentDataDescriptionService;
 import xquerysearch.service.QueryService;
 import xquerysearch.transformation.ArQueryToInternalTransformer;
 import xquerysearch.transformation.ArTsQueryToInternalTransformer;
@@ -33,6 +35,9 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 	@Autowired
 	private QueryService queryService;
 
+	@Autowired
+	private DocumentDataDescriptionService descriptionService;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -41,15 +46,16 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 		if (query == null) {
 			return null;
 		}
-
 		List<Result> results = queryService.getResultList(query, settings);
 		ArQueryInternal aqi = ArQueryToInternalTransformer.transform(query.getArQuery());
 
 		if (results != null) {
 			for (Result result : results) {
 				if (result != null) {
-					AssociationRuleInternal ari = AssociationRuleToInternalTransformer.transform(result
-							.getRule());
+					ResultDataDescription dataDescription = descriptionService
+							.getDataDescriptionByDocId(result.getDocId());
+					AssociationRuleInternal ari = AssociationRuleToInternalTransformer.transform(
+							result.getRule(), dataDescription);
 					double[][] compliance = evaluator.evaluate(ari, aqi);
 					result.setQueryCompliance(compliance);
 				}

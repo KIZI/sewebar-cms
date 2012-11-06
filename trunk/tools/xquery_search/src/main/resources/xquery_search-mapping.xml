@@ -28,7 +28,7 @@
 		</property>
 		<property name="targetClass" value="xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery" />
 	</bean>
-	
+
 	<bean id="hybridQueryCastor" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocations">
 			<array>
@@ -43,6 +43,15 @@
 		<property name="targetClass" value="xquerysearch.domain.arbquery.hybridquery.ArHybridBuilderQuery" />
 	</bean>
 
+	<bean id="documentDataDescriptionCastor" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocations">
+			<array>
+				<value>classpath:xquerysearch/mapping/documentdatadescription-mapping.xml</value>
+			</array>
+		</property>
+		<property name="targetClass" value="xquerysearch.domain.arbquery.hybridquery.ArHybridBuilderQuery" />
+	</bean>
+	
 	<bean id="resultCastor" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocations" value="classpath:xquerysearch/mapping/result-mapping.xml" />
 		<property name="targetClass" value="xquerysearch.domain.result.Result" />

@@ -4,6 +4,7 @@ import java.util.List;
 
 import xquerysearch.domain.result.BBA;
 import xquerysearch.domain.result.ImValue;
+import xquerysearch.domain.result.datadescription.ResultDataDescription;
 
 /**
  * Domain object representing Association Rule used for internal purposes.
@@ -18,6 +19,7 @@ public class AssociationRuleInternal {
 	private List<BBA> conditionBbas;
 	private List<ImValue> imValues;
 	private Boolean interesting;
+	private ResultDataDescription dataDescription;
 
 	/**
 	 * @return the antecedentBbas
@@ -92,6 +94,21 @@ public class AssociationRuleInternal {
 	 */
 	public void setInteresting(Boolean interesting) {
 		this.interesting = interesting;
+	}
+
+	/**
+	 * @return the dataDescription
+	 */
+	public ResultDataDescription getDataDescription() {
+		return dataDescription;
+	}
+
+	/**
+	 * @param dataDescription
+	 *            the dataDescription to set
+	 */
+	public void setDataDescription(ResultDataDescription dataDescription) {
+		this.dataDescription = dataDescription;
 	}
 
 }

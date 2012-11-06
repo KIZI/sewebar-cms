@@ -1,7 +1,7 @@
 package xquerysearch.domain.arbquery.datadescription;
 
 /**
- * @author Tomas
+ * @author Tomas Marek
  * 
  */
 public class Identifier {
