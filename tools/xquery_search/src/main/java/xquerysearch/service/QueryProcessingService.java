@@ -17,5 +17,11 @@ public interface QueryProcessingService {
 	 */
 	public String processQuery(String query, long startTime);
 	
+	/**
+	 * Processes directly obtained query - no further processing of query. 
+	 * 
+	 * @param query
+	 * @return
+	 */
 	public String processDirectQuery(String query);
 }

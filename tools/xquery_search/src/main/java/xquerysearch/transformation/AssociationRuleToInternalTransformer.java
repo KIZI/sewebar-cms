@@ -7,6 +7,7 @@ import xquerysearch.domain.result.BBA;
 import xquerysearch.domain.result.Cedent;
 import xquerysearch.domain.result.ImValue;
 import xquerysearch.domain.result.Rule;
+import xquerysearch.domain.result.datadescription.ResultDataDescription;
 import xquerysearch.utils.ResultUtils;
 
 /**
@@ -30,9 +31,11 @@ public class AssociationRuleToInternalTransformer {
 	 * @param rule
 	 * @return
 	 */
-	public static AssociationRuleInternal transform(Rule rule) {
+	public static AssociationRuleInternal transform(Rule rule, ResultDataDescription dataDescription) {
 		AssociationRuleInternal ari = new AssociationRuleInternal();
 
+		ari.setDataDescription(dataDescription);
+		
 		Cedent antecedent = rule.getAntecedent();
 		Cedent consequent = rule.getConsequent();
 		Cedent condition = rule.getCondition();

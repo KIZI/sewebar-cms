@@ -3,7 +3,7 @@ package xquerysearch.domain.arbquery.datadescription;
 import java.util.List;
 
 /**
- * @author Tomas
+ * @author Tomas Marek
  * 
  */
 public class Dictionary {

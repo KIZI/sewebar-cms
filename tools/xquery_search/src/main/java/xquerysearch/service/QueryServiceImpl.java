@@ -72,7 +72,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
-		
+
 		if (resultSet != null) {
 			return resultSet.getResults();
 		}
@@ -89,7 +89,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 
 		// TODO Max Results retrieve from query
 		ResultSet resultSet = getResultSet(xpath, 100);
-		
+
 		if (resultSet != null) {
 			return resultSet.getResults();
 		}
@@ -146,7 +146,11 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 	@Override
 	public String query(String query) {
 		List<String> results = dao.getResultsByQuery(new Query(query));
-		return results.toString();
+		if (results != null) {
+			return results.toString();
+		} else {
+			return null;
+		}
 	}
 
 }
