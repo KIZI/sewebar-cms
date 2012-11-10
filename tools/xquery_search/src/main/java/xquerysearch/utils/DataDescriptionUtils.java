@@ -1,6 +1,9 @@
 package xquerysearch.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.saxon.functions.regex.Categories;
 
 import xquerysearch.domain.arbquery.datadescription.DataDescription;
 import xquerysearch.domain.arbquery.datadescription.Dictionary;
@@ -31,6 +34,7 @@ public class DataDescriptionUtils {
 	 * @return
 	 */
 	public static int getCategoryCountByFieldName(ResultDataDescription dataDescription, String fieldName) {
+		// TODO rework
 		if (dataDescription != null && fieldName != null) {
 			List<DataField> dataFields = dataDescription.getDataFields();
 			if (dataFields != null) {
@@ -52,18 +56,47 @@ public class DataDescriptionUtils {
 	 * @return
 	 */
 	public static int getCategoryCountByFieldName(DataDescription dataDescription, String fieldName) {
-		// TODO rework
 		if (dataDescription != null && fieldName != null) {
-			for (Dictionary dictionary : dataDescription.getDictionaries()) {
-				if (dictionary.getSourceDictType().equals("TransformationDictionary")) {
-					for (Field field : dictionary.getFields()) {
-						if (field.getName().equals(fieldName)) {
-							return field.getCategories().size();
-						}
-					}
-				}
-			}
+			List<String> categories = getCategories(dataDescription, fieldName);
+			return categories.size();
 		}
 		return 0;
 	}
+
+	public static List<String> getCategories(DataDescription dataDescription, String fieldName) {
+		List<String> ret = new ArrayList<String>();
+		if (dataDescription != null && dataDescription.getDictionaries() != null) {
+			for (Dictionary dictionary : dataDescription.getDictionaries()) {
+				if (dictionary.getSourceDictType().equals("TransformationDictionary")) {
+					ret.addAll(getCategories(dictionary, fieldName));
+				}
+			}
+		}
+		return ret;
+	}
+
+	public static List<String> getCategories(Dictionary dictionary, String fieldName) {
+		List<String> ret = new ArrayList<String>();
+		if (dictionary != null && dictionary.getFields() != null) {
+			ret.addAll(getCategories(dictionary.getFields(), fieldName));
+		}
+		return ret;
+	}
+
+	public static List<String> getCategories(List<Field> fields, String fieldName) {
+		List<String> ret = new ArrayList<String>();
+		if (fields != null) {
+			for (Field field : fields) {
+				if (fieldName != null) {
+					if (field.getName().equals(fieldName)) {
+						ret.addAll(field.getCategories());
+					}
+				} else {
+					ret.addAll(field.getCategories());
+				}
+			}
+		}
+		return ret;
+	}
+
 }

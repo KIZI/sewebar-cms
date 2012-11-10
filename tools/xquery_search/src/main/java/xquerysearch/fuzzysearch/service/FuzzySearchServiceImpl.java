@@ -48,7 +48,8 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 			return null;
 		}
 		List<Result> results = queryService.getResultList(query, settings);
-		ArQueryInternal aqi = ArQueryToInternalTransformer.transform(query.getArQuery());
+		ArQueryInternal aqi = ArQueryToInternalTransformer.transform(query.getArQuery(),
+				query.getDataDescription());
 
 		if (results != null) {
 			for (Result result : results) {

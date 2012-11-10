@@ -1,5 +1,6 @@
 package xquerysearch.analysis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +39,18 @@ public class AssociationRuleAnalyzer {
 		output.setConditionBbaCount(ari.getConditionBbas().size());
 
 		Map<String, Double> concretenessMap = new HashMap<String, Double>();
-		concretenessMap.putAll(analyzeConcreteness(ari.getAntecedentBbas(), ari.getDataDescription().getDataFields()));
-		concretenessMap.putAll(analyzeConcreteness(ari.getConsequentBbas(), ari.getDataDescription().getDataFields()));
-		concretenessMap.putAll(analyzeConcreteness(ari.getConditionBbas(), ari.getDataDescription().getDataFields()));
-		
+
+		List<DataField> fields = new ArrayList<DataField>();
+		if (ari.getDataDescription() != null && ari.getDataDescription().getDataFields() != null) {
+			fields = ari.getDataDescription().getDataFields();
+		}
+
+		concretenessMap.putAll(analyzeConcreteness(ari.getAntecedentBbas(), fields));
+		concretenessMap.putAll(analyzeConcreteness(ari.getConsequentBbas(), fields));
+		concretenessMap.putAll(analyzeConcreteness(ari.getConditionBbas(), fields));
+
 		output.getConcretenessMap().putAll(concretenessMap);
-		
+
 		return output;
 	}
 
@@ -51,8 +58,14 @@ public class AssociationRuleAnalyzer {
 		Map<String, Double> ret = new HashMap<String, Double>();
 		for (BBA bba : bbas) {
 			int categoryCount = bba.getTransformationDictionary().getCatNames().size();
-			int fieldCategoryCount = getCategoryCountForField(bba.getTransformationDictionary().getFieldName(), fields);
-			ret.put(bba.getTransformationDictionary().getFieldName(), new Double(categoryCount / fieldCategoryCount));
+			int fieldCategoryCount = getCategoryCountForField(bba.getTransformationDictionary()
+					.getFieldName(), fields);
+			if (categoryCount > 0 && fieldCategoryCount > 0) {
+				ret.put(bba.getTransformationDictionary().getFieldName(), new Double(categoryCount
+						/ fieldCategoryCount));
+			} else {
+				ret.put(bba.getTransformationDictionary().getFieldName(), new Double(0));
+			}
 		}
 		return ret;
 	}
