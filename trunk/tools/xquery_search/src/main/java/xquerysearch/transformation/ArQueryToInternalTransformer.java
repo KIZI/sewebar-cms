@@ -9,6 +9,7 @@ import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.arbquery.DbaSetting;
 import xquerysearch.domain.arbquery.InterestMeasureSetting;
 import xquerysearch.domain.arbquery.InterestMeasureThreshold;
+import xquerysearch.domain.arbquery.datadescription.DataDescription;
 
 /**
  * Transformer for transformation from {@link ArQuery} to
@@ -31,7 +32,7 @@ public class ArQueryToInternalTransformer {
 	 * @param arQuery
 	 * @return
 	 */
-	public static ArQueryInternal transform(ArQuery arQuery) {
+	public static ArQueryInternal transform(ArQuery arQuery, DataDescription dataDescription) {
 		ArQueryInternal aqi = new ArQueryInternal();
 
 		String antecedent = arQuery.getAntecedentSetting();
@@ -46,6 +47,8 @@ public class ArQueryToInternalTransformer {
 		aqi.setConditionBbaSettingList(getBbaSettingsForCedent(condition, dbaSettings, bbaSettings));
 		
 		aqi.setImThresholdList(getThresholds(arQuery.getInterestMeasureSetting()));
+		
+		aqi.setDataDescription(dataDescription);
 		
 		return aqi;
 	}

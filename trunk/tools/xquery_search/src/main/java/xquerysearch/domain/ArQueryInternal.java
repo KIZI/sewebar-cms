@@ -5,6 +5,7 @@ import java.util.List;
 import xquerysearch.domain.arbquery.ArQuery;
 import xquerysearch.domain.arbquery.BbaSetting;
 import xquerysearch.domain.arbquery.InterestMeasureThreshold;
+import xquerysearch.domain.arbquery.datadescription.DataDescription;
 
 /**
  * Domain object representing {@link ArQuery} used for internal purposes.
@@ -14,10 +15,11 @@ import xquerysearch.domain.arbquery.InterestMeasureThreshold;
  */
 public class ArQueryInternal {
 
-	List<BbaSetting> antecedentBbaSettingList;
-	List<BbaSetting> consequentBbaSettingList;
-	List<BbaSetting> conditionBbaSettingList;
-	List<InterestMeasureThreshold> imThresholdList;
+	private List<BbaSetting> antecedentBbaSettingList;
+	private List<BbaSetting> consequentBbaSettingList;
+	private List<BbaSetting> conditionBbaSettingList;
+	private List<InterestMeasureThreshold> imThresholdList;
+	private DataDescription dataDescription;
 
 	/**
 	 * @return the antecedentBbaSettingList
@@ -77,6 +79,21 @@ public class ArQueryInternal {
 	 */
 	public void setImThresholdList(List<InterestMeasureThreshold> imThresholdList) {
 		this.imThresholdList = imThresholdList;
+	}
+
+	/**
+	 * @return the dataDescription
+	 */
+	public DataDescription getDataDescription() {
+		return dataDescription;
+	}
+
+	/**
+	 * @param dataDescription
+	 *            the dataDescription to set
+	 */
+	public void setDataDescription(DataDescription dataDescription) {
+		this.dataDescription = dataDescription;
 	}
 
 }

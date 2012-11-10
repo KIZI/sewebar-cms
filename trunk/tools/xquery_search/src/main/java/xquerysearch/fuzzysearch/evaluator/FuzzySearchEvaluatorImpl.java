@@ -245,8 +245,10 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 			Map.Entry<String, Double> pair = (Entry<String, Double>) it.next();
 			double queryValue = getConcretenessByName(pair.getKey(), queryAnalysisOutput);
 			double resultValue = pair.getValue().doubleValue();
-			if ((resultValue/queryValue) > 1) {
-				return ((resultValue/queryValue) * bbaConcretenessPenalty);
+			if (queryValue > 0 && resultValue > 0) {
+				if ((resultValue / queryValue) > 1) {
+					return ((resultValue / queryValue) * bbaConcretenessPenalty);
+				}
 			}
 		}
 		return 0;
@@ -254,16 +256,18 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private double getConcretenessByName(String name, ArQueryAnalysisOutput analysisOutput) {
-		Iterator it = analysisOutput.getConcretenessMap().entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, Double> pair = (Entry<String, Double>) it.next();
-			if (pair.getKey().equals(name)) {
-				return pair.getValue().doubleValue();
+		if (analysisOutput != null && name != null) {
+			Iterator it = analysisOutput.getConcretenessMap().entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, Double> pair = (Entry<String, Double>) it.next();
+				if (pair.getKey().equals(name)) {
+					return pair.getValue().doubleValue();
+				}
 			}
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * @param bbaCountPenalty
 	 *            the bbaCountPenalty to set
