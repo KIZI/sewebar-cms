@@ -1,7 +1,10 @@
 package xquerysearch.fuzzysearch.evaluator;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +42,8 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 
 	private static int notInterestingPenalty;
 
+	private static int bbaConcretenessPenalty;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -52,6 +57,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 
 		resultCompliance -= checkBbaCounts(resultAnalysis, queryAnalysis);
 		resultCompliance -= checkInterestingness(ari);
+		resultCompliance -= checkConcreteness(queryAnalysis, resultAnalysis);
 
 		double[] antecedentBbaVector = evaluateBbas(ari.getAntecedentBbas(),
 				aqi.getAntecedentBbaSettingList());
@@ -225,13 +231,39 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param ari
 	 * @return
 	 */
-	private int checkInterestingness(AssociationRuleInternal ari) {
+	private double checkInterestingness(AssociationRuleInternal ari) {
 		if (ari.getInteresting() != null && ari.getInteresting() == false) {
 			return notInterestingPenalty;
 		}
 		return 0;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private double checkConcreteness(ArQueryAnalysisOutput queryAnalysisOutput, ResultAnalysisOutput resultAnalysisOutput) {
+		Iterator it = resultAnalysisOutput.getConcretenessMap().entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Double> pair = (Entry<String, Double>) it.next();
+			double queryValue = getConcretenessByName(pair.getKey(), queryAnalysisOutput);
+			double resultValue = pair.getValue().doubleValue();
+			if ((resultValue/queryValue) > 1) {
+				return ((resultValue/queryValue) * bbaConcretenessPenalty);
+			}
+		}
+		return 0;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private double getConcretenessByName(String name, ArQueryAnalysisOutput analysisOutput) {
+		Iterator it = analysisOutput.getConcretenessMap().entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Double> pair = (Entry<String, Double>) it.next();
+			if (pair.getKey().equals(name)) {
+				return pair.getValue().doubleValue();
+			}
+		}
+		return 0;
+	}
+	
 	/**
 	 * @param bbaCountPenalty
 	 *            the bbaCountPenalty to set
@@ -267,5 +299,14 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	@Value("${penalty.notInteresting}")
 	public void setNotInterestingPenalty(int notInterestingPenalty) {
 		FuzzySearchEvaluatorImpl.notInterestingPenalty = notInterestingPenalty;
+	}
+
+	/**
+	 * @param bbaConcretenessPenalty
+	 *            the bbaConcretenessPenalty to set
+	 */
+	@Value("${penalty.notInteresting}")
+	public void setBbaConcretenessPenalty(int bbaConcretenessPenalty) {
+		FuzzySearchEvaluatorImpl.bbaConcretenessPenalty = bbaConcretenessPenalty;
 	}
 }

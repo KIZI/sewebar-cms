@@ -21,14 +21,13 @@ public class OutputFuzzySorter {
 	 * Results are ordered from one with higher query compliance to one with the lowest.
 	 * 
 	 * @param results
-	 *            {@link Set} of {@link Result}s to sort
+	 *            {@link List} of {@link Result}s to sort
 	 * @return sorted {@link ArrayList} in descending order
 	 */
-	public static List<Result> sortByCompliance(Set<Result> results) {
-		List<Result> ret = new ArrayList<Result>(results);
-		Collections.sort(ret, new FuzzyComparator());
-		Collections.reverse(ret);
-		return ret;
+	public static List<Result> sortByCompliance(List<Result> results) {
+		Collections.sort(results, new FuzzyComparator());
+		Collections.reverse(results);
+		return results;
 	}
 
 }

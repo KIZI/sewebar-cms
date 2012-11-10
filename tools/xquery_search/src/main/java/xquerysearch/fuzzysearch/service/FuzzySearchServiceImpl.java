@@ -16,6 +16,7 @@ import xquerysearch.domain.result.datadescription.ResultDataDescription;
 import xquerysearch.fuzzysearch.evaluator.FuzzySearchEvaluator;
 import xquerysearch.service.DocumentDataDescriptionService;
 import xquerysearch.service.QueryService;
+import xquerysearch.sorting.OutputFuzzySorter;
 import xquerysearch.transformation.ArQueryToInternalTransformer;
 import xquerysearch.transformation.ArTsQueryToInternalTransformer;
 import xquerysearch.transformation.AssociationRuleToInternalTransformer;
@@ -62,7 +63,7 @@ public class FuzzySearchServiceImpl implements FuzzySearchService {
 			}
 		}
 
-		return results;
+		return OutputFuzzySorter.sortByCompliance(results);
 	}
 
 	/**

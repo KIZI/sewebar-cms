@@ -1,5 +1,8 @@
 package xquerysearch.domain.analysis;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Domain object for storing results of ArQuery analysis.
  * 
@@ -11,6 +14,7 @@ public class ArQueryAnalysisOutput {
 	private int antecedentBbaCount;
 	private int consequentBbaCount;
 	private int conditionBbaCount;
+	private Map<String, Double> concretenessMap = new HashMap<String, Double>();
 
 	/**
 	 * @return the antecedentBbaCount
@@ -57,4 +61,10 @@ public class ArQueryAnalysisOutput {
 		this.conditionBbaCount = conditionBbaCount;
 	}
 
+	/**
+	 * @return the concretenessMap
+	 */
+	public Map<String, Double> getConcretenessMap() {
+		return concretenessMap;
+	}
 }
