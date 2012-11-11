@@ -2,7 +2,7 @@ package xquerysearch.domain;
 
 import java.util.List;
 
-import xquerysearch.domain.result.BBA;
+import xquerysearch.domain.result.BBAForAnalysis;
 import xquerysearch.domain.result.ImValue;
 import xquerysearch.domain.result.datadescription.ResultDataDescription;
 
@@ -14,9 +14,9 @@ import xquerysearch.domain.result.datadescription.ResultDataDescription;
  */
 public class AssociationRuleInternal {
 
-	private List<BBA> antecedentBbas;
-	private List<BBA> consequentBbas;
-	private List<BBA> conditionBbas;
+	private List<BBAForAnalysis> antecedentBbas;
+	private List<BBAForAnalysis> consequentBbas;
+	private List<BBAForAnalysis> conditionBbas;
 	private List<ImValue> imValues;
 	private Boolean interesting;
 	private ResultDataDescription dataDescription;
@@ -24,7 +24,7 @@ public class AssociationRuleInternal {
 	/**
 	 * @return the antecedentBbas
 	 */
-	public List<BBA> getAntecedentBbas() {
+	public List<BBAForAnalysis> getAntecedentBbas() {
 		return antecedentBbas;
 	}
 
@@ -32,14 +32,14 @@ public class AssociationRuleInternal {
 	 * @param antecedentBbas
 	 *            the antecedentBbas to set
 	 */
-	public void setAntecedentBbas(List<BBA> antecedentBbas) {
+	public void setAntecedentBbas(List<BBAForAnalysis> antecedentBbas) {
 		this.antecedentBbas = antecedentBbas;
 	}
 
 	/**
 	 * @return the consequentBbas
 	 */
-	public List<BBA> getConsequentBbas() {
+	public List<BBAForAnalysis> getConsequentBbas() {
 		return consequentBbas;
 	}
 
@@ -47,14 +47,14 @@ public class AssociationRuleInternal {
 	 * @param consequentBbas
 	 *            the consequentBbas to set
 	 */
-	public void setConsequentBbas(List<BBA> consequentBbas) {
+	public void setConsequentBbas(List<BBAForAnalysis> consequentBbas) {
 		this.consequentBbas = consequentBbas;
 	}
 
 	/**
 	 * @return the conditionBbas
 	 */
-	public List<BBA> getConditionBbas() {
+	public List<BBAForAnalysis> getConditionBbas() {
 		return conditionBbas;
 	}
 
@@ -62,7 +62,7 @@ public class AssociationRuleInternal {
 	 * @param conditionBbas
 	 *            the conditionBbas to set
 	 */
-	public void setConditionBbas(List<BBA> conditionBbas) {
+	public void setConditionBbas(List<BBAForAnalysis> conditionBbas) {
 		this.conditionBbas = conditionBbas;
 	}
 

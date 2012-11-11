@@ -3,7 +3,7 @@ package xquerysearch.transformation;
 import java.util.ArrayList;
 
 import xquerysearch.domain.AssociationRuleInternal;
-import xquerysearch.domain.result.BBA;
+import xquerysearch.domain.result.BBAForAnalysis;
 import xquerysearch.domain.result.Cedent;
 import xquerysearch.domain.result.ImValue;
 import xquerysearch.domain.result.Rule;
@@ -40,9 +40,9 @@ public class AssociationRuleToInternalTransformer {
 		Cedent consequent = rule.getConsequent();
 		Cedent condition = rule.getCondition();
 
-		ari.setAntecedentBbas(new ArrayList<BBA>(ResultUtils.getBbasFromCedent(antecedent)));
-		ari.setConsequentBbas(new ArrayList<BBA>(ResultUtils.getBbasFromCedent(consequent)));
-		ari.setConditionBbas(new ArrayList<BBA>(ResultUtils.getBbasFromCedent(condition)));
+		ari.setAntecedentBbas(new ArrayList<BBAForAnalysis>(ResultUtils.getBbasForAnalysisFromCedent(antecedent, false)));
+		ari.setConsequentBbas(new ArrayList<BBAForAnalysis>(ResultUtils.getBbasForAnalysisFromCedent(consequent, false)));
+		ari.setConditionBbas(new ArrayList<BBAForAnalysis>(ResultUtils.getBbasForAnalysisFromCedent(condition, false)));
 
 		ari.setImValues(new ArrayList<ImValue>(rule.getImValues()));
 

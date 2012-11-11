@@ -22,7 +22,7 @@ import xquerysearch.domain.analysis.ArTsQueryAnalysisOutput;
 import xquerysearch.domain.analysis.ResultAnalysisOutput;
 import xquerysearch.domain.analysis.TaskSettingAnalysisOutput;
 import xquerysearch.domain.arbquery.BbaSetting;
-import xquerysearch.domain.result.BBA;
+import xquerysearch.domain.result.BBAForAnalysis;
 
 /**
  * Implementation of {@link FuzzySearchEvaluator}.
@@ -44,6 +44,8 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 
 	private static int bbaConcretenessPenalty;
 
+	private static int disjunctionPenalty;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -123,12 +125,12 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettings
 	 * @return
 	 */
-	private double[] evaluateBbas(List<BBA> bbas, List<BbaSetting> bbaSettings) {
+	private double[] evaluateBbas(List<BBAForAnalysis> bbas, List<BbaSetting> bbaSettings) {
 		double[] ret = new double[bbaSettings.size()];
 
 		for (int i = 0; i < bbaSettings.size(); i++) {
 			BbaSetting bbaSetting = bbaSettings.get(i);
-			BBA bba = getCorrespondingBba(bbaSetting.getFieldRef().getValue(), bbas);
+			BBAForAnalysis bba = getCorrespondingBba(bbaSetting.getFieldRef().getValue(), bbas);
 			ret[i] = evaluateBba(bba, bbaSetting);
 		}
 
@@ -143,12 +145,16 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSetting
 	 * @return
 	 */
-	private double evaluateBba(BBA bba, BbaSetting bbaSetting) {
+	private double evaluateBba(BBAForAnalysis bba, BbaSetting bbaSetting) {
+		double ret = 0;
 		if (bba != null && bbaSetting != null) {
-			return evaluatesCategories(bba.getTransformationDictionary().getCatNames(), bbaSetting
+			ret += evaluatesCategories(bba.getTransformationDictionary().getCatNames(), bbaSetting
 					.getCoefficient().getCategories());
+			if (bba.isDisjunctive() == true) {
+				ret += disjunctionPenalty;
+			}
 		}
-		return 0.0;
+		return ret;
 	}
 
 	/**
@@ -159,9 +165,9 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbas
 	 * @return
 	 */
-	private BBA getCorrespondingBba(String fieldRef, List<BBA> bbas) {
+	private BBAForAnalysis getCorrespondingBba(String fieldRef, List<BBAForAnalysis> bbas) {
 		if (fieldRef != null && bbas != null) {
-			for (BBA bba : bbas) {
+			for (BBAForAnalysis bba : bbas) {
 				if (bba.getTransformationDictionary().getFieldName().equals(fieldRef)) {
 					return bba;
 				}
@@ -312,5 +318,14 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	@Value("${penalty.concreteness}")
 	public void setBbaConcretenessPenalty(int bbaConcretenessPenalty) {
 		FuzzySearchEvaluatorImpl.bbaConcretenessPenalty = bbaConcretenessPenalty;
+	}
+	
+	/**
+	 * @param disjunctionPenalty
+	 *            the disjunctionPenalty to set
+	 */
+	@Value("${penalty.disjunction}")
+	public void setDisjunctionPenalty(int disjunctionPenalty) {
+		FuzzySearchEvaluatorImpl.disjunctionPenalty = disjunctionPenalty;
 	}
 }
