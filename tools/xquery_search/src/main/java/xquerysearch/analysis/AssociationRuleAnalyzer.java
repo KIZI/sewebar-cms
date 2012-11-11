@@ -7,7 +7,7 @@ import java.util.Map;
 
 import xquerysearch.domain.AssociationRuleInternal;
 import xquerysearch.domain.analysis.ResultAnalysisOutput;
-import xquerysearch.domain.result.BBA;
+import xquerysearch.domain.result.BBAForAnalysis;
 import xquerysearch.domain.result.Rule;
 import xquerysearch.domain.result.datadescription.DataField;
 
@@ -54,9 +54,9 @@ public class AssociationRuleAnalyzer {
 		return output;
 	}
 
-	private static Map<String, Double> analyzeConcreteness(List<BBA> bbas, List<DataField> fields) {
+	private static Map<String, Double> analyzeConcreteness(List<BBAForAnalysis> bbas, List<DataField> fields) {
 		Map<String, Double> ret = new HashMap<String, Double>();
-		for (BBA bba : bbas) {
+		for (BBAForAnalysis bba : bbas) {
 			double categoryCount = bba.getTransformationDictionary().getCatNames().size();
 			double fieldCategoryCount = getCategoryCountForField(bba.getTransformationDictionary()
 					.getFieldName(), fields);

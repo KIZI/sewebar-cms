@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import xquerysearch.domain.result.BBA;
+import xquerysearch.domain.result.BBAForAnalysis;
 import xquerysearch.domain.result.Cedent;
 import xquerysearch.domain.result.DBA;
 import xquerysearch.domain.result.Result;
@@ -91,6 +92,84 @@ public class ResultUtils {
 		return ret;
 	}
 
+	/**
+	 * Retrieves all {@link BBAForAnalysis}s from given {@link Result}.
+	 * 
+	 * @param result
+	 * @return
+	 */
+	public static List<BBAForAnalysis> getBbasForAnalysisFromResult(Result result) {
+		if (result == null) {
+			return null;
+		}
+
+		List<BBAForAnalysis> ret = new ArrayList<BBAForAnalysis>();
+
+		if (result.getRule() != null) {
+			ret.addAll(getBbasForAnalysisFromCedent(result.getRule().getAntecedent(), false));
+			ret.addAll(getBbasForAnalysisFromCedent(result.getRule().getConsequent(), false));
+			ret.addAll(getBbasForAnalysisFromCedent(result.getRule().getCondition(), false));
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Goes through cedent's {@link DBA}s and retrieves their {@link BBAForAnalysis}s.
+	 * 
+	 * @param cedent
+	 * @return
+	 */
+	public static List<BBAForAnalysis> getBbasForAnalysisFromCedent(Cedent cedent, boolean disjunctive) {
+		List<BBAForAnalysis> ret = new ArrayList<BBAForAnalysis>();
+		if (cedent != null) {
+			List<DBA> dbas = cedent.getDbas();
+			if (dbas != null) {
+				for (DBA dba : dbas) {
+					boolean isDbaDisjunctive = false;
+					if (dba.getConnective().equalsIgnoreCase("disjunction")) {
+						isDbaDisjunctive = true;
+					}
+					ret.addAll(getBbasForAnalysisFromDba(dba, isDbaDisjunctive));
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Goes through {@link DBA}s and retrieves their {@link BBAForAnalysis}s.
+	 * 
+	 * @param dba
+	 * @return
+	 */
+	public static List<BBAForAnalysis> getBbasForAnalysisFromDba(DBA dba, boolean disjunctive) {
+		List<BBAForAnalysis> ret = new ArrayList<BBAForAnalysis>();
+		if (dba != null) {
+			List<BBA> bbas = dba.getBbas();
+			List<DBA> dbas = dba.getDbas();
+
+			if (bbas != null) {
+				for (BBA bba : bbas) {
+					BBAForAnalysis bbaForAnalysis = new BBAForAnalysis(bba);
+					bbaForAnalysis.setDisjunctive(disjunctive);
+					ret.add(bbaForAnalysis);
+				}
+			}
+
+			if (dbas != null) {
+				for (DBA dbaOfDba : dbas) {
+					boolean isDbaDisjunctive = false;
+					if (dbaOfDba.getConnective().equalsIgnoreCase("disjunction")) {
+						isDbaDisjunctive = true;
+					}
+					ret.addAll(getBbasForAnalysisFromDba(dbaOfDba, isDbaDisjunctive));
+				}
+			}
+		}
+		return ret;
+	}
+	
 	/**
 	 * Retrieves all categories from given {@link BBA}s.
 	 * 
