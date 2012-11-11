@@ -55,10 +55,14 @@ public class ArQueryAnalyzer {
 	private static Map<String, Double> analyzeConcreteness(List<BbaSetting> bbas, DataDescription dataDescription) {
 		Map<String, Double> ret = new HashMap<String, Double>();
 		for (BbaSetting bbaSetting : bbas) {
-			int categoryCount = bbaSetting.getCoefficient().getCategories().size();
-			int fieldCategoryCount = DataDescriptionUtils.getCategories(dataDescription,
+			double categoryCount = bbaSetting.getCoefficient().getCategories().size();
+			double fieldCategoryCount = DataDescriptionUtils.getCategories(dataDescription,
 					bbaSetting.getFieldRef().getValue()).size();
-			ret.put(bbaSetting.getFieldRef().getValue(), new Double(categoryCount / fieldCategoryCount));
+			if (categoryCount > 0 && fieldCategoryCount > 0) {
+				ret.put(bbaSetting.getFieldRef().getValue(), new Double(categoryCount / fieldCategoryCount));
+			} else {
+				ret.put(bbaSetting.getFieldRef().getValue(), new Double(0));
+			}
 		}
 		return ret;
 	}

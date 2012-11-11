@@ -309,7 +309,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaConcretenessPenalty
 	 *            the bbaConcretenessPenalty to set
 	 */
-	@Value("${penalty.notInteresting}")
+	@Value("${penalty.concreteness}")
 	public void setBbaConcretenessPenalty(int bbaConcretenessPenalty) {
 		FuzzySearchEvaluatorImpl.bbaConcretenessPenalty = bbaConcretenessPenalty;
 	}
