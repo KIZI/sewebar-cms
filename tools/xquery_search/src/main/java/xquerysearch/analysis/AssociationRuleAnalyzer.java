@@ -57,12 +57,11 @@ public class AssociationRuleAnalyzer {
 	private static Map<String, Double> analyzeConcreteness(List<BBA> bbas, List<DataField> fields) {
 		Map<String, Double> ret = new HashMap<String, Double>();
 		for (BBA bba : bbas) {
-			int categoryCount = bba.getTransformationDictionary().getCatNames().size();
-			int fieldCategoryCount = getCategoryCountForField(bba.getTransformationDictionary()
+			double categoryCount = bba.getTransformationDictionary().getCatNames().size();
+			double fieldCategoryCount = getCategoryCountForField(bba.getTransformationDictionary()
 					.getFieldName(), fields);
 			if (categoryCount > 0 && fieldCategoryCount > 0) {
-				ret.put(bba.getTransformationDictionary().getFieldName(), new Double(categoryCount
-						/ fieldCategoryCount));
+				ret.put(bba.getTransformationDictionary().getFieldName(), new Double(categoryCount / fieldCategoryCount));
 			} else {
 				ret.put(bba.getTransformationDictionary().getFieldName(), new Double(0));
 			}
