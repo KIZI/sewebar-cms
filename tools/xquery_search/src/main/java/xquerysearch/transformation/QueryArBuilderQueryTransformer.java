@@ -1,6 +1,5 @@
 package xquerysearch.transformation;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.oxm.castor.CastorMarshaller;
 
 import xquerysearch.domain.arbquery.ArBuilderQuery;
@@ -30,18 +29,6 @@ public class QueryArBuilderQueryTransformer {
 	 */
 	public static ArBuilderQuery transform(CastorMarshaller arbQueryCastor, final String query) {
 		return castor.targetToObject(arbQueryCastor, query);
-	}
-
-	/**
-	 * Transforms query as String to {@link ArBuilderQuery} object and
-	 * simplifies it.
-	 * 
-	 * @param query
-	 * @return simplified query as object
-	 */
-	public static ArBuilderQuery transformAndSimplify(CastorMarshaller arbQueryCastor, final String query) {
-		// TODO implement
-		throw new NotImplementedException("Not implemented yet...");
 	}
 
 }
