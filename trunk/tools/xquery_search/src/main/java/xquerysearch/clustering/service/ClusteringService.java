@@ -30,8 +30,9 @@ public interface ClusteringService {
 	 * 
 	 * @param results
 	 * @param params
+	 * @param clusters
 	 * @return
 	 */
-	public List<Cluster> clusterResults(List<Result> results, Params params);
+	public List<Cluster> clusterResults(List<Result> results, Params params, List<Cluster> clusters);
 	
 }

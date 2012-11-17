@@ -35,16 +35,14 @@ public class ClusteringServiceImpl implements ClusteringService {
 	@Override
 	public List<Cluster> getClustersByQuery(ArBuilderQuery query, QuerySettings settings) {
 		List<Result> results = fuzzySearchService.getFuzzyResultsByQuery(query, settings);
-		return clusterResults(results, settings.getParams());
+		return clusterResults(results, settings.getParams(), new ArrayList<Cluster>());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Cluster> clusterResults(List<Result> results, Params params) {
-		List<Cluster> clusters = new ArrayList<Cluster>();
-		
+	public List<Cluster> clusterResults(List<Result> results, Params params, List<Cluster> clusters) {
 		if (results == null) {
 			logger.info("CLUSTERING - Results null!");
 			return clusters;
@@ -91,7 +89,7 @@ public class ClusteringServiceImpl implements ClusteringService {
 		logger.info("CLUSTERING - Results to reprocess: " + resultsToReprocess.size());
 		
 		if (resultsToReprocess.size() > 0) {
-			clusters = clusterResults(resultsToReprocess, params);
+			clusterResults(resultsToReprocess, params, clusters);
 		}
 		
 		return clusters;
@@ -132,6 +130,7 @@ public class ClusteringServiceImpl implements ClusteringService {
 				for (Result result : clusterResults) {
 					double distance = ResultCharacteristicsComputer.compare(centroid, result, formulaType);
 					if (distance < belongingLimit) {
+						clusterResults.remove(result);
 						ret.add(result);
 					}
 				}
