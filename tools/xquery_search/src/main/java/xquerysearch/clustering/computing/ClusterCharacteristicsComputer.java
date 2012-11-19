@@ -56,15 +56,53 @@ public class ClusterCharacteristicsComputer {
 	 * @return
 	 */
 	private static double[][] getAverageVector(List<double[][]> vectors) {
-		double[][] avgVector = null;
+		double[][] sumVector = null;
 		for (int i = 0; i < vectors.size(); i++) {
-			if (i == 0) {
-				avgVector = vectors.get(i);
-			} else {
-				avgVector = combineVectors(avgVector, vectors.get(i));
+			sumVector = summarizeVectors(sumVector, vectors.get(i));
+		}
+		return computeAverageVector(sumVector, vectors.size());
+	}
+
+	/**
+	 * Add values from given actual vector to given sum vector.
+	 * 
+	 * @param sumVector
+	 * @param actualVector
+	 * @return
+	 */
+	private static double[][] summarizeVectors(double[][] sumVector, double[][] actualVector) {
+		if (sumVector == null) {
+			sumVector = new double[actualVector.length][];
+		}
+		for (int i = 0; i < actualVector.length; i++) {
+			if (sumVector[i] == null) {
+				sumVector[i] = new double[actualVector[i].length];
+			}
+			for (int j = 0; j < actualVector[i].length; j++) {
+				double sumValue = sumVector[i][j];
+				double actualValue = actualVector[i][j];
+				sumVector[i][j] = sumValue + actualValue;
 			}
 		}
-		return avgVector;
+		return sumVector;
+	}
+
+	/**
+	 * Creates vector with average values from given sum vector.
+	 * 
+	 * @param sumVector
+	 * @param count
+	 * @return
+	 */
+	private static double[][] computeAverageVector(double[][] sumVector, int count) {
+		double[][] ret = new double[sumVector.length][];
+		for (int i = 0; i < sumVector.length; i++) {
+			ret[i] = new double[sumVector[i].length];
+			for (int j = 0; j < sumVector[i].length; j++) {
+				ret[i][j] = sumVector[i][j] / count;
+			}
+		}
+		return ret;
 	}
 
 	/**

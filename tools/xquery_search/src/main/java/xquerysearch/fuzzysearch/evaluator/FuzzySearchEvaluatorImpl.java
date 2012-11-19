@@ -153,8 +153,9 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @return
 	 */
 	private double evaluateBba(BBAForAnalysis bba, BbaSetting bbaSetting) {
-		double ret = 0;
+		double ret = 100;
 		if (bba != null && bbaSetting != null) {
+			ret = 0;
 			ret += evaluatesCategories(bba.getTransformationDictionary().getCatNames(), bbaSetting
 					.getCoefficient().getCategories());
 			if (bba.isDisjunctive() == true) {

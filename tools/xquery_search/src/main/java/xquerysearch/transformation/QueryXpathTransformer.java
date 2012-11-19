@@ -53,7 +53,7 @@ public class QueryXpathTransformer {
 			return "";
 		}
 
-		if (settings != null && settings.getType().equals(QueryType.NORMAL.getText()) == false) {
+		if (settings != null && settings.getType() != null && settings.getType().equals(QueryType.SHORTER.getText()) == true) {
 			return transformShorter(query);
 		} else {
 			return transformNormal(query);
