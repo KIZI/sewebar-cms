@@ -35,22 +35,15 @@ public class ResultCharacteristicsComputer {
 			double[][] centroidVector = centroid.getVector();
 			double[][] resultCompliance = result.getQueryCompliance();
 
-			double[] centroidFinalVector = new double[centroidVector.length];
-			double[] resultFinalVector = new double[resultCompliance.length];
+			double[] centroidFinalVector = new double[getAllItemsCount(centroidVector)];
+			double[] resultFinalVector = new double[getAllItemsCount(resultCompliance)];
 
+			int position = 0;
 			for (int i = 0; i < centroidVector.length; i++) {
-				if (centroidVector[i].length == 1) {
-					resultFinalVector[i] = resultCompliance[i][0];
-					centroidFinalVector[i] = centroidVector[i][0];
-				} else {
-					double localSumCentroid = 0.0;
-					double localSumResult = 0.0;
-					for (int j = 0; j < centroidVector[i].length; j++) {
-						localSumCentroid += centroidVector[i][j];
-						localSumResult += resultCompliance[i][j];
-					}
-					centroidFinalVector[i] = (localSumCentroid / centroidVector[i].length);
-					resultFinalVector[i] = (localSumResult / resultCompliance[i].length);
+				for (int j = 0; j < centroidVector[i].length; j++) {
+					centroidFinalVector[position] = centroidVector[i][j];
+					resultFinalVector[position] = resultCompliance[i][j];
+					position++;
 				}
 			}
 
@@ -108,5 +101,22 @@ public class ResultCharacteristicsComputer {
 			sumResultSq += (resultValue * resultValue);
 		}
 		return (sumOfMultiplications / (Math.sqrt(sumResultSq) * Math.sqrt(sumCentroidSq)));
+	}
+
+	/**
+	 * Returns count of all items in 2-dimensional vector
+	 * 
+	 * @param vector
+	 * @return
+	 */
+	private static int getAllItemsCount(double[][] vector) {
+		int count = 0;
+		for (int i = 0; i < vector.length; i++) {
+			for (int j = 0; j < vector[i].length; j++) {
+				count++;
+			}
+		}
+
+		return count;
 	}
 }

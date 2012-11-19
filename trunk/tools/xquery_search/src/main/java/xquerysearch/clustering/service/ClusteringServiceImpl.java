@@ -127,10 +127,11 @@ public class ClusteringServiceImpl implements ClusteringService {
 			List<Result> clusterResults = cluster.getResults();
 			Centroid centroid = cluster.getCentroid();
 			if (clusterResults != null && centroid != null) {
-				for (Result result : clusterResults) {
+				for (int i = 0; i < clusterResults.size(); i++) {
+					Result result = clusterResults.get(i);
 					double distance = ResultCharacteristicsComputer.compare(centroid, result, formulaType);
 					if (distance < belongingLimit) {
-						clusterResults.remove(result);
+						clusterResults.remove(i);						
 						ret.add(result);
 					}
 				}

@@ -16,8 +16,6 @@ import xquerysearch.domain.arbquery.tasksetting.ArTsBuilderQuery;
 import xquerysearch.domain.arbquery.tasksetting.ArTsQuery;
 import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
-import xquerysearch.fuzzysearch.service.FuzzySearchService;
-import xquerysearch.grouping.service.GroupingService;
 import xquerysearch.transformation.QueryXpathTaskSettingTransformer;
 import xquerysearch.transformation.QueryXpathTransformer;
 import xquerysearch.utils.QueryUtils;
@@ -36,12 +34,6 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 
 	@Autowired
 	private ResultsDao dao;
-
-	@Autowired
-	private FuzzySearchService fuzzySearchService;
-
-	@Autowired
-	private GroupingService groupingService;
 
 	/**
 	 * {@inheritDoc}
