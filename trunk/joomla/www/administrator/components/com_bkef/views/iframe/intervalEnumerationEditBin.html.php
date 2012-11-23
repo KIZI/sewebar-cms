@@ -39,7 +39,7 @@ class BkefViewIntervalEnumerationEditBin extends JView
       $binId=intval($this->binId);
       
       if (@$this->binId>-1){
-        $value=(string)@$this->xml->MetaAttributes[0]->MetaAttribute[$this->maId]->Formats[0]->Format[$this->fId]->PreprocessingHints[0]->DiscretizationHint[$this->phId]->IntervalEnumeration[0]->IntervalBin[$this->binId]->Name[0];
+        $value=(string)@$this->xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->IntervalEnumeration[0]->IntervalBin[$binId]->Name[0];
       }else{
         $value='';
       }

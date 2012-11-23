@@ -26,6 +26,15 @@ class BkefViewFormat extends JView
       JHTML::_('behavior.modal');
       $doc->addStyleSheet('components/com_bkef/css/main.css');
       
+      /*Ověření, jestli jde o přístup z administrace nebo front-endu*/
+      require_once(JApplicationHelper::getPath('toolbar_html'));
+      if (JPATH_BASE==JPATH_ADMINISTRATOR){ 
+        TOOLBAR_bkef::_DEFAULT();
+      }else{
+        TOOLBAR_bkef::frontend();
+      }
+      /**/
+      
       $xml=$this->xml;
       $maId=intval($this->maId);
       $article=intval($this->article);
@@ -69,7 +78,7 @@ class BkefViewFormat extends JView
           echo ' |&nbsp;';
           echo '<a class="modal" href="index.php?option=com_bkef&amp;task=editFormatAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('EDIT_ANNOTATION').'</a> ';
           echo ' |&nbsp;';
-          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=deleteFormatAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
+          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=delFormatAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
           echo '</div>';
           $anId++;
         }
@@ -78,7 +87,7 @@ class BkefViewFormat extends JView
         echo '<div class="linksDiv">
                 <a href="index.php?option=com_bkef&amp;task=editFormat&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 200}}" class="modal">'.JText::_('EDIT_BASIC_INFO').'</a>
                  |&nbsp;
-                <a href="index.php?option=com_bkef&amp;task=addAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_ANNOTATION').'...</a>
+                <a href="index.php?option=com_bkef&amp;task=addFormatAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_ANNOTATION').'...</a>
               </div>';
               
       echo '</div>';
@@ -267,7 +276,7 @@ class BkefViewFormat extends JView
                             $intId++;
                           }
                         }else{
-                          echo '<div class="missing infotext">'.JText::_('INTERVAL_ENUMERATION_BIN_NO_INTERVALS_INFO').'</div>';
+                          echo '<div class="missing infotext">'.JText::_('INTERVAL_ENUMERATION_NO_VALUES_INFO').'</div>';
                         }  
                         echo '<div class="linksDiv">
                                 <a href="index.php?option=com_bkef&amp;task=intervalEnumerationAddInterval&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;binId='.$binId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('ADD_INTERVAL').'</a>
@@ -280,7 +289,7 @@ class BkefViewFormat extends JView
                         $binId++;
                       }
                     }else{
-                      echo '<div class="missing infotext">'.JText::_('NOMINAL_ENUMERATION_NO_BINS_INFO').'</div>';
+                      echo '<div class="missing infotext">'.JText::_('INTERVAL_ENUMERATION_NO_BINS_INFO').'</div>';
                     }
                     echo '<div class="linksDiv">
                             <a href="index.php?option=com_bkef&amp;task=intervalEnumerationAddBin&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;phId='.$phId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\',size:{x:300,y:200}}" class="modal">'.JText::_('ADD_BIN').'</a>
@@ -338,48 +347,75 @@ class BkefViewFormat extends JView
       if (count($format->ValueDescriptions[0]->ValueDescription)>0){
         foreach ($format->ValueDescriptions[0]->ValueDescription as $valueDescription) {
           echo '<div class="level2Div">';
-        	echo '<h3>'.$valueDescription['type'].'</h3>';
-        	echo '<div class="annotation">'.$valueDescription->Annotation[0]->Text[0];
-        	if (@$valueDescription->Annotation[0]->Author[0]){
-            echo '('.$valueDescription->Annotation[0]->Author[0].')';
+        	echo '<h3>';
+          if (count($valueDescription->Features->Feature)>0){
+            $featuresArr=array();
+            foreach ($valueDescription->Features->Feature as $feature) {
+            	$featuresArr[]=JText::_((string)$feature);
+            }
           }
-          echo '</div>';
-          echo '<br /><div class="infotext">';
-          echo JText::_('VALUE_DESCRIPTIONS_GROUP_'.strtoupper(str_replace(' ','',$valueDescription['type'])));
-          echo '</div>';
-          echo '<div class="linksDiv"><a href="index.php?option=com_bkef&amp;task=editValueDescription&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 300}}" class="modal">'.JText::_('EDIT_ANNOTATION').'...</a>';
-          echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delValueDescription&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 300}}" class="modal">'.JText::_('DELETE_VALUE_DESCRIPTION').'...</a>';
-          echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=addValueDescriptionValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;type=value&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 300}}" class="modal">'.JText::_('ADD_VALUE').'...</a>';
-          echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=addValueDescriptionValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;type=interval&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 300, y: 300}}" class="modal">'.JText::_('ADD_INTERVAL').'...</a></div><br />';
-          
-          $vdValueId=0;
-          if (count($valueDescription->children())>0){
-            $realChildCount=0;
-            foreach ($valueDescription->children() as $child) {
-            	if ($child->getName()=='Interval'){
-            	  $realChildCount++;
-                //vypiseme interval
-                echo '<div>'.JText::_('INTERVAL').': <strong>';
-              	if ((string)$child->LeftBound['type']=='closed'){echo '<';}else{echo '(';}
-              	echo $child->LeftBound['value'].' ; '.$child->RightBound['value'];
-              	if ((string)$child->RightBound['type']=='closed'){echo '>';}else{echo ')';}
-                echo '</strong>';
-                echo '&nbsp;&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delVdValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;vdId='.$vdId.'&amp;vdValueId='.$vdValueId.'">'.JText::_('DELETE').'</a></div>';
-              }elseif ($child->getName()=='Value') {
-                $realChildCount++;
-                //vypiseme hodnotu
-                echo '<div>'.JText::_('VALUE').': <strong>'.$child.'</strong>';
-                echo '&nbsp;&nbsp;&nbsp;<a href="index.php?option=com_bkef&amp;task=delVdValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;article='.$this->article.'&amp;vdId='.$vdId.'&amp;vdValueId='.$vdValueId.'">'.JText::_('DELETE').'</a></div>';
-              }
+          echo implode(', ',$featuresArr);
+          echo '</h3>';
+          $scopeNotSet=true;
+          //scope u value description
+          if (@count($valueDescription->Scope->Interval)>0){
+            $scopeNoteSet=false;
+            $vdIntervalId=0;
+            //jde o intervaly
+            foreach ($format->Range[0]->Interval as $interval) {
+            	echo JText::_('INTERVAL').': <strong>';
+            	if (($interval['closure']=='openClosed')||($interval['closure']=='openOpen')){echo '(';}else{echo '&lt;';}
+            	echo $interval['leftMargin'].' ; '.$interval['rightMargin'];
+            	if (($interval['closure']=='closedOpen')||($interval['closure']=='openOpen')){echo ')';}else{echo '&gt;';}
+            	echo '</strong>';
+              echo '<a class="modal" href="index.php?option=com_bkef&amp;task=delValueDescriptionInterval&amp;article='.$this->article.'&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;vdIntervalId='.$vdIntervalId.'" >'.JText::_('DELETE').'</a> ';
+              echo '<br />';
+              $vdIntervalId++;
+            }
+          }
+          if (@count($valueDescription->Scope->Value)>0){
+            $scopeNoteSet=false;
+            $vdValueId=0;
+            //jde o intervaly
+            foreach ($format->Range[0]->Value as $value) {
+            	echo JText::_('VALUE').': <strong>'.((string)$value).'</strong>';
+              echo '<a class="modal" href="index.php?option=com_bkef&amp;task=delValueDescriptionValue&amp;article='.$this->article.'&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;vdValueId='.$vdValueId.'" >'.JText::_('DELETE').'</a> ';
+              echo '<br />';
               $vdValueId++;
             }
-            if (!($realChildCount>0)){
-              echo '<div class="missing infotext">'.JText::_('VALUE_DESCRIPTION_NO_VALUES_INFO').'</div>';
-            }
-          }else {
+          }
+          if ($scopeNotSet){
             echo '<div class="missing infotext">'.JText::_('VALUE_DESCRIPTION_NO_VALUES_INFO').'</div>';
           }
-          
+          echo '<div class="linksDiv">
+                  <a href="index.php?option=com_bkef&amp;task=addValueDescriptionValue&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_VALUE').'...</a>
+                  |&nbsp;
+                  <a href="index.php?option=com_bkef&amp;task=addValueDescriptionInterval&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_INTERVAL').'...</a>
+                </div>';
+          //--scope u value description
+          //anotace u value description
+          if (@count($valueDescription->Annotations[0]->Annotation)>0){
+            echo '<h4>'.JText::_('ANNOTATIONS').'</h4>';
+            $anId=0;
+            foreach ($valueDescription->Annotations[0]->Annotation as $annotation) {
+            	echo '<div class="annotation level3Div">';
+            	echo '<strong>'.($annotation->Text[0]!=''?$annotation->Text[0]:'&lt;&lt;???&gt;&gt;').'</strong>';
+              echo '<br />'.JText::_('CREATED').': '.$annotation->Created[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->Created[0]->Timestamp)).')';
+              if ((string)$annotation->Created[0]->Timestamp!=(string)$annotation->LastModified[0]->Timestamp){
+                echo '; '.JText::_('LAST_MODIFIED').': '.$annotation->LastModified[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->LastModified[0]->Timestamp)).')';
+              }
+              echo ' |&nbsp;';
+              echo '<a class="modal" href="index.php?option=com_bkef&amp;task=editValueDescriptionAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('EDIT_ANNOTATION').'</a> ';
+              echo ' |&nbsp;';
+              echo '<a class="modal" href="index.php?option=com_bkef&amp;task=deleteValueDescriptionAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
+              echo '</div>';
+              $anId++;
+            }
+          }
+          echo '<div class="linksDiv">
+                  <a href="index.php?option=com_bkef&amp;task=addValueDescriptionAnnotation&amp;maId='.$maId.'&amp;fId='.$fId.'&amp;vdId='.$vdId.'&amp;article='.$this->article.'&amp;tmpl=component" rel="{handler: \'iframe\', size: {x: 500, y: 280}}" class="modal">'.JText::_('ADD_ANNOTATION').'...</a>
+                </div>';
+          //--anotace u value description
           $vdId++;
           echo '</div>';
         }

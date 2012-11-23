@@ -39,7 +39,7 @@ class BkefViewEditRange extends JView
         echo '  <tr>
                   <td colspan="4">
                     <h3>'.JText::_('ENUMERATION').'</h3>
-                    <div>'.JText::_('EDIT_RANGE_ENUMERAION_INFO').'</div>            
+                    <div>'.JText::_('EDIT_RANGE_ENUMERATION_INFO').'</div>            
                   </td>
                 </tr>';
         echo '  <tr>
@@ -132,7 +132,7 @@ class BkefViewEditRange extends JView
         $closure=(string)$format->Range->Interval[0]['closure'];
         //--vyreseni hranic intervalu        
         echo   '<tr>
-                  <td>Od:</td>
+                  <td>'.JText::_('INTERVAL_LEFT_BOUND').':</td>
                   <td colspan="3">
                     <select name="leftBoundType" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_LEFTBOUND').'">';                
                 echo '<option value="closed" title="closed" '.((($closure=='closedClosed')||($closure=='closedOpen'))?'selected="selected"':'').'>&lt;</option>';
@@ -142,7 +142,7 @@ class BkefViewEditRange extends JView
                   </td>
                 </tr>';
         echo '  <tr>
-                  <td>Do:</td>
+                  <td>'.JText::_('INTERVAL_RIGHT_BOUND').':</td>
                   <td colspan="3">
                     <input name="rightBoundValue" value="'.$format->Range->Interval['rightMargin'].'" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_RIGHTVALUE').'" />
                     <select name="rightBoundType" title="'.JText::_('TITLE_EDIT_RANGE_INTERVAL_RIGHTBOUND').'">';

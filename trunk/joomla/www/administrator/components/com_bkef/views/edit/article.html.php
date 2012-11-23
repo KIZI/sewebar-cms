@@ -36,7 +36,7 @@ class BkefViewArticle extends JView
     if (JPATH_BASE==JPATH_ADMINISTRATOR){
       TOOLBAR_bkef::_DEFAULT();
     }else{
-      TOOLBAR_bkef::frondend();
+      TOOLBAR_bkef::frontend();
     }
     /**/
     

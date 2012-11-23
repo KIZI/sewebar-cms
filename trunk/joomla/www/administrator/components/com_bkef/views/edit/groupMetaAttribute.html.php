@@ -26,6 +26,14 @@ class BkefViewMetaAttribute extends JView
       JHTML::_('behavior.modal');
       $doc->addStyleSheet('components/com_bkef/css/main.css');
       
+      /*Ověření, jestli jde o přístup z administrace nebo front-endu*/
+      require_once(JApplicationHelper::getPath('toolbar_html'));
+      if (JPATH_BASE==JPATH_ADMINISTRATOR){ 
+        TOOLBAR_bkef::_DEFAULT();
+      }else{
+        TOOLBAR_bkef::frontend();
+      }
+      /**/
       
       $xml=$this->xml;
       $maId=intval($this->maId);

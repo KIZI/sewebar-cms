@@ -30,11 +30,12 @@ class BkefViewNominalEnumerationDeleteBin extends JView
       $maId=intval($this->maId);
       $fId=intval($this->fId);
       $phId=intval($this->phId);
-      
+      $binId=intval($this->binId);
+                                 
       echo '<div>';
       echo JText::_('DELETE_NOMINAL_ENUMERATION_BIN_QUESTION');
       echo '</div>';
-      echo '<strong>'.((string)@$this->xml->MetaAttributes[0]->MetaAttribute[$this->maId]->Formats[0]->Format[$this->fId]->PreprocessingHints[0]->DiscretizationHint[$this->phId]->NominalEnumeration[0]->NominalBin[$this->binId]->Name[0]).'</strong>';
+      echo '<strong>'.((string)@$this->xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->NominalEnumeration[0]->NominalBin[$binId]->Name[0]).'</strong>';
       echo '<br /><br />';
       ?>
       <form action="index.php?option=com_bkef&amp;task=nominalEnumerationDeleteBin" method="post" target="_parent" >
