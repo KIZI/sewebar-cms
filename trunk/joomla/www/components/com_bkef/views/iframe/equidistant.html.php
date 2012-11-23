@@ -24,35 +24,44 @@ class BkefViewEquidistant extends JView
         $doc->addStyleSheet('components/com_bkef/css/component.css');
       }         
       
-      echo '<h1>'.JText::_('EQUIDISTANT_H1').'</h1>';
+      echo '<h1>'.JText::_('EQUIDISTANT_INTERVAL_SET_PARAMS_H1').'</h1>';
       
       $xml=$this->xml;
       $maId=intval($this->maId);
       $fId=intval($this->fId);
       $phId=intval($this->phId);
-      $equidistant=$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->PreprocessingHint[$phId]->DiscretizationHint[0]->Equidistant[0];
+      $equidistant=$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->EquidistantInterval[0];
       
 ?>
       <form action="index.php?option=com_bkef&amp;task=equidistant" method="post" target="_parent" >
         <?php
+        $closure=$equidistant['closure'];
+        if (strpos($closure,'closed')===0){
+          $closureLeft='closed';
+          $closureRight=strtolower(substr($closure,6));
+        }else{
+          $closureLeft='open';
+          $closureRight=strtolower(substr($closure,4));
+        }
+        
         echo '<table>';
         echo '<tr><td>'.JText::_('INTERVAL_START').':</td><td><select name="leftBoundType" type="'.JText::_('TITLE_EQUIDISTANT_INTERVAL_LEFTBOUND').'">';
         echo '<option value="closed" title="closed"';
-        if ($equidistant->Start[0]['type']=='closed'){echo ' selected="selected" ';}
+        if ($closureLeft=='closed'){echo ' selected="selected" ';}
         echo '>&lt;</option>';
         echo '<option value="open" title="open" ';
-        if ($equidistant->Start[0]['type']=='open'){echo ' selected="selected" ';}
+        if ($closureLeft=='open'){echo ' selected="selected" ';}
         echo '>(</option>';
-        echo '</select></td><td><input name="leftBoundValue" value="'.$equidistant->Start[0].'" title="'.JText::_('TITLE_EQUIDISTANT_INTERVAL_LEFTVALUE').'" /></td></tr>';
+        echo '</select></td><td><input name="leftBoundValue" value="'.floatval((string)$equidistant->Start[0]).'" title="'.JText::_('TITLE_EQUIDISTANT_INTERVAL_LEFTVALUE').'" /></td></tr>';
         echo '<tr><td>'.JText::_('INTERVAL_END').':</td><td><select name="rightBoundType" type="'.JText::_('TITLE_EQUIDISTANT_INTERVAL_RIGHTBOUND').'">';
         echo '<option value="closed" title="closed" ';
-        if ($equidistant->End[0]['type']=='closed'){echo ' selected="selected" ';}
+        if ($closureRight=='closed'){echo ' selected="selected" ';}
         echo '>&gt;</option>';
         echo '<option value="open" title="open" ';
-        if ($equidistant->End[0]['type']=='open'){echo ' selected="selected" ';}
+        if ($closureRight=='open'){echo ' selected="selected" ';}
         echo '>)</option>';
-        echo '</select></td><td><input name="rightBoundValue" value="'.$equidistant->End[0].'" type="'.JText::_('TITLE_EQUIDISTANT_INTERVAL_RIGHTVALUE').'" /></td></tr>';
-        echo '<tr><td>Step:</td><td colspan="2"><input name="step" value="'.$equidistant->Step[0].'" /></td></tr>';
+        echo '</select></td><td><input name="rightBoundValue" value="'.floatval((string)$equidistant->End[0]).'" type="'.JText::_('TITLE_EQUIDISTANT_INTERVAL_RIGHTVALUE').'" /></td></tr>';
+        echo '<tr><td>Step:</td><td colspan="2"><input name="step" value="'.floatval((string)$equidistant->Step[0]).'" /></td></tr>';
         echo '</table>';
         ?>
         
@@ -61,7 +70,7 @@ class BkefViewEquidistant extends JView
         <input type="hidden" name="fId" value="<?php echo $fId; ?>" />
         <input type="hidden" name="phId" value="<?php echo $phId; ?>" />
         <input type="hidden" name="potvrzeni" value="1" />
-        <input type="submit" value="<?php echo JText::_('ADD_VALUE_SUBMIT');?>..." />
+        <input type="submit" value="<?php echo JText::_('SAVE');?>..." />
       </form>
       <?php
       //parent::display($tpl);

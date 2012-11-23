@@ -34,7 +34,7 @@ class BkefViewDelPreprocessingHint extends JView
       echo '<div>';
       
         echo JText::_('DELETING_PREPROCESSING_HINT_QUESTION').' <strong>';
-        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->PreprocessingHint[$phId]['name'];
+        echo (string)$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->Name[0];
         echo '</strong> ?
       </div>    <br /><br />';
       ?>

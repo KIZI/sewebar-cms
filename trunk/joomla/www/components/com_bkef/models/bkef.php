@@ -69,6 +69,43 @@ class BkefModel extends JModel
 	}
 
   /**
+   *  Funkce pro naklonování článku v DB Joomla!, vracející jeho ID...
+   */     
+  private function cloneArticleDB($articleId){
+    $db=&JFactory::getDBO();
+    //načteme původní článek
+    $db->setQuery("SELECT * FROM #__content WHERE id='".$articleId."' LIMIT 1;");
+    $rows = $db->loadObjectList();     
+    if (count($rows)==1){ 
+      //TODO
+      $article=$rows[0];
+      $user =& JFactory::getUser();             
+      $newTitle=$article->title.': '.$user->name;
+       //TODO pojmenování nového článku
+      $db->setQuery("INSERT INTO #__content (title,introtext,fulltext,state,sectionid,mask,catid,created,created_by,checked_out,attribs,parentid,metakey,version,access)VALUES ('".$db->getEscaped($newTitle)."','".$db->getEscaped(stripslashes($article->introtext))."','".$db->getEscaped(stripslashes($article->fulltext))."','".$article->state."', '".$article->sectionid."', '".$article->mask."', '".$article->catid."',NOW(),'".$user->get('id')."','0','".$db->getEscaped($article->attribs)."','".$article->parentid."','BKEF','1','".$db->getEscaped($article->access)."');");
+      if ($db->query()){
+        $db->setQuery("SELECT id FROM #__content WHERE title='".$db->getEscaped($newTitle)."' ORDER BY id DESC LIMIT 1;");
+        return @$db->loadObject()->id;
+      } 
+    }
+    return false;
+  } 
+  
+  /**
+   *  Funkce pro odstranění článku z DB - jen pro účely klonovaných článků!!!
+   */
+  private function deleteArticleDB($articleId){
+    $db=&JFactory::getDBO();
+    $db->setQuery("DELETE FROM #__content WHERE id='".$articleId."' LIMIT 1;");
+    if ($db->query()){
+      $db->setQuery("DELETE FROM #__content_frontpage WHERE content_id='".$articleId."';");
+      $db->query();
+      $db->setQuery("DELETE FROM #__content_rating WHERE content_id='".$articleId."';");
+      $db->query();
+    }
+  }      
+
+  /**
    *  Funkce pro načtení dat 1 článku z databáze
    */
   private function prepareArticleDB($articleId,$text='all',$skipPlugins=false){
@@ -698,7 +735,7 @@ class BkefModel extends JModel
      }
      
      $user =& JFactory::getUser();
-     //exit("INSERT INTO #__content (title,introtext,state,sectionid,catid,created,created_by,metakey,version)VALUES ('".$db->getEscaped($articleName)."','".$db->getEscaped(stripslashes($articleContent))."', '".$state."', '".$sectionid."', '".$categoryid."',NOW(),'".$user->get('id')."','BKEF','1');");
+
      $db->setQuery("INSERT INTO #__content (title,introtext,state,sectionid,catid,created,created_by,metakey,version)VALUES ('".$db->getEscaped($articleName)."','".$db->getEscaped(stripslashes($articleContent))."', '".$state."', '".$sectionid."', '".$categoryid."',NOW(),'".$user->get('id')."','BKEF','1');");
      $rows = $db->query();   
    }

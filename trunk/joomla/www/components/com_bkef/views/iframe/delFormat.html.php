@@ -33,9 +33,9 @@ class BkefViewDelFormat extends JView
       echo '<div>';
       
         echo JText::_('DELETING_FORMAT_QUESTION1').'<strong>';
-        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]['name']; 
+        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->Name[0]; 
         echo '</strong> '.JText::_('DELETING_FORMAT_QUESTION2').' <strong>';
-        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]['name']; 
+        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]->Name[0]; 
         echo '</strong> ?';
       echo '</div>    <br /><br />';
       ?>

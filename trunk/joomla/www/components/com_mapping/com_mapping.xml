@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.5.0">
+	<name>mapping</name>
+	<!-- The following elements are optional and free of formatting conttraints -->
+	<creationDate>2011</creationDate>
+	<author>Stanislav Vojíř</author>
+	<authorEmail>stanislav.vojir@gmail.com</authorEmail>
+	<authorUrl>http://vojir.net</authorUrl>
+	<copyright>(C) 2010-2011 All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<!--  The version string is recorded in the components table -->
+	<version>1.0</version>
+
+	 
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.sql</file>
+		</sql>
+	</install>
+	 
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.sql</file>
+		</sql>
+	</uninstall>
+	    
+	<!-- Site Main File Copy Section-->
+	<files>
+		  <!-- <filename>admin.mapping.php</filename> -->
+      <filename>mapping.php</filename>	
+		  <filename>controller.php</filename>
+		  <filename>toolbar.mapping.html.php</filename>
+		  
+      <filename>js/jquery1.4.min.js</filename>
+		  <filename>js/mapping_langCS.js</filename>
+		  <filename>js/mapping_langEN.js</filename>
+		  <filename>js/scroll.js</filename>
+		  <filename>js/useredit.js</filename>
+		  <filename>js/usereditValues.js</filename>
+		  
+      <filename>library/AbstractAssignClass.php</filename>
+		  <filename>library/AbstractValuesAssignClass.php</filename>
+		  <filename>library/ExpirienceClass.php</filename>
+		  <filename>library/GlobalMaxAssignClass.php</filename>
+		  <filename>library/IdenticalValuesAssignClass.php</filename>
+		  <filename>library/ManualAssignClass.php</filename>
+		  <filename>library/ManualValuesAssignClass.php</filename>
+		  <filename>library/MatchingClass.php</filename>
+		  <filename>library/MaxAssignClass.php</filename>
+		  <filename>library/NgramsValuesAssignClass.php</filename>
+		  <filename>library/NumericClass.php</filename>
+		  <filename>library/OptimizedAssignClass.php</filename>
+		  <filename>library/SimilarityValuesAssignClass.php</filename>
+		  <filename>library/StringClass.php</filename>
+		  <filename>library/XmlConnector.php</filename>
+		  <filename>library/XmlConnectorBKEF.php</filename>
+		  <filename>library/XmlConnectorPMML.php</filename>
+		  
+      <filename>models/config.php</filename>
+		  <filename>models/data.php</filename>
+		  <filename>models/expirience.php</filename>
+		  <filename>models/workdata.php</filename>
+		  
+		  <filename>views/config/config.html.php</filename>
+		  <filename>views/main/articlesIframe.html.php</filename>
+		  <filename>views/main/error.html.php</filename>
+		  <filename>views/main/finalizedMapping.html.php</filename>
+		  <filename>views/main/selArticles.html.php</filename>
+		  <filename>views/main/useredit.html.php</filename>
+		  <filename>views/main/usereditValues.html.php</filename>
+		  
+		  <filename>css/component.css</filename>
+		  <filename>css/general.css</filename>
+		  <filename>css/useredit.css</filename>
+		  <filename>css/usereditValues.css</filename>
+		  
+		  <filename>sql/install.mysql.sql</filename>
+		  <filename>sql/uninstall.mysql.sql</filename>
+		</files>
+		
+		<languages folder="lang">
+			<language tag="en-GB">en-GB.com_mapping.ini</language>
+			<language tag="cs-CZ">cs-CZ.com_mapping.ini</language>
+		</languages> 
+
+	<administration>
+	
+		<!-- Administration Menu Section -->
+		<menu>PMML-BKEF Mapping</menu>
+		<submenu>
+			<menu link="option=com_mapping">Start</menu>
+			<menu link="option=com_mapping&amp;task=config">Config</menu>
+		</submenu>
+		
+
+		<files>
+		  <filename>admin.mapping.php</filename>
+      <!-- <filename>mapping.php</filename> -->	
+		  <filename>controller.php</filename>
+		  <filename>toolbar.mapping.html.php</filename>
+		  
+      <filename>js/jquery1.4.min.js</filename>
+		  <filename>js/mapping_langCS.js</filename>
+		  <filename>js/mapping_langEN.js</filename>
+		  <filename>js/scroll.js</filename>
+		  <filename>js/useredit.js</filename>
+		  <filename>js/usereditValues.js</filename>
+		  
+      <filename>library/AbstractAssignClass.php</filename>
+		  <filename>library/AbstractValuesAssignClass.php</filename>
+		  <filename>library/ExpirienceClass.php</filename>
+		  <filename>library/GlobalMaxAssignClass.php</filename>
+		  <filename>library/IdenticalValuesAssignClass.php</filename>
+		  <filename>library/ManualAssignClass.php</filename>
+		  <filename>library/ManualValuesAssignClass.php</filename>
+		  <filename>library/MatchingClass.php</filename>
+		  <filename>library/MaxAssignClass.php</filename>
+		  <filename>library/NgramsValuesAssignClass.php</filename>
+		  <filename>library/NumericClass.php</filename>
+		  <filename>library/OptimizedAssignClass.php</filename>
+		  <filename>library/SimilarityValuesAssignClass.php</filename>
+		  <filename>library/StringClass.php</filename>
+		  <filename>library/XmlConnector.php</filename>
+		  <filename>library/XmlConnectorBKEF.php</filename>
+		  <filename>library/XmlConnectorPMML.php</filename>
+		  
+      <filename>models/config.php</filename>
+		  <filename>models/data.php</filename>
+		  <filename>models/expirience.php</filename>
+		  <filename>models/workdata.php</filename>
+		  
+		  <filename>views/config/config.html.php</filename>
+		  <filename>views/main/articlesIframe.html.php</filename>
+		  <filename>views/main/error.html.php</filename>
+		  <filename>views/main/finalizedMapping.html.php</filename>
+		  <filename>views/main/selArticles.html.php</filename>
+		  <filename>views/main/useredit.html.php</filename>
+		  <filename>views/main/usereditValues.html.php</filename>
+		  
+		  <!--<filename>css/component.css</filename>
+		  <filename>css/general.css</filename>-->
+		  <filename>css/useredit.css</filename>
+		  <filename>css/usereditValues.css</filename>
+		  
+		  <filename>sql/install.mysql.sql</filename>
+		  <filename>sql/uninstall.mysql.sql</filename>
+		</files>
+		
+		<languages folder="lang">
+			<language tag="en-GB">en-GB.com_mapping.ini</language>
+			<language tag="cs-CZ">cs-CZ.com_mapping.ini</language>
+		</languages>                                    -
+		
+	</administration>
+</install>
