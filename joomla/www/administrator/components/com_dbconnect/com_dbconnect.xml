@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.5.0">
+	<name>DB Connect</name>
+	<!-- The following elements are optional and free of formatting conttraints -->
+	<creationDate>February 2012</creationDate>
+	<author>Stanislav Vojíř</author>
+	<authorEmail>stanislav.vojir@vse.cz</authorEmail>
+	<authorUrl>http://www.vojir.net</authorUrl>
+	<copyright>(C) 2011-2012 All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<!--  The version string is recorded in the components table -->
+	<version>1.0</version>
+	<!-- The description is optional and defaults to the name -->
+	<description>
+		<![CDATA[<p>Tato komponenta slouží k přípravě connection stringů a výběru tabulky pro datamining v rámci projektu SEWEBAR</p>]]>
+  </description>
+	  <!--            
+  <install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.dbconnect.sql</file>
+		</sql>
+	</install>
+	 
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.dbconnect.sql</file>
+		</sql>
+	</uninstall>
+        -->                    
+               
+	<media folder="media" destination="com_dbconnect">
+		<filename>css/admin.css</filename>
+    <filename>css/admin.css</filename>
+		<filename>images/dbconnect_icon.png</filename>
+    <filename>images/spinner.gif</filename>
+    <filename>js/dbConfigForm.js</filename>
+    <filename>js/dmtaskForm.js</filename>
+	</media>  
+  
+  <languages folder="lang">                          
+		<language tag="en-GB">cs-CZ.com_dbconnect.ini</language>
+		<language tag="cs-CZ">en-GB.com_dbconnect.ini</language>    
+	</languages>                 
+                                              
+	<files folder="">                   
+		<filename>dbconnect.php</filename>
+    <filename>com_dbconnect.xml</filename>
+    
+    <filename>controllers/dbconnectController.php</filename>
+    
+    <filename>models/bkef.php</filename>
+    <filename>models/connections.php</filename>
+    <filename>models/data.php</filename>
+    <filename>models/fml.php</filename>
+    <filename>models/generator.php</filename>
+    <filename>models/kbi.php</filename>
+    <filename>models/pmml.php</filename>
+    <filename>models/tasks.php</filename>
+    <filename>models/unidb.php</filename>
+    
+    <filename>views/adminconnections/view.html.php</filename>
+    <filename>views/adminconnections/tmpl/default.php</filename>
+    <filename>views/clonedmtask/view.html.php</filename>
+    <filename>views/clonedmtask/tmpl/default.php</filename>
+    <filename>views/deleteconnection/view.html.php</filename>
+    <filename>views/deleteconnection/tmpl/default.php</filename>
+    <filename>views/deletedmtask/view.html.php</filename>
+    <filename>views/deletedmtask/tmpl/default.php</filename>
+    <filename>views/generatepmml/view.html.php</filename>
+    <filename>views/generatepmml/tmpl/default.php</filename>
+    <filename>views/listconnections/view.html.php</filename>
+    <filename>views/listconnections/tmpl/default.php</filename>
+    <filename>views/listdmtasks/view.html.php</filename>
+    <filename>views/listdmtasks/tmpl/default.php</filename>
+    <filename>views/newdatabase/view.html.php</filename>
+    <filename>views/newdatabase/tmpl/error.php</filename>
+    <filename>views/newdatabase/tmpl/selectprimarykey.php</filename>
+    <filename>views/newdatabase/tmpl/selecttable.php</filename>
+    <filename>views/newdatabase/tmpl/setdatabase.php</filename>
+    <filename>views/neweditdmtask/view.html.php</filename>
+    <filename>views/neweditdmtask/tmpl/default.php</filename>
+    <filename>views/preprocessing/view.html.php</filename>
+    <filename>views/preprocessing/tmpl/default.php</filename>
+    <filename>views/quickdmtask/view.html.php</filename>
+    <filename>views/quickdmtask/tmpl/default.php</filename>
+    <filename>views/quickdmtaskgenerated/view.html.php</filename>
+    <filename>views/quickdmtaskgenerated/tmpl/default.php</filename>
+    <filename>views/selectconnection/view.html.php</filename>
+    <filename>views/selectconnection/tmpl/default.php</filename>
+    <filename>views/showconnectioninfo/view.html.php</filename>
+    <filename>views/showconnectioninfo/tmpl/default.php</filename>
+    <filename>views/showpreprocessinghints/view.html.php</filename>
+    <filename>views/showpreprocessinghints/tmpl/default.php</filename>
+    <filename>views/showtable/view.html.php</filename>
+    <filename>views/showtable/tmpl/default.php</filename>
+	</files>
+	                                            
+	<administration>
+		<!-- Administration Menu Section -->
+		<!--<menu img="components/com_helloworld02/images/helloworld02.png">DB Connect</menu>-->
+    <menu>DB Connect</menu>
+		<submenu>
+			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+			<menu link="option=com_dbconnect&amp;task=listDMTasks">DM Tasks</menu>
+			<menu link="option=com_dbconnect&amp;task=listConnections">DB Connections</menu>
+      <menu link="option=com_dbconnect&amp;task=adminConnections">DB Connections ADMIN</menu>
+		</submenu>
+		<!-- Administration Main File Copy Section -->
+		<files folder="">
+      <filename>admin.dbconnect.php</filename>
+      <filename>com_dbconnect.xml</filename>
+      
+      <filename>controllers/dbconnectController.php</filename>
+      
+      <filename>models/bkef.php</filename>
+      <filename>models/connections.php</filename>
+      <filename>models/data.php</filename>
+      <filename>models/fml.php</filename>
+      <filename>models/generator.php</filename>
+      <filename>models/kbi.php</filename>
+      <filename>models/pmml.php</filename>
+      <filename>models/tasks.php</filename>
+      <filename>models/unidb.php</filename>
+      
+      <filename>views/adminconnections/view.html.php</filename>
+      <filename>views/adminconnections/tmpl/default.php</filename>
+      <filename>views/clonedmtask/view.html.php</filename>
+      <filename>views/clonedmtask/tmpl/default.php</filename>
+      <filename>views/deleteconnection/view.html.php</filename>
+      <filename>views/deleteconnection/tmpl/default.php</filename>
+      <filename>views/deletedmtask/view.html.php</filename>
+      <filename>views/deletedmtask/tmpl/default.php</filename>
+      <filename>views/generatepmml/view.html.php</filename>
+      <filename>views/generatepmml/tmpl/default.php</filename>
+      <filename>views/listconnections/view.html.php</filename>
+      <filename>views/listconnections/tmpl/default.php</filename>
+      <filename>views/listdmtasks/view.html.php</filename>
+      <filename>views/listdmtasks/tmpl/default.php</filename>
+      <filename>views/newdatabase/view.html.php</filename>
+      <filename>views/newdatabase/tmpl/error.php</filename>
+      <filename>views/newdatabase/tmpl/selectprimarykey.php</filename>
+      <filename>views/newdatabase/tmpl/selecttable.php</filename>
+      <filename>views/newdatabase/tmpl/setdatabase.php</filename>
+      <filename>views/neweditdmtask/view.html.php</filename>
+      <filename>views/neweditdmtask/tmpl/default.php</filename>
+      <filename>views/preprocessing/view.html.php</filename>
+      <filename>views/preprocessing/tmpl/default.php</filename>
+      <filename>views/quickdmtask/view.html.php</filename>
+      <filename>views/quickdmtask/tmpl/default.php</filename>
+      <filename>views/quickdmtaskgenerated/view.html.php</filename>
+      <filename>views/quickdmtaskgenerated/tmpl/default.php</filename>
+      <filename>views/selectconnection/view.html.php</filename>
+      <filename>views/selectconnection/tmpl/default.php</filename>
+      <filename>views/showconnectioninfo/view.html.php</filename>
+      <filename>views/showconnectioninfo/tmpl/default.php</filename>
+      <filename>views/showpreprocessinghints/view.html.php</filename>
+      <filename>views/showpreprocessinghints/tmpl/default.php</filename>
+      <filename>views/showtable/view.html.php</filename>
+      <filename>views/showtable/tmpl/default.php</filename>
+      
+      
+      <filename>sql/install.dbconnect.sql</filename>
+      <filename>sql/uninstall.dbconnect.sql</filename>
+		</files>
+
+		<!-- Administration Language File Copy Section -->
+		<languages folder="lang">
+			<language tag="cs-CZ">cs-CZ.com_dbconnect.ini</language>
+			<language tag="en-GB">en-GB.com_dbconnect.ini</language>
+		</languages>
+    
+	</administration>
+</install>
