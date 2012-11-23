@@ -26,6 +26,14 @@ class BkefViewMetaAttribute extends JView
       JHTML::_('behavior.modal');
       $doc->addStyleSheet('components/com_bkef/css/main.css');
       
+      /*Ověření, jestli jde o přístup z administrace nebo front-endu*/
+      require_once(JApplicationHelper::getPath('toolbar_html'));
+      if (JPATH_BASE==JPATH_ADMINISTRATOR){ 
+        TOOLBAR_bkef::_DEFAULT();
+      }else{
+        TOOLBAR_bkef::frontend();
+      }
+      /**/
       
       $xml=$this->xml;
       $maId=intval($this->maId);
@@ -37,27 +45,63 @@ class BkefViewMetaAttribute extends JView
       /*PATH*/
       echo '<div class="navigationDiv">';
       echo '<a href="index.php?option=com_bkef&amp;task=selArticle&amp;article='.$article.'">'.$xml->Header[0]->Title[0].' ('.$this->articleTitle.')</a>';
-      echo '&nbsp;-&gt;&nbsp;MetaAttribute: <strong>'.$xml->MetaAttributes[0]->MetaAttribute[$maId]['name'].'</strong>';
+      echo '&nbsp;-&gt;&nbsp;MetaAttribute: <strong>'.$xml->MetaAttributes[0]->MetaAttribute[$maId]->Name[0].'</strong>';
       echo '</div>';
       /**/
       
-      echo '<h1>'.JText::_('METAATTRIBUTE').': '.$metaAttribute['name'].'</h1>';
+      echo '<h1>'.JText::_('METAATTRIBUTE').': '.$metaAttribute->Name[0].'</h1>';
       echo '<div class="level1Div">';
-      echo JText::_('VARIABILITY').': <strong>'.$metaAttribute->Variability.'</strong><br />';
-      if (@$metaAttribute->Annotation){
-        echo '<div class="annotation">'.JText::_('ANNOTATION').' '.@$metaAttribute->Annotation->Author.':<br />'.@$metaAttribute->Annotation->Text.'</div>';
+      echo '<table>
+              <tr>
+                <td>'.JText::_('VARIABILITY').'</td>
+                <td><strong>'.$metaAttribute->Variability[0].'</strong></td>
+              </tr>
+              <tr>
+                <td>'.JText::_('CREATED').'</td>
+                <td><strong>'.date(JText::_('DATETIMEFORMAT'),strtotime($metaAttribute->Created[0]->Timestamp)).' ('.$metaAttribute->Created[0]->Author.')'.'</strong></td>
+              </tr>
+              <tr>
+                <td>'.JText::_('LAST_MODIFIED').'</td>
+                <td><strong>'.date(JText::_('DATETIMEFORMAT'),strtotime($metaAttribute->LastModified[0]->Timestamp)).' ('.$metaAttribute->LastModified[0]->Author.')'.'</strong></td>
+              </tr>
+            </table>';
+            
+      if (count(@$metaAttribute->Annotations[0]->Annotation)>0){
+        echo '<h3>'.JText::_('ANNOTATIONS').'</h3>';
+        $anId=0;
+        foreach ($metaAttribute->Annotations[0]->Annotation as $annotation) {
+        	echo '<div class="annotation level2Div">';
+        	echo '<strong>'.($annotation->Text[0]!=''?$annotation->Text[0]:'&lt;&lt;???&gt;&gt;').'</strong>';
+          echo '<br />'.JText::_('CREATED').': '.$annotation->Created[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->Created[0]->Timestamp)).')';
+          if ((string)$annotation->Created[0]->Timestamp!=(string)$annotation->LastModified[0]->Timestamp){
+            echo '; '.JText::_('LAST_MODIFIED').': '.$annotation->LastModified[0]->Author.' ('.date(JText::_('DATETIMEFORMAT'),strtotime($annotation->LastModified[0]->Timestamp)).')';
+          }
+          echo ' |&nbsp;';
+          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=editMetaAttributeAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('EDIT_ANNOTATION').'</a> ';
+          echo ' |&nbsp;';
+          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=delMetaAttributeAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
+          echo '</div>';
+          $anId++;
+        }
       }
       echo '</div>';
-      echo '<div class="linksDiv"><a class="modal" href="index.php?option=com_bkef&amp;task=editMetaAttribute&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}">'.JText::_('EDIT_META_ANNOTATION').'...</a></div><br />';
+      echo '<div class="linksDiv">
+              <a class="modal" href="index.php?option=com_bkef&amp;task=editMetaAttribute&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}">'.JText::_('EDIT_META').'...</a>
+              <a class="modal" href="index.php?option=com_bkef&amp;task=addMetaAttributeAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}">'.JText::_('ADD_ANNOTATION').'...</a>
+            </div><br />';
       echo '<div class="infotext">'.JText::_('SELECT_FORMAT_INFO').'</div>';
       echo '<h2>'.JText::_('FORMATS').'</h2>';
       echo '<div class="infotext"></div>';
       if (count($metaAttribute->Formats->Format)>0){
         echo '<table class="adminlist">';
-        echo '<thead><tr><th>'.JText::_('FORMAT_NAME').'</th><th>'.JText::_('AUTHOR').'</th><th></th></tr></thead>';
+        echo '<thead><tr><th>'.JText::_('FORMAT_NAME').'</th><th>'.JText::_('CREATED').'</th><th>'.JText::_('LAST_MODIFIED').'</th><th>'.JText::_('ACTIONS').'</th></tr></thead>';
         $fId=0;
         foreach ($metaAttribute->Formats->Format as $format) {
-        	echo '<tr class="row'.($fId%2).'"><td><a href="index.php?option=com_bkef&amp;task=format&amp;article='.$this->article.'&amp;maId='.$maId.'&amp;fId='.$fId.'"><strong>'.$format[name].'</strong></a></td><td>'.$format->Author.'</td><td width="200">';
+        	echo '<tr class="row'.($fId%2).'">
+                  <td><a href="index.php?option=com_bkef&amp;task=format&amp;article='.$this->article.'&amp;maId='.$maId.'&amp;fId='.$fId.'"><strong>'.$format->Name[0].'</strong></a></td>
+                  <td>'.date(JText::_('DATETIMEFORMAT'),strtotime($format->Created[0]->Timestamp)).' ('.$format->Created[0]->Author.')</td>
+                  <td>'.date(JText::_('DATETIMEFORMAT'),strtotime($format->LastModified[0]->Timestamp)).' ('.$format->LastModified[0]->Author.')</td>
+                  <td width="200">';
        
           echo '<a href="index.php?option=com_bkef&amp;task=format&amp;article='.$this->article.'&amp;maId='.$maId.'&amp;fId='.$fId.'">'.JText::_('EDIT_FORMAT').'</a>';
           echo '&nbsp;&nbsp;|&nbsp;&nbsp;';

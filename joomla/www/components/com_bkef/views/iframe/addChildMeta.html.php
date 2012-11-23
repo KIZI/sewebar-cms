@@ -44,7 +44,7 @@ class BkefViewAddChildMeta extends JView
           $childId=0;
           foreach ($xml->MetaAttributes[0]->MetaAttribute as $meta){
             if (($meta['level']==0)&&(!in_array(intval($meta['id']),$childArr))){
-              echo '<option value="'.intval($meta['id']).'">'.$meta['name'].'</option>';
+              echo '<option value="'.intval($meta['id']).'">'.$meta->Name[0].'</option>';
             }
             $childId++;                
           }

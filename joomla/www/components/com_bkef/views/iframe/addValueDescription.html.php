@@ -45,7 +45,7 @@ class BkefViewAddValueDescription extends JView
           <tr>
             <td><?php echo JText::_('NEW_VALUE_DESCRIPTION_TYPE'); ?></td>
             <td>
-              <select name="vd" title="<?php echo JText::_('TITLE_NEW_VALUE_DESCRIPTION_TYPE'); ?>">
+              <select name="vdFeature" title="<?php echo JText::_('TITLE_NEW_VALUE_DESCRIPTION_TYPE'); ?>">
                 <option value="Similar">Similar</option>
                 <option value="Outlier">Outlier</option>
                 <option value="Often Missing">Often Missing</option>

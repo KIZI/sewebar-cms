@@ -2,10 +2,9 @@
 /**
  * HTML View class for the gInclude Component
  *  
- * @package    gInclude
  * @license    GNU/GPL
  * @author Stanislav Vojíř - xvojs03
- * @copyright Stanislav Vojíř, 2009
+ * @copyright Stanislav Vojíř, 2011
  *   
  */
  
@@ -33,7 +32,7 @@ class BkefViewDelMetaAttribute extends JView
       echo '<div>';
       
         echo JText::_('DELETING_METAATTRIBUTE_QUESTION').' <strong>';
-        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]['name'];
+        echo $xml->MetaAttributes[0]->MetaAttribute[$maId]->Name[0];
         echo '</strong> ?
       </div>    <br /><br />';
       ?>

@@ -30,7 +30,7 @@ class BkefViewEditFormat extends JView
       
       $autor='';
       if ($fId>-1) {
-        $autor=@$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats->Format[$fId]->Author;
+        $autor=@$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats->Format[$fId]->LastModified[0]->Author;
       }else {
         $user=& JFactory::getUser();
         $autor=$user->name;
@@ -42,18 +42,12 @@ class BkefViewEditFormat extends JView
           <tr>
             <td><?php echo JText::_('FORMAT_NAME');?>&nbsp;</td>
             <td>
-              <input type="text" name="name" title="<?php echo JText::_('TITLE_EDIT_FORMAT_NAME');?>" value="<?php if ($fId>-1) echo @$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats->Format[$fId]['name']; ?>" style="width:350px;font-weight:bold;"/>
+              <input type="text" name="name" title="<?php echo JText::_('TITLE_EDIT_FORMAT_NAME');?>" value="<?php if ($fId>-1) echo @$xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats->Format[$fId]->Name; ?>" style="width:350px;font-weight:bold;"/>
             </td>
           </tr>
           <tr>
             <td></td>
             <td class="infotext missing"><?php echo JText::_('EDIT_FORMAT_NAME_WARNING');?></td>
-          </tr>
-          <tr>
-            <td><?php echo JText::_('FORMAT_AUTHOR');?>&nbsp;</td>
-            <td>
-              <input type="text" name="author" value="<?php echo $autor; ?>" title="<?php echo JText::_('TITLE_EDIT_FORMAT_AUTHOR');?>" style="width:350px;"/>
-            </td>
           </tr>
           <tr><td colspan="2">&nbsp;</td></tr>
           <tr>
@@ -94,6 +88,18 @@ class BkefViewEditFormat extends JView
               </select>
             </td>
           </tr>
+          <?php
+            if (!($fId>-1)){
+              echo '<tr>
+                      <td>'.JText::_('ANNOTATION').'</td>
+                      <td><textarea name="annotation"></textarea></td>
+                    </tr>
+                    <tr>  
+                      <td>'.JText::_("ANNOTATION_AUTHOR").'</td>
+                      <td><input type="text" name="annotationAuthor" value="'.$autor.'" /></td>
+                    </tr>';
+            }
+          ?>
         </table>
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $this->maId; ?>" />
