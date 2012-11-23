@@ -26,6 +26,14 @@ class BkefViewMetaAttribute extends JView
       JHTML::_('behavior.modal');
       $doc->addStyleSheet('components/com_bkef/css/main.css');
       
+      /*Ověření, jestli jde o přístup z administrace nebo front-endu*/
+      require_once(JApplicationHelper::getPath('toolbar_html'));
+      if (JPATH_BASE==JPATH_ADMINISTRATOR){ 
+        TOOLBAR_bkef::_DEFAULT();
+      }else{
+        TOOLBAR_bkef::frontend();
+      }
+      /**/
       
       $xml=$this->xml;
       $maId=intval($this->maId);
@@ -71,7 +79,7 @@ class BkefViewMetaAttribute extends JView
           echo ' |&nbsp;';
           echo '<a class="modal" href="index.php?option=com_bkef&amp;task=editMetaAttributeAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('EDIT_ANNOTATION').'</a> ';
           echo ' |&nbsp;';
-          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=deleteMetaAttributeAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
+          echo '<a class="modal" href="index.php?option=com_bkef&amp;task=delMetaAttributeAnnotation&amp;article='.$this->article.'&amp;tmpl=component&amp;maId='.$maId.'&amp;anId='.$anId.'" rel="{handler: \'iframe\', size: {x: 500, y: 330}}" >'.JText::_('DELETE_ANNOTATION').'</a> ';
           echo '</div>';
           $anId++;
         }

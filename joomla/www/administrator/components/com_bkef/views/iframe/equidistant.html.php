@@ -24,7 +24,7 @@ class BkefViewEquidistant extends JView
         $doc->addStyleSheet('components/com_bkef/css/component.css');
       }         
       
-      echo '<h1>'.JText::_('EQUIDISTANT_H1').'</h1>';
+      echo '<h1>'.JText::_('EQUIDISTANT_INTERVAL_SET_PARAMS_H1').'</h1>';
       
       $xml=$this->xml;
       $maId=intval($this->maId);
@@ -70,7 +70,7 @@ class BkefViewEquidistant extends JView
         <input type="hidden" name="fId" value="<?php echo $fId; ?>" />
         <input type="hidden" name="phId" value="<?php echo $phId; ?>" />
         <input type="hidden" name="potvrzeni" value="1" />
-        <input type="submit" value="<?php echo JText::_('ADD_VALUE_SUBMIT');?>..." />
+        <input type="submit" value="<?php echo JText::_('SAVE');?>..." />
       </form>
       <?php
       //parent::display($tpl);

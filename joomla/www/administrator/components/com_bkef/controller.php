@@ -12,7 +12,7 @@
 
 /* ověření, jestli je skript spouštěn v rámci instance joomly a ne samostatně */
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
+                   
 function checknumber($value){
   if (ereg("[0-9]+,[0-9]+", $value)) {
   	return str_replace(",", ".", $value);
@@ -371,22 +371,24 @@ class BkefController extends JController
       $xml->Header[0]->LastModified[0]->Timestamp=date('c');
       $metaAttribute->Variability=JRequest::getString('variability');
       /*projdeme metaatributy a najdeme vsechna jmena*/
-      $name=(string)JRequest::getString('name');
+      $name=trim((string)JRequest::getString('name'));
       $namesArr=array();
       $maIdX=0;
       foreach ($xml->MetaAttributes[0]->MetaAttribute as $metaAttribute) {
       	if ($maIdX!=$maId){
-          $namesArr[]=(string)$metaAttribute['name'];
+          $namesArr[]=(string)$metaAttribute->Name;
         }
       	$maIdX++;
       }
-      while (in_array($name,$namesArr)){
-        $name=$name.'X';
-      }  
+      $oldName=(string)$xml->MetaAttributes[0]->MetaAttribute[$maId]->Name;
+      if ($name!=$oldName){
+        while (in_array($name,$namesArr)){
+          $name=$name.'X';
+        }
+      } 
       /**/
-      $oldName=$xml->MetaAttributes[0]->MetaAttribute[$maId]['name'];
 
-      $xml->MetaAttributes[0]->MetaAttribute[$maId]['name']=$name;
+      $xml->MetaAttributes[0]->MetaAttribute[$maId]->Name[0]=$name;
       $model->save(JRequest::getInt('article'),$xml->asXML());
       $this->_redirect='index.php?option=com_bkef&task=metaAttribute&article='.JRequest::getInt('article').'&maId='.$maId.'#basicInfo'; 
     }else {             
@@ -1309,7 +1311,7 @@ class BkefController extends JController
       $view->maId=JRequest::getInt('maId');
       $view->fId=JRequest::getInt('fId');
       $view->display();
-    } 
+    }                                  
   }
   
   /**
@@ -1522,10 +1524,63 @@ class BkefController extends JController
   }    
   
 
+/**
+   * Funkce pro přidání anotace k metaattributu
+   */     
+  function addMetaAttributeAnnotation(){ /*DONE*/
+    require_once (JPATH_COMPONENT.DS.'models'.DS.'bkef.php');
+    $model=new BkefModel();         
+		if ($_POST['potvrzeni']=='1'){
+      //skutecne mame ukladat
+      $xml=$model->load(JRequest::getInt('article'));
+      $maId=intval(JRequest::getInt('maId',-1));
+      //$anId=intval(JRequest::getInt('anId',-1));///nepotrebne
+      
+      $metaAttribute=$xml->MetaAttributes[0]->MetaAttribute[$maId];
+      if (!isset($metaAttribute->Annotations[0])){
+        $annotations=$metaAttribute->addChild('Annotations');
+      }else {
+        $annotations=$metaAttribute->Annotations[0];
+      }
+      //uprava anotace
+      $annotation=$annotations->addChild('Annotation');
+      $annotation->addChild('Text',JRequest::getString('annotationText',''));
+      $author=JRequest::getString('annotationAuthor',$this->getUserName());
+      $created=$annotation->addChild('Created');
+      $created->addChild('Timestamp',date('c'));
+      $created->addChild('Author',$author);
+      $lastModified=$annotation->addChild('LastModified');
+      $lastModified->addChild('Timestamp',date('c'));
+      $lastModified->addChild('Author',$author);
+      //aktualizace BKEF lastmodified
+      $xmlLastModified=$xml->Header[0]->LastModified[0];
+      $xmlLastModified->Timestamp=date('c');
+      $xmlLastModified->Author=$author;
+      //aktualizace lastmodified u metaatributu
+      $metaAttribute=$xml->MetaAttributes[0]->MetaAttribute[$maId];
+      $metaAttribute->LastModified[0]->Timestamp=date('c');
+      $metaAttribute->LastModified[0]->Author=$author;
+      //ulozeni zmen
+      $model->save(JRequest::getInt('article'),$xml->asXML());
+      $this->_redirect='index.php?option=com_bkef&task=metaAttribute&article='.JRequest::getInt('article').'&maId='.$maId.'#annotations'; 
+    }else {             
+      //zobrazime dotaz
+      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'editMetaAttributeAnnotation.html.php');
+      $view=new BkefViewEditMetaAttributeAnnotation();           
+      $view->xml=$model->load(JRequest::getInt('article'));
+      $view->h1=JText::_('NEW_ANNOTATION'); 
+      $view->akce='add';
+      $view->article=JRequest::getInt('article');
+      $view->maId=JRequest::getInt('maId');
+      $view->anId=-1;
+      $view->display();
+    } 
+  }
+  
   /**
    * Funkce pro přidání anotace k formátu
    */     
-  function addAnnotation(){ /*DONE*/
+  function addFormatAnnotation(){ /*DONE*/
     require_once (JPATH_COMPONENT.DS.'models'.DS.'bkef.php');
     $model=new BkefModel();         
 		if ($_POST['potvrzeni']=='1'){
@@ -1568,8 +1623,8 @@ class BkefController extends JController
       $this->_redirect='index.php?option=com_bkef&task=format&article='.JRequest::getInt('article').'&maId='.$maId.'&fId='.$fId.'#annotations'; 
     }else {             
       //zobrazime dotaz
-      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'editAnnotation.html.php');
-      $view=new BkefViewEditAnnotation();           
+      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'editFormatAnnotation.html.php');
+      $view=new BkefViewEditFormatAnnotation();           
       $view->xml=$model->load(JRequest::getInt('article'));
       $view->h1=JText::_('NEW_ANNOTATION'); 
       $view->akce='add';
@@ -1646,11 +1701,51 @@ class BkefController extends JController
       $view->display();
     } 
   }    
+  
+  /**
+   * Funkce pro editaci anotace u formátu
+   */     
+  function editMetaAttributeAnnotation(){ /*DONE*/
+    require_once (JPATH_COMPONENT.DS.'models'.DS.'bkef.php');
+    $model=new BkefModel();
+		if ($_POST['potvrzeni']=='1'){
+      $xml=$model->load(JRequest::getInt('article'));
+      $maId=intval(JRequest::getInt('maId',-1));
+      $anId=intval(JRequest::getInt('anId',-1));
+      $author=JRequest::getString('annotationAuthor',$this->getUserName());
+      //uprava anotace
+      $annotation=$format=$xml->MetaAttributes[0]->MetaAttribute[$maId]->Annotations[0]->Annotation[$anId];
+      $annotation->Text=JRequest::getString('annotationText','');
+      $annotation->LastModified[0]->Timestamp=date('c');
+      $annotation->LastModified[0]->Author=$author;
+      //aktualizace BKEF lastmodified
+      $xmlLastModified=$xml->Header[0]->LastModified[0];
+      $xmlLastModified->Timestamp=date('c');
+      $xmlLastModified->Author=$this->getUserName();
+      //aktualizace lastmodified u metaatributu
+      $metaAttribute=$xml->MetaAttributes[0]->MetaAttribute[$maId];
+      $metaAttribute->LastModified[0]->Timestamp=date('c');
+      $metaAttribute->LastModified[0]->Author=$author;
+      //ulozeni zmen
+      $model->save(JRequest::getInt('article'),$xml->asXML());
+      $this->_redirect='index.php?option=com_bkef&task=format&article='.JRequest::getInt('article').'&maId='.$maId.'&fId='.$fId.'#annotations'; 
+    }else {                                                                        
+      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'editMetaAttributeAnnotation.html.php');
+      $view=new BkefViewEditMetaAttributeAnnotation();           
+      $view->xml=$model->load(JRequest::getInt('article'));    
+      $view->h1=JText::_('EDIT_ANNOTATION');
+      $view->akce='edit';
+      $view->article=JRequest::getInt('article');
+      $view->maId=JRequest::getInt('maId');
+      $view->anId=JRequest::getInt('anId');       
+      $view->display();
+    } 
+  }
 
    /**
    * Funkce pro editaci anotace u formátu
    */     
-  function editAnnotation(){ /*DONE*/
+  function editFormatAnnotation(){ /*DONE*/
     require_once (JPATH_COMPONENT.DS.'models'.DS.'bkef.php');
     $model=new BkefModel();
 		if ($_POST['potvrzeni']=='1'){
@@ -1679,16 +1774,16 @@ class BkefController extends JController
       //ulozeni zmen
       $model->save(JRequest::getInt('article'),$xml->asXML());
       $this->_redirect='index.php?option=com_bkef&task=format&article='.JRequest::getInt('article').'&maId='.$maId.'&fId='.$fId.'#annotations'; 
-    }else {             
-      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'editAnnotation.html.php');
-      $view=new BkefViewEditAnnotation();           
-      $view->xml=$model->load(JRequest::getInt('article'));
+    }else {                                                                        
+      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'editFormatAnnotation.html.php');
+      $view=new BkefViewEditFormatAnnotation();           
+      $view->xml=$model->load(JRequest::getInt('article'));    
       $view->h1=JText::_('EDIT_ANNOTATION');
       $view->akce='edit';
       $view->article=JRequest::getInt('article');
       $view->maId=JRequest::getInt('maId');
       $view->fId=JRequest::getInt('fId');
-      $view->anId=JRequest::getInt('anId');
+      $view->anId=JRequest::getInt('anId');       
       $view->display();
     } 
   } 
@@ -1745,10 +1840,45 @@ class BkefController extends JController
     } 
   } 
   
+  /**
+   * Funkce pro smazání anotace u formátu
+   */     
+  function delMetaAttributeAnnotation(){ /*DONE*/
+    require_once (JPATH_COMPONENT.DS.'models'.DS.'bkef.php');
+    $model=new BkefModel();
+		if ($_POST['potvrzeni']=='1'){
+      $xml=$model->load(JRequest::getInt('article'));
+      $maId=intval(JRequest::getInt('maId',-1));
+      $anId=intval(JRequest::getInt('anId',-1));
+      //smazani
+      unset($xml->MetaAttributes[0]->MetaAttribute[$maId]->Annotations[0]->Annotation[$anId]);
+      //aktualizace BKEF lastmodified
+      $author=$this->getUserName();
+      $xmlLastModified=$xml->Header[0]->LastModified[0];
+      $xmlLastModified->Timestamp=date('c');
+      $xmlLastModified->Author=$author;
+      //aktualizace lastmodified u metaatributu
+      $metaAttribute=$xml->MetaAttributes[0]->MetaAttribute[$maId];
+      $metaAttribute->LastModified[0]->Timestamp=date('c');
+      $metaAttribute->LastModified[0]->Author=$author;
+      //ulozeni zmen
+      $model->save(JRequest::getInt('article'),$xml->asXML());
+      $this->_redirect='index.php?option=com_bkef&task=metaAttribute&article='.JRequest::getInt('article').'&maId='.$maId.'#annotations'; 
+    }else {                                            
+      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'delMetaAttributeAnnotation.html.php');
+      $view=new BkefViewDelMetaAttributeAnnotation();           
+      $view->xml=$model->load(JRequest::getInt('article'));
+      $view->article=JRequest::getInt('article');
+      $view->maId=JRequest::getInt('maId');
+      $view->anId=JRequest::getInt('anId');
+      $view->display();
+    } 
+  } 
+  
    /**
    * Funkce pro smazání anotace u formátu
    */     
-  function delAnnotation(){ /*DONE*/
+  function delFormatAnnotation(){ /*DONE*/
     require_once (JPATH_COMPONENT.DS.'models'.DS.'bkef.php');
     $model=new BkefModel();
 		if ($_POST['potvrzeni']=='1'){
@@ -1774,12 +1904,13 @@ class BkefController extends JController
       //ulozeni zmen
       $model->save(JRequest::getInt('article'),$xml->asXML());
       $this->_redirect='index.php?option=com_bkef&task=format&article='.JRequest::getInt('article').'&maId='.$maId.'&fId='.$fId.'#annotations'; 
-    }else {             
-      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'delAnnotation.html.php');
-      $view=new BkefViewDelAnnotation();           
+    }else {                                            
+      require_once (JPATH_COMPONENT.DS.'views'.DS.'iframe'.DS.'delFormatAnnotation.html.php');
+      $view=new BkefViewDelFormatAnnotation();           
       $view->xml=$model->load(JRequest::getInt('article'));
       $view->article=JRequest::getInt('article');
       $view->maId=JRequest::getInt('maId');
+      $view->fId=JRequest::getInt('fId');
       $view->anId=JRequest::getInt('anId');
       $view->display();
     } 

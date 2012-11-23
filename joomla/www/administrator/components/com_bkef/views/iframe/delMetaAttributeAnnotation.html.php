@@ -2,10 +2,10 @@
 /**
  * HTML View class for the gInclude Component
  *  
- * @package    BKEF
+ * @package    gInclude
  * @license    GNU/GPL
  * @author Stanislav Vojíř - xvojs03
- * @copyright Stanislav Vojíř, 2012
+ * @copyright Stanislav Vojíř, 2009
  *   
  */
  
@@ -13,8 +13,8 @@
  
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
-           
-class BkefViewIntervalEnumerationDeleteBin extends JView
+                        
+class BkefViewDelMetaAttributeAnnotation extends JView
 {
   function display($tpl = null)
   {               
@@ -24,25 +24,21 @@ class BkefViewIntervalEnumerationDeleteBin extends JView
         $doc->addStyleSheet('components/com_bkef/css/component.css');
       }         
       
-      echo '<h1>'.JText::_('DELETE_INTERVAL_ENUMERATION_BIN').'</h1>';
+      echo '<h1>'.JText::_('DELETING_ANNOTATION').'</h1>';
       
       $xml=$this->xml;
       $maId=intval($this->maId);
-      $fId=intval($this->fId);
-      $phId=intval($this->phId);
-      $binId=intval($this->binId);
+      $anId=intval($this->anId);
       
       echo '<div>';
-      echo JText::_('DELETE_INTERVAL_ENUMERATION_BIN_QUESTION');
-      echo '</div>';
-      echo '<strong>'.((string)@$this->xml->MetaAttributes[0]->MetaAttribute[$maId]->Formats[0]->Format[$fId]->PreprocessingHints[0]->DiscretizationHint[$phId]->IntervalEnumeration[0]->IntervalBin[$binId]->Name[0]).'</strong>';
-      echo '<br /><br />';
+        echo JText::_('DELETING_ANNOTATION_QUESTION');
+      echo '</div>    <br /><br />';
+      
       ?>
-      <form action="index.php?option=com_bkef&amp;task=intervalEnumerationDeleteBin" method="post" target="_parent" >
+      <form action="index.php?option=com_bkef&amp;task=delMetaAttributeAnnotation" method="post" target="_parent" >
         <input type="hidden" name="article" value="<?php echo $this->article; ?>" />
         <input type="hidden" name="maId" value="<?php echo $maId; ?>" />
-        <input type="hidden" name="fId" value="<?php echo $fId; ?>" />
-        <input type="hidden" name="phId" value="<?php echo $phId; ?>" />
+        <input type="hidden" name="anId" value="<?php echo $anId; ?>" />
         <input type="hidden" name="potvrzeni" value="1" id="potvrzeni" />
         <input type="submit" value="<?php echo JText::_('DELETE');?>..." />
       </form>

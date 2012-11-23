@@ -40,7 +40,7 @@ class BkefViewEditMetaAttribute extends JView
           <tr>
             <td><?php echo JText::_('METAATTRIBUTE_NAME');?>&nbsp;</td>
             <td>
-              <input type="text" name="name" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_NAME'); ?>" value="<?php if ($maId>-1) echo @$xml->MetaAttributes[0]->MetaAttribute[$maId]['name']; ?>" style="width:350px;font-weight:bold;"/>
+              <input type="text" name="name" title="<?php echo JText::_('TITLE_EDIT_METAATTRIBUTE_NAME'); ?>" value="<?php if ($maId>-1) echo (string)@$xml->MetaAttributes[0]->MetaAttribute[$maId]->Name; ?>" style="width:350px;font-weight:bold;"/>
             </td>
           </tr>
           <tr>
