@@ -1,6 +1,6 @@
 <?php 
 defined('_JEXEC') or die ('Restricted access');
-              
+                    
 /**
  * @package BKEF
  * @author Stanislav Vojíř - xvojs03
