@@ -54,6 +54,15 @@ class iziViewIziUploadCSV_2 extends JView
           }
         }
         
+        function delimitierChange(){
+          delimitier=$('delimitier').value;
+          if (delimitier==''){        
+            $('delimitier_text').style.display='block';
+          }else{
+            $('delimitier_text').style.display='none';
+          }
+        }
+        
         function uploadcsv2preview(){
           delimitier=$('delimitier').value;  
           if (delimitier==''){
@@ -70,16 +79,6 @@ class iziViewIziUploadCSV_2 extends JView
             //$('escape').value='\\\\';
             //escape='\\\\';
           }
-          
-          function delimitierChange(){
-            delimitier=$('delimitier').value;
-            if (delimitier==''){
-              $('delimitier_text').style.display='block';
-            }else{
-              $('delimitier_text').style.display='none';
-            }
-          }
-          
           
           var a = new Ajax( '".JRoute::_('index.php?option=com_dbconnect&controller=izi&format=raw&task=uploadCSV_getData&file='.$this->fileData->id)."', {
           	method: 'get',

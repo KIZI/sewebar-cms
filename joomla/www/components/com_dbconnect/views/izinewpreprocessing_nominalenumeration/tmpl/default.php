@@ -161,6 +161,7 @@
             //TODO kontrola, jestli neni zadana hodnota v jine kategorii!
             value=$(group+\'_valueInput\').getValue();
             value=value.trim();
+            editedGroup="";
             if (value!=""){
               //pridani polozky...
               valuesCount++;
