@@ -530,6 +530,11 @@ class IziController extends JController{
     }
     $start=$this->cleanNumber($_REQUEST['start']);
     $end=$this->cleanNumber($_REQUEST['end']);
+    if ($end<$start){
+      $x=$start;
+      $start=$end;
+      $end=$x;
+    }
     $step=$this->cleanNumber($_REQUEST['step']);
     $paramsArr=array('start'=>$start,
                      'end'=>$end,

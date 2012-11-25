@@ -10,7 +10,7 @@
   
   
   echo '<h1>'.JText::_('PREPROCESSING_EQUIDISTANT_INTERVALS').'</h1>';
-  echo '<form method="post" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_equidistantInterval').'">
+  echo '<form method="post" onsubmit="return equidistantInputCheck();" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_equidistantInterval').'">
           <table>
             <tr>
               <td>'.JText::_('DATAFIELD').'</td>

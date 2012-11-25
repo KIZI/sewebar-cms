@@ -39,7 +39,7 @@ defined('_JEXEC') or die('Restricted access');
                     <option value=","'.(($this->delimitier==',')?' selected="selected"':'').'>'.JText::_('DELIMITIER_COMMA').'</option>
                     <option value="\t"'.(($this->delimitier=='\t')?' selected="selected"':'').'>'.JText::_('DELIMITIER_TAB').'</option>
                     <option value="|"'.(($this->delimitier=='|')?' selected="selected"':'').'>'.JText::_('DELIMITIER_LINE').'</option>
-                    <option value="|"'.((!in_array($this->delimitier,array(';',',','|','\t')))?' selected="selected"':'').'>'.JText::_('DELIMITIER_OTHER').'</option>
+                    <option value=""'.((!in_array($this->delimitier,array(';',',','|','\t')))?' selected="selected"':'').'>'.JText::_('DELIMITIER_OTHER').'</option>
                   </select>
                   <input type="text" onfocus="setTimer(this);" style="display:none;" onblur="clearTimer(this);" value="'.htmlspecialchars($this->delimitier).'" id="delimitier_text" name="delimitier_text" maxlength="3" />
                 </td>
