@@ -13,16 +13,17 @@ class iziViewIziNewPreprocessing_Equidistant extends JView
 		$document = & JFactory::getDocument();
 		$document->setTitle( JText::_('NEW_PREPROCESSING') );
     
-    $document->addScriptDeclaration("
+    $document->addScriptDeclaration("  
       function cleanNumber(number){
+        //number=number.replace(/^\s+|\s+$/g,'');
         number=number.replace(',','.');
         return number.replace(' ','');
-      }
+      }              
       function is_numeric(value){
         if (value==''){return false}
         return !isNaN(value);
       }
-      function equidistantInputCheck(){
+      function equidistantInputCheck(){   
         start=cleanNumber($('start').value);
         $('start').value=start;
         if (!is_numeric(start)){
@@ -35,18 +36,22 @@ class iziViewIziNewPreprocessing_Equidistant extends JView
           alert('".JText::_('END_VALUE_IS_NOT_NUMBER')."');
           return false;
         }
+        if (parseFloat(start)>=parseFloat(end)){
+          alert('".JText::_('START_VALUE_BIGGER_THAN_END')."');
+          return false;
+        }         
         step=cleanNumber($('step').value);
         $('step').value=step;
         if ((!is_numeric(step))||(step<=0)){
           alert('".JText::_('STEP_VALUE_IS_NOT_NUMBER')."');
           return false;
         }
-        if ((step>(end-start)){
+        if (step>(end-start)){
           alert('".JText::_('STEP_VALUE_IS_TOO_BIG')."');
           return false;
         }
         return true;
-      }
+      }       
     ");
     
     parent::display();		

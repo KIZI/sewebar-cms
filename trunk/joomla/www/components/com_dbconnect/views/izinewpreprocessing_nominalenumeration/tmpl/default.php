@@ -199,6 +199,7 @@
           }
           
           function addGroup(){
+            if (!checkValueSubmitted()){return;}
             groupsCount++;
             groupDivId="group_"+groupsCount;
             groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
@@ -254,9 +255,7 @@
           
         </script>';
   
-  echo '
-        <a href="#" onclick="javascript:checkValueSubmitted();">check</a>
-        <form method="post" onsubmit="return submitNominalEnumeration();" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_nominalEnumeration').'">
+  echo '<form method="post" onsubmit="return submitNominalEnumeration();" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_nominalEnumeration').'">
           <table>
             <tr>
               <td>'.JText::_('DATAFIELD').'</td>

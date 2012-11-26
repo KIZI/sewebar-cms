@@ -32,7 +32,7 @@ defined('_JEXEC') or die('Restricted access');
                 </td>
               </tr>
               <tr>
-                <td><label for="delimitier">'.JText::_('DELIMITIER').'</label></td>
+                <td><label for="delimitier">'.JText::_('CSV_DELIMITIER').'</label></td>
                 <td>
                   <select name="delimitier" id="delimitier" onchange="delimitierChange();uploadcsv2preview();">
                     <option value=";"'.(($this->delimitier==';')?' selected="selected"':'').'>'.JText::_('DELIMITIER_SEMICOLON').'</option>
@@ -45,13 +45,13 @@ defined('_JEXEC') or die('Restricted access');
                 </td>
               </tr>
               <tr>
-                <td><label for="enclosure">'.JText::_('ENCLOSURE').'</label></td>
+                <td><label for="enclosure">'.JText::_('CSV_ENCLOSURE').'</label></td>
                 <td>
                   <input type="text" onkeydown="checkParamsChange(this);"  onchange="checkParamsChange(this);" value="'.htmlspecialchars($this->enclosure).'" id="enclosure" name="enclosure" maxlength="1" />
                 </td>
               </tr>
               <tr>
-                <td><label for="escape">'.JText::_('ESCAPE_CHARACTER').'</label></td>
+                <td><label for="escape">'.JText::_('CSV_ESCAPE_CHARACTER').'</label></td>
                 <td>
                   <input type="text" onkeydown="checkParamsChange(this);" onchange="checkParamsChange(this);" value="'.htmlspecialchars($this->escapeChar).'" id="escape" name="escape" maxlength="1" />
                 </td>
