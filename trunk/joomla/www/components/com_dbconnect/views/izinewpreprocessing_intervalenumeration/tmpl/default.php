@@ -245,6 +245,10 @@
           function submitIntervalEnumeration(){ 
             if (!checkIntervalSubmitted()){
               return false;
+            }            
+            if (!checkNoGroupedIntervals()){
+              alert(\''.JText::_('NO_GROUPED_INTERVALS_FOUND').'\');
+              return false;
             }
             if (checkBlankGroups()){
               return (confirm(\''.JText::_('BLANK_INTERVAL_GROUPS_WARNING').'\'))
@@ -265,6 +269,13 @@
             });
             return blankResult;
           }
+          
+          /**
+           *  Funkce pro kontrolu, jestli jsou v zadání alespoň nějaké hodnoty
+           */
+          function checkNoGroupedIntervals(){
+            return ($$(\'input.intervalInput\').length>0);
+          }                     
           
         </script>';
   
