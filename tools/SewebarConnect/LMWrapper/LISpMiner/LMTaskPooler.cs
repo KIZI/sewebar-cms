@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using log4net;
@@ -21,14 +20,14 @@ namespace LMWrapper.LISpMiner
 				if (this._process == null)
 				{
 					this._process = new Process
-					                	{
-					                		EnableRaisingEvents = true,
-					                		StartInfo = new ProcessStartInfo
-					                		            	{
-					                		            		FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
-					                		            		Arguments = this.Arguments
-					                		            	},
-					                	};
+										{
+											EnableRaisingEvents = true,
+											StartInfo = new ProcessStartInfo
+															{
+																FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
+																Arguments = this.Arguments
+															},
+										};
 
 					this._process.Exited += new EventHandler(ProcessExited);
 				}
@@ -145,11 +144,16 @@ namespace LMWrapper.LISpMiner
 
 		protected override void Run()
 		{
-			if (this.Status != ExecutableStatus.Ready) return;
-
 			this.Status = ExecutableStatus.Running;
 
-			Log.Debug(String.Format("Launching: {0} {1}", this.ApplicationName, this.Arguments));
+			if (this.CancelAll || this.TaskCancel)
+			{
+				Log.Debug(String.Format("Launching Task cancelation: {0} {1}", this.ApplicationName, this.Arguments));
+			}
+			else
+			{
+				Log.Debug(String.Format("Launching: {0} {1}", this.ApplicationName, this.Arguments));
+			}
 
 			this._stopwatch.Start();
 
@@ -166,29 +170,16 @@ namespace LMWrapper.LISpMiner
 			if (this.CancelAll || this.TaskCancel)
 			{
 				Log.InfoFormat("Task cancelation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
-				               this._stopwatch.Elapsed);
+							   this._stopwatch.Elapsed);
 			}
 			else
 			{
 				Log.InfoFormat("Result generation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
-				               this._stopwatch.Elapsed);
+							   this._stopwatch.Elapsed);
 			}
 
 			this.Process.Close();
 			this._process = null;
-		}
-
-		public void Stop()
-		{
-			if (!this.Process.HasExited)
-			{
-				Log.Debug("stopping / killing");
-
-				if (!this.Process.CloseMainWindow())
-				{
-					this.Stop();
-				}
-			}
 		}
 	}
 }

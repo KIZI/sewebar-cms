@@ -10,7 +10,6 @@ namespace LMWrapper.LISpMiner
 	{
 		private LMSwbImporter _importer;
 		private LMSwbExporter _exporter;
-		private Task4ftGen _task4FtGen;
 		private LMTaskPooler _lmTaskPooler;
 		private Version _version;
 
@@ -36,19 +35,6 @@ namespace LMWrapper.LISpMiner
 				}
 
 				return this._version;
-			}
-		}
-
-		public ExecutableStatus Status
-		{
-			get
-			{
-				if (this.Importer.Status == ExecutableStatus.Ready
-					&& this.Exporter.Status == ExecutableStatus.Ready
-					&& this.Task4FtGen.Status == ExecutableStatus.Ready)
-					return ExecutableStatus.Ready;
-
-				return ExecutableStatus.Running;
 			}
 		}
 
@@ -89,26 +75,6 @@ namespace LMWrapper.LISpMiner
 			}
 
 			set { this._exporter = value; }
-		}
-
-		public Task4ftGen Task4FtGen
-		{
-			get
-			{
-				if(this._task4FtGen == null)
-				{
-					this._task4FtGen = new Task4ftGen
-					{
-						LMPath = this.LMPath,
-						Dsn = this.Metabase.DSN,
-						LISpMiner = this
-					};
-				}
-
-				return this._task4FtGen;
-			}
-
-			set { this._task4FtGen = value; }
 		}
 
 		public LMTaskPooler LMTaskPooler
@@ -312,7 +278,7 @@ namespace LMWrapper.LISpMiner
 			{
 				exporter.Survey = true;
 				exporter.Output = tasksFile;
-                exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMSurvey.Task.Template.TXT");
+				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMSurvey.Task.Template.TXT");
 
 				exporter.Execute();
 

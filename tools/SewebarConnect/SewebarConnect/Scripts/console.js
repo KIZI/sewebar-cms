@@ -53,28 +53,6 @@
 		return false;
 	});
 
-	// task 4ft
-	$('button[name="task_4ft"]').click(function () {
-		$.ajax({
-			type: "POST",
-			url: "Task/Run",
-			data: {
-				guid: $('#task_id').val(),
-				content: $('#task_request').val(),
-				alias: $('#task_alias').val(),
-				template: $('#task_template').val()
-			},
-			dataType: 'text',
-			complete: function (data) {
-				var textarea = $('#task_response');
-				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
-				textarea.val(data.responseText);
-			}
-		});
-
-		return false;
-	});
-
 	// task pooler
 	$('button[name="task_pool"]').click(function () {
 		$.ajax({

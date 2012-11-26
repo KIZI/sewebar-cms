@@ -14,10 +14,7 @@ namespace LMWrapper
 
 		protected string[] Packages = new string[]
 		                              	{
-		                              		"LM.4ft.zip",
-											"LM.TaskPooler.zip",
-											"LM.Sewebar.zip",
-											"LMEmpty.zip"
+		                              		"LISp-Miner.Core.zip"
 		                              	};
 
 		public string TargetPath { get; private set; }

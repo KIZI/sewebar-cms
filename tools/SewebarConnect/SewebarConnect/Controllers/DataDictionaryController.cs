@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.DataDictionary;
-using SewebarConnect.API.Responses;
 using SewebarConnect.API.Responses.DataDictionary;
 
 namespace SewebarConnect.Controllers
@@ -16,9 +15,9 @@ namespace SewebarConnect.Controllers
 			var request = new ImportRequest(this);
 
 			var response = new ImportResponse
-			               	{
-			               		Id = this.LISpMiner.Id
-			               	};
+							{
+								Id = this.LISpMiner.Id
+							};
 
 			if (this.LISpMiner != null && request.DataDictionary != null)
 			{
@@ -26,13 +25,13 @@ namespace SewebarConnect.Controllers
 				importer.Input = request.DataDictionaryPath;
 				importer.Execute();
 
-				response.Message = String.Format("Imported {0} to {1}", importer.Input, importer.Dsn);
+				response.Message = String.Format("Data Dictionary imported to {0}", importer.Dsn);
 				response.Status = Status.Success;
 
 				return new XmlResult
-				       	{
-				       		Data = response
-				       	};
+						{
+							Data = response
+						};
 			}
 
 			throw new Exception("No DataDictionary given.");
@@ -59,9 +58,9 @@ namespace SewebarConnect.Controllers
 			response.OutputFilePath = exporter.Output;
 
 			return new XmlFileResult
-			       	{
-			       		Data = response
-			       	};
+					{
+						Data = response
+					};
 		}
 	}
 }
