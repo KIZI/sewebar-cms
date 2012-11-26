@@ -34,7 +34,7 @@
   
   if (count(@$this->preprocessingHint->NominalEnumeration->NominalBin)>0){
     foreach ($this->preprocessingHint->NominalEnumeration->NominalBin as $nominalBin){
-    	echo '<div class="binDiv">';
+    	echo '<div class="groupDiv">';
       echo '<h3>'.@$nominalBin->Name.'</h3>'; 
       if (count($nominalBin->Value)>0){
         echo '<ul class="binValuesUl">';

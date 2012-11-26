@@ -269,10 +269,11 @@ class IziController extends JController{
     $maName=$pmmlMapping['metaattributeName'];
     $formatName=$pmmlMapping['formatName'];
     
-    $preprocessingHints=$bkefModel->getPreprocessingHints($maName,$formatName);
+    //$preprocessingHints=$bkefModel->getPreprocessingHints($maName,$formatName);
     
     $view=@$this->getView('IziShowPreprocessingHints',$this->document->getType());
-    $view->assignRef('preprocessingHints',$preprocessingHints);
+    //$view->assignRef('preprocessingHints',$preprocessingHints);
+    $view->assignRef('format',$bkefModel->getFormat($maName,$formatName));
     $view->assign('taskId',$task->id);
     $view->assign('maName',$maName);
     $view->assign('formatName',$formatName);
@@ -285,53 +286,6 @@ class IziController extends JController{
    */     
   public function editAttribute(){
     exit('NOT IMPLEMENTED');
-  }
-  
-  /**
-   *  Akce pro vyvolání vytvoření nového preprocessing hintu
-   */
-  public function newPreprocessingHint(){
-    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
-    $taskId=JRequest::getInt('task_id',JRequest::getInt('taskId',-1));
-    $kbiId=JRequest::getInt('kbi',-1);
-    if ($taskId>0){
-      $task=$tasksModel->getTask($taskId);
-    }elseif($kbiId>0){
-      $task=$tasksModel->getTaskByKbi($kbiId);
-    }                     
-    if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
-      return ;
-    }
-    
-    //TODO naplnění FML modelu konkrétními daty
-    $fmlModel=&$this->getModel('Fml','dbconnectModel');
-    $dataModel=&$this->getModel('Data','dbconnectModel');
-    $fml=$dataModel->loadArticleXML($task->fml_article);
-    if (!$fmlModel->setFml($fml)){      exit('Neplatné mapování! Spusťte prosím znovu krok mapování...');      //TODO
-      //TODO vyřešit chybu - nejde o mapování PMML na BKEF!!!
-    }
-    
-    $pmmlName=JRequest::getString('pmmlName',JRequest::getString('col',''));
-    $pmmlMapping=$fmlModel->getPmmlMapping($pmmlName);
-       
-    $maName=$pmmlMapping['metaattributeName'];
-    $formatName=$pmmlMapping['formatName'];
-    
-    
-    $bkefModel=&$this->getModel('Bkef','dbconnectModel'); 
-    $bkef=$dataModel->loadArticleXML($task->bkef_article);
-    if (!$bkefModel->setBkef($bkef)){      exit('Soubor BKEF připojený k úloze není platný.');    //TODO
-      //TODO vyřešit chybu - nejde o mapování PMML na BKEF!!!
-    }                            
-    $format=$bkefModel->getFormat($maName,$formatName);
-    $view=&$this->getView('IziNewPreprocessing_start',$this->document->getType());
-    $view->assign('maName',$maName);
-    $view->assign('formatName',$formatName);
-    $view->assignRef('format',$format);
-    $view->assign('pmmlName',$pmmlName);
-    $view->assign('taskId',$task->id);
-    $view->display();
   }
   
   /**

@@ -87,7 +87,7 @@
                               valuesCount++;
                               valueDiv=new Element("div",{"id":"value_"+valuesCount});
                               value=htmlspecialchars(value);
-                              valueDiv.setHTML(value+"<input type=\"hidden\" name=\""+groupDivId+"_value_"+valuesCount+"\" value=\""+value+"\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
+                              valueDiv.setHTML(value+"<input type=\"hidden\" name=\""+groupDivId+"_value_"+valuesCount+"\" value=\""+value+"\" class=\"valueInput\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
                               valueDiv.inject(groupDivId+"_itemsDiv");
                             });
                          });
@@ -247,11 +247,21 @@
             if (!checkValueSubmitted()){
               return false;
             }
+            if (!checkNoGroupedValues()){
+              alert(\''.JText::_('NO_GROUPED_VALUES_FOUND').'\');
+              return false;
+            }
             if (checkBlankGroups()){
               return (confirm(\''.JText::_('BLANK_NOMINAL_GROUPS_WARNING').'\'))
             }               
             return true;
           }
+          /**
+           *  Funkce pro kontrolu, jestli jsou v zadání alespoň nějaké hodnoty
+           */
+          function checkNoGroupedValues(){
+            return ($$(\'input.valueInput\').length>0);
+          }  
           
         </script>';
   
