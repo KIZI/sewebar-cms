@@ -18,6 +18,55 @@
   echo '<script type="text/javascript">
           var groupsCount=0;
           var intervalsCount=0;
+          var editedGroup="";
+          
+          /**
+           *  Funkce pro kontrolu unikátnosti jednotlivých BINů
+           */                     
+          function binNameCheck(binNameInput){
+            value=binNameInput.value;
+            value.trim();
+            if (value==""){
+              alert(\''.JText::_('BLANK_BIN_NAME').'\');
+              setTimeout("$("+binNameInput.id+").focus();",50);
+              return;
+            }else{
+              usedName=false;
+              $$("input.binNameInput").each(function(el){
+                                           if (el.id!=binNameInput.id){ 
+                                             if (el.value==binNameInput.value){
+                                               usedName=true;
+                                             }
+                                           }                                            
+                                         });
+              if (usedName){
+                alert(\''.JText::_('BIN_NAME_HAS_BEEN_USED_FOR_OTHER_BIN').'\');
+                setTimeout("$("+binNameInput.id+").focus();",50);
+                return;
+              }                           
+            }
+          }
+          
+          /**
+           *  Funkce pro kontrolu, jestli se překrývají zadané intervaly
+           */                     
+          function intervalOverlap(leftValue1,rightValue1,leftBound1,rightBound1,leftValue2,rightValue2,leftBound2,rightBound2){
+            //pripadne prohozeni intervalu
+            if (leftValue1<leftValue2){
+              leftValueX=leftValue2;rightValueX=rightValue2;leftBoundX=leftBound2;rightBoundX=rightBound2;
+              leftValue2=leftValue1;rightValue2=rightValue1;leftBound2=leftBound1;rightBound2=rightBound1;
+              leftValue1=leftValueX;rightValue1=rightValueX;leftBound1=leftBoundX;rightBound1=rightBoundX;
+            }
+            //podminky
+            if ((leftValue1>leftValue2)&&(leftValue1<rightValue2)){return true;}
+            if ((rightValue1<rightValue2)&&(rightValue1>leftValue2)){return true;}
+            if ((leftValue1==leftValue2)&&(leftBound1=="closed")&&(leftBound2=="closed")){return true;}
+            if ((rightValue1==rightValue2)&&(rightBound1=="Closed")&&(rightBound2=="Closed")){return true;}
+            if ((rightValue1==leftValue2)&&(rightBound1=="Closed")&&(leftBound2=="closed")){return true;}
+            if ((leftValue1==rightValue2)&&(leftBound1=="closed")&&(rightBound2=="Closed")){return true;}
+            //proslo to...
+            return false;
+          }
           
           function htmlspecialchars(str) {
             if (typeof(str) == "string") {
@@ -46,11 +95,16 @@
           }
           
           function addItem(group){
+            if (!checkIntervalSubmitted()){return;}
+            editedGroup=group;
             $(group+"_addDiv").setHTML("'.JText::_('INTERVAL_TO_ADD').' <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"closed\">'.JText::_('INTERVAL_LEFT_CLOSED').'</option><option value=\"open\">'.JText::_('INTERVAL_LEFT_OPEN').'</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"Closed\">'.JText::_('INTERVAL_RIGHT_CLOSED').'</option><option value=\"Open\" selected=\"selected\">'.JText::_('INTERVAL_RIGHT_OPEN').'</option></select><a href=\"javascript:addIntervalSubmit(\'"+group+"\');\" class=\"smallButton\">'.JText::_('ADD_TO_GROUP').'</a><a href=\"javascript:addIntervalCancel(\'"+group+"\');\" class=\"smallButton\">'.JText::_('CANCEL').'</a>");
           }
           
           function deleteGroup(group){
             if (confirm("'.JText::_('REALLY_DELETE_SELECTED_GROUP').'")){
+              if (editedGroup==group){
+                editedGroup="";
+              }
               $(group).remove();
             }
           }
@@ -61,6 +115,7 @@
           }
           
           function addIntervalCancel(group){ 
+            editedGroup="";
             $(group+"_addDiv").setHTML(\'<a href="javascript:addItem(\'+"\'"+group+"\'"+\')" class="smallButton">'.JText::_("ADD_INTERVAL").'</a>\');
           }
           
@@ -88,10 +143,53 @@
             leftBound=$(group+\'_leftBound\').getValue();
             rightBound=$(group+\'_rightBound\').getValue();
             
-            if ((startValue>endValue)||(!((startValue==endValue)&&(leftBound==\'closed\')&&(rightBound==\'closed\')))){
+            if ((startValue>endValue)||((startValue==endValue)&&(!((leftBound==\'closed\')&&(rightBound==\'Closed\'))))){
               alert(\''.JText::_('START_VALUE_BIGGER_THAN_END_OR_SAME').'\');
               return;
             }
+            
+            //projiti všech položek, které byly přidány v minulosti
+            var leftBoundOpenString="'.JText::_('INTERVAL_LEFT_OPEN').'";
+            var rightBoundClosedString="'.JText::_('INTERVAL_RIGHT_CLOSED').'"; 
+            var rightBoundOpenString="'.JText::_('INTERVAL_RIGHT_OPEN').'";
+            var leftBoundClosedString="'.JText::_('INTERVAL_LEFT_CLOSED').'";            
+            var overlapingIntervalsArr=new Array();
+            
+            $$(\'input.intervalInput\').each(function(el){
+                                               intervalArr=el.value.split("#");
+                                               if (intervalArr[0].substr(0,2)==\'cl\'){
+                                                 leftBound2="closed";
+                                                 rightBound2=intervalArr[0].substr(6);
+                                               }else{
+                                                 leftBound2="open";
+                                                 rightBound2=intervalArr[0].substr(4);
+                                               }
+                                               leftValue2=intervalArr[1];
+                                               rightValue2=intervalArr[2];
+                                               
+                                               if (intervalOverlap(startValue,endValue,leftBound,rightBound,leftValue2,rightValue2,leftBound2,rightBound2)){
+                                                 if (leftBound2==\'closed\'){
+                                                   str=leftBoundClosedString;
+                                                 }else{
+                                                   str=leftBoundOpenString;
+                                                 }
+                                                 str+=leftValue2+" ; "+rightValue2;
+                                                 if (rightBound2==\'closed\'){
+                                                   str+=rightBoundClosedString;
+                                                 }else{
+                                                   str+=rightBoundOpenString;
+                                                 }
+                                                 overlapingIntervalsArr.push(str);
+                                               }
+                                             });';
+  echo'     if (overlapingIntervalsArr.length>0){
+              if (overlapingIntervalsArr.length>1){
+                alert("'.JText::_('OVERLAP_WITH_INTERVALS').' "+overlapingIntervalsArr.join(", "));
+              }else{
+                alert("'.JText::_('OVERLAP_WITH_INTERVAL').' "+overlapingIntervalsArr.join(", "));
+              }
+              return;
+            }        
             
             //pridani polozky...
             intervalHTML=\'\';
@@ -99,21 +197,22 @@
             intervalHTML+=startValue+\' ; \'+endValue;
             if (rightBound==\'Closed\'){intervalHTML+=\''.JText::_('INTERVAL_RIGHT_CLOSED').'\';}else{intervalHTML+=\''.JText::_('INTERVAL_RIGHT_OPEN').'\';}
             intervalData=leftBound+rightBound+\'#\'+startValue+\'#\'+endValue;
-                          
+            editedGroup="";              
             intervalsCount++;
             valueDiv=new Element("div",{"id":"interval_"+intervalsCount});
             value=htmlspecialchars(intervalData);
-            valueDiv.setHTML(intervalHTML+"<input type=\"hidden\" name=\""+group+"_interval_"+intervalsCount+"\" value=\""+intervalData+"\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
+            valueDiv.setHTML(intervalHTML+"<input type=\"hidden\" name=\""+group+"_interval_"+intervalsCount+"\" value=\""+intervalData+"\" class=\"intervalInput\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
             valueDiv.inject(group+"_itemsDiv");
             
             $(group+"_addDiv").setHTML(\'<a href="javascript:addItem(\'+"\'"+group+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a>\');
           }
           
           function addGroup(){
+            if (!checkIntervalSubmitted()){return;}
             groupsCount++;
             groupDivId="group_"+groupsCount;
             groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input type="text" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+groupDivId+\'" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
+            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input onblur="binNameCheck(this);" class="binNameInput" type="text" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+groupDivId+\'" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
             groupDiv.inject("testDiv");
             
             groupName=$(groupDivId+"_name");
@@ -124,9 +223,52 @@
             //testDiv.inject(groupDiv);
           }
           
+          
+          /**
+           *  Funkce pro kontrolu, jestli je ukončené přidávání poslední hodnoty
+           */                     
+          function checkIntervalSubmitted(){  
+            if (editedGroup==""){
+              return true;
+            }else{        
+              if (confirm("'.JText::_('NOT_SUBMITTED_INTERVAL_WARNING').'")){
+                addIntervalCancel(editedGroup);
+                return true;
+              }
+            }
+            return false;
+          }
+          
+          /**
+           *  Funkce pro kontroly před odesláním formuláře
+           */                     
+          function submitIntervalEnumeration(){ 
+            if (!checkIntervalSubmitted()){
+              return false;
+            }
+            if (checkBlankGroups()){
+              return (confirm(\''.JText::_('BLANK_INTERVAL_GROUPS_WARNING').'\'))
+            }               
+            return true;
+          }
+          
+          /**
+           *  Funkce pro kontrolu, jestli jsou v zadání prázdné skupiny (bez hodnot)
+           */                     
+          function checkBlankGroups(){
+            var blankResult=false;       
+            $$(\'div.itemsDiv\').each(function(el){
+              items=$$("div#"+el.id+\' input\');
+              if (items.length==0){   
+                blankResult=true;
+              }
+            });
+            return blankResult;
+          }
+          
         </script>';
   
-  echo '<form method="post" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_intervalEnumeration').'">
+  echo '<form method="post" onsubmit="return submitIntervalEnumeration();" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_intervalEnumeration').'">
           <table>
             <tr>
               <td>'.JText::_('DATAFIELD').'</td>
