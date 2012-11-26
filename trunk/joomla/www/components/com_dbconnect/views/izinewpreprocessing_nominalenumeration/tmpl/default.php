@@ -50,13 +50,37 @@
           var valuesCount=0;
           var editedGroup="";          
           
+          function binNameCheck(binNameInput){
+            value=binNameInput.value;
+            value.trim();
+            if (value==""){
+              alert(\''.JText::_('BLANK_BIN_NAME').'\');
+              setTimeout("$("+binNameInput.id+").focus();",50);
+              return;
+            }else{
+              usedName=false;
+              $$("input.binNameInput").each(function(el){
+                                           if (el.id!=binNameInput.id){ 
+                                             if (el.value==binNameInput.value){
+                                               usedName=true;
+                                             }
+                                           }                                            
+                                         });
+              if (usedName){
+                alert(\''.JText::_('BIN_NAME_HAS_BEEN_USED_FOR_OTHER_BIN').'\');
+                setTimeout("$("+binNameInput.id+").focus();",50);
+                return;
+              }                           
+            }
+          }
+          
           function prepareDefaultBins(){
             binsArr.each(function(bin){
                             //pridame skupinu
                             groupsCount++;
                             var groupDivId="group_"+groupsCount;
                             var groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-                            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input type="text" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+htmlspecialchars(bin.name)+\'" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
+                            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input  onblur="binNameCheck(this);" type="text" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+htmlspecialchars(bin.name)+\'" class="binNameInput" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
                             groupDiv.inject("testDiv");
                             
                             bin.values.each(function(value){
@@ -91,6 +115,7 @@
                                itemsArr.push(item);
                              }
                            });
+             itemsArr.sort();              
              return itemsArr;              
           } 
           
@@ -177,7 +202,7 @@
             groupsCount++;
             groupDivId="group_"+groupsCount;
             groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input type="text" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+groupDivId+\'" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
+            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input type="text" onblur="binNameCheck(this);" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+groupDivId+\'" class="binNameInput" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
             groupDiv.inject("testDiv");
             
             groupName=$(groupDivId+"_name");

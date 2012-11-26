@@ -46,7 +46,7 @@
           }
           
           function addItem(group){
-            $(group+"_addDiv").setHTML("'.JText::_('INTERVAL_TO_ADD').' <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"closed\">'.JText::_('INTERVAL_LEFT_CLOSED').'</option><option value=\"open\">'.JText::_('INTERVAL_LEFT_OPEN').'</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"Closed\">'.JText::_('INTERVAL_RIGHT_CLOSED').'</option><option value=\"Open\">'.JText::_('INTERVAL_RIGHT_OPEN').'</option></select><a href=\"javascript:addIntervalSubmit(\'"+group+"\');\" class=\"smallButton\">'.JText::_('ADD_TO_GROUP').'</a><a href=\"javascript:addIntervalCancel(\'"+group+"\');\" class=\"smallButton\">'.JText::_('CANCEL').'</a>");
+            $(group+"_addDiv").setHTML("'.JText::_('INTERVAL_TO_ADD').' <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"closed\">'.JText::_('INTERVAL_LEFT_CLOSED').'</option><option value=\"open\">'.JText::_('INTERVAL_LEFT_OPEN').'</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"Closed\">'.JText::_('INTERVAL_RIGHT_CLOSED').'</option><option value=\"Open\" selected=\"selected\">'.JText::_('INTERVAL_RIGHT_OPEN').'</option></select><a href=\"javascript:addIntervalSubmit(\'"+group+"\');\" class=\"smallButton\">'.JText::_('ADD_TO_GROUP').'</a><a href=\"javascript:addIntervalCancel(\'"+group+"\');\" class=\"smallButton\">'.JText::_('CANCEL').'</a>");
           }
           
           function deleteGroup(group){
@@ -68,25 +68,30 @@
             //TODO kontrola, jestli neni zadana hodnota v jine kategorii!
             startValue=$(group+\'_startValueInput\').getValue();
             startValue=startValue.trim();
-            if (startValue==\'\'){
-              addIntervalCancel(group);
+            if (startValue!=\'0\'){
+              startValue=parseFloat(startValue.replace(\',\',\'.\')) || \'X\';
+            }    
+            if (startValue==\'X\'){
+              alert(\''.JText::_('START_VALUE_IS_NOT_NUMBER').'\');
               return;
             }
-            startValue=parseFloat(startValue.replace(\',\',\'.\')) || 0;
+            
             endValue=$(group+\'_endValueInput\').getValue();
             endValue=endValue.trim();
-            if (endValue==\'\'){
-              addIntervalCancel(group);
-              return;
+            if (endValue!=\'0\'){
+              endValue=parseFloat(endValue.replace(\',\',\'.\')) || \'X\';
             }
-            endValue=parseFloat(endValue.replace(\',\',\'.\')) || 0;
-            if (startValue>endValue){
-              xValue=startValue;
-              startValue=endValue;
-              endValue=xValue;
+            if (endValue==\'X\'){
+              alert(\''.JText::_('END_VALUE_IS_NOT_NUMBER').'\');
+              return;
             }
             leftBound=$(group+\'_leftBound\').getValue();
             rightBound=$(group+\'_rightBound\').getValue();
+            
+            if ((startValue>endValue)||(!((startValue==endValue)&&(leftBound==\'closed\')&&(rightBound==\'closed\')))){
+              alert(\''.JText::_('START_VALUE_BIGGER_THAN_END_OR_SAME').'\');
+              return;
+            }
             
             //pridani polozky...
             intervalHTML=\'\';
