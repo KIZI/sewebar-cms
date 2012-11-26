@@ -8,6 +8,7 @@ namespace LMWrapper.LISpMiner
 	/// <summary>
 	/// Generation of hypotheses as a batch process.
 	/// </summary>
+	[Obsolete]
 	public class Task4ftGen : Executable, ITaskLauncher
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Task4ftGen));

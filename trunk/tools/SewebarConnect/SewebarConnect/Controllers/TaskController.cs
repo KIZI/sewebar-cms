@@ -195,13 +195,6 @@ namespace SewebarConnect.Controllers
 
 		[ValidateInput(false)]
 		[ErrorHandler]
-		public ActionResult Run()
-		{
-			return this.RunTask(new TaskDefinition { DefaultTemplate = "4ftMiner.Task.Template.PMML", Launcher = this.LISpMiner.Task4FtGen });
-		}
-
-		[ValidateInput(false)]
-		[ErrorHandler]
 		public ActionResult Pool()
 		{
 			return this.RunTask(new TaskDefinition { DefaultTemplate = "ETreeMiner.Task.Template.PMML", Launcher = this.LISpMiner.LMTaskPooler });
