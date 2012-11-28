@@ -288,10 +288,10 @@
           $interval->addAttribute('rightMargin',(string)$col->statistics->max);
         }
         if ($generatePreprocessing){
-          $preprocessed=false;
-          if (isset($col->Items)){
+          $preprocessed=false;    
+          if (isset($col->items)){
             //mame hodnoty
-            $colItemsCount=count($col->Items);   exit(var_dump($colItemsCount));
+            $colItemsCount=count($col->items);  
             if (($colItemsCount>0)&&($colItemsCount<=self::MAX_NUMERIC_ITEMS)){
               $this->generatePreprocessing_eachOne($preprocessingHints);
               $preprocessed=true;
