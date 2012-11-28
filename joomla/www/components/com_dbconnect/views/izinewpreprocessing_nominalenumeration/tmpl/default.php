@@ -15,6 +15,29 @@
     	  $valuesArr[]=(string)$value;
       }
     }
+  }elseif($formatType=='interval'){
+    if (count(@$this->format->Range->Interval)>0){
+      $datafieldRangeTr= '<tr><td>'.JText::_('DATAFIELD_RANGE').'</td><td>';
+      $intervalsArr=array();
+      foreach ($this->format->Range->Interval as $interval){
+      	$closure=(string)$interval['closure'];
+        if (substr($closure,0,4)=='open'){
+          $leftBound=JText::_('INTERVAL_LEFT_OPEN');
+          $closure=substr($closure,4);
+        }else{
+          $leftBound=JText::_('INTERVAL_LEFT_CLOSED');
+          $closure=substr($closure,6);
+        }
+        if ($closure=='Closed'){
+          $rightBound=JText::_('INTERVAL_RIGHT_CLOSED');
+        }else{
+          $rightBound=JText::_('INTERVAL_RIGHT_OPEN');
+        }
+        $intervalsArr[]='<strong>'.$leftBound.((string)$interval['leftMargin']).' ; '.((string)$interval['rightMargin']).$rightBound.'</strong>';
+      }
+      $datafieldRangeTr.= implode(', ',$intervalsArr);
+      $datafieldRangeTr.= '</td></tr>';
+    }
   }
   
   $binsArr=array();       
@@ -192,7 +215,7 @@
               valuesCount++;
               valueDiv=new Element("div",{"id":"value_"+valuesCount});
               value=htmlspecialchars(value);
-              valueDiv.setHTML(value+"<input type=\"hidden\" name=\""+group+"_value_"+valuesCount+"\" value=\""+value+"\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
+              valueDiv.setHTML(value+"<input type=\"hidden\" name=\""+group+"_value_"+valuesCount+"\" value=\""+value+"\" class=\"valueInput\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
               valueDiv.inject(group+"_itemsDiv");
             }
             $(group+"_addDiv").setHTML(\'<a href="javascript:addItem(\'+"\'"+group+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a>\');
@@ -243,7 +266,7 @@
           /**
            *  Funkce pro kontroly před odesláním formuláře
            */                     
-          function submitNominalEnumeration(){ 
+          function submitNominalEnumeration(){   
             if (!checkValueSubmitted()){
               return false;
             }
@@ -277,6 +300,7 @@
               <td><strong>'.htmlspecialchars($this->preprocessingHint->Name).'</strong></td>
             </tr>';
   }          
+  echo @$datafieldRangeTr;
   echo '    <tr>
               <td>
                 <label for="attributeName">'.JText::_('ATTRIBUTE_NAME').'</label>
@@ -284,7 +308,7 @@
               <td>
                 <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars($this->pmmlName).'" />
               </td>
-            </tr>
+            </tr> 
           </table>
           <div id="testDiv"></div>
           <div style="padding-left:10px;">
