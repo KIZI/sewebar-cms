@@ -67,7 +67,7 @@
 
   echo '  <div class="formActionsDiv">
             <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&tmpl=component&task=selectPreprocessingHint&maName='.urlencode($this->maName).'&formatName='.urlencode($this->formatName).'&pmmlName='.urlencode($this->pmmlName).'&preprocessingName='.urlencode((string)$this->preprocessingHint->Name).'&taskId='.urlencode($this->taskId)).'" class="button">'.JText::_('SELECT_PREPROCESSING').'</a>
-            <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&tmpl=component&task=editPreprocessingHint_nominalEnumeration&maName='.urlencode($this->maName).'&formatName='.urlencode($this->formatName).'&pmmlName='.urlencode($this->pmmlName).'&oldPhName='.urlencode((string)$this->preprocessingHint->Name).'&taskId='.urlencode($this->taskId)).'" class="button">'.JText::_('EDIT_PREPROCESSING').'</a>
+            <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&tmpl=component&task=editPreprocessingHint_intervalEnumeration&maName='.urlencode($this->maName).'&formatName='.urlencode($this->formatName).'&pmmlName='.urlencode($this->pmmlName).'&oldPhName='.urlencode((string)$this->preprocessingHint->Name).'&taskId='.urlencode($this->taskId)).'" class="button">'.JText::_('EDIT_PREPROCESSING').'</a>
           </div>
           
         ';

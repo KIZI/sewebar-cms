@@ -6,12 +6,42 @@
   
   echo '<h1>'.JText::_('PREPROCESSING_INTERVAL_ENUMERATION').'</h1>';
   
-  $binsArr=array();
-  if (isset($this->preprocessingHint)){
-    if (count($this->preprocessingHint->IntervalBin)>0){
-      foreach ($this->preprocessingHint->IntervalBin as $intervalBin){
-      	//TODO zpracování existujících preprocessing hintů!!
+  $binsArr=array();       
+  if (isset($this->preprocessingHint)&&isset($this->preprocessingHint->IntervalEnumeration)){ 
+    if (count($this->preprocessingHint->IntervalEnumeration->IntervalBin)>0){         
+      foreach ($this->preprocessingHint->IntervalEnumeration->IntervalBin as $intervalBin){
+        $binArr=array();
+        $binArr['name']=(string)$intervalBin->Name;
+        $binArr['intervals']=array();
+        if (count($intervalBin->Interval)>0){
+          foreach ($intervalBin->Interval as $interval) {
+            $closure=(string)$interval['closure'];
+            if (substr($closure,0,4)=='open'){
+              $leftBound='open';
+              $closure=substr($closure,4);
+            }else{
+              $leftBound='closed';
+              $closure=substr($closure,6);
+            }
+            if ($closure=='Closed'){
+              $rightBound='Closed';
+            }else{
+              $rightBound='Open';
+            }
+        	  $binArr['intervals'][]=array('leftMargin'=>(string)$interval['leftMargin'],'rightMargin'=>(string)$interval['rightMargin'],'leftBound'=>$leftBound,'rightBound'=>$rightBound); 
+          }
+        }
+        $binsArr[]=$binArr;
       }
+      echo '<script type="text/javascript">
+              var binsJson=\''.json_encode($binsArr).'\'; 
+              var binsArr= JSON && JSON.parse(binsJson) || eval("(function(){return " + binsJSON + ";})()");
+
+              window.addEvent(\'domready\',function() {   
+                  prepareDefaultBins();
+                }
+              );
+            </script>';
     }
   }
   
@@ -79,7 +109,7 @@
             return str;
           }
           
-          function checkIntervalSubmit(group,event){
+          function checkIntervalSubmit(group,event){ 
             var x;
             if(window.event){
             	x=event.keyCode;
@@ -87,7 +117,7 @@
             	x=event.which;
             }
             if (x==13){
-              addIntervalSubmit(group);
+              setTimeout("addIntervalSubmit(\'"+group+"\')",100);
               return false;
             }else{
               return true;
@@ -97,7 +127,7 @@
           function addItem(group){
             if (!checkIntervalSubmitted()){return;}
             editedGroup=group;
-            $(group+"_addDiv").setHTML("'.JText::_('INTERVAL_TO_ADD').' <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"closed\">'.JText::_('INTERVAL_LEFT_CLOSED').'</option><option value=\"open\">'.JText::_('INTERVAL_LEFT_OPEN').'</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"Closed\">'.JText::_('INTERVAL_RIGHT_CLOSED').'</option><option value=\"Open\" selected=\"selected\">'.JText::_('INTERVAL_RIGHT_OPEN').'</option></select><a href=\"javascript:addIntervalSubmit(\'"+group+"\');\" class=\"smallButton\">'.JText::_('ADD_TO_GROUP').'</a><a href=\"javascript:addIntervalCancel(\'"+group+"\');\" class=\"smallButton\">'.JText::_('CANCEL').'</a>");
+            $(group+"_addDiv").setHTML("'.JText::_('INTERVAL_TO_ADD').' <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"alert(\'checkX\'); return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"closed\">'.JText::_('INTERVAL_LEFT_CLOSED').'</option><option value=\"open\">'.JText::_('INTERVAL_LEFT_OPEN').'</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit(\'"+group+"\',event);\"><option value=\"Closed\">'.JText::_('INTERVAL_RIGHT_CLOSED').'</option><option value=\"Open\" selected=\"selected\">'.JText::_('INTERVAL_RIGHT_OPEN').'</option></select><a href=\"javascript:addIntervalSubmit(\'"+group+"\');\" class=\"smallButton\">'.JText::_('ADD_TO_GROUP').'</a><a href=\"javascript:addIntervalCancel(\'"+group+"\');\" class=\"smallButton\">'.JText::_('CANCEL').'</a>");
           }
           
           function deleteGroup(group){
@@ -118,6 +148,11 @@
             editedGroup="";
             $(group+"_addDiv").setHTML(\'<a href="javascript:addItem(\'+"\'"+group+"\'"+\')" class="smallButton">'.JText::_("ADD_INTERVAL").'</a>\');
           }
+          
+          var leftBoundOpenString="'.JText::_('INTERVAL_LEFT_OPEN').'";
+          var rightBoundClosedString="'.JText::_('INTERVAL_RIGHT_CLOSED').'"; 
+          var rightBoundOpenString="'.JText::_('INTERVAL_RIGHT_OPEN').'";
+          var leftBoundClosedString="'.JText::_('INTERVAL_LEFT_CLOSED').'";
           
           function addIntervalSubmit(group){
             //TODO kontrola, jestli neni zadana hodnota v jine kategorii!
@@ -148,11 +183,7 @@
               return;
             }
             
-            //projiti všech položek, které byly přidány v minulosti
-            var leftBoundOpenString="'.JText::_('INTERVAL_LEFT_OPEN').'";
-            var rightBoundClosedString="'.JText::_('INTERVAL_RIGHT_CLOSED').'"; 
-            var rightBoundOpenString="'.JText::_('INTERVAL_RIGHT_OPEN').'";
-            var leftBoundClosedString="'.JText::_('INTERVAL_LEFT_CLOSED').'";            
+            //projiti všech položek, které byly přidány v minulosti            
             var overlapingIntervalsArr=new Array();
             
             $$(\'input.intervalInput\').each(function(el){
@@ -242,7 +273,7 @@
           /**
            *  Funkce pro kontroly před odesláním formuláře
            */                     
-          function submitIntervalEnumeration(){ 
+          function submitIntervalEnumeration(){
             if (!checkIntervalSubmitted()){
               return false;
             }            
@@ -275,7 +306,45 @@
            */
           function checkNoGroupedIntervals(){
             return ($$(\'input.intervalInput\').length>0);
-          }                     
+          }  
+          
+          
+          /**
+           *  Funkce pro předgenerování existujících skupin intervalů
+           */                     
+          function prepareDefaultBins(){
+            binsArr.each(function(bin){
+                            //pridame skupinu
+                            groupsCount++;
+                            var groupDivId="group_"+groupsCount;
+                            var groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
+                            groupDiv.setHTML(\'<a class="deleteGroupA" href="javascript:deleteGroup(\'+"\'"+groupDivId+"\'"+\')">'.JText::_('DELETE_GROUP').'</a><div><label for="\'+groupDivId+\'_name">'.JText::_('GROUP_NAME').'</label> <input  onblur="binNameCheck(this);" type="text" name="\'+groupDivId+\'_name" id="\'+groupDivId+\'_name" value="\'+htmlspecialchars(bin.name)+\'" class="binNameInput" /></div><div id="\'+groupDivId+\'_itemsDiv" class="itemsDiv"></div><div id="\'+groupDivId+\'_addDiv"><a href="javascript:addItem(\'+"\'"+groupDivId+"\'"+\')" class="smallButton">'.JText::_("ADD_ITEM").'</a></div>\');
+                            groupDiv.inject("testDiv");
+                            
+                            bin.intervals.each(function(interval){
+                              intervalsCount++;
+                              valueDiv=new Element("div",{"id":"interval_"+intervalsCount});
+                              if (interval.leftBound=="open"){
+                                intervalValue="open";
+                                intervalText=leftBoundOpenString;
+                              }else{
+                                intervalValue="closed";
+                                intervalText=leftBoundClosedString;
+                              }
+                              intervalText+=interval.leftMargin+" ; "+interval.rightMargin;
+                              if (interval.rightBound=="closed"){
+                                intervalText+=rightBoundClosedString;
+                                intervalValue+="Closed";
+                              }else{
+                                intervalText+=rightBoundOpenString;
+                                intervalValue+="Open";
+                              }
+                              intervalValue+="#"+interval.leftMargin+"#"+interval.rightMargin;
+                              valueDiv.setHTML(intervalText+"<input type=\"hidden\" name=\""+groupDivId+"_interval_"+intervalsCount+"\" value=\""+intervalValue+"\" class=\"intervalInput\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\"'.JText::_('DELETE').'\">x</a>");
+                              valueDiv.inject(groupDivId+"_itemsDiv");
+                            });
+                         });
+          }                   
           
         </script>';
   
