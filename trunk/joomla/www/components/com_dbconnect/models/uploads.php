@@ -140,8 +140,8 @@ class dbconnectModelUploads extends JModel
       $carky=substr_count($row,',');
       $svislitka=substr_count($row,'|');    
       $tabulatory=substr_count($row,"\t");  
-      $max=max($stredniky,$carky,$svislitka,$tabulatory);
-      if ($max<=3){return ',';}
+      $max=max($stredniky,$carky,$svislitka,$tabulatory); 
+      if ($max<2){return ',';}
       switch ($max) {
         case $stredniky:return ';';
         case $carky:return ',';
@@ -189,7 +189,7 @@ class dbconnectModelUploads extends JModel
       }
     }
     //shromáždíme informace
-    $outputArr=array();
+    $outputArr=array();      
     for ($i=0;$i<$columnsCount;$i++){
       if ($numericalArr[$i]==2){
         $datatype='float';
@@ -213,9 +213,9 @@ class dbconnectModelUploads extends JModel
    */     
   private function isNumeric($value){
     if (is_numeric($value)||(is_numeric(str_replace(',','.',$value)))){
-      if (is_int($value)){
+      if (intval($value)==$value){
         return 1;
-      }else{
+      }else{  
         return 2;
       }
     }else{
