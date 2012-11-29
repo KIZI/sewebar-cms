@@ -47,8 +47,9 @@
 			<property name="initializeLogging" value="true" />
 			<property name="lockDetectMode" value="MINWRITE" />
 			<property name="logAutoRemove" value="true" />
-			<property name="lockTimeout" value="1" />
+			<property name="lockTimeout" value="5000" /> <!-- In microseconds -->
 			<property name="txnMaxActive" value="5000" />
+			<property name="txnTimeout" value="60000000" /> <!-- 60 seconds in microseconds -->
 		</bean>
 	</beans>
 

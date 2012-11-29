@@ -107,8 +107,8 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 			String arTsXpath = QueryXpathTaskSettingTransformer.transformToXpath(arTsQuery, arTsSettings);
 			String arXpath = QueryXpathTransformer.transformToXpath(arQuery, arSettings);
 
-			String xpath = "/PMML[TaskSetting[" + arTsXpath + "] and AssociationRule[" + arXpath
-					+ "]]/AssociationRule";
+			String xpath = "/PMML/AssociationRule[count(../TaskSetting[" + arTsXpath + "]) > 0 and "
+					+ arXpath + "]";
 
 			// TODO Max Results retrieve from query
 			ResultSet resultSet = getResultSet(xpath, 100);

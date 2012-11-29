@@ -3,8 +3,6 @@ package xquerysearch.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.saxon.functions.regex.Categories;
-
 import xquerysearch.domain.arbquery.datadescription.DataDescription;
 import xquerysearch.domain.arbquery.datadescription.Dictionary;
 import xquerysearch.domain.arbquery.datadescription.Field;

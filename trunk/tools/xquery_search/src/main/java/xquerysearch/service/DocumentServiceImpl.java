@@ -80,7 +80,6 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			logger.warn("XSLT file error!");
 			return false;
 		}
-
 		return dao.insertDocument(document);
 	}
 
