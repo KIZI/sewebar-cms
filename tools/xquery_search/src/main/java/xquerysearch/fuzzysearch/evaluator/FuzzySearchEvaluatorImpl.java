@@ -153,14 +153,15 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @return
 	 */
 	private double evaluateBba(BBAForAnalysis bba, BbaSetting bbaSetting) {
-		double ret = 100;
+		double ret = 0;
 		if (bba != null && bbaSetting != null) {
-			ret = 0;
-			ret += evaluatesCategories(bba.getTransformationDictionary().getCatNames(), bbaSetting
+			ret += evaluateCategories(bba.getTransformationDictionary().getCatNames(), bbaSetting
 					.getCoefficient().getCategories());
 			if (bba.isDisjunctive() == true) {
 				ret += disjunctionPenalty;
 			}
+		} else {
+			return 100; 
 		}
 		return ret;
 	}
@@ -191,7 +192,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	 * @param bbaSettingCategories
 	 * @return
 	 */
-	private double evaluatesCategories(List<String> bbaCategories, List<String> bbaSettingCategories) {
+	private double evaluateCategories(List<String> bbaCategories, List<String> bbaSettingCategories) {
 		double compliance = 0;
 		if (bbaCategories != null && bbaSettingCategories != null) {
 			for (String bbaSetCategory : bbaSettingCategories) {
@@ -253,7 +254,7 @@ public class FuzzySearchEvaluatorImpl implements FuzzySearchEvaluator {
 	}
 
 	/**
-	 * TODO documentation
+	 * Checks ratio of result bba categories concreteness and query bba categories concreteness. 
 	 * 
 	 * @param concretenessMapQuery
 	 * @param concretenessMapResult
