@@ -18,6 +18,7 @@ import xquerysearch.domain.result.Result;
 import xquerysearch.domain.result.ResultSet;
 import xquerysearch.transformation.QueryXpathTaskSettingTransformer;
 import xquerysearch.transformation.QueryXpathTransformer;
+import xquerysearch.utils.QuerySettingsUtils;
 import xquerysearch.utils.QueryUtils;
 
 /**
@@ -29,6 +30,8 @@ import xquerysearch.utils.QueryUtils;
 @Service
 public class QueryServiceImpl extends AbstractService implements QueryService {
 
+	private static final int MAX_RESULTS = 500;
+	
 	@Value("${container.name}")
 	protected String containerName;
 
@@ -62,8 +65,12 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		String xpath = QueryXpathTransformer.transformToXpath(query, settings);
 		xpath = "/PMML/" + xpath;
 
-		// TODO Max Results retrieve from query
-		ResultSet resultSet = getResultSet(xpath, 100);
+		int maxResults = QuerySettingsUtils.getMaxResults(settings);
+		if (maxResults == 0) {
+			maxResults = MAX_RESULTS;
+		}
+		
+		ResultSet resultSet = getResultSet(xpath, maxResults);
 
 		if (resultSet != null) {
 			return resultSet.getResults();
@@ -79,8 +86,12 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 		String xpath = QueryXpathTaskSettingTransformer.transformToXpath(query, settings);
 		xpath = "/PMML[" + xpath + "]/AssociationRule";
 
-		// TODO Max Results retrieve from query
-		ResultSet resultSet = getResultSet(xpath, 100);
+		int maxResults = QuerySettingsUtils.getMaxResults(settings);
+		if (maxResults == 0) {
+			maxResults = MAX_RESULTS;
+		}
+		
+		ResultSet resultSet = getResultSet(xpath, maxResults);
 
 		if (resultSet != null) {
 			return resultSet.getResults();
@@ -110,8 +121,7 @@ public class QueryServiceImpl extends AbstractService implements QueryService {
 			String xpath = "/PMML/AssociationRule[count(../TaskSetting[" + arTsXpath + "]) > 0 and "
 					+ arXpath + "]";
 
-			// TODO Max Results retrieve from query
-			ResultSet resultSet = getResultSet(xpath, 100);
+			ResultSet resultSet = getResultSet(xpath, MAX_RESULTS);
 
 			if (resultSet != null) {
 				return resultSet.getResults();

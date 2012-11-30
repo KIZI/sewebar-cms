@@ -12,6 +12,7 @@ public class QuerySettings {
 	private String target;
 	private String resultsAnalysis;
 	private boolean useLegacyOutput;
+	private int maxResults;
 	private Params params;
 
 	/**
@@ -87,6 +88,21 @@ public class QuerySettings {
 	 */
 	public void setUseLegacyOutput(boolean useLegacyOutput) {
 		this.useLegacyOutput = useLegacyOutput;
+	}
+
+	/**
+	 * @return the maxResults
+	 */
+	public int getMaxResults() {
+		return maxResults;
+	}
+
+	/**
+	 * @param maxResults
+	 *            the maxResults to set
+	 */
+	public void setMaxResults(int maxResults) {
+		this.maxResults = maxResults;
 	}
 
 }
