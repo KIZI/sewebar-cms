@@ -11,10 +11,12 @@ public class InterestMeasureThreshold {
 
 	private String id;
 	private String longName;
+	private String shortName;
 	private String description;
 	private String order;
 	private String interestMeasure;
 	private String compareType;
+	private String thresholdString;
 	private Threshold threshold;
 
 	/**
@@ -45,6 +47,21 @@ public class InterestMeasureThreshold {
 	 */
 	public void setLongName(String longName) {
 		this.longName = longName;
+	}
+
+	/**
+	 * @return the shortName
+	 */
+	public String getShortName() {
+		return shortName;
+	}
+
+	/**
+	 * @param shortName
+	 *            the shortName to set
+	 */
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
 	/**
@@ -123,12 +140,27 @@ public class InterestMeasureThreshold {
 	}
 
 	/**
-	 * @{inheritDoc}
+	 * @return the tresholdString
+	 */
+	public String getThresholdString() {
+		return thresholdString;
+	}
+
+	/**
+	 * @param tresholdString
+	 *            the tresholdString to set
+	 */
+	public void setThresholdString(String thresholdString) {
+		this.thresholdString = thresholdString;
+	}
+
+	/**
+	 * @{inheritDoc
 	 */
 	@Override
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
-		ret.append("<InterestMeasureThreshold id=\"" + id +"\">");
+		ret.append("<InterestMeasureThreshold id=\"" + id + "\">");
 		ret.append("<Extension name=\"LongName\">" + longName + "</Extension>");
 		ret.append("<Extension name=\"Description\">" + description + "</Extension>");
 		ret.append("<Extension name=\"Order\">" + order + "</Extension>");
