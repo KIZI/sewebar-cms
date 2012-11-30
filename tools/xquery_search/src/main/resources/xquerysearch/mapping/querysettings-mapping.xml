@@ -17,6 +17,9 @@
 		<field name="useLegacyOutput" type="boolean">
 			<bind-xml name="UseLegacyOutput" node="element" />
 		</field>
+		<field name="maxResults" type="integer">
+			<bind-xml name="MaxResults" node="element" />
+		</field>
 		<field name="params" type="xquerysearch.domain.arbquery.Params">
 			<bind-xml name="Params" node="element" />
 		</field>
