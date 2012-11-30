@@ -318,6 +318,9 @@
 		<field name="longName" type="string">
 			<bind-xml name="LongName" node="element" />
 		</field>
+		<field name="shortName" type="string">
+			<bind-xml name="ShortName" node="element" />
+		</field>
 		<field name="description" type="string">
 			<bind-xml name="Description" node="element" />
 		</field>
@@ -329,6 +332,9 @@
 		</field>
 		<field name="compareType" type="string">
 			<bind-xml name="CompareType" node="element" />
+		</field>
+		<field name="thresholdString" type="string">
+			<bind-xml name="Threshold" node="element" />
 		</field>
 		<field name="threshold" type="xquerysearch.domain.result.tasksetting.Threshold">
 			<bind-xml name="Threshold" node="element" />
