@@ -14,8 +14,13 @@ class IziController extends JController{
     while(file_exists($path.'demo_'.$counter.'.csv')){
       $counter++;
     }
-         
-    copy('./components/com_dbconnect/media/loans.csv',$path.'demo_'.$counter.'.csv');
+    
+    if ($_REQUEST['file']=='big'){
+      copy('./components/com_dbconnect/media/loansBig.csv',$path.'demo_'.$counter.'.csv');
+    }else{
+      copy('./components/com_dbconnect/media/loans.csv',$path.'demo_'.$counter.'.csv');
+    }     
+    
              
              
     $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
@@ -869,7 +874,7 @@ class IziController extends JController{
       }                                          
       //priradime connection do view
       $view->assignRef('connection',$connection); 
-      if ($task){
+      if (@$task){
         $view->assignRef('dmTask',$task);
       }
       $view->setModel($connectionsModel,true);
@@ -922,7 +927,7 @@ class IziController extends JController{
          )
         ){           
       //TODO show error
-      /////exit('BKEF OR FML GENERATION FAILED!');
+      //exit('BKEF OR FML GENERATION FAILED!');
       /////return;
     }                     
     //máme vygenerováno, tak jdeme ukládat
@@ -930,7 +935,7 @@ class IziController extends JController{
     $bkefArticleTitle=$connection->table.' - BKEF ('.$curDateStr.')';
     $fmlArticleTitle=$connection->table.' - FML ('.$curDateStr.')';
     $bkefXML=$generatorModel->getBkefXML();
-      
+        
     if ($bkefXML){
       if ($task->bkef_article>0){
         //update
@@ -1034,6 +1039,15 @@ class IziController extends JController{
   private function cleanNumber($number){
     return floatval(str_replace(array(' ',','),array('','.'),$number));
   }
+  
+  
+  
+  /**
+   *  Akce pro zobrazení hodnot vybraného atributu
+   */
+  public function previewAttribute(){
+    exit('sem');
+  }      
 
 }
 ?>
