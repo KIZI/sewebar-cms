@@ -367,3 +367,64 @@ div#iziDiv div.formActionsDiv input:hover{
   text-decoration: none;
   color: white;
 }
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv,div#iziDiv div#izipreviewattributeDiv div#previewDiv{
+  height: 390px;
+  padding: 5px;
+  overflow: auto;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table{
+  border-spacing: 1px;
+  margin: 10px;
+  width:97%;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.valueTd,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.valueTd{
+  text-align: left;
+  font-weight: bold;
+  /*width: 350px;*/
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.countTd,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.countTd{
+  text-align: right;
+  width: 80px;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.percTd,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.percTd{
+  text-align: right;
+  width: 60px;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.graphTd,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.graphTd{
+  width:200px;
+  vertical-align: middle;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.graphTd div,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.graphTd div{
+  background: rgb(146,82,19);;
+  height:10px;
+  border: 1px solid rgb(146,82,19); ;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td{
+  border: 1px solid rgb(235,235,235);  
+  padding: 2px 5px;
+  white-space: nowrap;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table th,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table th{
+  background-color:#075783;
+  color:white;
+  font-size: 13px;
+  text-align: center;
+  padding: 3px 10px;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table tr:hover td,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table tr:hover td{
+  background: rgb(250,250,255);
+}
+div#iziDiv div.loadingDiv{
+  background:url('../images/spinner.gif') left 12px no-repeat;
+  color: gray;
+  padding: 10px 25px ;
+}

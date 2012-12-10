@@ -13,46 +13,14 @@ class iziViewIziNewPreprocessing_Equidistant extends JView
 		$document = & JFactory::getDocument();
 		$document->setTitle( JText::_('NEW_PREPROCESSING') );
     
-    $document->addScriptDeclaration("  
-      function cleanNumber(number){
-        //number=number.replace(/^\s+|\s+$/g,'');
-        number=number.replace(',','.');
-        return number.replace(' ','');
-      }              
-      function is_numeric(value){
-        if (value==''){return false}
-        return !isNaN(value);
-      }
-      function equidistantInputCheck(){   
-        start=cleanNumber($('start').value);
-        $('start').value=start;
-        if (!is_numeric(start)){
-          alert('".JText::_('START_VALUE_IS_NOT_NUMBER')."');
-          return false;
-        }
-        end=cleanNumber($('end').value);
-        $('end').value=end;
-        if (!is_numeric(end)){
-          alert('".JText::_('END_VALUE_IS_NOT_NUMBER')."');
-          return false;
-        }
-        if (parseFloat(start)>=parseFloat(end)){
-          alert('".JText::_('START_VALUE_BIGGER_THAN_END')."');
-          return false;
-        }         
-        step=cleanNumber($('step').value);
-        $('step').value=step;
-        if ((!is_numeric(step))||(step<=0)){
-          alert('".JText::_('STEP_VALUE_IS_NOT_NUMBER')."');
-          return false;
-        }
-        if (step>(end-start)){
-          alert('".JText::_('STEP_VALUE_IS_TOO_BIG')."');
-          return false;
-        }
-        return true;
-      }       
-    ");
+    $document->addScriptDeclaration("var lang=".json_encode(array(
+                                                              'START_VALUE_IS_NOT_NUMBER'=>JText::_('START_VALUE_IS_NOT_NUMBER'),
+                                                              'END_VALUE_IS_NOT_NUMBER'=>JText::_('END_VALUE_IS_NOT_NUMBER'),
+                                                              'START_VALUE_BIGGER_THAN_END'=>JText::_('START_VALUE_BIGGER_THAN_END'),
+                                                              'STEP_VALUE_IS_NOT_NUMBER'=>JText::_('STEP_VALUE_IS_NOT_NUMBER'),
+                                                              'STEP_VALUE_IS_TOO_BIG'=>JText::_('STEP_VALUE_IS_TOO_BIG')
+                                                            )).";");
+    JHtml::script('equidistant.js','media/com_dbconnect/js/');                                                        
     
     parent::display();		
   }

@@ -21,6 +21,19 @@
     }
     
     /**
+     *  Funkce vracející přehled hodnot z konkrétního databázového sloupce
+     */
+    public function getColumnValuesPreview($tableName,$columnName){
+      try{
+        $result=$this->db->prepare('SELECT '.$columnName.' AS hodnota,count('.$columnName.') AS pocet FROM '.$tableName.' GROUP BY '.$columnName.' ORDER BY '.$columnName.';');
+        $result->execute();
+      }catch (PDOException $e){
+        return null;
+      }
+      return $result->fetchAll();
+    }          
+    
+    /**
      *  Funkce pro načtení seznamu dostupných tabulek
      */     
     public function getTables(){    

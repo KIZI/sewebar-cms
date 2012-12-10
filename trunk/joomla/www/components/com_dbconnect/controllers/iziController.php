@@ -1041,6 +1041,41 @@ class IziController extends JController{
   }
   
   
+  /**
+   *  Akce pro zobrazení hodnot z konkrétního sloupce DB tabulky
+   */     
+  public function previewColumn(){
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');    
+    $taskId=JRequest::getInt('task_id',JRequest::getInt('taskId',-1));
+    $kbiId=JRequest::getInt('kbi',-1);
+    $columnName=JRequest::getString('col','');
+    if ($taskId>0){
+      $task=$tasksModel->getTask($taskId);
+    }elseif($kbiId>0){
+      $task=$tasksModel->getTaskByKbi($kbiId);
+    }                            
+    if (!$task){//TODO zobrazení chyby
+      JError::raiseError(500,JText::_('FORBIDDEN'));
+      return ;
+    }
+    
+    $connectionsModel= &$this->getModel('Connections', 'dbconnectModel');
+    $connection=$connectionsModel->getConnection($task->db_table);
+    
+    $unidbModel=&$this->getModel('Unidb','dbconnectModel');    
+    $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->password,$connection->db_name);
+    if ($dbError!=''){        
+      JError::raiseError(500,$dbError);
+      return ;                                
+    }
+    
+    $values=$unidbModel->getColumnValuesPreview($connection->table,$columnName);
+    
+    $view=&$this->getView('IziPreviewColumn',$this->document->getType());
+    $view->assign('columnName',$columnName);
+    $view->assignRef('values',$values);
+    $view->display();
+  }
   
   /**
    *  Akce pro zobrazení hodnot vybraného atributu
