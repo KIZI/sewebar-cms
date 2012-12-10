@@ -176,7 +176,7 @@
     /**
      *  Funkce pro vytvoření tabulky v DB
      */
-    public function createTable($tableName,$columnsData){  
+    public function createTable($tableName,$columnsData){
       $sql2='';       
       foreach ($columnsData as $columnData) { 
         if ($columnData['datatype']=='int'){

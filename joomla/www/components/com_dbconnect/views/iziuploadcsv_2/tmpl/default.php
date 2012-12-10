@@ -9,7 +9,7 @@ defined('_JEXEC') or die('Restricted access');
   echo '<div id="iziuploadcsv2Div">
           <form method="post" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=uploadCSV_import').'" >
             <input type="hidden" name="file" value="'.$this->fileData->id.'" />
-            <table>
+            <table style="width:300px;">
               <tr>
                 <td colspan="2"><h2>'.JText::_('IMPORT_CONFIG').'</h2></td>
               </tr>
@@ -56,7 +56,9 @@ defined('_JEXEC') or die('Restricted access');
                   <input type="text" onkeydown="checkParamsChange(this);" onchange="checkParamsChange(this);" value="'.htmlspecialchars($this->escapeChar).'" id="escape" name="escape" maxlength="1" />
                 </td>
               </tr>
-              <td colspan="2"><h2>'.JText::_('IMPORT_STATS').'</h2></td>
+              <tr>
+                <td colspan="2"><h2>'.JText::_('IMPORT_STATS').'</h2></td>
+              </tr>
               <tr>
                 <td>'.JText::_('ROWS_COUNT').'</td>
                 <td>

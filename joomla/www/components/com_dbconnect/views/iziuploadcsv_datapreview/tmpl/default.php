@@ -14,8 +14,8 @@
   $html.= '  </tr>';
   foreach ($this->csvRows as $row){
   	$html.= '<tr>';
-              foreach ($row as $value) {
-                $html.= '<td>'.htmlspecialchars($value).'</td>';	
+              for ($i=0;$i<$columnsCount;$i++) {
+              	$html.= '<td>'.htmlspecialchars(@$row[$i]).'</td>';
               }
     $html.= '</tr>';
   }

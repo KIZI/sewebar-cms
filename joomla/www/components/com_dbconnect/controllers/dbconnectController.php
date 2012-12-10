@@ -601,7 +601,7 @@ class dbconnectController extends JController{
     $fmlModel=&$this->getModel('Fml','dbconnectModel');
     $bkefModel=&$this->getModel('Bkef','dbconnectModel');
                                                      
-    if ((!$connection)||(!$fml)||(!$bkef)){
+    if ((!$connection)||(!$fml)||(!$bkef)){           exit('err');
       //TODO vypsání informace o tom, že zatím není všechno nastaveno!
       JError::raiseError(500,JText::_('NOT_PREPARED'));
       return ;
@@ -611,6 +611,9 @@ class dbconnectController extends JController{
     $fmlModel->setFml($fml);
     $bkefModel->setBkef($bkef);   
     $pmml=$pmmlModel->generatePMML($task,$connection,$bkefModel,$fmlModel);
+                                   //exit(var_dump($pmml));
+                                   //exit('pmml');
+                                   
                                                          //exit(var_dump($pmml));
     //TODO configArr
     $defaultKbiSource=$task->kbi_source;
