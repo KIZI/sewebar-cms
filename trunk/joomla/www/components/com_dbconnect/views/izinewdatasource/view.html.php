@@ -1,7 +1,7 @@
 <?php
 jimport( 'joomla.application.component.view' );
                                   
-class iziViewIziNewDatasource extends JView
+class iziViewIziPreviewColumn extends JView
 {
 	/**
 	 * Display the view
@@ -11,7 +11,7 @@ class iziViewIziNewDatasource extends JView
     JHtml::stylesheet('izi.css','media/com_dbconnect/css/');
     
 		$document = & JFactory::getDocument();
-		$document->setTitle( JText::_('NEW_DATASOURCE') );
+		$document->setTitle( JText::_('PREVIEW_COLUMN') );
     
     parent::display();		
   }
