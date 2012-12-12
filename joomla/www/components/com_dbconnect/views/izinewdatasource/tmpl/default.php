@@ -2,6 +2,10 @@
   defined('_JEXEC') or die('Restricted access');
   echo '<div id="iziDiv">';
   
+  function getGaugeWidth($count,$totalCount){
+    return round($count/$totalCount*100,1);
+  }
+  
   ?>
   <script type="text/javascript">
   //<![CDATA[
@@ -16,14 +20,37 @@
   <?php
   echo '<a href="#" onclick="reloadParent()" class="backButton">'.JText::_('CLOSE').'</a>';
   
-  echo '<h1>'.JText::_('NEW_DATASOURCE').'</h1>';
-  
-  echo '<div class="bigButtonsDiv">
-          <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=uploadDemoCSV&tmpl=component').'">Upload DEMO file</a>
-          <!--<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listDMTasks&tmpl=component').'">'.JText::_('EXISTING_TASKS').'</a>
-          <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listConnections&tmpl=component').'">'.JText::_('NEW_TASK_USING_EXISTING_DATA').'</a>-->
-          <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=uploadCSV&tmpl=component').'">'.JText::_('UPLOAD_CSV_FILE').'</a>
-        </div>';
+  echo '<div id="izipreviewcolumnDiv">';
+    echo '<h1>'.$this->columnName.'</h1>';
+    $valuesCount=0;
+    foreach ($this->values as $valueRow){
+    	$valuesCount+=$valueRow['pocet'];
+    }
+    
+    echo '<div id="previewDiv">';
+    echo '<table>
+            <tr>
+              <th>'.JText::_('VALUE').'</th>
+              <th>'.JText::_('COUNT').'</th>
+              <th>'.JText::_('PERC').'</th>
+              <th></th>
+            </tr>';
+    foreach ($this->values as $valueRow){
+    	echo '<tr>
+              <td class="valueTd">'.htmlspecialchars($valueRow['hodnota']).'</td>
+              <td class="countTd">'.$valueRow['pocet'].'</td>
+              <td class="percTd">';
+                $procent=getGaugeWidth($valueRow['pocet'],$valuesCount);
+      echo      $procent.'%';          
+      echo '  </td>
+              <td class="graphTd">
+                <div style="width:'.$procent.'%;"></div>
+              </td>
+            </tr>';
+    }
+    echo '</table>';
+  echo '</div>';
         
   echo '</div>';
+  
 ?>
