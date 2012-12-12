@@ -206,7 +206,7 @@
               '.$sql2.'
               PRIMARY KEY  (`id`)
             ) AUTO_INCREMENT=1 DEFAULT CHARSET=utf8';
-                                 
+                               
       $query=$this->db->prepare($sql);
       $query->execute();   
     }
@@ -214,7 +214,7 @@
     /**
      *  Funkce pro import dat
      */
-    public function importData($tableNameX,$columnsData,$rowsData){
+    public function importData($tableNameX,$columnsData,$rowsData){ 
       $columnNamesArr=array();
       foreach ($columnsData as $column){
       	$columnNamesArr[]='`'.$column['name'].'`';
