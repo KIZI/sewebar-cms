@@ -244,8 +244,13 @@ class dbconnectModelUploads extends JModel
       //načten další řádek
       for ($i=0;$i<$columnsCount;$i++){
         $value=@$data[$i];
-      	if ($numericalArr[$i]){
-          $numericalArr[$i]=$this->isNumeric($value);
+        $isNumeric=$this->isNumeric($value);
+      	if ($numericalArr[$i]==1){
+          $numericalArr[$i]=$isNumeric;
+        }elseif($numericalArr[$i]==2){
+          if ($isNumeric==0){
+            $numericalArr[$i]=0;
+          }
         }
         $strlen=strlen($value);
         if ($strlen>$strlenArr[$i]){
@@ -277,9 +282,10 @@ class dbconnectModelUploads extends JModel
   /**
    *  Funkce kontrolující, jestli  je zadaná hodnota číslem
    */     
-  private function isNumeric($value){
+  private function isNumeric($value){       
     if (is_numeric($value)||(is_numeric(str_replace(',','.',$value)))){
-      if (intval($value)==$value){
+      if (((string)intval(str_replace(',','.',$value)))==$value){   
+      //echo(var_dump(array(((string)intval(str_replace(',','.',$value))),$value)));
         return 1;
       }else{  
         return 2;
@@ -301,6 +307,9 @@ class dbconnectModelUploads extends JModel
       $outName=substr($outName,0,20);
       if ($outName==''){
         $outName='col'.$i;
+      }
+      if (strtolower($outName)=='id'){
+        $outName.='col_id';
       }
       $attach=0;
       while (in_array($outName.(($attach>0)?$attach:''),$outputArr)) {
