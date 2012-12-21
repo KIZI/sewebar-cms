@@ -120,7 +120,7 @@
           </xsl:for-each>
         </td>
         <!-- frequence -->
-        <td><xsl:value-of select="p:Extension[@name='Frequency']/@value"/></td>
+        <td><xsl:value-of select="../p:Extension[@name='Frequency' and @extender=current()/@binValue]/@value"/></td>
       </tr>
     </xsl:if>
   </xsl:template>
