@@ -36,7 +36,7 @@
     <xsl:variable name="sumOfCategories">
       <xsl:choose>
         <xsl:when test="$graphType='continuous'">
-          <xsl:value-of select="sum(./p:Discretize/p:DiscretizeBin/p:Extension/@value)"/>
+          <xsl:value-of select="sum(./p:Discretize/p:Extension/@value)"/>
         </xsl:when>
         <xsl:when test="$graphType='categorical' or $graphType='ordinal'">
           <xsl:value-of select="sum(./p:MapValues/p:InlineTable/p:Extension[@name='Frequency']/@value)"/>
@@ -47,7 +47,7 @@
     <xsl:variable name="numberOfCategories">
       <xsl:choose>
         <xsl:when test="$graphType='continuous'">
-          <xsl:value-of select="count(./p:Discretize/p:DiscretizeBin/p:Extension[@name='Frequency'])"/>
+          <xsl:value-of select="count(./p:Discretize/p:Extension[@name='Frequency'])"/>
         </xsl:when>
         <xsl:when test="$graphType='categorical' or $graphType='ordinal'">
           <xsl:value-of select="count(./p:MapValues/p:InlineTable/p:Extension[@name='Frequency'])"/>
@@ -58,14 +58,14 @@
     <xsl:variable name="title" select="./p:Discretize/@field | ./p:MapValues/@outputColumn"/>
 
     <xsl:variable name="values">
-      <xsl:apply-templates mode="graphValue" select="./p:Discretize/p:DiscretizeBin/p:Extension[@name='Frequency'] | ./p:MapValues/p:InlineTable/p:Extension[@name='Frequency']">
+      <xsl:apply-templates mode="graphValue" select="./p:Discretize/p:Extension[@name='Frequency'] | ./p:MapValues/p:InlineTable/p:Extension[@name='Frequency']">
         <xsl:with-param name="graphType" select="$graphType"></xsl:with-param>
         <xsl:with-param name="numberOfCategories" select="$numberOfCategories"></xsl:with-param>
       </xsl:apply-templates>
     </xsl:variable>
         
     <xsl:variable name="labels">
-      <xsl:apply-templates mode="graphLabel" select="./p:Discretize/p:DiscretizeBin/p:Extension[@name='Frequency'] | ./p:MapValues/p:InlineTable/p:Extension[@name='Frequency']">
+      <xsl:apply-templates mode="graphLabel" select="./p:Discretize/p:Extension[@name='Frequency'] | ./p:MapValues/p:InlineTable/p:Extension[@name='Frequency']">
         <xsl:with-param name="graphType" select="$graphType"></xsl:with-param>
         <xsl:with-param name="numberOfCategories" select="$numberOfCategories"></xsl:with-param>
       </xsl:apply-templates>                        
@@ -90,23 +90,27 @@
   </xsl:template>
   
   <xsl:template match="p:Extension[@name='Frequency']" mode="graphLabel">
+   
     <xsl:param name="graphType"/>
     <xsl:param name="numberOfCategories"/>
     <xsl:variable name="barTitle">
       <xsl:choose>
         <xsl:when test="$graphType='continuous'">
+          <xsl:variable name="closure" select="../p:DiscretizeBin[@binValue=current()/@extender]/p:Interval/@closure"></xsl:variable>
+          <xsl:variable name="rightMargin" select="../p:DiscretizeBin[@binValue=current()/@extender]/p:Interval/@rightMargin"></xsl:variable>
+          <xsl:variable name="leftMargin" select="../p:DiscretizeBin[@binValue=current()/@extender]/p:Interval/@leftMargin"></xsl:variable>
           <xsl:choose>
-            <xsl:when test="../p:Interval/@closure = 'closedClosed'">
-              <xsl:value-of select="concat ('&lt;', ../p:Interval/@leftMargin, ';', ../p:Interval/@rightMargin, '&gt;')"/>
+            <xsl:when test="$closure= 'closedClosed'">
+              <xsl:value-of select="concat ('&lt;', $leftMargin, ';', $rightMargin, '&gt;')"/>
             </xsl:when>
-            <xsl:when test="../p:Interval/@closure = 'closedOpen'">
-              <xsl:value-of select="concat ('&lt;', ../p:Interval/@leftMargin, ';', ../p:Interval/@rightMargin, ')')"/>
+            <xsl:when test="$closure= 'closedOpen'">
+              <xsl:value-of select="concat ('&lt;', $leftMargin, ';', $rightMargin, ')')"/>
             </xsl:when>
-            <xsl:when test="../p:Interval/@closure = 'openClosed'">
-              <xsl:value-of select="concat ('(', ../p:Interval/@leftMargin, ';', ../p:Interval/@rightMargin, '&gt;')"/>
+            <xsl:when test="$closure= 'openClosed'">
+              <xsl:value-of select="concat ('(', $leftMargin, ';', $rightMargin, '&gt;')"/>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="concat ('(', ../p:Interval/@leftMargin, ';', ../p:Interval/@rightMargin, ')')"/>
+              <xsl:value-of select="concat ('(', $leftMargin, ';', $rightMargin, ')')"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
