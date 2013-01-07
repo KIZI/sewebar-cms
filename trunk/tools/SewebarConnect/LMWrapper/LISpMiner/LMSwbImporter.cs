@@ -9,11 +9,6 @@ namespace LMWrapper.LISpMiner
 	public class LMSwbImporter : Executable
 	{
 		/// <summary>
-		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
-		/// </summary>
-		public override string Dsn { get; set; }
-
-		/// <summary>
 		/// /Alias:[alias_file]  ... aliases for text strings (for PMML mainly)
 		/// </summary>
 		public string Alias { get; set; }

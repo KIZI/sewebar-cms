@@ -12,6 +12,8 @@ namespace LMWrapper
 
 		public string LMPath { get; set; }
 
+		public string PCGridPath { get; set; }
+
 		public Dictionary<string, LISpMiner.LISpMiner>.KeyCollection ExistingMiners
 		{
 			get { return this.RegisteredMiners.Keys; }

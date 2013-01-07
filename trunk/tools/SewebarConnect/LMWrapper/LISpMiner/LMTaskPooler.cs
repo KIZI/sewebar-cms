@@ -37,11 +37,6 @@ namespace LMWrapper.LISpMiner
 		}
 
 		/// <summary>
-		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
-		/// </summary>
-		public override string Dsn { get; set; }
-
-		/// <summary>
 		/// /TaskID [TaskID]		... TaskID of selected task
 		/// </summary>
 		public string TaskId { get; set; }

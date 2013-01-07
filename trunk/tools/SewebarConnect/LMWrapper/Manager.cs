@@ -11,10 +11,12 @@ namespace LMWrapper
 	{
 		private const string VersionPath = "http://lispminer.vse.cz/download/index.php";
 		private const string FilesPath = "http://lispminer.vse.cz/files/exe/";
+		private const string PCGridPackage = "http://lispminer.vse.cz/files/tgs/PCGrid.120706.VSE.zip";
 
 		protected string[] Packages = new string[]
 		                              	{
-		                              		"LISp-Miner.Core.zip"
+		                              		"LISp-Miner.Core.zip",
+		                              		"LM.GridPooler.zip"
 		                              	};
 
 		public string TargetPath { get; private set; }
@@ -54,6 +56,8 @@ namespace LMWrapper
 			outputBuffer = string.Format("\tto destination: {0}", Path.GetFullPath(this.TargetPath));
 			sb.AppendLine(outputBuffer);
 			Console.WriteLine(outputBuffer);
+			
+			this.EmptyOutputLine(sb);
 
 			if (Directory.Exists(directory))
 			{
@@ -72,13 +76,29 @@ namespace LMWrapper
 				Directory.Delete(current, true);
 			}
 
+			this.EmptyOutputLine(sb);
+
+			this.DownloadPCGrid(this.TargetPath, sb);
+
+			this.EmptyOutputLine(sb);
+
+			#region Setting LISp Miner version {0} as current.
+
 			outputBuffer = string.Format("Setting LISp Miner version {0} as current.", this.Version);
 			sb.AppendLine(outputBuffer);
 			Console.WriteLine(outputBuffer);
 
 			DirectoryUtil.Copy(directory, current);
 
+			#endregion
+
 			return sb.ToString();
+		}
+
+		private void EmptyOutputLine(StringBuilder output)
+		{
+			output.AppendLine();
+			Console.WriteLine();
 		}
 
 		private void DownloadPackage(string directory, string package, StringBuilder output)
@@ -98,6 +118,33 @@ namespace LMWrapper
 			ZipUtil.Unzip(directory, destination);
 
 			File.Delete(destination);
+		}
+
+		private void DownloadPCGrid(string directory, StringBuilder output)
+		{
+			var current = String.Format("{0}\\{1}", directory, "PCGrid");
+			var package = Path.GetFileName(PCGridPackage);
+
+			if (Directory.Exists(current))
+			{
+				Directory.Delete(current, true);
+			}
+
+			var outputBuffer = string.Format("Downloading PCGrid executables ({0}) ...", package);
+			output.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
+			
+			var destination = String.Format("{0}\\{1}", directory, package);
+
+			this.Client.DownloadFile(PCGridPackage, destination);
+
+			outputBuffer = String.Format("Unpacking {0} ...", package);
+			output.AppendLine(outputBuffer);
+			Console.WriteLine(outputBuffer);
+			ZipUtil.Unzip(directory, destination);
+
+			// Keep packages of PCGrid
+			// File.Delete(destination);
 		}
 	}
 }

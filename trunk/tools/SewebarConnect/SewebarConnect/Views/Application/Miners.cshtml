@@ -29,19 +29,7 @@
 	<ol>
 		@foreach (var miner in MvcApplication.Environment.ExistingMiners)
 		{
-			<li><a href="@Url.Action("Miner", new {guid = miner})">@miner</a>&nbsp;<a href="@Url.Action("Remove", new {guid = miner})" class="ajax">Remove</a></li>
-		}
-	</ol>
-}
-
-@if (ODBCManagerRegistry.GetAllDataSourceNames().Count > 0)
-{
-	<h3>ODBC DSNs</h3>
-	<ol>
-		@foreach (var dsn in ODBCManagerRegistry.GetAllDataSourceNames().Keys)
-		{
-
-			<li>@dsn <a href="@Url.Action("RemoveDsn", "Application", new {dsn = dsn})" class="ajax">Remove</a></li>
-		}
+			<li><a href="@Url.Action("Miner", new {guid = miner})">@miner</a>&nbsp;<a href="@Url.Action("Cancel", "TaskPool", new {guid = miner})" class="ajax">Cancel All Tasks</a>&nbsp;<a href="@Url.Action("Remove", new { guid = miner })" class="ajax">Remove</a></li>
+        }
 	</ol>
 }

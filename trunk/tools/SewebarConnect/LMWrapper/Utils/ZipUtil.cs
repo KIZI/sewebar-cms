@@ -7,7 +7,10 @@ namespace LMWrapper.Utils
 	{
 		public static void Unzip(string directory, string zip)
 		{
-			var package = new FastZip();
+			var package = new FastZip
+				              {
+					              CreateEmptyDirectories = true
+				              };
 
 			package.ExtractZip(zip, directory, String.Empty);
 		}

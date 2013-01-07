@@ -17,7 +17,10 @@ namespace LMWrapper.LISpMiner
 
 		public ExecutableStatus Status { get; protected set; }
 
-		public virtual string Dsn { get; set; }
+		/// <summary>
+		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
+		/// </summary>
+		public string Dsn { get; set; }
 
 		public string LMPath { get; set; }
 

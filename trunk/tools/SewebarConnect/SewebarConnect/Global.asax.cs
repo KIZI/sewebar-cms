@@ -26,6 +26,7 @@ namespace SewebarConnect
 						DataPath = GetAppSetting("Sewebar-DataPath", String.Format(@"{0}..\Data", AppDomain.CurrentDomain.BaseDirectory)),
 						LMPoolPath = GetAppSetting("Sewebar-PoolPath", String.Format(@"{0}..\Data\LMs", AppDomain.CurrentDomain.BaseDirectory)),
 						LMPath = GetAppSetting("Sewebar-LMPath",String.Format(@"{0}..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
+						PCGridPath = GetAppSetting("Sewebar-PCGridPath", String.Format(@"{0}..\Libs\{1}\\Binaries", AppDomain.CurrentDomain.BaseDirectory, "PCGrid")),
 					};
 				}
 
@@ -76,9 +77,16 @@ namespace SewebarConnect
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
 			routes.MapRoute(
-				"Default", // Route name
-				"{controller}/{action}/{id}", // URL with parameters
-				new { controller = "Application", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+				name: "TaskGen",
+				url: "TaskGen/{controller}/{action}/{taskName}",
+				defaults: new { controller = "TaskPool", action = "Run", taskName = UrlParameter.Optional },
+				namespaces: new []{ "SewebarConnect.Controllers.TaskGen" }
+			);
+
+			routes.MapRoute(
+				name: "Default",
+				url: "{controller}/{action}/{id}",
+				defaults: new { controller = "Application", action = "Index", id = UrlParameter.Optional }
 			);
 
 		}
