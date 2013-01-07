@@ -11,6 +11,8 @@ namespace LMWrapper.LISpMiner
 		private LMSwbImporter _importer;
 		private LMSwbExporter _exporter;
 		private LMTaskPooler _lmTaskPooler;
+		private LMProcPooler _lmProcPooler;
+		private LMGridPooler _lmGridPooler;
 		private Version _version;
 
 		#region Properties
@@ -51,6 +53,7 @@ namespace LMWrapper.LISpMiner
 						LISpMiner = this
 					};
 				}
+
 				return this._importer;
 			}
 
@@ -83,7 +86,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmTaskPooler == null)
 				{
-					this._lmTaskPooler = new LMTaskPooler()
+					this._lmTaskPooler = new LMTaskPooler
 					{
 						LMPath = this.LMPath,
 						Dsn = this.Metabase.DSN,
@@ -95,6 +98,41 @@ namespace LMWrapper.LISpMiner
 			}
 
 			set { this._lmTaskPooler = value; }
+		}
+
+		public LMProcPooler LMProcPooler
+		{
+			get
+			{
+				if (this._lmProcPooler == null)
+				{
+					this._lmProcPooler = new LMProcPooler
+					{
+						LMPath = this.LMPath,
+						Dsn = this.Metabase.DSN,
+						LISpMiner = this
+					};
+				}
+
+				return this._lmProcPooler;
+			}
+
+			set { this._lmProcPooler = value; }
+		}
+
+		public LMGridPooler LMGridPooler
+		{
+			get
+			{
+				if (this._lmGridPooler == null)
+				{
+					this._lmGridPooler = new LMGridPooler(this, this.Metabase.DSN, this.LMPath, this.Environment.PCGridPath);
+				}
+
+				return this._lmGridPooler;
+			}
+
+			set { this._lmGridPooler = value; }
 		}
 
 		protected Environment Environment { get; set; }

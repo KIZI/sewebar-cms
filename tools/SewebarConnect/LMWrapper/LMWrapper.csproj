@@ -52,6 +52,8 @@
     <Compile Include="LISpMiner\4ftGen.cs" />
     <Compile Include="LISpMiner\ExecutableStatus.cs" />
     <Compile Include="LISpMiner\LISpMiner.cs" />
+    <Compile Include="LISpMiner\LMGridPooler.cs" />
+    <Compile Include="LISpMiner\LMProcPooler.cs" />
     <Compile Include="LISpMiner\LMSwbExporter.cs" />
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
     <Compile Include="LISpMiner\LMTaskPooler.cs" />

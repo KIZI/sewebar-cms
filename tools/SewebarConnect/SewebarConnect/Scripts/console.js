@@ -57,7 +57,7 @@
 	$('button[name="task_pool"]').click(function () {
 		$.ajax({
 			type: "POST",
-			url: "Task/Pool",
+			url: "TaskGen/GridPool",
 			data: {
 				guid: $('#task_id').val(),
 				content: $('#task_request').val(),

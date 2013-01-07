@@ -14,24 +14,26 @@ using SewebarConnect.API.Requests.Task;
 using SewebarConnect.API.Responses.Task;
 using log4net;
 
-namespace SewebarConnect.Controllers
+namespace SewebarConnect.Controllers.TaskGen
 {
-	public class TaskController : BaseController
-	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof(TaskController));
+    public abstract class TaskGenBaseController : BaseController
+    {
+	    protected abstract ILog Log { get; }
 
-		private const string XPathStatus = "/*/*/TaskSetting/Extension/TaskState";
-		private const string XPathNumberOfRules = "/*/*/@numberOfRules";
-		private const string XPathHypothesesCountMax = "/*/*/TaskSetting/Extension/HypothesesCountMax";
+		protected const string XPathStatus = "/*/*/TaskSetting/Extension/TaskState";
+		protected const string XPathNumberOfRules = "/*/*/@numberOfRules";
+		protected const string XPathHypothesesCountMax = "/*/*/TaskSetting/Extension/HypothesesCountMax";
 
 		protected class TaskDefinition
 		{
 			public string DefaultTemplate { get; set; }
 
 			public ITaskLauncher Launcher { get; set; }
+
+			public string TaskName { get; set; }
 		}
 
-		public static string RemoveInvalidXmlChars(string input)
+		protected static string RemoveInvalidXmlChars(string input)
 		{
 			return new string(input.Where(value =>
 				(value >= 0x0020 && value <= 0xD7FF) ||
@@ -48,11 +50,11 @@ namespace SewebarConnect.Controllers
 				var xml = RemoveInvalidXmlChars(reader.ReadToEnd());
 				var document = XDocument.Parse(xml);
 
-				var statusAttribute = ((IEnumerable<object>) document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
+				var statusAttribute = ((IEnumerable<object>)document.XPathEvaluate(XPathStatus)).FirstOrDefault() as XElement;
 				var numberOfRulesAttribute =
-					((IEnumerable<object>) document.XPathEvaluate(XPathNumberOfRules)).FirstOrDefault() as XAttribute;
+					((IEnumerable<object>)document.XPathEvaluate(XPathNumberOfRules)).FirstOrDefault() as XAttribute;
 				var hypothesesCountMaxAttribute =
-					((IEnumerable<object>) document.XPathEvaluate(XPathHypothesesCountMax)).FirstOrDefault() as XElement;
+					((IEnumerable<object>)document.XPathEvaluate(XPathHypothesesCountMax)).FirstOrDefault() as XElement;
 
 				if (statusAttribute == null)
 				{
@@ -67,7 +69,7 @@ namespace SewebarConnect.Controllers
 				}
 
 				if (hypothesesCountMaxAttribute == null ||
-				    !Int32.TryParse(hypothesesCountMaxAttribute.Value, out hypothesesCountMax))
+					!Int32.TryParse(hypothesesCountMaxAttribute.Value, out hypothesesCountMax))
 				{
 					throw new InvalidTaskResultXml("HypothesesCountMax cannot be resolved.", xmlPath, XPathHypothesesCountMax);
 				}
@@ -108,7 +110,7 @@ namespace SewebarConnect.Controllers
 						{
 							throw new LISpMinerException("Task possibly does not exist but no appLog generated");
 						}
-						
+
 						this.GetInfo(exporter.Output, out status, out numberOfRules, out hypothesesCountMax);
 					}
 					catch (LISpMinerException ex)
@@ -177,9 +179,9 @@ namespace SewebarConnect.Controllers
 				}
 
 				return new XmlFileResult
-						{
-							Data = response
-						};
+				{
+					Data = response
+				};
 			}
 			finally
 			{
@@ -193,49 +195,40 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
-		[ValidateInput(false)]
-		[ErrorHandler]
-		public ActionResult Pool()
+		protected ActionResult CancelTask(TaskDefinition definition)
 		{
-			return this.RunTask(new TaskDefinition { DefaultTemplate = "ETreeMiner.Task.Template.PMML", Launcher = this.LISpMiner.LMTaskPooler });
-		}
-
-		[ValidateInput(false)]
-		[ErrorHandler]
-		public ActionResult Cancel(string taskName)
-		{
-			var taskPooler = this.LISpMiner.LMTaskPooler;
+			var taskPooler = definition.Launcher;
 
 			try
 			{
-				if (String.IsNullOrWhiteSpace(taskName))
+				if (String.IsNullOrWhiteSpace(definition.TaskName))
 				{
 					// cancel all
 					taskPooler.CancelAll = true;
 					taskPooler.Execute();
 
 					return new XmlResult
-							{
-								Data = new Response
-										{
-											Message = "All tasks has been canceled."
-										}
-							};
+					{
+						Data = new Response
+						{
+							Message = "All tasks has been canceled."
+						}
+					};
 				}
 				else
 				{
 					// cancel task
 					taskPooler.TaskCancel = true;
-					taskPooler.TaskName = taskName;
+					taskPooler.TaskName = definition.TaskName;
 					taskPooler.Execute();
 
 					return new XmlResult
-							{
-								Data = new Response
-										{
-											Message = String.Format("Task {0} has been canceled.", taskName)
-										}
-							};
+					{
+						Data = new Response
+						{
+							Message = String.Format("Task {0} has been canceled.", definition.TaskName)
+						}
+					};
 				}
 			}
 			finally
@@ -246,5 +239,5 @@ namespace SewebarConnect.Controllers
 				taskPooler.TaskName = String.Empty;
 			}
 		}
-	}
+    }
 }

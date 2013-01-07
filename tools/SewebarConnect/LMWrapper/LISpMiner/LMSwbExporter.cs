@@ -9,11 +9,6 @@ namespace LMWrapper.LISpMiner
 	public class LMSwbExporter : Executable
 	{
 		/// <summary>
-		/// /DSN:[data-source-name]  ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
-		/// </summary>
-		public override string Dsn { get; set; }
-
-		/// <summary>
 		/// /MatrixID:[MatrixID]  ... MatrixID of the selected matrix
 		/// </summary>
 		public string MatrixId { get; set; }

@@ -22,6 +22,7 @@
 <pre>
 @Model.GetTaskList()
 </pre>
+<a href="@Url.Action("Cancel", "TaskPool", new { guid = Model.Id })" class="ajax">Cancel All</a>
 
 <h2>DSN</h2>
 <dl>

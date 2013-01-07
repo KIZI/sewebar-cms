@@ -36,7 +36,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	{
 		return isset($this->config['port']) ? $this->config['port'] : 80;
 	}
-	
+
+	public function getPooler()
+	{
+		return isset($this->config['pooler']) ? $this->config['pooler'] : 'task';
+	}
+
 	public function __construct($config)
 	{
 		parent::__construct($config);
@@ -45,7 +50,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	protected function parseRegisterResponse($response)
 	{
 		$xml_response = simplexml_load_string($response);
-		
+
 		if($xml_response['status'] == 'failure') {
 			throw new Exception($xml_response->message);
 		} else if($xml_response['status'] == 'success') {
@@ -75,7 +80,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$response = $this->requestPost("$url/Application/Register", $db_cfg);
 
 		KBIDebug::log(array('config' => $db_cfg, 'response' => $response), "Miner registered");
-		
+
 		return $this->parseRegisterResponse($response);
 	}
 
@@ -96,7 +101,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
 	}
-	
+
 	public function importDataDictionary($dataDictionary, $server_id = NULL)
 	{
 		$server_id = $server_id == NULL ? $this->getMinerId() : $server_id;
@@ -106,25 +111,25 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		$url = trim($this->getUrl(), '/');
-		
+
 		$data = array(
 			'content' => $dataDictionary,
 			'guid' => $server_id
 		);
-		
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "$url/DataDictionary/Import");
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
 		curl_setopt($ch, CURLOPT_VERBOSE, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
-		
+
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		curl_close($ch);
-		
+
 		KBIDebug::log($response, "Import executed");
-		
+
 		return $this->parseRegisterResponse($response);
 	}
 
@@ -152,8 +157,19 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Task/Pool";
-		
+
+		switch($this->getPooler()) {
+			case 'grid':
+				$url = "$url/TaskGen/GridPool";
+			break;
+			case 'proc':
+				$url = "$url/TaskGen/ProcPool";
+				break;
+			case 'task':
+			default:
+				$url = "$url/TaskGen/TaskPool";
+		}
+
 		$data = array(
 			'content' => $query,
 			'guid' => $this->getMinerId()
@@ -165,10 +181,10 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		KBIDebug::log(array('URL' => $url, 'POST' => $data), 'LM Query');
-		
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
+
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
 		curl_setopt($ch, CURLOPT_VERBOSE, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -182,20 +198,31 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $response;
 	}
 
-    public function cancelTask($taskName)
-    {
-        $url = trim($this->getUrl(), '/');
-        $url = "$url/Task/Cancel";
+	public function cancelTask($taskName)
+	{
+		$url = trim($this->getUrl(), '/');
 
-        $data = array(
-            'guid' => $this->getMinerId(),
-            'taskName' => $taskName
-        );
+		switch($this->getPooler()) {
+			case 'grid':
+				$url = "$url/TaskGen/GridPool/Cancel";
+				break;
+			case 'proc':
+				$url = "$url/TaskGen/ProcPool/Cancel";
+			break;
+			case 'task':
+			default:
+				$url = "$url/TaskGen/TaskPool/Cancel";
+		}
 
-        KBIDebug::info(array($url, $data));
+		$data = array(
+			'guid' => $this->getMinerId(),
+			'taskName' => $taskName
+		);
 
-        $dd = $this->requestCurl($url, $data);
+		KBIDebug::info(array($url, $data));
 
-        return trim($dd);
-    }
+		$dd = $this->requestCurl($url, $data);
+
+		return trim($dd);
+	}
 }
