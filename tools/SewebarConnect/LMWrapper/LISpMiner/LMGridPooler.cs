@@ -45,7 +45,7 @@ namespace LMWrapper.LISpMiner
 
 		protected string KeyStorePath
 		{
-			get { return this.GridBinariesPath; }
+			get { return this.GridBinariesPath + "\\.."; }
 		}
 
 		public override string Arguments
@@ -178,12 +178,12 @@ namespace LMWrapper.LISpMiner
 					writer.WriteLine(string.Format("keystore={0}", this.InitializeKeyStore(mainDirectory, "SewebarConnect.jks")));
 					writer.WriteLine("");
 					writer.WriteLine("# key alias in the keystore");
-					writer.WriteLine("alias=*****");
+					writer.WriteLine("alias=lmcloud1");
 					writer.WriteLine("");
 					writer.WriteLine("# keystore & key password");
 					writer.WriteLine("# It is HIGHLY recommended not to write password here, but instead");
 					writer.WriteLine("# use the password dialog below!");
-					writer.WriteLine("password=*****");
+					writer.WriteLine("password=lc1eXni");
 					writer.WriteLine("");
 					writer.WriteLine("# Password dialog class, a graphical dialog is used to ask the ");
 					writer.WriteLine("# password from the user");

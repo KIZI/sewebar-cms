@@ -86,12 +86,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmTaskPooler == null)
 				{
-					this._lmTaskPooler = new LMTaskPooler
-					{
-						LMPath = this.LMPath,
-						Dsn = this.Metabase.DSN,
-						LISpMiner = this
-					};
+					this._lmTaskPooler = new LMTaskPooler(this, this.Metabase.DSN, this.LMPath);
 				}
 
 				return this._lmTaskPooler;
@@ -106,12 +101,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmProcPooler == null)
 				{
-					this._lmProcPooler = new LMProcPooler
-					{
-						LMPath = this.LMPath,
-						Dsn = this.Metabase.DSN,
-						LISpMiner = this
-					};
+					this._lmProcPooler = new LMProcPooler(this, this.Metabase.DSN, this.LMPath);
 				}
 
 				return this._lmProcPooler;

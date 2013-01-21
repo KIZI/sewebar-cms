@@ -41,9 +41,18 @@ namespace Debugger
 
 		private static void Update(string lmLibPath)
 		{
-			var manager = new Manager(lmLibPath);
+			try
+			{
+				var manager = new Manager(lmLibPath);
 
-			manager.Update();
+				manager.Update();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				Console.WriteLine();
+				Console.WriteLine(ex.StackTrace);
+			}
 		}
 
 		private static void Remove()

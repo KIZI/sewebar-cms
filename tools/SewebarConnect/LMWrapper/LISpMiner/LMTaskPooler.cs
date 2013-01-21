@@ -126,9 +126,13 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		public LMTaskPooler()
+		public LMTaskPooler(LISpMiner lispMiner, string dsn, string lmPath)
 			: base()
 		{
+			this.LISpMiner = lispMiner;
+			this.Dsn = dsn;
+			this.LMPath = lmPath;
+
 			this.ApplicationName = "LMTaskPooler.exe";
 			this._stopwatch = new Stopwatch();
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_LMTaskPooler", Guid.NewGuid());
