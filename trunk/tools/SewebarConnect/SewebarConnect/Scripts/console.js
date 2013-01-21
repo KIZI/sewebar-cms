@@ -75,11 +75,95 @@
 		return false;
 	});
 
-	// cancel
-	$('button[name="cancel"]').click(function () {
+	// proc pooler
+	$('button[name="proc_pool"]').click(function () {
 		$.ajax({
 			type: "POST",
-			url: "Task/Cancel",
+			url: "TaskGen/ProcPool",
+			data: {
+				guid: $('#task_id').val(),
+				content: $('#task_request').val(),
+				alias: $('#task_alias').val(),
+				template: $('#task_template').val()
+			},
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#task_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
+		});
+
+		return false;
+	});
+
+	// grid pooler
+	$('button[name="grid_pool"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "TaskGen/GridPool",
+			data: {
+				guid: $('#task_id').val(),
+				content: $('#task_request').val(),
+				alias: $('#task_alias').val(),
+				template: $('#task_template').val()
+			},
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#task_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
+		});
+
+		return false;
+	});
+
+	// task_pool_cancel
+	$('button[name="task_pool_cancel"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "TaskGen/TaskPool/Cancel",
+			data: {
+				guid: $('#cancel_id').val(),
+				taskName: $('#cancel_task').val()
+			},
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#cancel_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
+		});
+
+		return false;
+	});
+
+	// proc_pool_cancel
+	$('button[name="proc_pool_cancel"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "TaskGen/ProcPool/Cancel",
+			data: {
+				guid: $('#cancel_id').val(),
+				taskName: $('#cancel_task').val()
+			},
+			dataType: 'text',
+			complete: function (data) {
+				var textarea = $('#cancel_response');
+				setStatusClass(textarea, data.status == 500 ? 'failure' : 'success');
+				textarea.val(data.responseText);
+			}
+		});
+
+		return false;
+	});
+
+	// grid_pool_cancel
+	$('button[name="grid_pool_cancel"]').click(function () {
+		$.ajax({
+			type: "POST",
+			url: "TaskGen/GridPool/Cancel",
 			data: {
 				guid: $('#cancel_id').val(),
 				taskName: $('#cancel_task').val()

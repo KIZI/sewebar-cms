@@ -86,11 +86,13 @@
 		<textarea name="task_response" id="task_response" rows="20" cols="80"></textarea>
 	</fieldset>
 	<div class="buttons">
-		<button name="task_pool">Pool Task</button>
+		<button name="task_pool">Task Pooler</button>
+		<button name="proc_pool">Proc Pooler</button>
+		<button name="grid_pool">Grid Pooler</button>
 	</div>
 </form>
 
-<h2>Tasks Cancel (TaskPooler only)</h2>
+<h2>Tasks Cancel</h2>
 <form action="#" class="console">
 <fieldset class="id">
 	<label for="cancel_id">LM ID</label>
@@ -109,7 +111,9 @@
 	<textarea name="cancel_response" id="cancel_response" rows="20" cols="80"></textarea>
 </fieldset>
 <div class="buttons">
-	<button name="cancel">Cancel</button>
+	<button name="task_pool_cancel">Cancel in Task Pooler</button>
+	<button name="proc_pool_cancel">Cancel in Proc Pooler</button>
+	<button name="grid_pool_cancel">Cancel in Grid Pooler</button>
 </div>
 </form>
 

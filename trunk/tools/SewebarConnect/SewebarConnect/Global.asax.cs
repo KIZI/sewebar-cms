@@ -76,12 +76,9 @@ namespace SewebarConnect
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-			routes.MapRoute(
-				name: "TaskGen",
-				url: "TaskGen/{controller}/{action}/{taskName}",
-				defaults: new { controller = "TaskPool", action = "Run", taskName = UrlParameter.Optional },
-				namespaces: new []{ "SewebarConnect.Controllers.TaskGen" }
-			);
+			routes.Add("TaskGen",
+			           new OneWayRoute(url: "TaskGen/{controller}/{action}/{taskName}",
+			                           defaults: new RouteValueDictionary(new {controller = "TaskPool", action = "Run", taskName = UrlParameter.Optional})));
 
 			routes.MapRoute(
 				name: "Default",
