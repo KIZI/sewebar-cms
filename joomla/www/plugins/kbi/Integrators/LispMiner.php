@@ -158,7 +158,14 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$url = trim($this->getUrl(), '/');
 
-		switch($this->getPooler()) {
+		$pooler = $this->getPooler();
+
+		if(isset($options['pooler'])) {
+			$pooler = $options['pooler'];
+			KBIDebug::info("Using '{$pooler}' as pooler", 'LISpMiner');
+		}
+
+		switch($pooler) {
 			case 'grid':
 				$url = "$url/TaskGen/GridPool";
 			break;
