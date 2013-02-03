@@ -27,9 +27,14 @@ class KbiModelTransformator extends JModel
 
 	private $xslt = NULL;
 	private $parameters = NULL;
+	private $getOptions = array();
+	private $postOptions = array();
 
-	public function __construct($config)
+	public function __construct($config, $get = NULL, $post = NULL)
 	{
+		$this->getOptions = $get === NULL ? $_GET : $get;
+		$this->postOptions = $post === NULL ? $_POST : $post;
+
 		$this->setSource(isset($config['source']) ? $config['source'] : NULL);
 		$this->setQuery(isset($config['query']) ? $config['query'] : NULL);
 		$this->setParams(isset($config['parameters']) ? $config['parameters'] : NULL);
@@ -117,8 +122,8 @@ class KbiModelTransformator extends JModel
 		}
 
 		if($this->query != NULL) {
-			$query->setOptions($_GET, 'GET');
-			$query->setOptions($_POST, 'POST');
+			$query->setOptions($this->getOptions, 'GET');
+			$query->setOptions($this->postOptions, 'POST');
 
 			return $this->query->setParameters($this->getParams());
 		}
