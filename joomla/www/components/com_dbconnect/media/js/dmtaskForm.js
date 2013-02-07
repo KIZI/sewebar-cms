@@ -66,12 +66,12 @@
   }
   
   function enableSubmitTask(enabled){ 
+    submit=$('taskSubmitButton');
+    if (!submit){return;}
     if (enabled){
-      submit=$('taskSubmitButton');
       submit.disabled=false;
       submit.removeClass('disabled');
     }else{
-      submit=$('taskSubmitButton');
       submit.disabled=true;
       submit.addClass('disabled');
     }
