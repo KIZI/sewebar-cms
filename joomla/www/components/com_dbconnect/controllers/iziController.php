@@ -235,7 +235,7 @@ class IziController extends JController{
       $task=$tasksModel->getTaskByKbi($kbiId);
     }                            
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
                                 
@@ -316,7 +316,7 @@ class IziController extends JController{
       $task=$tasksModel->getTaskByKbi($kbiId);
     }                     
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
     $dataModel=&$this->getModel('Data','dbconnectModel');
@@ -387,7 +387,7 @@ class IziController extends JController{
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTask($taskId);
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
                          
@@ -431,7 +431,7 @@ class IziController extends JController{
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTask($taskId);
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
     $dataModel=&$this->getModel('Data','dbconnectModel');
@@ -539,7 +539,7 @@ class IziController extends JController{
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTask($taskId);
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
     $dataModel=&$this->getModel('Data','dbconnectModel');
@@ -647,7 +647,7 @@ class IziController extends JController{
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTask($taskId);
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
     $dataModel=&$this->getModel('Data','dbconnectModel');
@@ -843,7 +843,7 @@ class IziController extends JController{
     $connection=$connectionsModel->getConnection($connectionId);       
     //if ((@$connection->uid!=$userId)&&($adminMode!='ok')){
     if (@$connection->uid!=$userId){
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return;
     }                                 
     
@@ -907,7 +907,7 @@ class IziController extends JController{
                
     $task=$tasksModel->getTask($taskId);
     if (!$task){
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return;
     }         
     $user=& JFactory::getUser();
@@ -1005,7 +1005,7 @@ class IziController extends JController{
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTask($taskId);
     if (!$task){
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }                                               
     $dataModel=&$this->getModel('Data','dbconnectModel');
@@ -1056,7 +1056,7 @@ class IziController extends JController{
   /**
    *  Akce pro zobrazení hodnot z konkrétního sloupce DB tabulky
    */     
-  public function previewColumn(){
+  public function previewColumn(){     
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');    
     $taskId=JRequest::getInt('task_id',JRequest::getInt('taskId',-1));
     $kbiId=JRequest::getInt('kbi',-1);
@@ -1067,7 +1067,7 @@ class IziController extends JController{
       $task=$tasksModel->getTaskByKbi($kbiId);
     }                            
     if (!$task){//TODO zobrazení chyby
-      JError::raiseError(500,JText::_('FORBIDDEN'));
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
       return ;
     }
     
@@ -1081,11 +1081,16 @@ class IziController extends JController{
       return ;                                
     }
     
-    $values=$unidbModel->getColumnValuesPreview($connection->table,$columnName);
+    $order=JRequest::getVar('order','value');
+    
+    $values=$unidbModel->getColumnValuesPreview($connection->table,$columnName,$order);
     
     $view=&$this->getView('IziPreviewColumn',$this->document->getType());
     $view->assign('columnName',$columnName);
+    $view->assign('kbiId',$kbiId);
     $view->assignRef('values',$values);
+    $view->assign('order',$order);
+    $view->assign('graphStyle',JRequest::getVar('graph'));
     $view->display();
   }
   
@@ -1103,5 +1108,14 @@ class IziController extends JController{
     exit('not yet implemented');
   } 
 
+  /**
+   *  Akce pro vygenerování a zobrazení view s popisem chyby - aby nebylo nutné zobrazovat standartní hlášku joomly
+   */     
+  private function showErrorView($title,$text){      
+    $view=&$this->getView('IziError',$this->document->getType());
+    $view->assign('title',$title);
+    $view->assign('text',$text);
+    $view->display();
+  }
 }
 ?>

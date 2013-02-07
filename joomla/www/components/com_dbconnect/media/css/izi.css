@@ -371,8 +371,10 @@ div#iziDiv div.formActionsDiv input:hover{
   color: white;
 }
 div#iziDiv div#izipreviewcolumnDiv div#previewDiv,div#iziDiv div#izipreviewattributeDiv div#previewDiv{
-  height: 390px;
+  height: 340px;
   padding: 5px;
+  padding-top: 0px;
+  margin-top: 5px;
   overflow: auto;
 }
 div#iziDiv div#izipreviewcolumnDiv div#previewDiv table,
@@ -381,6 +383,7 @@ div#iziDiv div#izipreviewattributeDiv div#previewDiv table{
   margin: 10px;
   width:97%;
 }
+
 div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.valueTd,
 div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.valueTd{
   text-align: left;
@@ -422,12 +425,95 @@ div#iziDiv div#izipreviewattributeDiv div#previewDiv table th{
   text-align: center;
   padding: 3px 10px;
 }
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table th a,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table th a{
+  color:white;
+  font-weight: bold;
+  text-decoration: none;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table th span.order,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table th span.order{
+  color:white;
+  display: inline-block;
+  font-weight: bold;
+  margin:0px 0px 0px 5px;
+  font-size:16px;
+}
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table th a:hover,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table th a:hover{
+  color:white;
+  font-weight: bold;
+  text-decoration: underline;
+}
 div#iziDiv div#izipreviewcolumnDiv div#previewDiv table tr:hover td,
 div#iziDiv div#izipreviewattributeDiv div#previewDiv table tr:hover td{
   background: rgb(250,250,255);
 }
+
+div#iziDiv table#previewInfoTable{
+  margin: 0px 20px;
+}
+div#iziDiv table#previewInfoTable td.rowsCountTd{
+  width:220px;
+}
+div#iziDiv table#previewInfoTable td.differentCountTd{
+  width:300px;
+}
+
 div#iziDiv div.loadingDiv{
   background:url('../images/spinner.gif') left 12px no-repeat;
   color: gray;
   padding: 10px 25px ;
 }
+
+div#iziDiv h1.error{
+  color: rgb(204,0,51) !important;
+}
+div#iziDiv div.error{
+  color: rgb(204,0,51) !important;
+  margin: 20px 30px;
+  text-align: center;
+  font-size: 15px;
+}
+table#loginTable{
+  margin-left:auto;
+  margin-right:auto;
+}
+table#loginTable td{
+  padding: 2px 5px;
+  vertical-align: middle;
+}
+table#loginTable td input{
+  padding: 5px 10px;
+  font-size:110%;
+  width:260px;
+}
+
+table#loginTable input.button{
+  background-color: #075783;
+  border: 1px solid #075783;
+  border-radius: 5px 5px 5px 5px;
+  color: white;
+  display: block;
+  margin: 4px auto;
+  padding: 10px;
+  text-decoration: none;
+  width: 150px;
+  display: inline-block;
+}
+table#loginTable a.cancelButton{
+  background-color: #075783;
+  border: 1px solid #075783;
+  border-radius: 5px 5px 5px 5px;
+  color: white;
+  display: block;
+  margin: 4px auto;
+  padding: 9px 8px 8px 8px;
+  text-decoration: none;
+  width: 80px;
+  display: inline-block;
+}
+div.noAccountDiv{
+  text-align: center;
+  padding-top:10px;
+} 
