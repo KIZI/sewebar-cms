@@ -122,8 +122,8 @@
                    $fieldColumn->addAttribute('field',$derivedName);
                    $inlineTable=$mapValues->addChild('InlineTable');
                    
-                   //TODO
-                   $this->discretize_nominalEnumeration($inlineTable,$fmlModel,$bkefPreprocessing->NominalEnumeration,$connection,$pmmlFieldName);
+                   //TODO   
+                   $this->discretize_nominalEnumeration($inlineTable,$fmlModel,$bkefPreprocessing->NominalEnumeration,$connection,$pmmlFieldName,((string)$bkefFormat->DataType!='String'));
                  }
                  //máme všechny potřebné údaje - můžeme se pokusit sloupec předzpracovat
                }
@@ -240,7 +240,7 @@
     /**
      *  Funkce pro připravení DerivedField do TransformationDictionary pro NominalEnumeration
      */         
-    private function discretize_nominalEnumeration(&$inlineTable,$fmlModel,$nominalEnumeration,$connection,$columnName){
+    private function discretize_nominalEnumeration(&$inlineTable,$fmlModel,$nominalEnumeration,$connection,$columnName,$notMappedFormat=false){
       //připravíme si pole s roztříděním jednotlivých hodnot do skupin podle BKEFu
       $valuesGroupsArr=array();
       if (@count($nominalEnumeration->NominalBin)>0){
@@ -254,34 +254,45 @@
           }
         }
       }
-      //připravíme si mapovací pole
-      $valuesMapArr=$fmlModel->getValuesMappingsArr($columnName);
-      //TODO!!!
-      //pokusíme se připojit k externí databázi a udělat preprocessing konkrétních hodnot
-      if (!$this->prepareUniDb($connection)){return;}         
-      //načteme všechny hodnoty z daného sloupce a vypíšeme je
-      $values=$this->uniDb->getColumnValues($connection->table,$columnName);      
-      if (count($values)>0){         
-        foreach ($values as $valueItem) {
-          $value=$valueItem[0];
-          if (is_numeric($value)){
-            $mappedValue=$value;
-          }else{                          
-            $mappedValue=@$valuesMapArr[$value];  
-            if (!$mappedValue){continue;}        
-          }                         
-          $valueGroup=@$valuesGroupsArr[$mappedValue];
-          if (!$valueGroup){continue;}   
+      
+      if ($notMappedFormat){
+        /*jde o nemapovaný formát (numerický či regex)*/
+        foreach ($valuesGroupsArr as $value=>$valueGroup){
         	$row=$inlineTable->addChild('row'); 
           $row->addChild('column',(string)$value);
           $row->addChild('field',(string)$valueGroup);
         }
+      }else{
+        /*jde o mapovaný formát (string)*/
+        //připravíme si mapovací pole
+        $valuesMapArr=$fmlModel->getValuesMappingsArr($columnName);
+        //TODO!!!
+        //pokusíme se připojit k externí databázi a udělat preprocessing konkrétních hodnot
+        if (!$this->prepareUniDb($connection)){return;}         
+        //načteme všechny hodnoty z daného sloupce a vypíšeme je
+        $values=$this->uniDb->getColumnValues($connection->table,$columnName);      
+        if (count($values)>0){         
+          foreach ($values as $valueItem) {
+            $value=$valueItem[0];
+            if (is_numeric($value)){
+              $mappedValue=$value;
+            }else{                          
+              $mappedValue=@$valuesMapArr[$value];  
+              if (!$mappedValue){continue;}        
+            }                         
+            $valueGroup=@$valuesGroupsArr[$mappedValue];
+            if (!$valueGroup){continue;}   
+          	$row=$inlineTable->addChild('row'); 
+            $row->addChild('column',(string)$value);
+            $row->addChild('field',(string)$valueGroup);
+          }
+        }
       }
       
       
-      //exit(var_dump($valuesGroupsArr));
-      //exit(var_dump($nominalEnumeration));
-      //TODO preprocessing
+      
+      
+      
     } 
     
     private function prepareUniDb($connection){    

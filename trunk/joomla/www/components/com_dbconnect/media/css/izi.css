@@ -50,6 +50,9 @@ div#iziDiv h2{
   font-size: 20px;
   margin: 10px;
 }
+div#iziDiv div#newTaskUserDiv{
+  text-align:center;
+}
 div#iziDiv div.bigButtonsDiv{
   text-align: center;
   margin-left: auto;

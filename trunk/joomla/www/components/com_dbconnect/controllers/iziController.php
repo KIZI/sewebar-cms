@@ -48,6 +48,16 @@ class IziController extends JController{
   /**
    *  Akce pro zobrazení začátku výběru nového datového zdroje
    */      
+  public function newTask(){
+    $view=$this->getView('IziNewTask',$this->document->getType());
+    $user=&JFactory::getUser();
+    $view->assignRef('user',$user);
+    $view->display();
+  }
+    
+  /**
+   *  Akce pro zobrazení začátku výběru nového datového zdroje
+   */      
   public function newDatasource(){
     $view=$this->getView('IziNewDatasource',$this->document->getType());
     $view->display();
@@ -344,6 +354,8 @@ class IziController extends JController{
     $view->assign('taskId',$task->id);
     $view->display();
   } 
+  
+  
   
   /**
    *  Akce pro vyvolání úpravy preprocessing hintu
@@ -735,7 +747,7 @@ class IziController extends JController{
   /**
    *  Metoda pro vytvoření KBI Source a import zadání úlohy v PMML
    */                                                                                    //TODO výběr minerUrl
-  private function generateKbiSource($configArr,$connection,$task,$pmml,$minerUrl='http://lmcloud.vse.cz/SewebarConnect'){   
+  private function generateKbiSource($configArr,$connection,$task,$pmml,$minerUrl='http://connect-dev.lmcloud.vse.cz/SewebarConnect'){   
     $kbiModel=&$this->getModel('Kbi','dbconnectModel');        
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);                                      
     JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');     
@@ -1081,8 +1093,15 @@ class IziController extends JController{
    *  Akce pro zobrazení hodnot vybraného atributu
    */
   public function previewAttribute(){
-    exit('sem');
+    exit('not yet implemented');
   }      
+  
+  /**
+   *  Akce pro vyvolání úpravy preprocessing hintu
+   */
+  public function newReportArticle(){
+    exit('not yet implemented');
+  } 
 
 }
 ?>

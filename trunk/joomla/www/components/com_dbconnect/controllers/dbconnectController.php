@@ -653,7 +653,7 @@ class dbconnectController extends JController{
   /**
    *  Metoda pro vytvoření KBI Source a import zadání úlohy v PMML
    */                                                                                    //TODO výběr minerUrl
-  private function generateKbiSource($configArr,$connection,$task,$pmml,$minerUrl='http://connect.lmcloud.vse.cz'){   
+  private function generateKbiSource($configArr,$connection,$task,$pmml,$minerUrl='http://connect-dev.lmcloud.vse.cz/SewebarConnect'){   
     $kbiModel=&$this->getModel('Kbi','dbconnectModel');        
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);                                      
     JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');     
