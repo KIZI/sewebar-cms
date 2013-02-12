@@ -4,7 +4,7 @@
 */                            
 
 jimport('joomla.application.component.model');
-                   
+                                 
 /**
  * @package Joomla
  * @subpackage Config

@@ -50,6 +50,13 @@ class IziController extends JController{
    */      
   public function newTask(){
     $view=$this->getView('IziNewTask',$this->document->getType());
+                                        
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel'); 
+                                          
+    $order=JRequest::getVar('order','id');
+    $tasks=$tasksModel->getTasks($order);
+  	$view->assignRef('tasks',	$tasks);                   
+    
     $user=&JFactory::getUser();
     $view->assignRef('user',$user);
     $view->display();

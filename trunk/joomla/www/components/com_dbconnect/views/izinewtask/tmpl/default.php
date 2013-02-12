@@ -10,8 +10,20 @@
       parent.close();
       ///parent.reload();
     }
+    
+    function showExistingTasksList(){
+      $('tasksList').style.display='block';
+      $('showTasksA').style.display='none';
+    }
   //]]>
   </script>
+  <style type="text/css">
+  /* <![CDATA[ */
+    div#tasksList{
+      display: none;
+    }
+  /* ]]> */
+  </style>
   
   <?php
   if (JRequest::getVar('close','')!='no'){
@@ -31,7 +43,7 @@
     }
     echo '</h2>';
     echo '<p>'.JText::_('NEW_TASK_USER_INFO');
-    echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=user&task=logout').'" class="button">'.JText::_('LOGOUT').'</a>';
+    echo ' <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=user&task=logout').'" class="button">'.JText::_('LOGOUT').'</a>';
     echo '</p>';
   }else{
     //jde o anonyma
@@ -45,7 +57,14 @@
   echo '<div class="bigButtonsDiv">
           <h2>'.JText::_('EXISTING_TASKS').'</h2>';
   if ($this->user->id>0){
-    echo '<a href="">'.JText::_('SHOW_EXISTING_TASKS').'</a>';
+    echo '<a href="#" id="showTasksA" onclick="showExistingTasksList()">'.JText::_('SHOW_EXISTING_TASKS').'</a>';
+    echo '<div id="tasksList">';
+    if ($this->tasks&&(count($this->tasks)>0)){
+      foreach($this->tasks as $task){
+        echo '<a href="#">'.htmlspecialchars($task->name).'</a>';
+      }
+    }
+    echo '</div>';
     /*<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listDMTasks&tmpl=component').'">'.JText::_('EXISTING_TASKS').'</a>*/
   }else{
     echo '<p>'.JText::_('ANONYMOUS_USER_TASKS_INFO').'</p>';
@@ -54,7 +73,7 @@
   if ($this->user->id>0){
     echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listConnections&tmpl=component').'">'.JText::_('NEW_TASK_USING_EXISTING_DATA').'</a>
           <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=uploadCSV&tmpl=component').'">'.JText::_('UPLOAD_CSV_FILE').'</a>
-          <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listConnections&tmpl=component').'">'.JText::_('CONNECT_DATABASE').'</a>';
+          <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listConnections&tmpl=component').'">'.JText::_('USE_MYSQL_DATABASE').'</a>';
   }else{
     echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=uploadDemoCSV&tmpl=component').'">Upload DEMO file</a>
           <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=uploadCSV&tmpl=component').'">'.JText::_('UPLOAD_CSV_FILE').'</a>';
