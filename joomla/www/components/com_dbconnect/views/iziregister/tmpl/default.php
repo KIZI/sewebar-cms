@@ -20,20 +20,25 @@
   }else{
     echo '<a href="#" onclick="reloadParent()" class="backButton">'.JText::_('CLOSE').'</a>';
   }
-  
+                         
   echo '<h1>'.JText::_('REGISTER_USER').'</h1>';
-  if (@$this->errorMessage!=''){
-    echo '<div class="error">'.$this->errorMessage.'</div>';
-  }
   echo '<form method="post" action="'.JRoute::_('index.php?option=com_dbconnect&controller=user&task=register&tmpl=component'.($backLink?'&back=ok':'')).'">
-          <table id="loginTable">
-            <tr>
+          <input type="hidden" name="sent" value="ok" />
+          <table id="loginTable">';
+  if (@$this->errorMessage!=''){
+    echo '  <tr><td colspan="2"><div class="error">'.$this->errorMessage.'</div></td></tr>';
+  }        
+  echo '    <tr>
               <td><label for="name">'.JText::_('NAME').'</label></td>
               <td><input id="name" type="text" name="name" value="'.$this->name.'" /></td>              
             </tr>
             <tr>
               <td><label for="username">'.JText::_('USERNAME').'</label></td>
               <td><input id="username" type="text" name="username" value="'.$this->username.'" /></td>              
+            </tr>
+            <tr>
+              <td><label for="email">'.JText::_('EMAIL').'</label></td>
+              <td><input id="email" type="text" name="email" value="'.$this->email.'" /></td>              
             </tr>
             <tr>  
               <td><label for="password">'.JText::_('PASSWORD').'</label></td>

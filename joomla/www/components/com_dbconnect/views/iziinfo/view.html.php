@@ -1,16 +1,17 @@
 <?php
 jimport( 'joomla.application.component.view' );
                                   
-class userViewIziRegister extends JView
+class iziViewIziInfo extends JView
 {
 	/**
 	 * Display the view
 	 */
-	function display(){
+	function display()
+	{
     JHtml::stylesheet('izi.css','media/com_dbconnect/css/');
     
 		$document = & JFactory::getDocument();
-		$document->setTitle( JText::_('REGISTER_USER') );
+		$document->setTitle( JText::_('INFO') );
     
     parent::display();		
   }
