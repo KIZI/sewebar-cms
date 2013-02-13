@@ -6,6 +6,8 @@ jimport( 'joomla.application.component.controller' );
  */  
 class ApiController extends JController{
   var $document;
+  private $loggedIn;
+
 
   /**
    *  Akce pro jednoduchý import dat - parametry přebírá z $_POST
@@ -64,6 +66,9 @@ class ApiController extends JController{
     $pmmlData=trim(@$_POST['pmml']);
     $minerUrl=trim(@$_POST['miner_url']);
     
+    //přihlášení uživatele
+    $this->loginUser();
+    
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTask($taskId);
     if (!$task){
@@ -85,7 +90,7 @@ class ApiController extends JController{
         $kbiResult=$this->generateKbiSource(null,$connection,$task,$pmmlData);
       }
     }catch(Exception $e){
-      $result=array('status'=>'error','kbi_source'=>@$kbiResult['kbi_source'],'miner_id'=>@$kbiResult['miner_id'],'message'=>$e->getMessage());
+      $result=array('status'=>'error'/*,'kbi_source'=>@$kbiResult['kbi_source'],'miner_id'=>@$kbiResult['miner_id']*/,'message'=>$e->getMessage());
     }
     
     if (!$result){
@@ -123,7 +128,8 @@ class ApiController extends JController{
     if ($taskName==''){
       $taskName='APIimport '.date('Y-m-d H:i:s');
     }
-    
+
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     if ($taskId=$tasksModel->insertBasicTask($taskName,$connectionId,'<columns></columns>',false)){
       $result=array('status'=>'ok','task_id'=>$taskId);
       $_POST['task_id']=$taskId;
@@ -208,12 +214,14 @@ class ApiController extends JController{
    *  Akce pro přihlášení uživatele prostřednictvím zaslaných dat v POSTu
    */     
   public function loginUser(){
+    if ($this->loggedIn){return;}
     $username=@$_POST['username'];
     $password=@$_POST['password'];
     if ($username!=''){
-      $application=&JFactory->getApplication;
-      $application->login(array('username'=>$username,'password'=>$password));
+      $application = JFactory::getApplication();
+      $application->login(array('username'=>$username,'password'=>$password),array('silent'=>true));
     }
+    $this->loggedIn=true;
   }
   
   /**
@@ -296,7 +304,8 @@ class ApiController extends JController{
    */     
   public function __construct( $default = array()){                                        
 		parent::__construct( $default );
-		$this->document =& JFactory::getDocument();
+		$this->document=&JFactory::getDocument();
+    $this->loggedIn=false;
 	}
 
 }
