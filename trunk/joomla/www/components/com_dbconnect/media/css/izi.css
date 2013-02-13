@@ -517,3 +517,9 @@ div.noAccountDiv{
   text-align: center;
   padding-top:10px;
 } 
+div.bigButtonsDiv a span{
+  display: block;
+}
+div.bigButtonsDiv a span.server{
+  font-size: 0.8em;
+}

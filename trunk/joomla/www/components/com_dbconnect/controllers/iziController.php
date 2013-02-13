@@ -1124,5 +1124,41 @@ class IziController extends JController{
     $view->assign('text',$text);
     $view->display();
   }
+  
+  /**
+   *  Akce pro zobrazení detailů připojení k databázi 
+   */     
+  public function showConnection(){
+    $connectionsModel= & $this->getModel('Connections', 'dbconnectModel');
+    $connection=&$connectionsModel->getConnection(JRequest::getInt('connection_id',-1));
+    if (!$connection){
+      $this->showErrorView(JText::_('CONNECTION_NOT_FOUND'),JText::_('CONNECTION_NOT_FOUND_TEXT'));
+    }
+    $view=&$this->getView('IziShowConnection',$this->document->getType());
+    $view->assign('connection',$connection);
+    $view->display();
+  }
+  
+  
+  /**
+   *  Akce pro zobrazení detailů připojení k databázi 
+   */     
+  public function showTask(){
+    $tasksModel= & $this->getModel('Tasks', 'dbconnectModel');
+    $task=&$tasksModel->getConnection(JRequest::getInt('task_id',-1));
+    if (!$task){
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
+    }
+    $view=&$this->getView('IziShowTask',$this->document->getType());
+    $view->assign('task',$task);
+    $view->display();
+  }  
+  
+  /**
+   *  Akce pro zadání nového připojení k databázi
+   */
+  public function newDatabase(){
+    exit('TODO');//TODO dokopírovat a upravit z dbconnectControlleru
+  }      
 }
 ?>
