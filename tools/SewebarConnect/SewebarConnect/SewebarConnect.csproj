@@ -70,6 +70,7 @@
     <Compile Include="API\Exceptions\InvalidTaskResultXml.cs" />
     <Compile Include="API\Exceptions\IXmlException.cs" />
     <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
+    <Compile Include="API\Requests\Task\TaskInfoRequest.cs" />
     <Compile Include="API\Responses\Application\LISpMinerResponse.cs" />
     <Compile Include="API\Responses\DataDictionary\ExportResponse.cs" />
     <Compile Include="API\Responses\ExceptionResponse.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DataDictionaryController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TaskGen\GridPoolController.cs" />
     <Compile Include="Controllers\TaskGen\ProcPoolController.cs" />
     <Compile Include="Controllers\TaskGen\TaskGenBaseController.cs" />
