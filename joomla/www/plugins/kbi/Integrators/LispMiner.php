@@ -152,35 +152,47 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function queryPost($query, $options)
 	{
+		// $options['export'] = '9741046ed676ec7470cb043db2881a094e36b554';
+
 		if($this->getMinerId() === NULL) {
 			throw new Exception('LISpMiner ID was not provided.');
 		}
 
 		$url = trim($this->getUrl(), '/');
 
-		$pooler = $this->getPooler();
-
-		if(isset($options['pooler'])) {
-			$pooler = $options['pooler'];
-			KBIDebug::info("Using '{$pooler}' as pooler", 'LISpMiner');
-		}
-
-		switch($pooler) {
-			case 'grid':
-				$url = "$url/TaskGen/GridPool";
-			break;
-			case 'proc':
-				$url = "$url/TaskGen/ProcPool";
-				break;
-			case 'task':
-			default:
-				$url = "$url/TaskGen/TaskPool";
-		}
-
 		$data = array(
-			'content' => $query,
 			'guid' => $this->getMinerId()
 		);
+
+		if(isset($options['export'])) {
+			$task = $options['export'];
+			$url = "$url/Task/Export";
+
+			$data['task'] = $task;
+
+			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
+		} else {
+			$pooler = $this->getPooler();
+
+			if(isset($options['pooler'])) {
+				$pooler = $options['pooler'];
+				KBIDebug::info("Using '{$pooler}' as pooler", 'LISpMiner');
+			}
+
+			switch($pooler) {
+				case 'grid':
+					$url = "$url/TaskGen/GridPool";
+				break;
+				case 'proc':
+					$url = "$url/TaskGen/ProcPool";
+					break;
+				case 'task':
+				default:
+					$url = "$url/TaskGen/TaskPool";
+			}
+
+			$data['content'] = $query;
+		}
 
 		if(isset($options['template'])) {
 			$data['template'] = $options['template'];
