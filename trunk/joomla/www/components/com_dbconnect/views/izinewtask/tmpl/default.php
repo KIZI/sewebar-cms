@@ -61,7 +61,7 @@
     echo '<div id="tasksList">';
     if ($this->tasks&&(count($this->tasks)>0)){
       foreach($this->tasks as $task){
-        echo '<a href="#">'.htmlspecialchars($task->name).'</a>';
+        echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=showTask&tmpl=component&task_id='.$task->id).'">'.htmlspecialchars($task->name).'</a>';
       }
     }
     echo '</div>';
