@@ -133,7 +133,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseRegisterResponse($response);
 	}
 
-	public function getDataDescription()
+	public function getDataDescription($params=null)
 	{
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/DataDictionary/Export";
@@ -141,7 +141,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$data = array(
 			'guid' => $this->getMinerId(),
 			'matrix' => $this->getMatrixName(),
-			'template' => ''
+			'template' => (@$params['template']?$params['template']:'')
 		);
 
 		KBIDebug::info(array($url, $data));
