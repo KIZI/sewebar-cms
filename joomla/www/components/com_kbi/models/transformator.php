@@ -182,13 +182,13 @@ class KbiModelTransformator extends JModel
 		}
 	}
 
-	public function getDataDescription()
+	public function getDataDescription($params=null)
 	{
 		$source = $this->getSource();
 
 		if($source != NULL && $source instanceof IHasDataDictionary) {
 			KBIDebug::log(array('source' => $source), 'DataDescription Source');
-			return $source->getDataDescription();
+			return $source->getDataDescription($params);
 		} else {
 			return JText::_('Given source has no DataDictionary (does not implenent IHasDataDictionary)');
 		}
