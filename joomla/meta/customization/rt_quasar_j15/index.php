@@ -27,6 +27,7 @@ $gantry->init();
 		$gantry->addStyles(array('template.css','joomla.css','style.css','typography.css'));
 	?>
 	<!-- sewebar specific imports-->
+  <link rel="shortcut icon" href="/favicon.ico" />
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/bkef/css/bkef.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/pmml/css/pmml.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/xml/pmml/css/navigation.css" type="text/css" />
