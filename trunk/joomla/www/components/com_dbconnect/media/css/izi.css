@@ -4,6 +4,14 @@
 .center{
   text-align: center;
 }
+.centerTable{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hidden{
+  display: none !important;
+}
 /*styly kvůli šabloně*/
 body{
   padding: 0px  !important;
@@ -115,7 +123,7 @@ div#iziDiv input,div#iziDiv select{
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
-div#iziDiv input.bigButton{
+div#iziDiv input.bigButton,div#iziDiv a.bigButton{
   border:1px solid #075783;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -284,6 +292,21 @@ div#iziDiv a.button{
   border-radius: 5px;
   display: inline-block;
   margin: 0px 10px 10px 0px;
+  background-color: #075783;
+  border: 1px solid #075783;
+  text-decoration: none;
+  color: white;
+  padding: 5px 10px ;
+}
+div#iziDiv td.actionsTd{
+  text-align: right;
+}
+div#iziDiv td.actionsTd a{
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0px 5px 0px 0px;
   background-color: #075783;
   border: 1px solid #075783;
   text-decoration: none;
@@ -522,4 +545,12 @@ div.bigButtonsDiv a span{
 }
 div.bigButtonsDiv a span.server{
   font-size: 0.8em;
+}
+table.dbConnectionTable input{
+  font-size: 110% !important;
+  padding: 5px 10px !important;
+  width: 260px;
+}
+table.dbConnectionTable input[type='checkbox']{
+  width:50px;
 }

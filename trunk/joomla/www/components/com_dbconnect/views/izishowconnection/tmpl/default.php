@@ -2,15 +2,15 @@
   defined('_JEXEC') or die('Restricted access');
   echo '<div id="iziDiv">';
   
-  echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=newTask&tmpl=component&close='.JRequest::getVar('close','')).'" class="backButton">'.JText::_('BACK').'</a>';
+  echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=listConnections&tmpl=component').'" class="backButton">'.JText::_('BACK').'</a>';
   
-  echo '<h1 class="center">'.JText::_('TASK_DETAILS').'</h1>';
+  echo '<h1>'.JText::_('DB_CONNECTION_DETAILS').'</h1>';
   
-  echo '<h2 class="center">'.htmlspecialchars($this->task->name).'</h2>';
+  echo '<h2>'.htmlspecialchars($this->task->name).'</h2>';
   echo '<table class="centerTable">
           <tr>
             <td>'.JText::_('CREATED').'</td>
-            <td><strong>'.date(JText::_('DATETIME_FORMAT'),strtotime($this->task->created)).'</strong></td>
+            <td><strong>'.date(JText::_('DATETIME_FORMAT'),strtotime($this->connection->created)).'</strong></td>
           </tr>
           <tr>
             <td colspan="2"><h3>'.JText::_('DB_TABLE_DETAILS').'</h3></td>
@@ -29,8 +29,8 @@
           </tr>
         </table>';
       
-  echo '<div class="bigButtonsDiv" style="margin-top:20px;">
-          <a href="'.str_replace(array('{$server}','{$1}'), array('http://'.$_SERVER['HTTP_HOST'],$kbiSource), JText::_('IZI_MINER_URL')).'" target="_parent">'.JText::_('RUN_TASK').'</a>
+  echo '<div class="center"  style="margin-top:20px;">
+          <a class="bigButton" href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=newDmTask&tmpl=component&connection_id='.$this->connection->id).'">'.JText::_('CREATE_NEW_TASK').'</a>
         </div>';
   
   

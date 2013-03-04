@@ -1,7 +1,7 @@
 <?php
 jimport( 'joomla.application.component.view' );
                                   
-class iziViewIziShowTask extends JView
+class iziViewIziShowConnection extends JView
 {
 	/**
 	 * Display the view
@@ -11,7 +11,7 @@ class iziViewIziShowTask extends JView
     JHtml::stylesheet('izi.css','media/com_dbconnect/css/');
     
 		$document = & JFactory::getDocument();
-		$document->setTitle( JText::_('TASK_DETAILS') );
+		$document->setTitle( JText::_('DB_CONNECTION_DETAILS') );
 
     parent::display();		
   }
