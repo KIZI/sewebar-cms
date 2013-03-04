@@ -10,7 +10,7 @@
   if ($this->connections&&(count($this->connections)>0)){
     echo '<div class="bigButtonsDiv">';
     foreach ($this->connections as $connection) {
-    	echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controler=izi&task=showConnection&connection_id='.$connection->id.'&tmpl=component').'">';
+    	echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=showConnection&connection_id='.$connection->id.'&tmpl=component').'">';
       echo '  <span class="name">'.htmlspecialchars($connection->db_name).'.<strong>'.htmlspecialchars($connection->table).'</strong></span>';
       echo '  <span class="server">'.strtolower(JText::_('USER')).': '.htmlspecialchars($connection->username).', '.strtolower(JText::_('SERVER')).': '.htmlspecialchars($connection->server).'</span>';
       echo '</a>';

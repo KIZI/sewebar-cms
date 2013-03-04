@@ -1,6 +1,6 @@
 <?php   
 jimport( 'joomla.application.component.controller' );
- 
+          
 class IziController extends JController{
   var $document;
 	  
@@ -255,7 +255,7 @@ class IziController extends JController{
     $columnsArr=array();
     $reload=false;
     if (count($columns)>0){
-      foreach ($columns as $column){    //exit(var_dump($columns));
+      foreach ($columns as $column){    
       	if ((string)$column['name']==$pmmlName){
           if ((string)$column['use']!='1'){
             $column['use']=1;
@@ -1128,7 +1128,7 @@ class IziController extends JController{
   /**
    *  Akce pro zobrazení detailů připojení k databázi 
    */     
-  public function showConnection(){
+  public function showConnection(){             
     $connectionsModel= & $this->getModel('Connections', 'dbconnectModel');
     $connection=&$connectionsModel->getConnection(JRequest::getInt('connection_id',-1));
     if (!$connection){
@@ -1143,13 +1143,17 @@ class IziController extends JController{
   /**
    *  Akce pro zobrazení detailů připojení k databázi 
    */     
-  public function showTask(){
+  public function showTask(){    
     $tasksModel= & $this->getModel('Tasks', 'dbconnectModel');
-    $task=&$tasksModel->getConnection(JRequest::getInt('task_id',-1));
+    $task=&$tasksModel->getTask(JRequest::getInt('task_id',-1));
     if (!$task){
       $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
     }
     $view=&$this->getView('IziShowTask',$this->document->getType());
+    $connectionsModel= & $this->getModel('Connections', 'dbconnectModel');
+    $connection=$connectionsModel->getConnection($task->db_table);
+    $view->assign('connection',$connectionsModel->getConnection($task->db_table));
+    
     $view->assign('task',$task);
     $view->display();
   }  
@@ -1158,7 +1162,30 @@ class IziController extends JController{
    *  Akce pro zadání nového připojení k databázi
    */
   public function newDatabase(){
-    exit('TODO');//TODO dokopírovat a upravit z dbconnectControlleru
+    $connectionsModel= & $this->getModel('Connections', 'dbconnectModel');
+    //zjistime, jestli mame ukladat data, nebo jen zobrazit formular
+    if ((JRequest::getString('save','')=='connection')&&(JRequest::getString('step','')=='3')){
+      //uložíme záznam    
+
+      $connectionId=$connectionsModel->insertConnection($_POST['db_type'],$_POST['db_server'],$_POST['db_username'],$_POST['db_password'],$_POST['db_database'],$_POST['db_table'],$_POST['db_primary_key'],$_POST['db_shared_connection']);      
+      //TODO - je potřeba dodělat kontrolu, jestli se má pokračovat s připojením...!!!
+      if (JRequest::getString('quickDMTask')=='ok'){
+        $this->_redirect=JRoute::_('index.php?option=com_dbconnect&task=quickDMTask&connection_id='.$connectionId,false);
+      }else{
+        $this->_redirect=JRoute::_('index.php?option=com_dbconnect&task=listConnections',false);
+      }      
+    }else{
+      $view = &$this->getView('IziNewDatabase',$this->document->getType());
+      $view->assign('quickDMTask',JRequest::getString('quickDMTask',''));
+      $view->setModel($connectionsModel,true);
+      if (isset($_POST['db_type'])&&isset($_POST['db_username'])&&isset($_POST['db_password'])&&isset($_POST['db_server'])&&isset($_POST['db_database'])){
+        $unidbModel=&$this->getModel('Unidb','dbconnectModel');       
+        $view->assign("pdoError",$unidbModel->setDB($_POST['db_type'],$_POST['db_server'],$_POST['db_username'],$_POST['db_password'],$_POST['db_database']));
+        $view->setModel($unidbModel,false);
+      }
+      
+      $view->display();
+    }
   }      
 }
 ?>
