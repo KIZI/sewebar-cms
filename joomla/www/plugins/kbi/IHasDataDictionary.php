@@ -2,5 +2,5 @@
 
 interface IHasDataDictionary
 {
-	public function getDataDescription();
+	public function getDataDescription($params=null);
 }
