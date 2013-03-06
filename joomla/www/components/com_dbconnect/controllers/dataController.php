@@ -6,13 +6,66 @@ jimport( 'joomla.application.component.controller' );
  */  
 class DataController extends JController{
   var $document;
+  const DEFAULT_IZI_EXPORT_TEMPLATE='4ftMiner.Task.Template.PMML';
+  const PMML_SECTION_ID=0;
 
   /**
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
   public function savePMMLArticle(){
-    $this->outputJSON(array('result'=>'error','message'=>'Not finished!'));
-    //TODO - dodělat stažení z KBI a uložení
+    $kbiId=JRequest::getInt('kbi',-1);
+    $lmtaskId=JRequest::getVar('lmtask','');
+    $articleId=JRequest::getInt('articleId',-1);
+    $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
+    //TODO rules - získání jejich seznamu a uložení ke článku
+                                        
+    try {          /*
+      require_once (JPATH_COMPONENT.DS.'../com_kbi/models/transformator.php');
+      $config = array(
+            			'source' => JRequest::getVar('kbi', null, 'default', 'none', JREQUEST_ALLOWRAW),
+            			'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+            			'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+            			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
+            		);                          
+			$model = new KbiModelTransformator($config);
+      $source=$model->getSource(); */
+      $this->getKbiSource($kbiId);
+      
+      $options=array('export'=>$lmtaskId,'template'=>$template);
+      $result=$source->queryPost(null,$options);
+      if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
+        //máme vyexportovaný PMML soubor => uložíme ho do článku 
+        /*uložení článku*/
+        $userId=JRequest::getInt('user',-1);
+        if (!($userId>=0)){
+          $user =& JFactory::getUser();
+          $userId=$user->get('id');    
+        }
+        $sectionId=JRequest::getInt('sectionId',self::PMML_SECTION_ID);
+        $title=JRequest::getString('title','');
+        if ($title==''){
+          $title='PMML '.date('r');
+        }
+        $dataModel=&$this->getModel('Data','dbconnectModel');
+        $articleId=$dataModel->saveArticle(0,$title,$result,$sectionId,$userId);
+        if ($articleId){
+          $dataModel->saveTaskArticle($taskId,$articleId,'pmml');
+        }
+        /*--uložení článku*/
+        $this->outputJSON(array('result'=>'ok','article'=>$articleId));
+        return;
+      }else{
+        $xml=simplexml_load_string($result);
+        if (isset($result->message)){
+          $errorMessage=(string)$result->message;
+        }else{
+          $errorMessage=JText::_('PMML_EXPORT_FORMAT_ERROR');
+        }
+      }
+    }catch (Exception $e) {
+		  $errorMessage=$e->getMessage();	
+	  }
+    $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
   }
   
   
@@ -20,15 +73,29 @@ class DataController extends JController{
   /**
    *  Akce pro získání seznamu článků s uživatelskými zprávami 
    */
-  public function listKBIArticles(){
+  public function listKBIArticles(){        
     $kbiId=JRequest::getInt('kbi',-1);
     if ($kbiId<0){//TODO kontrola, jestli má uživatel přístup k danému KBI zdroji
-      $this->outputJSON(array('result'=>'error','message'=>'KBI not defined!','kbi'=>$kbiId));
+      $this->outputJSON(array('result'=>'error','message'=>JText::_('KBI_NOT_DEFINED'),'kbi'=>$kbiId));
       return;
     }
-    
-    $this->outputJSON(array('result'=>'ok','kbi'=>$kbiId,'articles'=>array()));
-    //TODO !!!
+                        
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $task=$tasksModel->getTaskByKbi($kbiId);
+    if (!$task){
+      $this->outputJSON(array('result'=>'error','message'=>'DMTASK_NOT_ACCESSIBLE','kbi'=>$kbiId));
+      return;
+    }         
+    //máme načtenou úlohu, tak se pokusíme načíst jednotlivé články
+    $dataModel=&$this->getModel('Data','dbconnectModel');     
+    $articles=$dataModel->getArticlesList($task->id,'report'); 
+    $articlesArr=array();
+    if (count($articles)>0){  
+      foreach ($articles as $article){
+      	$articlesArr[$article->id]=$article->title;
+      }
+    }
+    $this->outputJSON(array('result'=>'ok','kbi'=>$kbiId,'articles'=>$articlesArr));
   }      
 
   /**
@@ -39,7 +106,7 @@ class DataController extends JController{
     if ($articleId>0){
       $this->setRedirect(JRoute::_('index.php?view=article&id='.$articleId));
     }else{
-      $this->setRedirect(JRoute::_('index.php');
+      $this->setRedirect(JRoute::_('index.php'));
     }
   }      
 
@@ -64,8 +131,12 @@ class DataController extends JController{
       
       $kbiId=JRequest::getInt('kbi',0);
       if ($kbiId>0){
-        //TODO je potřeba doplnit vazbu na KBI zdroj
-        
+        $type=JRequest::getVar('type','report');
+        $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+        $task=$tasksModel->getTaskByKbi($kbiId);
+        if ($task){
+          $dataModel->saveTaskArticle($task->id,$articleId,$type);
+        }
       }
       
       if (JRequest::getVar('return','')=='json'){
@@ -159,5 +230,27 @@ class DataController extends JController{
 		$this->document =& JFactory::getDocument();
 	}
 
+
+  /**
+   *  Funkce pro získání instance KBI modelu s konkrétním zdrojem
+   */     
+  private function getKbiModel($kbiId){
+    require_once (JPATH_COMPONENT.DS.'../com_kbi/models/transformator.php');
+    $config = array(
+          			'source' => $kbiId/*,
+          			'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+          			'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+          			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)*/
+          		);                          
+		return new KbiModelTransformator($config);
+  }
+  
+  /**
+   *  Funkce pro získání instance konkrétního KBI zdroje
+   */
+  private function getKbiSource($kbiId){
+    $model=$this->getKbiModel($kbiId);
+    return $model->getSource();
+  }     
 }
 ?>

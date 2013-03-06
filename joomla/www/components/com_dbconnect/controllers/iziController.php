@@ -1105,8 +1105,97 @@ class IziController extends JController{
    *  Akce pro zobrazení hodnot vybraného atributu
    */
   public function previewAttribute(){
-    exit('not yet implemented');
-  }      
+    //TODO
+    $attributeName=JRequest::getVar('attribute','');
+    $kbiId=JRequest::getInt('kbi','');
+    
+           
+    try {
+      require_once (JPATH_COMPONENT.DS.'../com_kbi/models/transformator.php');
+      $config = array(                        //TODO - kde se použije ID kbi zdroje???
+            			'source' => JRequest::getVar('kbi', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+            			'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+            			'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+            			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
+            		);                          
+			$model = new KbiModelTransformator($config);   
+			$dataDescription=$model->getDataDescription(array('template'=>'LMDataSource.Matrix.ARD.DBConnect.Template.PMML'));
+      $data=simplexml_load_string($dataDescription);
+                 
+      /*máme načtený XML dokument => získáme z něj příslušnou část (hodnoty zvoleného atributu)*/
+      $dictionary=null;
+      if (count($data->Dictionary)>0){
+        foreach ($data->Dictionary as $dict){
+        	if ($dict['sourceDictType']=='TransformationDictionary'){
+            $dictionary=$dict;
+            break;
+          }
+        }
+      }
+      $field=null;
+      if (($dictionary)&&(count($dictionary->Field)>0)){
+        foreach ($dictionary->Field as $fie){
+        	if ((string)$fie->Name==$attributeName){
+            $field=$fie;
+            break;
+          }
+        }
+      }
+      //pokud máme konkrétní field, tak načteme seznam hodnot
+      if ($field&&(count($field->Category)>0)){
+        $categoriesArr=array();
+        $order=1;
+        foreach ($field->Category as $category){
+        	$categoriesArr[]=array('order'=>$order,'name'=>(string)$category,'frequency'=>(integer)$category['frequency']);
+          $order++;
+        }
+      }
+      
+      if (is_array($categoriesArr)){
+        //výběr způsobu řazení a seřazení položek
+        $order=JRequest::getVar('order','order/asc');
+        $orderArr=explode('/',$order);
+        if (!in_array($orderArr[0],array('order','name','frequency'))){
+          $orderArr[0]='order';
+        }
+        if (@$orderArr[1]!='desc'){
+          $orderArr[1]='asc';
+          $order=$orderArr[0];
+        }else{
+          $order=$orderArr[0].'/desc';
+        }
+        
+        usort($categoriesArr,self::buildDatadictionarySorter($orderArr[0],$orderArr[1]));
+      }
+      
+		} catch (Exception $e) {
+			var_dump($e);
+      return;
+		}
+    
+    $view=&$this->getView('IziPreviewAttribute',$this->document->getType());
+    $view->assign('field',$field);
+    $view->assign('kbiId',$kbiId);
+    $view->assignRef('categoriesArr',$categoriesArr);
+    $view->assign('order',$order);
+    $view->assign('graphStyle',JRequest::getVar('graph'));
+    $view->display();
+  }     
+  
+  
+  /**
+   *  Funkce vracející implementaci řadící funkce pro usort, která je závislá na klíči vybraném pro řazení a směr řazení
+   */     
+  static function buildDatadictionarySorter($key,$order='asc'){
+    return function ($a, $b) use ($key,$order) {
+        $return =strnatcmp($a[$key], $b[$key]);
+        if ($order=='desc'){
+          $return*=-1;
+        }
+        return $return;
+    };
+  }
+  
   
   /**
    *  Akce pro vyvolání úpravy preprocessing hintu

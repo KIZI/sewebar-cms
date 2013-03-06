@@ -6,19 +6,8 @@
     return round($count/$totalCount*100,1);
   }
   
-  ?>
-  <script type="text/javascript">
-  //<![CDATA[
-
-    function reloadParent(){
-      parent.close();
-      ///parent.reload();
-    }
-  //]]>
-  </script>
   
-  <?php
-  echo '<a href="#" onclick="reloadParent()" class="backButton">'.JText::_('CLOSE').'</a>';
+  echo '<a href="#" onclick="parent.close();" class="backButton">'.JText::_('CLOSE').'</a>';
   
   echo '<div id="izipreviewcolumnDiv">';
     echo '<h1>'.$this->columnName.'</h1>';

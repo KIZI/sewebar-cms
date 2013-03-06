@@ -41,6 +41,29 @@
     }
     
     /**
+     *  Funkce vracející seznam článků připojených k úloze (na základě taskId a typu článku)
+     */
+    public function getArticlesList($taskId,$type){
+      $db=$this->getDBO();
+      $db->setQuery('SELECT * FROM #__dbconnect_tasks_articles JOIN #__content ON #__dbconnect_tasks_articles.article=#__content.id WHERE #__dbconnect_tasks_articles.task='.$db->quote($taskId).' AND #__dbconnect_tasks_articles.`type`='.$db->quote($type).' ORDER BY #__content.title;');
+      return $db->loadObjectList();
+    }      
+    
+    /**
+     *  Funkce pro uložení vazby mezi článkem a DM úlohou...
+     */         
+    public function saveTaskArticle($taskId,$articleId,$type){
+      $db=$this->getDBO();
+      $db->setQuery('INSERT INTO #__dbconnect_tasks_articles (article,task,`type`)VALUES('.$db->quote($articleId).','.$db->quote($taskId).','.$db->quote($type).');');
+      if (!$db->query()){
+        $db->setQuery('UPDATE #__dbconnect_tasks_articles SET `type`='.$db->quote($type).' WHERE task='.$db->quote($taskId).' AND article='.$db->quote($articleId).' LIMIT 1;')
+        $db->query();
+      }
+    }    
+    
+    
+    
+    /**
      *  Funkce pro vytvoření/uložení článku
      */         
     public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){
