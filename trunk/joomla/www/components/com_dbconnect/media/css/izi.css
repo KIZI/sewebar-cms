@@ -407,6 +407,11 @@ div#iziDiv div#izipreviewattributeDiv div#previewDiv table{
   width:97%;
 }
 
+div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.orderTd,
+div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.orderTd{
+  text-align: right;
+  width: 60px;
+}
 div#iziDiv div#izipreviewcolumnDiv div#previewDiv table td.valueTd,
 div#iziDiv div#izipreviewattributeDiv div#previewDiv table td.valueTd{
   text-align: left;

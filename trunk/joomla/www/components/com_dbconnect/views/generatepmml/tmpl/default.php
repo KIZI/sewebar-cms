@@ -12,7 +12,7 @@ defined('_JEXEC') or die('Restricted access');
           function redirectToUrl(){
             location.href="'.$this->redirectUrl.'";
           }
-          var t=setTimeout("redirectToUrl();",5000);
+          var t=setTimeout("redirectToUrl();",3000);
         </script>';
         
   echo '<a href="'.$this->redirectUrl.'" class="button">'.JText::_('REDIRECT').'</a>';

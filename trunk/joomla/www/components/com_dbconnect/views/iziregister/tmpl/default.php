@@ -2,23 +2,12 @@
   defined('_JEXEC') or die('Restricted access');
   echo '<div id="iziDiv">';
   
-  ?>
-  <script type="text/javascript">
-  //<![CDATA[
-
-    function reloadParent(){
-      parent.close();
-      ///parent.reload();
-    }
-  //]]>
-  </script>
   
-  <?php
   if (JRequest::getVar('back','')=='ok'){
     $backLink=true;
     echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=user&task=login&tmpl=component&back=ok').'" class="backButton">'.JText::_('BACK').'</a>';
   }else{
-    echo '<a href="#" onclick="reloadParent()" class="backButton">'.JText::_('CLOSE').'</a>';
+    echo '<a href="#" onclick="parent.close();" class="backButton">'.JText::_('CLOSE').'</a>';
   }
                          
   echo '<h1>'.JText::_('REGISTER_USER').'</h1>';
