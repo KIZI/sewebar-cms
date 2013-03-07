@@ -56,7 +56,7 @@
       $db=$this->getDBO();
       $db->setQuery('INSERT INTO #__dbconnect_tasks_articles (article,task,`type`)VALUES('.$db->quote($articleId).','.$db->quote($taskId).','.$db->quote($type).');');
       if (!$db->query()){
-        $db->setQuery('UPDATE #__dbconnect_tasks_articles SET `type`='.$db->quote($type).' WHERE task='.$db->quote($taskId).' AND article='.$db->quote($articleId).' LIMIT 1;')
+        $db->setQuery('UPDATE #__dbconnect_tasks_articles SET `type`='.$db->quote($type).' WHERE task='.$db->quote($taskId).' AND article='.$db->quote($articleId).' LIMIT 1;');
         $db->query();
       }
     }    
@@ -66,15 +66,18 @@
     /**
      *  Funkce pro vytvoření/uložení článku
      */         
-    public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){
+    public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){  
       $db=$this->getDBO();
       $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
       if ($db->loadObject()){
         //budeme updatovat
         $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', fulltext="", sectionId='.$db->quote($sectionId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
-      }else{
+        if ($db->query()){
+          return $articleId;
+        }
+      }else{    
         //budeme ukládat
-        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`sectionid`,`created`,`created_by`,`modified`,`modified_by`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).','.$db->quote($sectionId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).');');
+        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`sectionid`,`created`,`created_by`,`modified`,`modified_by`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($sectionId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).');');
         //TODO asset!!!
         if ($db->query()){
           return $db->insertid();
