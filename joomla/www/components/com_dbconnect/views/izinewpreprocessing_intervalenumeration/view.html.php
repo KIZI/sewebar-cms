@@ -38,9 +38,11 @@ class iziViewIziNewPreprocessing_IntervalEnumeration extends JView
                                                               'BLANK_INTERVAL_GROUPS_WARNING'=>JText::_('BLANK_INTERVAL_GROUPS_WARNING'),
                                                               'GROUP_NAME'=>JText::_('GROUP_NAME'),
                                                               'ADD_ITEM'=>JText::_('ADD_ITEM'),
-                                                              'DELETE'=>JText::_('DELETE')  
+                                                              'DELETE'=>JText::_('DELETE'),
+                                                              'INPUT_VALID_ATTRIBUTE_NAME'=>JText::_('INPUT_VALID_ATTRIBUTE_NAME')  
                                                             )).";");
     JHtml::script('intervalenumeration.js','media/com_dbconnect/js/');
+    JHtml::script('uniquenames.js','media/com_dbconnect/js/');
     
     parent::display();		
   }
