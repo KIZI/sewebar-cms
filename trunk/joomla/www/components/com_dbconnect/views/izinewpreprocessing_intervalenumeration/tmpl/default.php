@@ -32,17 +32,25 @@
           }
         }
         $binsArr[]=$binArr;
-      }
+      }              
       echo '<script type="text/javascript">
               var binsJson=\''.json_encode($binsArr).'\'; 
               var binsArr= JSON && JSON.parse(binsJson) || eval("(function(){return " + binsJSON + ";})()");
 
               window.addEvent(\'domready\',function() {   
                   prepareDefaultBins();
+                  getAttributesNames(\''.$this->kbiId.'\');
                 }
               );
             </script>';
     }
+  }else{
+    echo '<script type="text/javascript">
+              window.addEvent(\'domready\',function() {
+                  getAttributesNames(\''.$this->kbiId.'\');
+                }
+              );
+            </script>';
   }
   
   echo '<form method="post" onsubmit="return submitIntervalEnumeration();" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_intervalEnumeration').'">
@@ -76,7 +84,8 @@
       echo $intervalText;
       $br=true;
     }
-  }              
+  }
+  $this->kbiId=340;              
   echo         '</strong>
               </td>
             </tr>
@@ -85,7 +94,10 @@
                 <label for="attributeName">'.JText::_('ATTRIBUTE_NAME').'</label>
               </td>
               <td>
-                <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars($this->pmmlName).'" />
+                <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars($this->pmmlName).'" onkeyup="checkAttributeNameShow();" />
+                <span id="attributeNameExists">'.JText::_('ATTRIBUTE_NAME_EXISTS').'</span>
+                <span id="attributeNameNotSet">'.JText::_('ATTRIBUTE_NAME_NOT_SET').'</span>
+                <span id="attributeNameNotChecked">'.JText::_('ATTRIBUTE_NAME_NOT_CHECKED').'</span>
               </td>
             </tr>
           </table>

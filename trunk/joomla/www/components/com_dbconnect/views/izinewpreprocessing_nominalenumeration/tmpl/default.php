@@ -60,10 +60,18 @@
 
               window.addEvent(\'domready\',function() {   
                   prepareDefaultBins();
+                  getAttributesNames(\''.$this->kbiId.'\');
                 }
               );
             </script>';
     }
+  }else{
+    echo '<script type="text/javascript">
+            window.addEvent(\'domready\',function() {
+                getAttributesNames(\''.$this->kbiId.'\');
+              }
+            );
+          </script>';
   }
   
   echo '<script type="text/javascript">
@@ -88,7 +96,10 @@
                 <label for="attributeName">'.JText::_('ATTRIBUTE_NAME').'</label>
               </td>
               <td>
-                <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars($this->pmmlName).'" />
+                <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars($this->pmmlName).'" onkeyup="checkAttributeNameShow();" />
+                <span id="attributeNameExists">'.JText::_('ATTRIBUTE_NAME_EXISTS').'</span>
+                <span id="attributeNameNotSet">'.JText::_('ATTRIBUTE_NAME_NOT_SET').'</span>
+                <span id="attributeNameNotChecked">'.JText::_('ATTRIBUTE_NAME_NOT_CHECKED').'</span>
               </td>
             </tr> 
           </table>

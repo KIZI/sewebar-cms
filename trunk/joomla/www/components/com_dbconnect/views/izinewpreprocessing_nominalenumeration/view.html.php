@@ -28,10 +28,12 @@ class iziViewIziNewPreprocessing_NominalEnumeration extends JView
                                                               'DELETE'=>JText::_('DELETE'),
                                                               'NOT_SUBMITTED_VALUE_WARNING'=>JText::_('NOT_SUBMITTED_VALUE_WARNING'),
                                                               'NO_GROUPED_VALUES_FOUND'=>JText::_('NO_GROUPED_VALUES_FOUND'),
-                                                              'BLANK_NOMINAL_GROUPS_WARNING'=>JText::_('BLANK_NOMINAL_GROUPS_WARNING')
+                                                              'BLANK_NOMINAL_GROUPS_WARNING'=>JText::_('BLANK_NOMINAL_GROUPS_WARNING'),
+                                                              'INPUT_VALID_ATTRIBUTE_NAME'=>JText::_('INPUT_VALID_ATTRIBUTE_NAME')
                                                             )));
                                                             
     JHtml::script('nominalenumeration.js','media/com_dbconnect/js/');
+    JHtml::script('uniquenames.js','media/com_dbconnect/js/');
     
     parent::display();		
   }

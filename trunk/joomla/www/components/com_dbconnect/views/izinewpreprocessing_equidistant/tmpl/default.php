@@ -8,6 +8,13 @@
     echo '<a href="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=newAttribute&col='.urlencode($this->pmmlName).'&taskId='.$this->taskId.'&tmpl=component').'" class="backButton">'.JText::_('BACK').'</a>';
   }
   
+  echo '<script type="text/javascript">
+          window.addEvent(\'domready\',function() {
+              getAttributesNames(\''.$this->kbiId.'\');
+            }
+          );
+        </script>';
+  
   
   echo '<h1>'.JText::_('PREPROCESSING_EQUIDISTANT_INTERVALS').'</h1>';
   echo '<form method="post" onsubmit="return equidistantInputCheck();" action="'.JRoute::_('index.php?option=com_dbconnect&controller=izi&task=editPreprocessingHint_equidistantInterval').'">
@@ -27,7 +34,10 @@
                 <label for="attributeName">'.JText::_('ATTRIBUTE_NAME').'</label>
               </td>
               <td>
-                <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars(((@$this->attributeName!='')?$this->attributeName:$this->pmmlName.': equidistant')).'" />
+                <input type="text" name="attributeName" id="attributeName" value="'.htmlspecialchars(((@$this->attributeName!='')?$this->attributeName:$this->pmmlName.': equidistant')).'" onkeyup="checkAttributeNameShow();" />
+                <span id="attributeNameExists">'.JText::_('ATTRIBUTE_NAME_EXISTS').'</span>
+                <span id="attributeNameNotSet">'.JText::_('ATTRIBUTE_NAME_NOT_SET').'</span>
+                <span id="attributeNameNotChecked">'.JText::_('ATTRIBUTE_NAME_NOT_CHECKED').'</span>
               </td>
             </tr>
             <tr>
