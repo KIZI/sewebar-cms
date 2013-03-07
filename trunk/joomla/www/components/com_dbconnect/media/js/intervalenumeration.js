@@ -223,6 +223,11 @@
    *  Funkce pro kontroly před odesláním formuláře
    */                     
   function submitIntervalEnumeration(){
+    if (checkAttributeName($('attributeName').value)==false){
+      checkAttributeNameShow();
+      alert(lang['INPUT_VALID_ATTRIBUTE_NAME']);
+      return false;
+    }
     if (!checkIntervalSubmitted()){
       return false;
     }            
@@ -232,7 +237,7 @@
     }
     if (checkBlankGroups()){
       return (confirm(lang["BLANK_INTERVAL_GROUPS_WARNING"]));
-    }               
+    }
     return true;
   }
   

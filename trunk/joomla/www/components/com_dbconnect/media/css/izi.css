@@ -12,6 +12,10 @@
 .hidden{
   display: none !important;
 }
+input.error{
+  border: 1px solid red ;
+  color:red;
+}
 /*styly kvůli šabloně*/
 body{
   padding: 0px  !important;
@@ -558,4 +562,22 @@ table.dbConnectionTable input{
 }
 table.dbConnectionTable input[type='checkbox']{
   width:50px;
+}
+/*styly pro chyby u jmen*/
+#attributeNameExists{
+  padding: 0px 10px ;
+  color: red;
+  font-style: italic;
+  display: none;
+}
+#attributeNameNotSet{
+  padding: 0px 10px ;
+  color: red;
+  font-style: italic;
+  display: none;
+}
+#attributeNameNotChecked{
+  padding: 0px 10px ;
+  color: gray;
+  font-style: italic;
 }

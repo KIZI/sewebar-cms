@@ -9,7 +9,12 @@
     if (value==''){return false}
     return !isNaN(value);
   }
-  function equidistantInputCheck(){   
+  function equidistantInputCheck(){
+    if (checkAttributeName($('attributeName').value)==false){
+      checkAttributeNameShow();
+      alert(lang['INPUT_VALID_ATTRIBUTE_NAME']);
+      return false;
+    }   
     start=cleanNumber($('start').value);
     $('start').value=start;
     if (!is_numeric(start)){
