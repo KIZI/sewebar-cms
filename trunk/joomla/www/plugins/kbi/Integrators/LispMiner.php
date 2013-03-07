@@ -167,7 +167,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		if(isset($options['export'])) {
 			$task = $options['export'];
 			$url = "$url/Task/Export";
-
+                         
 			$data['task'] = $task;
 
 			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
