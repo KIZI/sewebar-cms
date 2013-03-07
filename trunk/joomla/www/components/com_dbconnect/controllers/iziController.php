@@ -48,8 +48,13 @@ class IziController extends JController{
   /**
    *  Akce pro zobrazení začátku výběru nového datového zdroje
    */      
-  public function newTask(){
+  public function newTask(){           
     $view=$this->getView('IziNewTask',$this->document->getType());
+    
+    if (isset($_GET['iziMinerUrl'])){
+      $session = JFactory::getSession();
+      $session->set('iziMinerUrl', $_GET['iziMinerUrl'],'dbconnect');
+    }
                                         
     $tasksModel=&$this->getModel('Tasks','dbconnectModel'); 
                                           
@@ -378,6 +383,14 @@ class IziController extends JController{
     $maName=JRequest::getString('maName','');
     $formatName=JRequest::getString('formatName','');
     
+    //vyřešení vygenerování preprocessing hintu a jeho uložení
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $task=$tasksModel->getTask($taskId);
+    if (!$task){//TODO zobrazení chyby
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
+      return ;
+    }
+    
     $attributeName=trim(JRequest::getString('attributeName',''));
     if ($attributeName==''){
       //nemáme zadaný název preprocessingu - zobrazíme view pro zadání 
@@ -386,17 +399,12 @@ class IziController extends JController{
       $view->assign('maName',$maName);
       $view->assign('formatName',$formatName);
       $view->assign('taskId',$taskId);
+      $view->assign('kbiId',$task->kbi_source);
       $view->display();
       //nemáme zadaný název preprocessingu - zobrazíme view pro zadání 
       return;
     }
-    //vyřešení vygenerování preprocessing hintu a jeho uložení
-    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
-    $task=$tasksModel->getTask($taskId);
-    if (!$task){//TODO zobrazení chyby
-      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
-      return ;
-    }
+    
                          
     $fmlModel=&$this->getModel('Fml','dbconnectModel'); 
     $dataModel=&$this->getModel('Data','dbconnectModel');
@@ -457,6 +465,7 @@ class IziController extends JController{
       $view->assign('maName',$maName);
       $view->assign('formatName',$formatName);
       $view->assign('taskId',$taskId);
+      $view->assign('kbiId',$task->kbi_source);
       $view->assign('oldPhName',$oldPhName);
       
       if ($oldPhName!=''){   
@@ -583,6 +592,7 @@ class IziController extends JController{
       $view->assign('maName',$maName);
       $view->assign('formatName',$formatName);
       $view->assign('taskId',$taskId);
+      $view->assign('kbiId',$task->kbi_source);
       $view->assign('format',$bkefModel->getFormat($maName,$formatName));
       $view->assign('preprocessingHint',$oldPreprocessingHint);
       $view->display();
@@ -691,6 +701,7 @@ class IziController extends JController{
       $view->assign('maName',$maName);
       $view->assign('formatName',$formatName);
       $view->assign('taskId',$taskId);
+      $view->assign('kbiId',$task->kbi_source);
       $view->assign('format',$bkefModel->getFormat($maName,$formatName));
       $view->assign('preprocessingHint',$oldPreprocessingHint);
       $view->display();
