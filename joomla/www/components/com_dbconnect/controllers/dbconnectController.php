@@ -626,7 +626,21 @@ class dbconnectController extends JController{
         $view->display();
       }else{
         $view = &$this->getView('IziGeneratePMML',$this->document->getType());
-        $view->assign('redirectUrl',str_replace(array('{$server}','{$1}'), array('http://'.$_SERVER['HTTP_HOST'],$kbiSource), JText::_('IZI_MINER_URL')));
+        $session = JFactory::getSession();  
+        if ($session->has('iziMinerUrl','dbconnect')){
+          $url=$session->get('iziMinerUrl','','dbconnect');     
+          if (strpos($url,'?')){
+            $url.='&';
+          }else{
+            $url.='?';
+          }
+          $url.='id_dm='.$kbiSource;           
+          $session->clear('iziMinerUrl','dbconnect');
+          $view->assign('redirectUrl',$url);
+        }else{
+          $view->assign('redirectUrl',str_replace(array('{$server}','{$1}'), array('http://'.$_SERVER['HTTP_HOST'],$kbiSource), JText::_('IZI_MINER_URL')));
+        }
+        
         $view->display();
       }
     }else{

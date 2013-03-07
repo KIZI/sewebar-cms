@@ -12,7 +12,7 @@ class DataController extends JController{
   /**
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
-  public function savePMMLArticle(){
+  public function savePMMLArticle(){      
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',-1);
@@ -29,10 +29,10 @@ class DataController extends JController{
             		);                          
 			$model = new KbiModelTransformator($config);
       $source=$model->getSource(); */
-      $this->getKbiSource($kbiId);
+      $source=$this->getKbiSource($kbiId);         
       
       $options=array('export'=>$lmtaskId,'template'=>$template);
-      $result=$source->queryPost(null,$options);
+      $result=$source->queryPost(null,$options);      
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
         //máme vyexportovaný PMML soubor => uložíme ho do článku 
         /*uložení článku*/
@@ -45,15 +45,20 @@ class DataController extends JController{
         $title=JRequest::getString('title','');
         if ($title==''){
           $title='PMML '.date('r');
-        }
+        }                                                   
         $dataModel=&$this->getModel('Data','dbconnectModel');
         $articleId=$dataModel->saveArticle(0,$title,$result,$sectionId,$userId);
         if ($articleId){
-          $dataModel->saveTaskArticle($taskId,$articleId,'pmml');
+          $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+          $task=$tasksModel->getTaskByKbi($kbiId);
+          if ($task){
+            $dataModel->saveTaskArticle($task->id,$articleId,'pmml');
+          }
+          $this->outputJSON(array('result'=>'ok','article'=>$articleId));
+          return;
         }
         /*--uložení článku*/
-        $this->outputJSON(array('result'=>'ok','article'=>$articleId));
-        return;
+        
       }else{
         $xml=simplexml_load_string($result);
         if (isset($result->message)){
@@ -215,6 +220,30 @@ class DataController extends JController{
   }      
   
   /**
+   *  Akce vracející JSON přehled atributů, které existují ve vybraném LM
+   */        
+  public function getExistingAttributes(){   
+    $kbiId=JRequest::getInt('kbi',-1);  
+    try{  
+      $kbiModel=$this->getKbiModel($kbiId);   
+      $xmlStr=$kbiModel->getDataDescription(array('template'=>'LMDataSource.Matrix.ARD.Attributes.Template.XML'));
+      $xml=simplexml_load_string($xmlStr);
+      $attributesArr=array();
+      if (($xml)&&(count($xml->Attribute)>0)){
+        foreach ($xml->Attribute as $attribute){
+          $attributesArr[]=(string)$attribute;	
+        }
+        $this->outputJSON(array('result'=>'ok','attributes'=>$attributesArr));
+        return;
+      }
+    }catch (Exception $e) {       
+		  $errorMessage=$e->getMessage();	
+	  }
+    $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
+  }
+  
+  
+  /**
    *  Funkce pro vypsání výstupu ve formátu JSON
    */     
   private function outputJSON($data){
@@ -237,10 +266,10 @@ class DataController extends JController{
   private function getKbiModel($kbiId){
     require_once (JPATH_COMPONENT.DS.'../com_kbi/models/transformator.php');
     $config = array(
-          			'source' => $kbiId/*,
+          			'source' => $kbiId,
           			'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
           			'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
-          			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)*/
+          			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
           		);                          
 		return new KbiModelTransformator($config);
   }
