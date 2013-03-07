@@ -106,7 +106,7 @@ namespace LMWrapper.LISpMiner
 			this.Dsn = dsn;
 			this.LMPath = lmPath;
 
-			this.ApplicationName = "LMPoolerPooler.exe";
+			this.ApplicationName = "LMProcPooler.exe";
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_LMProcPooler", Guid.NewGuid());
 			this.CancelAll = false;
 			// this.TimeOut = 10;
