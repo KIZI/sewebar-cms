@@ -607,12 +607,11 @@ class dbconnectController extends JController{
       return ;
     }                                     
                                     
-    $pmmlModel=&$this->getModel('Pmml','dbconnectModel');
+    $pmmlModel=&$this->getModel('Pmml','dbconnectModel');  
     $fmlModel->setFml($fml);
     $bkefModel->setBkef($bkef);   
     $pmml=$pmmlModel->generatePMML($task,$connection,$bkefModel,$fmlModel);
-                                   //exit(var_dump($pmml));
-                                   //exit('pmml');
+                                   
                                    
                                                          //exit(var_dump($pmml));
     //TODO configArr
