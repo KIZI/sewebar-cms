@@ -532,9 +532,9 @@ class IziController extends JController{
     if ($preprocessingHint){
       //došlo k uložení - potřebujeme doplnit FML a vygenerovat 
       $phName=(string)$preprocessingHint->Name;
-      
+                    
       $fmlModel->setPreprocessingHint($pmmlName,$maName,$formatName,$phName,$attributeName); 
-      $dataModel->saveArticleXML($task->fml_article,$fmlModel->getFml());
+      $dataModel->saveArticleXML($task->fml_article,$fmlModel->getFml());                 
       $dataModel->saveArticleXML($task->bkef_article,$bkefModel->getBkef());
       
       $this->_redirect=JRoute::_('index.php?option=com_dbconnect&controller=izi&task=quickDMTask_generate&task_id='.$taskId,false);

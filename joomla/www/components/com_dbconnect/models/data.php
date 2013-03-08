@@ -87,6 +87,20 @@
       }
     }
     
+    /**
+     *  Funkce pro uložení obsahu článku    
+     */    
+    public function saveArticleData($articleId,$data){
+      parent::saveArticle($articleId,$data);
+    }
+    
+  /**
+   *  Funkce pro uložení simpleXml do jednoho článku v DB
+   */     
+  function saveArticleXML($id,$xml){
+    $this->saveArticleData($id,$xml->asXML());
+  } 
+    
     
     /**
      *  Funkce pro úpravu textu tak, aby byl použitelný jako alias
