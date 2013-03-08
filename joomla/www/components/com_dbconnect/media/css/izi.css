@@ -581,3 +581,14 @@ table.dbConnectionTable input[type='checkbox']{
   color: gray;
   font-style: italic;
 }
+#taskNameNotChecked{
+  padding:3px 0px 5px 0px;
+  color:gray;
+  font-style: italic;
+}
+#taskNameExists,#taskNameNotSet{
+  padding:3px 0px 5px 0px;
+  color:red;
+  font-style: italic;
+  display: none;
+}

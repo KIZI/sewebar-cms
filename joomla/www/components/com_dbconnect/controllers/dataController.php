@@ -242,6 +242,29 @@ class DataController extends JController{
     $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
   }
   
+  /**
+   *  Akce vracející JSON přehled atributů, které existují ve vybraném LM
+   */        
+  public function getExistingTasks(){       
+    $user =& JFactory::getUser();
+    $userId=$user->id;
+    if (($user->guest)&&(JRequest::getVar('ignoreAnonymous','')=='ok')){
+      $this->outputJSON(array('result'=>'ok','tasks'=>array()));
+      return;
+    }
+                                                    
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $tasks=$tasksModel->getTasks();
+    $namesArr=array();
+    if ($tasks&&(count($tasks)>0)){
+      foreach ($tasks as $task){
+      	$namesArr[]=$task->name;
+      }
+    }
+     
+    $this->outputJSON(array('result'=>'ok','tasks'=>$namesArr));
+  }
+  
   
   /**
    *  Funkce pro vypsání výstupu ve formátu JSON
