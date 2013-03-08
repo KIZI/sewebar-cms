@@ -47,6 +47,10 @@
       <Project>{98E96392-DCB6-4200-B18D-1891AE9FE604}</Project>
       <Name>LMWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SewebarKey\SewebarKey.csproj">
+      <Project>{6B6A0A83-A72A-46A0-9AF3-67199AB0F597}</Project>
+      <Name>SewebarKey</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
