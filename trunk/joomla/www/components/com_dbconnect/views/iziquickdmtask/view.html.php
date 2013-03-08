@@ -21,6 +21,8 @@ class IziViewIziQuickDMTask extends JView
     $this->unidbModel=$this->getModel('Unidb','unidbModel'); 
     $this->assignRef('columns',$this->unidbModel->getColumns($this->connection->table)); 		
                                      
+    JHtml::script('uniquenames.js','media/com_dbconnect/js/');                                                                                          
+                                     
 		//DEVNOTE:call parent display
     parent::display();		
   }

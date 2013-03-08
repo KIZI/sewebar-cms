@@ -1,22 +1,34 @@
 <?php 
 defined('_JEXEC') or die('Restricted access');
 echo '<div id="iziDiv">';
+  echo '<script type="text/javascript">
+          window.addEvent(\'domready\',function() {  
+              getTasksNames();
+            }
+          );
+          function newTaskSubmitCheck(){
+            return (checkTaskName($(\'name\').value)!=false);
+          }
+        </script>';
   
   echo '<h1>'.JText::_('NEW_QUICK_DM_TASK_H1').'</h1>';
   echo '<div class="infoDiv">'.JText::_('NEW_IZI_QUICK_DM_TASK_INFO').'</div>';
   if ($this->columns&&(count($this->columns)>0)){
     //máme nějaké info o sloupcích - zobrazíme jejich výběr 
     echo '<div id="quickdmtaskDiv">';
-    echo '  <form method="post">';
+    echo '  <form method="post" onsubmit="return newTaskSubmitCheck();">';
     echo '    <input type="hidden" value="'.$this->connection->id.'" name="connection_id" />';
     echo '    <input type="hidden" value="'.$this->dmTask->id.'" name="task_id" />';
     echo '    <input type="hidden" value="ok" name="save" />';
     echo '    <input type="hidden" value="'.@$this->dmTask->id.'" name="task_id" />';
     echo '    <table>
                   <tr>
-                    <td style="padding-right:20px;"><label for="name">'.JText::_('TASK_NAME').'</label></td>
+                    <td style="padding-right:20px;width:90px;"><label for="name">'.JText::_('TASK_NAME').'</label></td>
                     <td>
-                      <input type="text" name="name" id="name" value="'.$this->connection->table.' ('.date(JText::_('DATETIME_FORMAT')).')" maxlength="60" style="min-width:250px;"  />
+                      <input type="text" name="name" id="name" value="'.$this->connection->table.' ('.date(JText::_('DATETIME_FORMAT')).')" maxlength="60" style="min-width:250px;" onkeyup="checkTaskNameShow();" />
+                      <div id="taskNameExists">'.JText::_('TASK_NAME_ALREADY_EXISTS').'</div>
+                      <div id="taskNameNotSet">'.JText::_('TASK_NAME_NOT_SET').'</div>
+                      <div id="taskNameNotChecked">'.JText::_('TASK_NAME_CANNOT_BE_CHECKED').'</div>
                     </td>
                   </tr>
                 </table>';
