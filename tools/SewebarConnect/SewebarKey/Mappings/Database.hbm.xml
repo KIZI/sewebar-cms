@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="SewebarKey" namespace="SewebarKey">
+	<class name="Database" table="databases">
+		<id name="Id" column="id" type="Guid" unsaved-value="00000000-0000-0000-0000-000000000000">
+			<generator class="guid.comb" />
+		</id>
+		<property name="Name" column="name" type="string" length="255" />
+		<property name="Password" column="password" type="string" />
+		<many-to-one name="Owner" column="id_user" cascade="none" fetch="join" class="SewebarKey.User, SewebarKey" not-found="ignore" />
+	</class>
+</hibernate-mapping>

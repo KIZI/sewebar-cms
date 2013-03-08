@@ -19,6 +19,9 @@ namespace Debugger
 				case "remove":
 					Remove();
 					break;
+				case "key":
+					ManageDatabase();
+					break;
 				default:
 					Help();
 					break;
@@ -29,6 +32,13 @@ namespace Debugger
 			Console.WriteLine("Done.");
 
 			Console.Read();
+		}
+
+		private static void ManageDatabase()
+		{
+			var databaseManager = new SewebarKey.Configurations.Manager();
+
+			databaseManager.CreateDatabase();
 		}
 
 		private static void Help()
