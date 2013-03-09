@@ -4,6 +4,10 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 using LMWrapper.LISpMiner;
+using NHibernate;
+using NHibernate.Cfg;
+using NHibernate.Context;
+using SewebarKey.Configurations;
 using log4net;
 
 namespace SewebarConnect
@@ -12,6 +16,7 @@ namespace SewebarConnect
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(MvcApplication));
 		private static LMWrapper.Environment _env;
+		public static ISessionFactory SessionFactory { get; private set; }
 
 		#region Properties
 
@@ -98,6 +103,11 @@ namespace SewebarConnect
 
 			// Load logging info
 			log4net.Config.XmlConfigurator.Configure();
+
+			ISessionManager sessionManager = new NHibernateSessionManager();
+			sessionManager.Configuration.CurrentSessionContext<WebSessionContext>();
+
+			SessionFactory = sessionManager.BuildSessionFactory();
 		}
 
 		protected void Application_Error(object sender, EventArgs e)

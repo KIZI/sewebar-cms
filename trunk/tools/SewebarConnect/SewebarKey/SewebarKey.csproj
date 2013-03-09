@@ -50,17 +50,19 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations\ISessionManager.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="Configurations\Manager.cs" />
+    <Compile Include="Configurations\NHibernateSessionManager.cs" />
     <Compile Include="Miner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ICommand.cs" />
+    <Compile Include="Repositories\IQuery.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\NHibernateRepository.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Configurations\hibernate.cfg.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Mappings\Database.hbm.xml" />
     <EmbeddedResource Include="Mappings\Miner.hbm.xml" />
     <EmbeddedResource Include="Mappings\User.hbm.xml" />
