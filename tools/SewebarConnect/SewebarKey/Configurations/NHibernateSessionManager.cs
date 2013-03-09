@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 
 namespace SewebarKey.Configurations
 {
-	public class Manager
+	public class NHibernateSessionManager : ISessionManager
 	{
-		private static Configuration _cfg;
+		private Configuration _cfg;
 
-		public static Configuration Config
+		public Configuration Configuration
 		{
 			get
 			{
 				if (_cfg == null)
 				{
 					_cfg = new Configuration();
-					_cfg.Configure(string.Format("{0}\\Configurations\\hibernate.cfg.xml", AppDomain.CurrentDomain.BaseDirectory));
+					_cfg.Configure(string.Format("{0}\\hibernate.cfg.xml", AppDomain.CurrentDomain.BaseDirectory));
 
 					//TODO: workaround pro threading SQLite. Problem pri uploadu souboru pres backgroundworkera a relativnim linkem na datasource. 
 					if (_cfg.Properties["connection.driver_class"] == "NHibernate.Driver.SQLite20Driver" &&
@@ -30,14 +30,19 @@ namespace SewebarKey.Configurations
 			}
 		}
 
-		public Manager()
+		public NHibernateSessionManager()
 		{	
 		}
 
 		public void CreateDatabase()
 		{
-			var schemaExport = new SchemaExport(Config);
+			var schemaExport = new SchemaExport(Configuration);
 			schemaExport.Create(false, true);
+		}
+
+		public ISessionFactory BuildSessionFactory()
+		{
+			return Configuration.BuildSessionFactory();
 		}
 	}
 }

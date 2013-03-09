@@ -2,6 +2,7 @@
 using System.IO;
 using LMWrapper;
 using LMWrapper.LISpMiner;
+using SewebarKey.Configurations;
 
 namespace Debugger
 {
@@ -36,7 +37,7 @@ namespace Debugger
 
 		private static void ManageDatabase()
 		{
-			var databaseManager = new SewebarKey.Configurations.Manager();
+			ISessionManager databaseManager = new NHibernateSessionManager();
 
 			databaseManager.CreateDatabase();
 		}

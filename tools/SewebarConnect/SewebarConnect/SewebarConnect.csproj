@@ -37,6 +37,9 @@
     <Reference Include="log4net">
       <HintPath>..\Libs\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\Libs\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="RouteDebugger" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
       <HintPath>..\Libs\routedebugger.2.1.4.0\RouteDebugger.dll</HintPath>
     </Reference>
@@ -95,6 +98,9 @@
     <Compile Include="Controllers\TaskGen\ProcPoolController.cs" />
     <Compile Include="Controllers\TaskGen\TaskGenBaseController.cs" />
     <Compile Include="Controllers\TaskGen\TaskPoolController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Filters\NHibernateSessionAttribute.cs" />
+    <Compile Include="Filters\NHibernateTransactionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -104,6 +110,9 @@
   <ItemGroup>
     <Content Include="Content\styles.css" />
     <Content Include="Global.asax" />
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\console.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
@@ -131,6 +140,10 @@
     <ProjectReference Include="..\LMWrapper\LMWrapper.csproj">
       <Project>{98E96392-DCB6-4200-B18D-1891AE9FE604}</Project>
       <Name>LMWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SewebarKey\SewebarKey.csproj">
+      <Project>{6B6A0A83-A72A-46A0-9AF3-67199AB0F597}</Project>
+      <Name>SewebarKey</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
