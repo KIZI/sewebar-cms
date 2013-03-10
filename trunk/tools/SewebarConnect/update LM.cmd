@@ -1,1 +1,1 @@
-build\release\Debugger.exe update Libs
+Build\Release\SewebarConsole.exe update Libs
