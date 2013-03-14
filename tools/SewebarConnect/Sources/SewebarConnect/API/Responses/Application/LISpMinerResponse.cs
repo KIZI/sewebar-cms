@@ -33,10 +33,8 @@ namespace SewebarConnect.API.Responses.Application
 				return new XDocument(
 					new XDeclaration("1.0", "utf-8", "yes"),
 					new XElement("response",
-					             new XAttribute("status", Status.Success.ToString().ToLower()),
-								 new XAttribute("id", this.LISpMiner.Id),
-								 new XAttribute("metabase", this.LISpMiner.Metabase.DSN),
-								 new XAttribute("database", this.LISpMiner.Database.DSN)
+								new XAttribute("status", Status.Success.ToString().ToLower()),
+								new XAttribute("id", this.LISpMiner.Id)
 						)
 					);
 			}

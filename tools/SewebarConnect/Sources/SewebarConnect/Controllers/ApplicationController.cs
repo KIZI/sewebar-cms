@@ -79,11 +79,9 @@ namespace SewebarConnect.Controllers
 		[ErrorHandler]
 		public XmlResult Register()
 		{
-
 			var request = new RegistrationRequest(this);
 			var id = ShortGuid.NewGuid();
-			var database = OdbcConnection.Create(MvcApplication.Environment, id.ToString(), request.DbConnection);
-			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), database, request.Metabase);
+			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
 
 			MvcApplication.Environment.Register(miner);
 

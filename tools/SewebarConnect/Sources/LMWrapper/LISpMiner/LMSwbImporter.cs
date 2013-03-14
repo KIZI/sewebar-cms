@@ -34,6 +34,11 @@ namespace LMWrapper.LISpMiner
 					arguments.AppendFormat("\"/DSN:{0}\" ", this.Dsn);
 				}
 
+				if (!String.IsNullOrEmpty(this.OdbcConnectionString))
+				{
+					arguments.AppendFormat("/ODBCConnectionString=\"{0}\" ", this.OdbcConnectionString);
+				}
+
 				// /Input:<pmml_file>
 				if (!String.IsNullOrEmpty(this.Input))
 				{
@@ -74,9 +79,13 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		public LMSwbImporter()
+		internal LMSwbImporter(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPath)
 			: base()
 		{
+			this.LISpMiner = lispMiner;
+			this.LMPath = lmPath ?? this.LISpMiner.LMPath;
+			this.OdbcConnectionString = connectionString.Value;
+
 			this.ApplicationName = "LMSwbImporter.exe";
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_importer", Guid.NewGuid());
 		}
