@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 
 namespace LMWrapper.ODBC
 {
@@ -16,35 +18,65 @@ namespace LMWrapper.ODBC
 
 		#endregion
 
-		public MySQLConnection(string dsn)
-			: base(dsn)
+		internal MySQLConnection(string dsnFile)
+			: base(dsnFile)
 		{
-			if (!ODBCManagerRegistry.DSNExists(this.DSN))
+			if (!File.Exists(this.DSNFile))
 			{
 				throw new Exception(
 					String.Format(
-						"DSN with given name does not exists ({0}), therefore it is not possible to create connection without definition",
-						this.DSN));
+						"DSN File \"{0}\" does not exists, therefore it is not possible to create connection without definition",
+						this.DSNFile));
 			}
 		}
 
-		public MySQLConnection(string dsn, string server, string db, string username, string pass)
-			: base(dsn)
+		internal MySQLConnection(string dsnFile, string server, string db, string username, string pass)
+			: this(
+				dsnFile,
+				new DbConnection
+					{
+						Type = OdbcDrivers.MySqlConnection,
+						Server = server,
+						Database = db,
+						Username = username,
+						Password = pass
+					})
 		{
-			this.ServerAddress = server;
-			this.Database = db;
-			this.Username = username;
-			this.Password = pass;
 
-			if (!ODBCManagerRegistry.DSNExists(this.DSN))
+		}
+
+		internal MySQLConnection(string databaseDSNFile, DbConnection connection)
+			: base(databaseDSNFile)
+		{
+			if (connection == null)
 			{
-				ODBCManagerRegistry.CreateDSNMySQL(this.DSN, "Auto created DSN for LISpMiner", this.ServerAddress, this.Database, this.Username, this.Password);
+				throw new Exception("Connection definition cannot be null!");
+			}
+
+			this.ServerAddress = connection.Server;
+			this.Database = connection.Database;
+			this.Username = connection.Username;
+			this.Password = connection.Password;
+
+			if (!File.Exists(this.DSNFile))
+			{
+				this.CreateDSNFile();
 			}
 		}
 
-		public override string ConnectionString
+		private void CreateDSNFile()
 		{
-			get { return string.Format("Server={0};Database={1};Uid={2};Pwd={3};", ServerAddress, Database, Username, Password); }
+			using (var writer = new StreamWriter(this.DSNFile, false, Encoding.ASCII))
+			{
+				writer.WriteLine("[ODBC]");
+				writer.WriteLine("DRIVER=MySQL ODBC 5.1 Driver");
+				writer.WriteLine(string.Format("SERVER={0}", this.ServerAddress));
+				writer.WriteLine(string.Format("DATABASE={0}", this.Database));
+				writer.WriteLine(string.Format("PORT={0}", 3306));
+				writer.WriteLine(string.Format("OPTION={0}", 3));
+				writer.WriteLine(string.Format("UID={0}", this.Username));
+				writer.WriteLine(string.Format("PWD={0}", this.Password));
+			}
 		}
 	}
 }

@@ -74,6 +74,11 @@ namespace LMWrapper.LISpMiner
 					arguments.AppendFormat("/DSN:{0} ", this.Dsn);
 				}
 
+				if (!String.IsNullOrEmpty(this.OdbcConnectionString))
+				{
+					arguments.AppendFormat("/ODBCConnectionString=\"{0}\" ", this.OdbcConnectionString);
+				}
+
 				// /TaskID <TaskID>
 				if (!String.IsNullOrEmpty(this.TaskId))
 				{
@@ -126,12 +131,12 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		public LMTaskPooler(LISpMiner lispMiner, string dsn, string lmPath)
+		internal LMTaskPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPath)
 			: base()
 		{
 			this.LISpMiner = lispMiner;
-			this.Dsn = dsn;
-			this.LMPath = lmPath;
+			this.LMPath = lmPath ?? this.LISpMiner.LMPath;
+			this.OdbcConnectionString = connectionString.Value;
 
 			this.ApplicationName = "LMTaskPooler.exe";
 			this._stopwatch = new Stopwatch();

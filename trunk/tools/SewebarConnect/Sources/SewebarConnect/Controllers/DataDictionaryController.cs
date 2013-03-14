@@ -25,7 +25,7 @@ namespace SewebarConnect.Controllers
 				importer.Input = request.DataDictionaryPath;
 				importer.Execute();
 
-				response.Message = String.Format("Data Dictionary imported to {0}", importer.Dsn);
+				response.Message = String.Format("Data Dictionary imported to {0}", importer.LISpMiner.Id);
 				response.Status = Status.Success;
 
 				return new XmlResult

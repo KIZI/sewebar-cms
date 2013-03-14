@@ -11,7 +11,7 @@ namespace LMWrapper.LISpMiner
 
 		private readonly Stopwatch _stopwatch;
 
-		public LISpMiner LISpMiner { get; set; }
+		public LISpMiner LISpMiner { get; protected set; }
 
 		public string ApplicationName { get; protected set; }
 
@@ -20,12 +20,18 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
 		/// </summary>
+		[Obsolete]
 		public string Dsn { get; set; }
 
-		public string LMPath { get; set; }
+		/// <summary>
+		/// /ODBCConnectionString="FILEDSN=X:\Path\File" ... 'File' is DSN file without extension (eg. IZIMiner.MB.dsn)
+		/// </summary>
+		public string OdbcConnectionString { get; protected set; }
+
+		public string LMPath { get; protected set; }
 
 		/// <summary>
-		/// /Quiet    ... errors reported to _AppLog.dat instead on screen
+		/// /Quiet	... errors reported to _AppLog.dat instead on screen
 		/// </summary>
 		public bool Quiet { get; set; }
 
@@ -37,7 +43,7 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// /AppLog:[log_file]		... (O) alternative path and file name for logging
 		/// </summary>
-		public string AppLog { get; set; }
+		public string AppLog { get; protected set; }
 
 		public abstract string Arguments { get; }
 
@@ -66,14 +72,14 @@ namespace LMWrapper.LISpMiner
 		protected virtual void Run()
 		{
 			var p = new Process
-			        	{
-			        		StartInfo = new ProcessStartInfo
-			        		            	{
+						{
+							StartInfo = new ProcessStartInfo
+											{
 												FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
-			        		            		Arguments = this.Arguments,
+												Arguments = this.Arguments,
 												WorkingDirectory = this.LMPath
-			        		            	}
-			        	};
+											}
+						};
 
 			this.Status = ExecutableStatus.Running;
 			

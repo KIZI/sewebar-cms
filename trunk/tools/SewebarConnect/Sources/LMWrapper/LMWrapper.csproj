@@ -53,7 +53,6 @@
     <Compile Include="Environment.cs" />
     <Compile Include="IMetabase.cs" />
     <Compile Include="LISpMinerException.cs" />
-    <Compile Include="LISpMiner\4ftGen.cs" />
     <Compile Include="LISpMiner\Executable.cs" />
     <Compile Include="LISpMiner\ExecutableStatus.cs" />
     <Compile Include="LISpMiner\LISpMiner.cs" />
@@ -65,6 +64,7 @@
     <Compile Include="LISpMiner\TaskLauncher.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="ODBC\AccessConnection.cs" />
+    <Compile Include="ODBC\ConnectionString.cs" />
     <Compile Include="ODBC\DbConnection.cs" />
     <Compile Include="ODBC\MySQLConnection.cs" />
     <Compile Include="ODBC\ODBCConnection.cs" />

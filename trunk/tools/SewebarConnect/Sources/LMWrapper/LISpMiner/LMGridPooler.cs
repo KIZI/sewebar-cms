@@ -59,6 +59,11 @@ namespace LMWrapper.LISpMiner
 					arguments.AppendFormat("/DSN:{0} ", this.Dsn);
 				}
 
+				if (!String.IsNullOrEmpty(this.OdbcConnectionString))
+				{
+					arguments.AppendFormat("/ODBCConnectionString=\"{0}\" ", this.OdbcConnectionString);
+				}
+
 				// /TaskID <TaskID>
 				if (!String.IsNullOrEmpty(this.TaskId))
 				{
@@ -116,11 +121,13 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		internal LMGridPooler(LISpMiner lispMiner, string dsn, string lmPath, string gridPath)
+		internal LMGridPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPath, string gridPath)
+			: base()
 		{
 			this.LISpMiner = lispMiner;
-			this.Dsn = dsn;
-			this.LMPath = lmPath;
+			this.LMPath = lmPath ?? this.LISpMiner.LMPath;
+			this.OdbcConnectionString = connectionString.Value;
+
 			this.GridBinariesPath = gridPath;
 
 			this.ApplicationName = "LMGridPooler.exe";

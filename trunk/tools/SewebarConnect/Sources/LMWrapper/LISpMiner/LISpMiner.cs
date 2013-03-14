@@ -15,6 +15,11 @@ namespace LMWrapper.LISpMiner
 		private LMGridPooler _lmGridPooler;
 		private Version _version;
 
+		internal static string GetMinerPath(Environment environment, string minerId)
+		{
+			return Path.GetFullPath(Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", minerId)));
+		}
+
 		#region Properties
 
 		public string Id { get; protected set; }
@@ -46,12 +51,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._importer == null)
 				{
-					this._importer = new LMSwbImporter
-					{
-						LMPath = this.LMPath,
-						Dsn = this.Metabase.DSN,
-						LISpMiner = this
-					};
+					this._importer = new LMSwbImporter(this, this.Metabase.ConnectionString, this.LMPath);
 				}
 
 				return this._importer;
@@ -66,12 +66,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._exporter == null)
 				{
-					this._exporter = new LMSwbExporter
-					{
-						LMPath = this.LMPath,
-						Dsn = this.Metabase.DSN,
-						LISpMiner = this
-					};
+					this._exporter = new LMSwbExporter(this, this.Metabase.ConnectionString, this.LMPath);
 				}
 
 				return this._exporter;
@@ -86,7 +81,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmTaskPooler == null)
 				{
-					this._lmTaskPooler = new LMTaskPooler(this, this.Metabase.DSN, this.LMPath);
+					this._lmTaskPooler = new LMTaskPooler(this, this.Metabase.ConnectionString, this.LMPath);
 				}
 
 				return this._lmTaskPooler;
@@ -101,7 +96,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmProcPooler == null)
 				{
-					this._lmProcPooler = new LMProcPooler(this, this.Metabase.DSN, this.LMPath);
+					this._lmProcPooler = new LMProcPooler(this, this.Metabase.ConnectionString, this.LMPath);
 				}
 
 				return this._lmProcPooler;
@@ -116,7 +111,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmGridPooler == null)
 				{
-					this._lmGridPooler = new LMGridPooler(this, this.Metabase.DSN, this.LMPath, this.Environment.PCGridPath);
+					this._lmGridPooler = new LMGridPooler(this, this.Metabase.ConnectionString, this.LMPath, this.Environment.PCGridPath);
 				}
 
 				return this._lmGridPooler;
@@ -133,7 +128,7 @@ namespace LMWrapper.LISpMiner
 		{
 			this.Id = id;
 			this.Environment = environment;
-			this.LMPath = Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", this.Id));
+			this.LMPath = GetMinerPath(environment, this.Id);
 
 			DirectoryUtil.Copy(environment.LMPath, this.LMPath);
 
@@ -151,11 +146,11 @@ namespace LMWrapper.LISpMiner
 			: this(environment, id)
 		{
 			string databaseFile;
-			string databaseDSN;
+			string databaseDSNFile;
 
-			this.GetDatabaseNames(databasePrototypeFile, out databaseFile, out databaseDSN);
+			this.GetDatabaseNames(databasePrototypeFile, out databaseFile, out databaseDSNFile);
 
-			this.Database = new AccessConnection(databaseFile, databasePrototypeFile, databaseDSN);
+			this.Database = new AccessConnection(databaseDSNFile, databaseFile, databasePrototypeFile);
 
 			this.CreateMetabase(metabasePrototypeFile);
 		}
@@ -163,18 +158,29 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// Creates LISpMiner with given database. Metabase is created as Access DB.
 		/// </summary>
-		/// <param name="environment">Environment settings</param>
+		/// <param name="environment">Environment settings.</param>
 		/// <param name="id">Desired ID.</param>
-		/// <param name="database">Original database.</param>
+		/// <param name="connection">Connection to original database.</param>
 		/// <param name="metabasePrototypeFile">Name of metabase file to use. Must exist in data folder.</param>
-		public LISpMiner(Environment environment, string id, OdbcConnection database, string metabasePrototypeFile)
+		public LISpMiner(Environment environment, string id, DbConnection connection, string metabasePrototypeFile)
 			: this(environment, id)
 		{
-			if (database != null)
+			string databaseFile;
+			string databaseDSNFile;
+
+			string databasePrototypeFile = this.GetDatabaseNames(connection.Database, out databaseFile, out databaseDSNFile);
+
+			if (connection.Type == OdbcDrivers.MySqlConnection)
 			{
-				this.Database = database;
+				this.Database = new MySQLConnection(databaseDSNFile, connection);
 			}
 			else
+			{
+				this.Database = new AccessConnection(databaseDSNFile, databaseFile, databasePrototypeFile);
+			}
+
+
+			if (this.Database == null)
 			{
 				throw new NullReferenceException("Database can't be null.");
 			}
@@ -199,24 +205,24 @@ namespace LMWrapper.LISpMiner
 
 			string metabaseFile;
 			string devNull = string.Empty;
-			string metabaseDSN;
+			string metabaseDSNFile;
 			string databaseFile;
-			string databaseDSN;
+			string databaseDSNFile;
 
-			this.GetDatabaseNames(string.Empty, out databaseFile, out databaseDSN);
+			this.GetDatabaseNames(string.Empty, out databaseFile, out databaseDSNFile);
 
 			if (File.Exists(databaseFile))
 			{
-				this.Database = new AccessConnection(databaseFile, string.Empty, databaseDSN);
+				this.Database = new AccessConnection(databaseDSNFile, databaseFile, string.Empty);
 			}
 			else
 			{
-				this.Database = new MySQLConnection(databaseDSN);
+				this.Database = new MySQLConnection(databaseDSNFile);
 			}
 
 
-			this.GetMetabaseNames(out metabaseFile, ref devNull, out metabaseDSN);
-			this.Metabase = new AccessConnection(metabaseFile, string.Empty, metabaseDSN);
+			this.GetMetabaseNames(out metabaseFile, ref devNull, out metabaseDSNFile);
+			this.Metabase = new AccessConnection(metabaseDSNFile, metabaseFile, string.Empty);
 
 			this.Created = lmpath.CreationTime;
 		}
@@ -224,39 +230,45 @@ namespace LMWrapper.LISpMiner
 		protected void CreateMetabase(string metabasePrototypeFile)
 		{
 			string metabaseFile;
-			string metabaseDSN;
+			string dsnFile;
 
-			this.GetMetabaseNames(out metabaseFile, ref metabasePrototypeFile, out metabaseDSN);
+			this.GetMetabaseNames(out metabaseFile, ref metabasePrototypeFile, out dsnFile);
 
-			this.Metabase = new AccessConnection(metabaseFile, metabasePrototypeFile, metabaseDSN);
+			this.Metabase = new AccessConnection(dsnFile, metabaseFile, metabasePrototypeFile);
 
 			this.Metabase.SetDatabaseDsnToMetabase(this.Database);
 		}
 
-		protected void GetMetabaseNames(out string file, ref string protofile, out string dsn)
+		protected void GetMetabaseNames(out string file, ref string protofile, out string dsnFile)
 		{
 			if (string.IsNullOrEmpty(protofile))
 			{
-				protofile = "LMEmpty.mdb";
+				protofile = String.Format(@"{0}\{1}", this.LMPath, "LMEmpty.mdb");
+			}
+			else
+			{
+				protofile = String.Format(@"{0}\{1}", Environment.DataPath, protofile);
 			}
 
-			//TODO: make default connection configurable
-			file = String.Format(@"{0}\LM-metabase-{1}.mdb", this.LMPath, this.Id);
-			protofile = String.Format(@"{0}\{1}", Environment.DataPath, protofile);
-			dsn = String.Format("LMM-{0}", this.Id);
+			file = String.Format(@"{0}\LM.MB.mdb", this.LMPath);
+			dsnFile = String.Format(@"{0}\LM.MB.dsn", this.LMPath);
 		}
 
-		protected void GetDatabaseNames(string databasePrototypeFile, out string file, out string dsn)
+		protected string GetDatabaseNames(string databasePrototypeFile, out string file, out string dsnFile)
 		{
-			if (String.IsNullOrEmpty(databasePrototypeFile))
+			string databasePrototypePath = Path.Combine(this.Environment.DataPath, databasePrototypeFile);
+
+			if (String.IsNullOrEmpty(databasePrototypeFile) || Path.GetExtension(databasePrototypePath) != "mdb" || !File.Exists(databasePrototypePath))
 			{
 				// because it is default to create with
-				databasePrototypeFile = "Barbora.mdb";
+				databasePrototypePath = Path.Combine(this.Environment.DataPath, "Barbora.mdb");
 			}
 			
-			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypeFile);
-			file = String.Format(@"{0}\LM-{2}-{1}.mdb", this.LMPath, this.Id, databaseName);
-			dsn = String.Format("LM{0}", this.Id);
+			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypePath);
+			file = String.Format(@"{0}\LM-{1}.mdb", this.LMPath,databaseName);
+			dsnFile = String.Format(@"{0}\LM.dsn", this.LMPath);
+
+			return databasePrototypePath;
 		}
 
 		protected Version GetVersion()
