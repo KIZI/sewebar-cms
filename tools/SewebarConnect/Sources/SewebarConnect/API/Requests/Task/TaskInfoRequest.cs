@@ -87,6 +87,5 @@ namespace SewebarConnect.API.Requests.Task
 				return this.HttpContext.Request["alias"];
 			}
 		}
-
 	}
 }

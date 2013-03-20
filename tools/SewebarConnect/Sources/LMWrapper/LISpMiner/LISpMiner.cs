@@ -256,12 +256,13 @@ namespace LMWrapper.LISpMiner
 
 		protected string GetDatabaseNames(string databasePrototypeFile, out string file, out string dsnFile)
 		{
-			string databasePrototypePath = Path.Combine(this.Environment.DataPath, databasePrototypeFile);
+			const string defaultDatabase = "Barbora.mdb";
+			string databasePrototypePath = Path.Combine(this.Environment.DataPath, databasePrototypeFile ?? defaultDatabase);
 
 			if (String.IsNullOrEmpty(databasePrototypeFile) || Path.GetExtension(databasePrototypePath) != "mdb" || !File.Exists(databasePrototypePath))
 			{
 				// because it is default to create with
-				databasePrototypePath = Path.Combine(this.Environment.DataPath, "Barbora.mdb");
+				databasePrototypePath = Path.Combine(this.Environment.DataPath, defaultDatabase);
 			}
 			
 			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypePath);
