@@ -47,6 +47,20 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		parent::__construct($config);
 	}
 
+	protected function parseResponse($response, $message)
+	{
+		$xml_response = simplexml_load_string($response);
+
+		if($xml_response['status'] == 'failure') {
+			throw new Exception($xml_response->message);
+		} else if($xml_response['status'] == 'success') {
+			// everything is OK
+			return $message;
+		}
+
+		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
+	}
+
 	protected function parseRegisterResponse($response)
 	{
 		$xml_response = simplexml_load_string($response);
@@ -79,7 +93,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$response = $this->requestPost("$url/Application/Register", $db_cfg);
 
-		KBIDebug::log(array('config' => $db_cfg, 'response' => $response), "Miner registered");
+		KBIDebug::log(array('config' => $db_cfg, 'response' => $response, 'url' => $url), "Miner registered");
 
 		return $this->parseRegisterResponse($response);
 	}
@@ -243,5 +257,55 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$dd = $this->requestCurl($url, $data);
 
 		return trim($dd);
+	}
+
+	public function registerUser($username, $password, $db_id, $db_password)
+	{
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/Users/Register";
+
+		$data = array(
+			'name' => $username,
+			'password' => $password,
+			'db_id' => $db_id,
+			'db_password' => $db_password
+		);
+
+		$response = $this->requestPost($url, $data);
+
+		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "User registered");
+
+		return $this->parseResponse($response, 'User successfully registered.');
+	}
+
+	public function getDatabasePassword($username, $password, $db_id)
+	{
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/Users/Get";
+
+		$data = array(
+			'name' => $username,
+			'password' => $password,
+			'db_id' => $db_id
+		);
+
+		$response = $this->requestGet($url, $data);
+
+		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "Password retring");
+
+		return $this->parseDatabasePassword($response);
+	}
+
+	protected function parseDatabasePassword($response)
+	{
+		$xml_response = simplexml_load_string($response);
+
+		if($xml_response['status'] == 'failure') {
+			throw new Exception($xml_response->message);
+		} else if($xml_response['status'] == 'success') {
+			return (string)$xml_response->database['password'];
+		}
+
+		throw new Exception('Response not in expected format');
 	}
 }
