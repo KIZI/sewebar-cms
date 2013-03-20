@@ -29,10 +29,15 @@ namespace SewebarConnect.API
 					new XDeclaration("1.0", "utf-8", "yes"),
 					new XElement("response",
 					             new XAttribute("status", this.Status.ToString().ToLower()),
-					             new XElement("message", this.Message)
+					             GetBody()
 						)
 					);
 			}
+		}
+
+		protected virtual XElement GetBody()
+		{
+			return new XElement("message", this.Message);
 		}
 
 		public virtual string Write()

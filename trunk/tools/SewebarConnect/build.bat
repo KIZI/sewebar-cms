@@ -3,7 +3,7 @@
 rem assuming msbuild is in system path, ie. "C:\Windows\Microsoft.NET\Framework\v4.0"
 
 echo Build started...
-"msbuild.exe" ".\SEWEBAR Connect.sln" /t:Rebuild /p:Configuration=Release > build_log.txt
+"msbuild.exe" ".\Sources\SEWEBAR Connect.sln" /t:Rebuild /p:Configuration=Release > build_log.txt
 if errorlevel 1 goto error
 
 goto end

@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
-using System.Xml.Linq;
+using SewebarConnect.API;
+using SewebarConnect.API.Requests.Users;
+using SewebarConnect.API.Responses.Users;
+using SewebarKey;
 using SewebarKey.Repositories;
 
 namespace SewebarConnect.Controllers
@@ -17,41 +21,65 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
-	    [Filters.NHibernateTransaction]
-        public ActionResult Users()
-	    {
-		    var users = Repository.FindAll<SewebarKey.User>();
-
-		    var doc = new XDocument(
-			    new XDeclaration("1.0", "utf-8", "yes"),
-			    new XElement("users",
-			                 users.Select(FromUser)
-				    )
-			    );
-
-			return this.Content(doc.ToString());
-	    }
-
 		[Filters.NHibernateTransaction]
-		public ActionResult Add()
+		public ActionResult Register()
 		{
-			var user = new SewebarKey.User
-				           {
-					           Username = "Andrej",
-					           Password = "*****"
-				           };
+			var request = new UserRequest(this.HttpContext);
+			
+			// TODO add query
+			IEnumerable<User> users = this.Repository.FindAll<User>();
+			User user = users.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
+
+			if (user == null)
+			{
+				user = new User
+					{
+						Username = request.UserName,
+						Password = request.Password
+					};
+			}
+
+			user.Databases.Add(new Database
+			{
+				Name = request.DbId,
+				Password = request.DbPassword,
+				Owner = user
+			});
 
 			Repository.Add(user);
 
-			return RedirectToAction("Users");
+			return List();
 		}
 
-		private static XElement FromUser(SewebarKey.User user)
+		[Filters.NHibernateTransaction]
+		public ActionResult Get(string name, string password, string db_id)
 		{
-			return new XElement("user",
-			                    new XElement("name", user.Username),
-								new XElement("password", user.Password)
-				);
+			Database database = null;
+
+			// TODO add query
+			IEnumerable<User> users = this.Repository.FindAll<User>();
+			User user = users.FirstOrDefault(u => u.Username == name && u.Password == password);
+			
+			if (user != null)
+			{
+				database = user.Databases.FirstOrDefault(d => d.Name == db_id);
+			}
+
+			return new XmlResult
+				{
+					Data = new DatabaseResponse(database)
+				};
 		}
+
+	    [Filters.NHibernateTransaction]
+        public ActionResult List()
+	    {
+		    var users = Repository.FindAll<SewebarKey.User>();
+
+			return new XmlResult
+				{
+					Data = new UsersResponse(users)
+				};
+	    }
     }
 }

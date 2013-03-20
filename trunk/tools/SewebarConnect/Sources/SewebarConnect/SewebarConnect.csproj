@@ -137,6 +137,7 @@
     <Compile Include="API\Requests\DataDictionary\ImportRequest.cs" />
     <Compile Include="API\Requests\Task\TaskInfoRequest.cs" />
     <Compile Include="API\Requests\Task\TaskRequest.cs" />
+    <Compile Include="API\Requests\Users\UserRequest.cs" />
     <Compile Include="API\Response.cs" />
     <Compile Include="API\Responses\Application\LISpMinerResponse.cs" />
     <Compile Include="API\Responses\Application\RegistrationResponse.cs" />
@@ -144,6 +145,9 @@
     <Compile Include="API\Responses\DataDictionary\ImportResponse.cs" />
     <Compile Include="API\Responses\ExceptionResponse.cs" />
     <Compile Include="API\Responses\Task\TaskResponse.cs" />
+    <Compile Include="API\Responses\Users\DatabaseResponse.cs" />
+    <Compile Include="API\Responses\Users\UserResponse.cs" />
+    <Compile Include="API\Responses\Users\UsersResponse.cs" />
     <Compile Include="API\Status.cs" />
     <Compile Include="API\XmlFileResult.cs" />
     <Compile Include="API\XmlResult.cs" />
