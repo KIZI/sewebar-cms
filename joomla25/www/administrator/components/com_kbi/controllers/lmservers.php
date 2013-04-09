@@ -19,6 +19,8 @@ jimport( 'joomla.application.component.controller' );
  */
 class KbiControllerLmservers extends JController
 {
+	private static $option = 'com_kbi';
+
 	/**
 	 * Constructor
 	 */
@@ -33,7 +35,7 @@ class KbiControllerLmservers extends JController
 
 	function display()
 	{
-		global $option, $mainframe;
+		KbiHelpers::addSubmenu('lmservers');
 
 		$document =& JFactory::getDocument();
 		$viewName = JRequest::getVar('controller', 'lmserver');
@@ -93,7 +95,7 @@ class KbiControllerLmservers extends JController
 
 	function save()
 	{
-		global $option;
+		$option = self::$option;
 
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
@@ -128,7 +130,7 @@ class KbiControllerLmservers extends JController
 
 	function remove()
 	{
-		global $option;
+		$option = self::$option;
 
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
@@ -154,7 +156,7 @@ class KbiControllerLmservers extends JController
 
 	function cancel()
 	{
-		global $option;
+		$option = self::$option;
 
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
@@ -164,7 +166,7 @@ class KbiControllerLmservers extends JController
 	
 	function register()
 	{
-		global $option;
+		$option = self::$option;
 		
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );

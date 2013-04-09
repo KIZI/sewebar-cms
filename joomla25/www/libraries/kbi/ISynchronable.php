@@ -7,6 +7,8 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
+require_once 'IHasDataDictionary.php';
+
 /**
  * Interface for document management between CMSs and KBs
  *
@@ -15,7 +17,7 @@
  *
  * @package KBI
  */
-interface ISynchronable
+interface ISynchronable extends IHasDataDictionary
 {
 	public function getDocuments();
 
@@ -45,8 +47,6 @@ interface ISynchronable
 	 * @return Zprava - splneno/chyba
 	 */
 	public function deleteDocument($id);
-
-	public function getDataDescription();
 
 	/**
 	 * Metoda pro uloĂ„ĹąÄąÄ˝Ă‹ĹĄenĂ„ĹąÄąÄ˝Ă‹ĹĄ query

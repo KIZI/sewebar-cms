@@ -16,14 +16,14 @@ JPluginHelper::importPlugin('jfirephp', 'system');
  *
  * @package com_kbi
  */
-class KbiModelLmservers extends JModel {
-
+class KbiModelLmservers extends JModel
+{
 	var $_servers = null;
 	var $_server = null;
 
 	public function getList(&$total, $limitstart, $limit, $search = '', $orderby = '', $where = array())
 	{
-		global $option;
+		$option = 'com_kbi';
 
 		if(!$this->_servers)
 		{
@@ -67,7 +67,4 @@ class KbiModelLmservers extends JModel {
 	{
 		return $this->getList($total, 0, 0);
 	}
-
 }
-
-?>
