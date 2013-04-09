@@ -46,7 +46,7 @@ class XQuery extends KBIntegratorSynchronable
 		parent::__construct($config);
 	}
 
-	public function queryPost($query)
+	public function queryPost($query, $options)
 	{
 		$url = $this->getUrl();
 
@@ -146,9 +146,9 @@ class XQuery extends KBIntegratorSynchronable
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
-		KBIDebug::log($data);
-		KBIDebug::log($info);
-		KBIDebug::log($response);
+		KBIDebug::log($data, "Adding document to source {$this->getName()}");
+		KBIDebug::log($info, 'Document add CURL info');
+		KBIDebug::log($response, 'Document add CURL response');
 
 		if($info['http_code'] != '200')
 		{

@@ -13,6 +13,8 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.model');
 
+JLoader::register('KbiHelpers', dirname(__FILE__) . '/helpers/helpers.php');
+
 JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
 JModel::addIncludePath(JPATH_COMPONENT.DS.'models');
 
@@ -42,6 +44,9 @@ switch($controller)
 		break;
 	case 'lmservers':
 		$controller = new KbiControllerLmservers();
+		break;
+	case 'lispminer':
+		$controller = new KbiControllerLispminer();
 		break;
 	case 'registerlmserver':
 		$controller = new KbiControllerRegisterlmserver();

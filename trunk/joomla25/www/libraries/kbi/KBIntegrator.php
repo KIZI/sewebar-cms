@@ -42,6 +42,10 @@ class KBIntegrator implements IKBIntegrator
 				require_once 'Integrators/LispMiner.php';
 				return new LispMiner($config);
 				break;
+            case 'JOOMLA':
+                require_once 'Integrators/Joomla.php';
+                return new JoomlaKBIIntegrator($config);
+                break;
 			case 'GENERIC':
 			default:
 				return new KBIntegrator($config);
@@ -51,6 +55,11 @@ class KBIntegrator implements IKBIntegrator
 
 	/** @var string */
 	protected $config;
+
+	public function getName()
+	{
+		return isset($this->config['name']) ? $this->config['name'] : '';
+	}
 
 	public function getUrl()
 	{
@@ -99,17 +108,21 @@ class KBIntegrator implements IKBIntegrator
 	 *
 	 * @param KBIQuery | string Query
 	 * @param string XSLT
+     * @return The result of query execution.
 	 */
-	public function query($query, $xsl = '') {
+	public function query($query, $xsl = '')
+	{
+		$options = array();
+
 		if($query instanceof KBIQuery) {
-			$query = $query->proccessQuery();
+			$query = $query->proccessQuery($options);
 		}
 
 		$method = strtoupper($this->getMethod());
 
 		switch($method) {
 			case 'POST':
-				$xml_data = $this->queryPost($query);
+				$xml_data = $this->queryPost($query, $options);
 				break;
 			case 'SOAP':
 				$xml_data = $this->querySoap($query);
@@ -144,22 +157,26 @@ class KBIntegrator implements IKBIntegrator
 		}
 	}
 
-	protected function queryGet($query) {
+	protected function queryGet($query)
+	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (GET).");
 	}
 
-	protected function queryPost($query) {
+	protected function queryPost($query, $options)
+	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (POST).");
 	}
 
-	protected function querySoap($query) {
+	protected function querySoap($query)
+	{
 		$class = get_class($this);
 		throw new Exception("Source type ({$class}) does not support this method (SOAP).");
 	}
 
-	function requestGet($url, $_data) {
+	function requestGet($url, $_data)
+	{
 		$data = array();
 	    while(list($n,$v) = each($_data)){
 	        $data[] = "$n=" . urlencode($v);
@@ -168,10 +185,13 @@ class KBIntegrator implements IKBIntegrator
 
 		$p = file_get_contents("$url?$data");
 
+		KBIDebug::info("$url?$data", 'GET');
+
 		return $p;
 	}
 
-	function requestCurl($url, $_data) {
+	function requestCurl($url, $_data)
+	{
 		$data = array();
 	    while(list($n,$v) = each($_data)){
 	        $data[] = "$n=" . urlencode($v);
@@ -215,7 +235,8 @@ class KBIntegrator implements IKBIntegrator
 		return $response;
 	}
 
-	function requestPost($url, $_data, $referer = NULL) {
+	function requestPost($url, $_data, $referer = NULL)
+	{
 	    // convert variables array to string:
 	    $data = array();
 	    while(list($n,$v) = each($_data)){
@@ -235,7 +256,11 @@ class KBIntegrator implements IKBIntegrator
 	    $path = $url['path'];
 
 	    // open a socket connection on port 80
-	    $fp = fsockopen($host, $this->getPort());
+	    $fp = fsockopen($host, $this->getPort(), $errno, $errstr);
+
+        if(!$fp) {
+            throw new Exception("Communication error: $errno $errstr ($host).");
+        }
 
 	    // send the request headers:
 	    fputs($fp, "POST $path HTTP/1.1\r\n");
@@ -262,7 +287,6 @@ class KBIntegrator implements IKBIntegrator
 
 	    // split the result header from the content
 	    $result = explode("\r\n\r\n", $result, 2);
-
 	    $header = isset($result[0]) ? $result[0] : '';
 	    $content = isset($result[1]) ? $result[1] : '';
 
@@ -270,7 +294,8 @@ class KBIntegrator implements IKBIntegrator
 	    return $content;
 	}
 
-	function parseNameValues($text) {
+	function parseNameValues($text)
+	{
 		if(is_array($text)) return $text;
 
 		$values = json_decode($text, true);

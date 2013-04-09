@@ -30,7 +30,8 @@ class KbiViewLmserver extends JView
 
 	function display($tpl = NULL)
 	{
-		global $option, $mainframe;
+		$option = 'com_kbi';
+
 		self::setToolbar();
 
 		JHTML::_('behavior.tooltip');

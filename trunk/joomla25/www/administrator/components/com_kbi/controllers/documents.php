@@ -32,6 +32,8 @@ class KbiControllerDocuments extends JController
 
 	function display()
 	{
+		KbiHelpers::addSubmenu('documents');
+
 		global $option;
 		$document =& JFactory::getDocument();
 		$view =& $this->getView('documents', $document->getType());

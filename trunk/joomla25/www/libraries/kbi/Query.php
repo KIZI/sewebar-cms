@@ -18,6 +18,8 @@ class KBIQuery
 	protected $params;
 	protected $params_xslt;
 	protected $delimiter;
+	protected $options_post;
+	protected $options_get;
 	//dictionaryquery
 	//dictionaryqueryxsl
 	//featurelist
@@ -66,6 +68,38 @@ class KBIQuery
 		return $this;
 	}
 
+	public function getOptions($type = 'GET')
+	{
+		if(strtolower($type) === 'get')
+		{
+			return isset($this->options_get) ? $this->options_get : $this->options_get = array();
+		}
+
+		if(strtolower($type) === 'post')
+		{
+			return isset($this->options_post) ? $this->options_post : $this->options_post = array();
+		}
+
+		throw new Exception('Only GET and POST method types are supported');
+	}
+
+	public function setOptions(array $options, $type = 'GET')
+	{
+		if(strtolower($type) === 'get')
+		{
+			$this->options_get = $options;
+			return $this;
+		}
+
+		if(strtolower($type) === 'post')
+		{
+			$this->options_post = $options;
+			return $this;
+		}
+
+		throw new Exception('Only GET and POST method types are supported');
+	}
+
 	public function __construct()
 	{
 
@@ -76,10 +110,13 @@ class KBIQuery
 	 *
 	 * @return string
 	 */
-	public function proccessQuery()
+	public function proccessQuery(&$options)
 	{
 		$parameters = $this->getParameters();
 		$xslt = $this->getXslt();
+
+		/* output parameter */
+		$options = array_merge($this->getOptions('GET'), $this->getOptions('POST'));
 
 		if(!empty($parameters))	{
 			if(is_array($parameters)) {

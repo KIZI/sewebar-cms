@@ -17,7 +17,8 @@ function KbiPostAjax(url)
 			{
 				source: $('source').getValue(),
 				query: $('query').getValue(),
-				xslt: $('xslt').getValue()
+				xslt: $('xslt').getValue(),
+                parameters: $('params').getValue()
 			}
 		}).request();
 
@@ -32,6 +33,7 @@ function KbiGetAjax(url)
 	url += "&source=" + $('source').getValue();
 	url += "&query=" + $('query').getValue();
 	url += "&xslt=" + $('xslt').getValue();
+    url += "&parameters=" + $('parameters').getValue();
 
 	url = encodeURI(url);
 
@@ -40,5 +42,40 @@ function KbiGetAjax(url)
 	$('messages').setHTML('<a href="' + myAjax.url + '" target="_blank">show</a>');
 
 	return false;
+}
+
+function KbiUploadDocument(url)
+{
+    var myAjax = new Ajax(url,
+        {
+            method: 'post',
+            update: $('results'),
+            data:
+            {
+                source: $('source').getValue(),
+                content: $('document').getValue()
+            }
+        }).request();
+
+    $('messages').empty();
+
+    return false;
+}
+
+function KbiDataDictionary(url)
+{
+    var myAjax = new Ajax(url,
+        {
+            method: 'get',
+            update: $('results'),
+            data:
+            {
+                source: $('source').getValue()
+            }
+        }).request();
+
+    $('messages').empty();
+
+    return false;
 }
 

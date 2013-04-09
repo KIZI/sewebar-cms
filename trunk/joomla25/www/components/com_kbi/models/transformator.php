@@ -27,9 +27,14 @@ class KbiModelTransformator extends JModel
 
 	private $xslt = NULL;
 	private $parameters = NULL;
+	private $getOptions = array();
+	private $postOptions = array();
 
-	public function __construct($config)
+	public function __construct($config, $get = NULL, $post = NULL)
 	{
+		$this->getOptions = $get === NULL ? $_GET : $get;
+		$this->postOptions = $post === NULL ? $_POST : $post;
+
 		$this->setSource(isset($config['source']) ? $config['source'] : NULL);
 		$this->setQuery(isset($config['query']) ? $config['query'] : NULL);
 		$this->setParams(isset($config['parameters']) ? $config['parameters'] : NULL);
@@ -116,8 +121,12 @@ class KbiModelTransformator extends JModel
 			$this->query = $query;
 		}
 
-		if($this->query != NULL)
+		if($this->query != NULL) {
+			$query->setOptions($this->getOptions, 'GET');
+			$query->setOptions($this->postOptions, 'POST');
+
 			return $this->query->setParameters($this->getParams());
+		}
 
 		return $this;
 	}
@@ -173,17 +182,29 @@ class KbiModelTransformator extends JModel
 		}
 	}
 
-	public function getDataDescription()
+	public function getDataDescription($params=null)
 	{
 		$source = $this->getSource();
 
-		if($source != NULL && $source instanceof ISynchronable) {
+		if($source != NULL && $source instanceof IHasDataDictionary) {
 			KBIDebug::log(array('source' => $source), 'DataDescription Source');
-			return $source->getDataDescription();
+			return $source->getDataDescription($params);
 		} else {
-			return JText::_('Chyba');
+			return JText::_('Given source has no DataDictionary (does not implenent IHasDataDictionary)');
 		}
 	}
+
+    public function cancelQuery($taskName)
+    {
+        $source = $this->getSource();
+
+        if($source != NULL && $source instanceof LispMiner) {
+            KBIDebug::log(array('source' => $source, 'task' => $taskName), 'Canceling task');
+            return $source->cancelTask($taskName);
+        } else {
+            return JText::_('Given source does not support query cancelation (only LISpMiner sources does).');
+        }
+    }
 }
 
 ?>
