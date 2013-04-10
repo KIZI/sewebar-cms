@@ -1,5 +1,7 @@
 <?php
-$paths = array('..', 'ardesigner');
+require_once dirname(__FILE__) . '/Updater.php';
+
+$paths = array('.', '../../tools/IZI Miner/');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -9,9 +11,10 @@ $paths = array('..', 'ardesigner');
 </head>
 <body>
 <?php foreach($paths as $path): ?>
+    <?php $updater = new Updater($path); ?>
 	Updating <i><?php print realpath($path) ?></i>...<br>
-	<?php print exec("svn update $path 2>&1") ?>
-	<br /><br />
+	<?php print $updater->update() ?>
+	<br /><hr /><br />
 <?php endforeach; ?>
 </body>
 </html>
