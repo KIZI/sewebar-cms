@@ -9,22 +9,48 @@
 
 defined('_JEXEC') or die('Restricted access');
 jimport( 'joomla.application.component.model' );
-JPluginHelper::importPlugin('jfirephp', 'system');
 
 /**
  * JModel for data sources. Cooperates with TableSource.
  *
  * @package com_kbi
  */
-class KbiModelSources extends JModel {
+class KbiModelSources extends JModel
+{
+	private $_sources = null;
+	private $_source = null;
+	private $com_kbi = 'com_kbi';
 
-	var $_sources = null;
-	var $_source = null;
+	/**
+	 * @param $data
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function save($data)
+	{
+		$table = JTable::getInstance('source', 'Table');
+
+		if (!$table->bind($data)) {
+			throw new Exception($table->getError());
+		}
+
+		if (!$table->check()) {
+			throw new Exception($table->getError());
+		}
+
+		if (!$table->store()) {
+			throw new Exception($table->getError());
+		}
+
+		if (!$table->checkIn()) {
+			throw new Exception($table->getError());
+		}
+
+		return $table;
+	}
 
 	public function getList(&$total, $limitstart, $limit, $search = '', $orderby = '', $where = array())
 	{
-		global $option;
-
 		if(!$this->_sources)
 		{
 			if (!empty($search))
@@ -46,7 +72,7 @@ class KbiModelSources extends JModel {
 
 			foreach($this->_sources as &$row)
 			{
-				$row->link = JRoute::_("index.php?option={$option}&id[]={$row->id}&task=edit");
+				$row->link = JRoute::_("index.php?option={$this->com_kbi}&id[]={$row->id}&task=edit");
 				$row->checked_out = false;
 			}
 		}
@@ -68,6 +94,34 @@ class KbiModelSources extends JModel {
 		return $this->getList($total, 0, 0);
 	}
 
-}
+	/**
+	 * @param $id
+	 * @throws Exception
+	 */
+	public function remove($id)
+	{
+		$table	=& JTable::getInstance('source', 'Table');
+		$id = (int) $id;
+		$source = $this->getSource($id);
 
-?>
+		// delete miner if it is LISpMiner
+		if($source && $source->type == 'LISPMINER') {
+			try {
+				$config = get_object_vars($source);
+
+				JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
+
+				$miner = KBIntegrator::create($config);
+				$miner->unregister();
+			} catch (Exception $ex) {
+				// Just log it
+				KBIDebug::log($ex->getMessage());
+			}
+		}
+
+		if (!$table->delete($id))
+		{
+			throw new Exception($table->getError());
+		}
+	}
+}

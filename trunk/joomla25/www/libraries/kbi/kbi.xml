@@ -7,7 +7,7 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>rewko@centrum.cz</authorEmail>
 	<authorUrl>www.rewko.eu</authorUrl>
-	<version>0.9</version>
+	<version>$Id$</version>
 	<description>
 		The Knowledge Base Include (KBI) library, which consists of communication procedures and CMS interfaces. This allows to use one implementation in various CMSs.
 	</description>

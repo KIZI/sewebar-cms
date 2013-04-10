@@ -10,7 +10,7 @@
 define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi');
 
 jimport( 'joomla.application.component.model' );
-JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
+JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
 
 /**
  * JModel for transformator. Transformator calls KBI library's query with combination of source, query and xslt.
@@ -52,6 +52,7 @@ class KbiModelTransformator extends JModel
 	 *
 	 *
 	 * @param mixed $value id | array | object | json
+	 * @throws Exception
 	 */
 	function setSource($value)
 	{
@@ -89,7 +90,8 @@ class KbiModelTransformator extends JModel
 	/**
 	 * Sets query to perform.
 	 *
-	 * @param KBIQuery | int | string Query
+	 * @param KBIQuery|int|string $value Query
+	 * @return $this
 	 */
 	function setQuery($value)
 	{

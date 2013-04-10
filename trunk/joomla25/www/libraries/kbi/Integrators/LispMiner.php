@@ -61,6 +61,17 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
 	}
 
+	public function register($db_cfg)
+	{
+		$url = trim($this->getUrl(), '/');
+
+		$response = $this->requestPost("$url/Application/Register", $db_cfg);
+
+		KBIDebug::log(array('config' => $db_cfg, 'response' => $response, 'url' => $url), "Miner registered");
+
+		return $this->parseRegisterResponse($response);
+	}
+
 	protected function parseRegisterResponse($response)
 	{
 		$xml_response = simplexml_load_string($response);
@@ -72,30 +83,6 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
-	}
-
-	protected function parseImportResponse($response)
-	{
-		$xml_response = simplexml_load_string($response);
-
-		if($xml_response['status'] == 'failure') {
-			throw new Exception($xml_response->message);
-		} else if($xml_response['status'] == 'success') {
-			return (string)$xml_response->message;
-		}
-
-		throw new Exception('Response not in expected format');
-	}
-
-	public function register($db_cfg)
-	{
-		$url = trim($this->getUrl(), '/');
-
-		$response = $this->requestPost("$url/Application/Register", $db_cfg);
-
-		KBIDebug::log(array('config' => $db_cfg, 'response' => $response, 'url' => $url), "Miner registered");
-
-		return $this->parseRegisterResponse($response);
 	}
 
 	public function unregister($server_id = NULL)
@@ -144,7 +131,20 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		KBIDebug::log($response, "Import executed");
 
-		return $this->parseRegisterResponse($response);
+		return $this->parseImportDataDictionaryResponse($response);
+	}
+
+	protected function parseImportDataDictionaryResponse($response)
+	{
+		$xml_response = simplexml_load_string($response);
+
+		if($xml_response['status'] == 'failure') {
+			throw new Exception($xml_response->message);
+		} else if($xml_response['status'] == 'success') {
+			return (string)$xml_response->message;
+		}
+
+		throw new Exception('Response not in expected format');
 	}
 
 	public function getDataDescription($params=null)
@@ -259,7 +259,77 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return trim($dd);
 	}
 
-	public function registerUser($username, $password, $db_id, $db_password)
+	public function test()
+	{
+		try {
+			$server_id = $this->getMinerId();
+
+			if($server_id === NULL) {
+				throw new Exception('LISpMiner ID was not provided.');
+			}
+
+			$url = trim($this->getUrl(), '/');
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "$url/Application/Miner?guid=$server_id");
+			curl_setopt($ch, CURLOPT_VERBOSE, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Accept: application/xml'
+			));
+
+			$response = curl_exec($ch);
+			curl_close($ch);
+
+			KBIDebug::log($response, "Test executed");
+
+			$this->parseResponse($response, '');
+
+			return true;
+		}
+		catch (Exception $ex)
+		{
+			return false;
+		}
+	}
+
+	public function registerUser($username, $password)
+	{
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/Users/Register";
+
+		$data = array(
+			'name' => $username,
+			'password' => $password
+		);
+
+		$response = $this->requestPost($url, $data);
+
+		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "User registered");
+
+		return $this->parseResponse($response, 'User successfully registered.');
+	}
+
+	public function updateUser($username, $password, $new_username, $new_password)
+	{
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/Users/Update";
+
+		$data = array(
+			'name' => $username,
+			'password' => $password,
+			'new_name' => $new_username,
+			'new_password' => $new_password
+		);
+
+		$response = $this->requestCurlPost($url, $data);
+
+		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "User updated");
+
+		return $this->parseResponse($response, 'User successfully updated.');
+	}
+
+	public function registerUserDatabase($username, $password, $db_id, $db_password)
 	{
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/Users/Register";

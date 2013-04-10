@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die('Restricted access');
 jimport( 'joomla.application.component.view' );
-JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
+JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
 
 /**
  * Admin detail view for sources.
@@ -18,6 +18,8 @@ JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
  */
 class KbiViewSource extends JView
 {
+	private $com_kbi = 'com_kbi';
+
 	function setToolbar()
 	{
 		$task = JRequest::getVar( 'task', '', 'method', 'string');
@@ -30,7 +32,6 @@ class KbiViewSource extends JView
 
 	function display($tpl = NULL)
 	{
-		global $option, $mainframe;
 		self::setToolbar();
 
 		JRequest::setVar( 'hidemainmenu', 1 );
@@ -48,7 +49,7 @@ class KbiViewSource extends JView
 		$this->assignRef('row', $source);
 		if(!empty($source))
 			$this->assignRef('source', KBIntegrator::create(get_object_vars($source)));
-		$this->assignRef('option', $option);
+		$this->assignRef('option', $this->com_kbi);
 		$this->assignRef('name', $user->name);
 		$this->assignRef('lists', $lists);
 
@@ -82,4 +83,3 @@ class KbiViewSource extends JView
 		);
 	}
 }
-?>

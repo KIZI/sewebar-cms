@@ -20,23 +20,23 @@ JLoader::import('LispMiner', JPATH_LIBRARIES . DS . 'kbi' . DS . 'Integrators');
  */
 class KbiControllerRegisterlmserver extends JController
 {
+	private $com_kbi = 'com_kbi';
+
 	/**
 	 * Constructor
 	 */
 	function __construct( $config = array() )
 	{
-		parent::__construct( $config );
+		parent::__construct($config);
+
 		// Register Extra tasks
-		$this->registerTask( 'apply',	'save' );
+		$this->registerTask('apply', 'save');
 	}
 
 	function display()
 	{
-		$document =& JFactory::getDocument();
-		$viewName = 'registerlmserver';
-		$viewType = $document->getType();
-
-		$view =& $this->getView($viewName, $viewType);
+		$document = JFactory::getDocument();
+		$view = $this->getView('registerlmserver', $document->getType());
 
 		// Get/Create the model
 		if ($model = &$this->getModel('lmservers')) {
@@ -44,25 +44,17 @@ class KbiControllerRegisterlmserver extends JController
 			$view->setModel($model, true);
 		}
 
-
-		//var_dump($view);
-
-		/*$model = NULL;
-
-		if(!JError::isError($model)) {
-			$view->setModel($model, true);
-		}*/
-
 		$view->setLayout('default');
 		$view->display();
 	}
 
 	function save()
 	{
-		global $option;
-
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
+
+		$app = JFactory::getApplication();
+
 		$id = JRequest::getVar('id', array(0), 'method', 'array');
 		$name = JRequest::getVar( 'name', '','post', 'string');
 		$db_type = JRequest::getVar( 'type', '','post', 'string');
@@ -70,11 +62,12 @@ class KbiControllerRegisterlmserver extends JController
 		$matrix_name = JRequest::getVar( 'matrix', '','post', 'string');
 		$dataDictionary = JRequest::getVar( 'dataDictionary', '','post', 'string', JREQUEST_ALLOWRAW );
 		
-		$this->setRedirect("index.php?option={$option}&controller=registerlmserver&id[]={$id[0]}");
+		$this->setRedirect("index.php?option={$this->com_kbi}&controller=registerlmserver&id[]={$id[0]}");
 
 		try
 		{	
-			$model = &$this->getModel('lmservers');
+			$model = $this->getModel('lmservers');
+			$sources = $this->getModel('sources');
 			$server = $model->getLmserver($id[0]);
 			
 			$db_conf = json_decode($db_conf, true);
@@ -88,36 +81,27 @@ class KbiControllerRegisterlmserver extends JController
 
 			// Import Data Dictionary
 			$miner->importDataDictionary($dataDictionary, $server_id);
-			
-			$db		=& JFactory::getDBO();
-			$table	=& JTable::getInstance('source', 'Table');			
-			
-			$table->name = $name;
-			$table->url = $server->url;
-			$table->type = 'LISPMINER';
-			$table->method = 'POST';
-			$table->params = json_encode(array(
-				'miner_id' => $server_id,
-				'matrix' => $matrix_name
-			));
-			$table->dictionaryquery = '';
-			
-			//$table->dictionaryquery = 
-			
-			if (!$table->check()) {
-				throw new Exception($table->getError());
-			}
-			if (!$table->store()) {
-				throw new Exception($table->getError());
-			}
-			$table->checkin();
 
-			$this->setRedirect("index.php?option={$option}&controller=sources");	
-			$this->setMessage( JText::_( 'Server sucessfully registered.' ) );
+			$data = array(
+				'name' => $name,
+				'url' => $server->url,
+				'type' => 'LISPMINER',
+				'method' => 'POST',
+				'params' => json_encode(array(
+					'miner_id' => $server_id,
+					'matrix' => $matrix_name
+				)),
+				'dictionaryquery' => ''
+			);
+			
+			$sources->save($data);
+
+			$this->setRedirect("index.php?option={$this->com_kbi}&controller=sources");
+			$this->setMessage(JText::_( 'Server sucessfully registered.'));
 		}
 		catch (Exception $ex)
 		{
-			JFactory::getApplication ()->enqueueMessage ( JText::_( 'ERROR REGISTERING SERVER' ) . "<br />" . $ex->getMessage(), 'error' );
+			$app->enqueueMessage(JText::_('ERROR REGISTERING SERVER' ) . "<br />" . $ex->getMessage(), 'error');
 
 			// try to remove registered miner as it is in invalid state.
 			if(isset($server_id) && isset($miner)) {
@@ -125,7 +109,7 @@ class KbiControllerRegisterlmserver extends JController
 					$miner->unregister($server_id);
 				}
 				catch (Exception $innerException) {
-					JFactory::getApplication ()->enqueueMessage ( JText::_( 'ERROR REMOVING REGISTERING SERVER' ) . "<br />" . $innerException->getMessage(), 'error' );
+					$app->enqueueMessage(JText::_('ERROR REMOVING REGISTERING SERVER') . "<br />" . $innerException->getMessage(), 'error');
 				}
 			}
 		}		
@@ -133,11 +117,9 @@ class KbiControllerRegisterlmserver extends JController
 
 	function cancel()
 	{
-		global $option;
-
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		$this->setRedirect( "index.php?option=$option&controller=lmservers" );
+		$this->setRedirect("index.php?option={$this->com_kbi}&controller=lmservers");
 	}
 }
