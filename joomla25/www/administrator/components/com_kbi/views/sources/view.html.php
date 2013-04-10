@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die('Restricted access');
 jimport( 'joomla.application.component.view' );
-JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
+JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
 
 /**
  * Admin list view for sources.

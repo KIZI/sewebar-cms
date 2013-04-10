@@ -1,4 +1,12 @@
 <?php
+/**
+ * @version		$Id$
+ * @package		KBI
+ * @author		Andrej Hazucha
+ * @copyright	Copyright (C) 2010 All rights reserved.
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
 require_once dirname(__FILE__) . '/../KBIntegratorSynchronable.php';
 require_once dirname(__FILE__) . '/../../../components/com_dbconnect/models/data.php';
 

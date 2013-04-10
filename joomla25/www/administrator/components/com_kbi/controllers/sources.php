@@ -19,31 +19,29 @@ jimport( 'joomla.application.component.controller' );
  */
 class KbiControllerSources extends JController
 {
+	private $com_kbi = 'com_kbi';
+
 	/**
 	 * Constructor
 	 */
 	function __construct( $config = array() )
 	{
-		parent::__construct( $config );
+		parent::__construct($config);
+
 		// Register Extra tasks
-		$this->registerTask( 'add',		'edit' );
-		$this->registerTask( 'apply',	'save' );
+		$this->registerTask('add', 'edit');
+		$this->registerTask('apply', 'save');
 	}
 
 	function display()
 	{
 		KbiHelpers::addSubmenu('sources');
 
-		global $option, $mainframe;
 		$app = JFactory::getApplication('administrator');
+		$document = JFactory::getDocument();
+		$view = $this->getView('sources', $document->getType());
+		$model = $this->getModel('sources');
 
-		$document =& JFactory::getDocument();
-		$viewName = JRequest::getVar('controller', 'sources');
-		$viewType = $document->getType();
-		$view =& $this->getView($viewName, $viewType);
-		$model = &$this->getModel('sources');
-
-		$user	=& JFactory::getUser();
 		$context			= 'com_kbi.sources.list';
 		$filter_order		= $app->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'name',	'cmd' );
 		$filter_order_Dir	= $app->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',			'word' );
@@ -77,26 +75,14 @@ class KbiControllerSources extends JController
 
 	function edit()
 	{
-		$document =& JFactory::getDocument();
-		$viewName = 'source';
-		$viewType = $document->getType();
-
-		$view =& $this->getView($viewName, $viewType);
+		$document = JFactory::getDocument();
+		$view = $this->getView('source', $document->getType());
 
 		// Get/Create the model
-		if ($model = &$this->getModel('sources')) {
+		if ($model = $this->getModel('sources')) {
 			// Push the model into the view (as default)
 			$view->setModel($model, true);
 		}
-
-
-		//var_dump($view);
-
-		/*$model = NULL;
-
-		if(!JError::isError($model)) {
-			$view->setModel($model, true);
-		}*/
 
 		$view->setLayout('default');
 		$view->display();
@@ -104,111 +90,79 @@ class KbiControllerSources extends JController
 
 	function save()
 	{
-		global $option;
-
 		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JRequest::checkToken() or jexit('Invalid Token');
 
-		$this->setRedirect( "index.php?option=$option" );
+		$app = JFactory::getApplication();
 
-		// Initialize variables
-		$db		=& JFactory::getDBO();
-		$table	=& JTable::getInstance('source', 'Table');
-
-		if (!$table->bind( JRequest::get( 'post' ) )) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-
-		$table->dictionaryquery = JRequest::getVar( 'dictionaryquery', '','post', 'string', JREQUEST_ALLOWRAW );
-
-		if (!$table->check()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		if (!$table->store()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		$table->checkin();
-
-		switch (JRequest::getCmd( 'task' ))
+		try
 		{
-			case 'apply':
-				$this->setRedirect( "index.php?option=$option&task=edit&id[]={$table->id}" );
-				break;
-		}
+			$this->setRedirect("index.php?option={$this->com_kbi}");
 
-		$this->setMessage( JText::_( 'Item Saved' ) );
+			$model = $this->getModel('sources');
+
+			$data = JRequest::get('post');
+			$data['dictionaryquery'] = JRequest::getVar('dictionaryquery', '','post', 'string', JREQUEST_ALLOWRAW);
+
+			$table = $model->save($data);
+
+			switch (JRequest::getCmd('task'))
+			{
+				case 'apply':
+					$this->setRedirect("index.php?option={$this->com_kbi}&task=edit&id[]={$table->id}");
+					break;
+			}
+
+			$this->setMessage(JText::_('Item Saved'));
+		}
+		catch(Exception $ex)
+		{
+			$app->enqueueMessage(JText::_('ERROR SAVING KBI SOURCE' ) . "<br />" . $ex->getMessage(), 'error');
+		}
 	}
 
 	function remove()
 	{
-		global $option;
-
 		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JRequest::checkToken() or jexit('Invalid Token');
 
-		$this->setRedirect( "index.php?option=$option" );
+		$this->setRedirect("index.php?option={$this->com_kbi}");
 
-		// Initialize variables
-		$db		=& JFactory::getDBO();
-		$ids	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
-		$table	=& JTable::getInstance('source', 'Table');
-		$n		= count( $ids );
+		$app = JFactory::getApplication();
+		$ids = JRequest::getVar('cid', array(0), 'post', 'array');
+		$n = count($ids);
+		$sources = &$this->getModel('sources');
 
-		for ($i = 0; $i < $n; $i++)
-		{
-			$sources = &$this->getModel('sources');
-			$source = $sources->getSource((int) $ids[$i]);
+		for ($i = 0; $i < $n; $i++) {
+			try {
+				$id = (int) $ids[$i];
+				$sources->remove($id);
 
-			// delete miner if it is LISpMiner
-			if($source && $source->type == 'LISPMINER') {
-				try {
-					$config = get_object_vars($source);
-
-					JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
-
-					$miner = KBIntegrator::create($config);
-					$miner->unregister();
-				} catch (Exception $ex) {
-					// Just log it
-					KBIDebug::log($ex->getMessage());
-				}
-			}
-
-			if (!$table->delete( (int) $ids[$i] ))
-			{
-				return JError::raiseWarning( 500, $table->getError() );
+				$app->enqueueMessage(JText::sprintf('SOURCE REMOVED (%d)', $id));
+			} catch (Exception $ex) {
+				$app->enqueueMessage(JText::_('ERROR SAVING KBI SOURCE' ) . "<br />" . $ex->getMessage(), 'error');
 			}
 		}
-
-		$this->setMessage( JText::sprintf( 'Items removed', $n ) );
 	}
 
 	function cancel()
 	{
-		global $option;
-
 		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JRequest::checkToken() or jexit('Invalid Token');
 
-		$this->setRedirect( "index.php?option=$option" );
-
-		// Initialize variables
-		//$db			=& JFactory::getDBO();
-		//$table		=& JTable::getInstance('bannerclient', 'Table');
-		//$table->cid	= JRequest::getVar( 'cid', 0, 'post', 'int' );
-		//$table->checkin();
+		$this->setRedirect("index.php?option={$this->com_kbi}");
 	}
 
 	function export()
 	{
-		global $option;
-
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JRequest::checkToken() or jexit('Invalid Token');
 
 		$controller = JRequest::getVar('controller');
-		$link = "index.php?option=$option&controller=$controller&task=renderexport&format=json";
-		foreach(JRequest::getVar( 'cid', array(0), 'post', 'array' ) as $id)
+		$link = "index.php?option={$this->com_kbi}&controller=$controller&task=renderexport&format=json";
+
+		foreach(JRequest::getVar( 'cid', array(0), 'post', 'array' ) as $id) {
 			$link .= "&cid[]=$id";
+		}
 
 		$this->setRedirect($link);
 	}
@@ -239,7 +193,7 @@ class KbiControllerSources extends JController
 
 		$view->assignRef('rows', $json);
 
-		JResponse::setHeader( 'Content-Disposition', 'attachment; filename="'.$filename.'.json"' );
+		JResponse::setHeader('Content-Disposition', 'attachment; filename="'.$filename.'.json"');
 
 		$view->display();
 	}

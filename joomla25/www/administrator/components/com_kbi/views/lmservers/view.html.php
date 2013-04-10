@@ -21,7 +21,7 @@ class KbiViewLmservers extends JView
 	function setToolbar()
 	{
 		JToolBarHelper::title( JText::_( 'LispMiner Connect servers' ), 'generic.png' );
-		//JToolBarHelper::deleteList( '', 'remove' );
+		JToolBarHelper::deleteList('', 'remove');
 		//JToolBarHelper::editListX( 'edit' );
 		JToolBarHelper::addNewX( 'add' );
 		//JToolBarHelper::( '' );

@@ -106,9 +106,9 @@ class KBIntegrator implements IKBIntegrator
 	/**
 	 * Implements the query execution. If remote source returned well-formed XML and XSLT is set the transformation is performed.
 	 *
-	 * @param KBIQuery | string Query
-	 * @param string XSLT
-     * @return The result of query execution.
+	 * @param KBIQuery|string $query
+	 * @param string $xsl XSLT
+	 * @return string The result of query execution.
 	 */
 	public function query($query, $xsl = '')
 	{
@@ -157,6 +157,18 @@ class KBIntegrator implements IKBIntegrator
 		}
 	}
 
+	/**
+	 * Checks agains remote source if this instance is correctly configured.
+	 *
+	 * @return bool Wheter this instance is valid.
+	 * @throws Exception
+	 */
+	public function test()
+	{
+		// should be overriden. Defaultly everything is valid.
+		return true;
+	}
+
 	protected function queryGet($query)
 	{
 		$class = get_class($this);
@@ -175,7 +187,7 @@ class KBIntegrator implements IKBIntegrator
 		throw new Exception("Source type ({$class}) does not support this method (SOAP).");
 	}
 
-	function requestGet($url, $_data)
+	public function requestGet($url, $_data)
 	{
 		$data = array();
 	    while(list($n,$v) = each($_data)){
@@ -190,7 +202,7 @@ class KBIntegrator implements IKBIntegrator
 		return $p;
 	}
 
-	function requestCurl($url, $_data)
+	public function requestCurl($url, $_data)
 	{
 		$data = array();
 	    while(list($n,$v) = each($_data)){
@@ -218,7 +230,7 @@ class KBIntegrator implements IKBIntegrator
 		return $data;
 	}
 
-	function requestCurlPost($url, $postdata)
+	public function requestCurlPost($url, $postdata)
 	{
 		$ch = curl_init();
 
@@ -235,7 +247,7 @@ class KBIntegrator implements IKBIntegrator
 		return $response;
 	}
 
-	function requestPost($url, $_data, $referer = NULL)
+	public function requestPost($url, $_data, $referer = NULL)
 	{
 	    // convert variables array to string:
 	    $data = array();
@@ -294,7 +306,7 @@ class KBIntegrator implements IKBIntegrator
 	    return $content;
 	}
 
-	function parseNameValues($text)
+	public function parseNameValues($text)
 	{
 		if(is_array($text)) return $text;
 

@@ -19,7 +19,7 @@ jimport( 'joomla.application.component.controller' );
  */
 class KbiControllerLmservers extends JController
 {
-	private static $option = 'com_kbi';
+	private $com_kbi = 'com_kbi';
 
 	/**
 	 * Constructor
@@ -27,21 +27,20 @@ class KbiControllerLmservers extends JController
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
+
 		// Register Extra tasks
-		$this->registerTask( 'add',		'edit' );
-		$this->registerTask( 'apply',	'save' );
-		$this->registerTask( 'register','register' );
+		$this->registerTask('add', 'edit');
+		$this->registerTask('apply','save');
+		$this->registerTask('register', 'register');
 	}
 
 	function display()
 	{
 		KbiHelpers::addSubmenu('lmservers');
 
-		$document =& JFactory::getDocument();
-		$viewName = JRequest::getVar('controller', 'lmserver');
-		$viewType = $document->getType();
-		$view =& $this->getView($viewName, $viewType);
-		$model = &$this->getModel('lmservers');
+		$document = JFactory::getDocument();
+		$view = $this->getView('lmservers', $document->getType());
+		$model = $this->getModel('lmservers');
 
 		$user	=& JFactory::getUser();
 		//$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit',		'limit',		$mainframe->getCfg('list_limit'), 'int' );
@@ -50,6 +49,7 @@ class KbiControllerLmservers extends JController
 		//$orderby = ' ORDER BY '. $filter_order .' '. $filter_order_Dir .', id';
 
 		$rows = $model->getList($total, 0, 100);
+		$lists = array();
 
 		jimport('joomla.html.pagination');
 		$pageNav = new JPagination( $total, 0, 100);
@@ -68,11 +68,8 @@ class KbiControllerLmservers extends JController
 
 	function edit()
 	{
-		$document =& JFactory::getDocument();
-		$viewName = 'lmserver';
-		$viewType = $document->getType();
-
-		$view =& $this->getView($viewName, $viewType);
+		$document = JFactory::getDocument();
+		$view = $this->getView('lmserver', $document->getType());
 
 		// Get/Create the model
 		if ($model = &$this->getModel('lmservers')) {
@@ -80,48 +77,28 @@ class KbiControllerLmservers extends JController
 			$view->setModel($model, true);
 		}
 
-
-		//var_dump($view);
-
-		/*$model = NULL;
-
-		if(!JError::isError($model)) {
-			$view->setModel($model, true);
-		}*/
-
 		$view->setLayout('default');
 		$view->display();
 	}
 
 	function save()
 	{
-		$option = self::$option;
-
 		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JRequest::checkToken() or jexit('Invalid Token');
 
-		$this->setRedirect( "index.php?option=$option&controller=lmservers" );
+		$this->setRedirect("index.php?option={$this->com_kbi}&controller=lmservers");
 
 		// Initialize variables
-		$db		=& JFactory::getDBO();
-		$table	=& JTable::getInstance('lmserver', 'Table');
+		$table	= JTable::getInstance('lmserver', 'Table');
 
-		if (!$table->bind( JRequest::get( 'post' ) )) {
+		if (!$table->save( JRequest::get( 'post' ) )) {
 			return JError::raiseWarning( 500, $table->getError() );
 		}
-
-		if (!$table->check()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		if (!$table->store()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		$table->checkin();
 
 		switch (JRequest::getCmd( 'task' ))
 		{
 			case 'apply':
-				$this->setRedirect( "index.php?option=$option&task=edit&id[]={$table->id}&controller=lmservers" );
+				$this->setRedirect("index.php?option={$this->com_kbi}&task=edit&id[]={$table->id}&controller=lmservers");
 				break;
 		}
 
@@ -130,15 +107,12 @@ class KbiControllerLmservers extends JController
 
 	function remove()
 	{
-		$option = self::$option;
-
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		$this->setRedirect( "index.php?option=$option&controller=lmservers" );
+		$this->setRedirect("index.php?option={$this->com_kbi}&controller=lmservers");
 
 		// Initialize variables
-		$db		=& JFactory::getDBO();
 		$ids	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$table	=& JTable::getInstance('lmserver', 'Table');
 		$n		= count( $ids );
@@ -156,23 +130,19 @@ class KbiControllerLmservers extends JController
 
 	function cancel()
 	{
-		$option = self::$option;
-
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		$this->setRedirect( "index.php?option=$option&controller=lmservers" );
+		$this->setRedirect("index.php?option={$this->com_kbi}&controller=lmservers");
 	}
 	
 	function register()
 	{
-		$option = self::$option;
-		
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 		
 		$id	= JRequest::getVar( 'id', array(0), 'post', 'array' );
 		
-		$this->setRedirect( "index.php?option=$option&id[]={$id[0]}&controller=registerlmserver" );		
+		$this->setRedirect("index.php?option={$this->com_kbi}&id[]={$id[0]}&controller=registerlmserver");
 	}
 }
