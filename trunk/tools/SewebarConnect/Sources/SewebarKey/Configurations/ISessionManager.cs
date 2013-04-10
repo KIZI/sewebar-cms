@@ -8,6 +8,9 @@ namespace SewebarKey.Configurations
 		Configuration Configuration { get; }
 
 		void CreateDatabase();
+
+		void UpdateDatabase();
+
 		ISessionFactory BuildSessionFactory();
 	}
 }

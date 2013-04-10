@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using SewebarConnect.API;
@@ -26,9 +26,8 @@ namespace SewebarConnect.Controllers
 		{
 			var request = new UserRequest(this.HttpContext);
 			
-			// TODO add query
-			IEnumerable<User> users = this.Repository.FindAll<User>();
-			User user = users.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
+			User user = this.Repository.Query<User>()
+				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
 
 			if (user == null)
 			{
@@ -39,16 +38,22 @@ namespace SewebarConnect.Controllers
 					};
 			}
 
-			user.Databases.Add(new Database
+			if (request.DbId != null)
 			{
-				Name = request.DbId,
-				Password = request.DbPassword,
-				Owner = user
-			});
+				user.Databases.Add(new Database
+					{
+						Name = request.DbId,
+						Password = request.DbPassword,
+						Owner = user
+					});
+			}
 
 			Repository.Add(user);
 
-			return List();
+			return new XmlResult
+				{
+					Data = new UserResponse(user)
+				};
 		}
 
 		[Filters.NHibernateTransaction]
@@ -56,9 +61,8 @@ namespace SewebarConnect.Controllers
 		{
 			Database database = null;
 
-			// TODO add query
-			IEnumerable<User> users = this.Repository.FindAll<User>();
-			User user = users.FirstOrDefault(u => u.Username == name && u.Password == password);
+			User user = this.Repository.Query<User>()
+				.FirstOrDefault(u => u.Username == name && u.Password == password);
 			
 			if (user != null)
 			{
@@ -69,6 +73,37 @@ namespace SewebarConnect.Controllers
 				{
 					Data = new DatabaseResponse(database)
 				};
+		}
+
+		[Filters.NHibernateTransaction]
+		public ActionResult Update()
+		{
+			var request = new UserRequest(this.HttpContext);
+
+			User user = this.Repository.Query<User>()
+				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
+
+			if (user == null)
+			{
+				throw new Exception("User not found.");
+			}
+
+			if (!string.IsNullOrEmpty(request.NewUserName))
+			{
+				user.Username = request.NewUserName;
+			}
+
+			if (!string.IsNullOrEmpty(request.NewPassword))
+			{
+				user.Password = request.NewPassword;
+			}
+
+			this.Repository.Save(user);
+
+			return new XmlResult
+			{
+				Data = new UserResponse(user)
+			};
 		}
 
 	    [Filters.NHibernateTransaction]

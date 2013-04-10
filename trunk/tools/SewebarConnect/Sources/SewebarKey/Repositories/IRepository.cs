@@ -1,23 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SewebarKey.Repositories
 {
-    public interface IRepository
-    {
-        TEntity Get<TEntity>(object id);
-        
+	public interface IRepository
+	{
+		TEntity Get<TEntity>(object id);
+		
 		IEnumerable<TEntity> FindAll<TEntity>() where TEntity : class;
-        
-		IEnumerable<TEntity> Find<TEntity>(IQuery<TEntity> query) where TEntity : class;
-        
-		TEntity FindFirst<TEntity>(IQuery<TEntity> query) where TEntity : class;
-        
-		TEntity FindFirstOrDefault<TEntity>(IQuery<TEntity> query) where TEntity : class;
-        
-		void Execute(ICommand command);
-        
+		
+		IQueryable<TEntity> Query<TEntity>() where TEntity : class;
+		
 		void Add(object entity);
-        
+
+		void Save(object entity);
+		
 		void Remove(object entity);
-    }
+	}
 }
