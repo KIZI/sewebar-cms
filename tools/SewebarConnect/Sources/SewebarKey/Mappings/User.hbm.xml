@@ -4,7 +4,7 @@
 		<id name="Id" column="id" type="Guid" unsaved-value="00000000-0000-0000-0000-000000000000">
 			<generator class="guid.comb" />
 		</id>
-		<property name="Username" column="name" type="string" length="255" />
+		<property name="Username" column="name" type="string" length="255" unique="true" not-null="true" />
 		<property name="Password" column="password" type="string" />
 		<set name="Databases" inverse="true" lazy="true" cascade="persist">
 			<key column="id_user"/>

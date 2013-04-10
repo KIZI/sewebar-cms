@@ -40,6 +40,12 @@ namespace SewebarKey.Configurations
 			schemaExport.Create(false, true);
 		}
 
+		public void UpdateDatabase()
+		{
+			var schemaExport = new SchemaUpdate(Configuration);
+			schemaExport.Execute(false, true);
+		}
+
 		public ISessionFactory BuildSessionFactory()
 		{
 			return Configuration.BuildSessionFactory();

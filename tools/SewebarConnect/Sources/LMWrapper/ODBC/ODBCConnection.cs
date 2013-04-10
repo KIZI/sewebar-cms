@@ -4,7 +4,7 @@ namespace LMWrapper.ODBC
 {
 	public abstract class OdbcConnection
 	{
-		protected string DSNFile { get; private set; }
+		public string DSNFile { get; private set; }
 
 		protected string DSNFileWithoutExtension { get; private set; }
 

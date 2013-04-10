@@ -17,6 +17,16 @@ namespace SewebarConnect.API.Requests.Users
 			get { return this.HttpContext.Request["password"]; }
 		}
 
+		public string NewUserName
+		{
+			get { return this.HttpContext.Request["new_name"]; }
+		}
+
+		public string NewPassword
+		{
+			get { return this.HttpContext.Request["new_password"]; }
+		}
+
 		public string DbId
 		{
 			get { return this.HttpContext.Request["db_id"]; }
