@@ -29,6 +29,7 @@ h1
 h2
 {
 	font-size: 15px;
+	cursor: pointer;
 }
 
 p
@@ -89,6 +90,14 @@ table
 {
 }
 
+form.reg,
+form.import,
+form.tasks,
+form.cancel,
+form.export {
+	display: none;
+}
+
 .console fieldset, .console fieldset.output
 {
 	float: left;
@@ -109,14 +118,14 @@ table
 	border: 1px solid #ccc;
 }
 
-.console fieldset.reg input,
-.console fieldset.reg select
+form.console.reg fieldset input,
+form.console.reg fieldset select
 {
 	border: 1px solid #ccc;
 	display: block;
 }
 
-.console fieldset.reg label
+form.console.reg fieldset label
 {
 	width: 110px;
 	display: block;
