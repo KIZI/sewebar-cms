@@ -200,6 +200,13 @@
 
 		return false;
 	});
+
+	$('h2').click(function () {
+		var cls = $(this).attr('class'),
+			form = 'form.' + cls;
+
+		$(form).toggle(500);
+	});
 });
 
 function setStatusClass(textarea, status) {
