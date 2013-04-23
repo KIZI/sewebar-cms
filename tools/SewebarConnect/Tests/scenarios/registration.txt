@@ -1,0 +1,1 @@
+type=AccessConnection&metabase=&server=&database=&username=&password=
