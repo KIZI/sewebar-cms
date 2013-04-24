@@ -49,8 +49,10 @@ class GincludeModel extends JModel
     if (!$skipPlugins){
       $dispatcher =& JDispatcher::getInstance();               
       JPluginHelper::importPlugin("content");                  //naimportujeme všechny pluginy pro zpracování obsahu
+      jimport( 'joomla.html.parameter' );
       $rows[0]->parameters = new JParameter($rows[0]->attribs);//vytvoříme objekt s parametry článku
-      $results = $dispatcher->trigger('onPrepareContent', array (& $rows[0], & $rows[0]->parameters, 0)); //načtení pluginů
+      
+      $results = $dispatcher->trigger('onContentPrepare', array ('com_content.featured',& $rows[0], & $rows[0]->parameters, 0)); //načtení pluginů
     }
     /*nahradíme event. špatný tvar komentářů*/
     $rows[0]->text=str_replace('<!--gInclude{','<!-- gInclude{',$rows[0]->text);
@@ -58,120 +60,134 @@ class GincludeModel extends JModel
     /**/
     return $rows[0];
   }
-  /**
-   *  Funkce pro načtení sekcí z databáze. 
-   *  Vrací pole hodnot ve tvari $arr[id]=title 
-   */ 
-  function getSections(){
-    $db = & JFactory::getDBO();
-    $db->setQuery( "SELECT title,id FROM #__sections order by title;" );
-    $rows = $db->loadObjectList();
-    $result=array();
-    foreach ( $rows as $row ) {
-      $result[$row->id]=$row->title;
-    }
-    return $result;
-  }
 
   /**
    *  Funkce pro načtení kategorií z databáze. Parametrem je ID sekce, pro kterou chceme vypsat kategorie. Pokud chceme kategorie pro všechny sekce, je parametrem -1; 
    *  Vrací pole hodnot ve tvari $arr[id]=title 
    */ 
-  function getCategories($section){
+  function getCategories($editor=false){
     $db = & JFactory::getDBO();
-    if ($section!=-1){$whereClause="where section='".$section."'";} //pokud je nastavena sekce, tak ji budeme filtrovat...
-    $db->setQuery( "SELECT title,id FROM #__categories $whereClause order by title;" );
-    $rows = $db->loadObjectList();
+    /* Kontrola,do kterých user skupin uživatel patří... */     
+        
+    $db->setQuery("SELECT id,title,level,access FROM #__categories WHERE extension='com_content' ORDER BY lft;");    
+    $rows=$db->loadObjectList();
     $result=array();
-    foreach ( $rows as $row ) {
-      $result[$row->id]=$row->title;
+    if (count($rows)>0){
+      $user =& JFactory::getUser();
+      $authorisedCategories=$user->getAuthorisedCategories('com_content','core.edit.own');
+      $viewLevels=$user->getAuthorisedViewLevels();
+      
+      
+      foreach ($rows as $row){     
+        //vyreseni pristupovych prav
+        $disabled=false;
+        if ($editor){
+          //jde o zobrazení kategorií s editačními právy
+          if (!in_array($row->id,$authorisedCategories)){$disabled=true;}
+        }else{
+          //chci jen vedet,jestli muzu danou kategorii cist
+          if (!in_array($row->access,$viewLevels)){$disabled=true;}
+        }          
+        //vyreseni vypsani kategorie
+        if ($row->level>1){   
+          $rowTitle='&nbsp;';
+          for($i=1;$i<$row->level;$i++){
+            $rowTitle.='&nbsp;';
+          }
+          $rowTitle.='- '.$row->title;    
+        }else{                  
+          $rowTitle=$row->title;
+        }              
+        
+      	$result[$row->id]=array('title'=>$rowTitle,'disabled'=>$disabled);
+      }
     }
+      
     return $result;
+  }
+
+  /**
+   *  Funkce vracející podmínku pro WHERE v SQL, která kontroluje, jestli patří kategorie či článek do některého z access levelů uživatele
+   *  @return string   
+   */     
+  private function getAccessWhereSql($tableName=''){
+    $user =& JFactory::getUser();
+    $viewLevels=$user->getAuthorisedViewLevels();
+    if ($tableName!=''){$tableName.='.';}
+  
+    $viewLevelsArr=array();            
+    $viewLevelsSql='';
+    if (count($viewLevels)>0){
+      foreach ($viewLevels as $viewLevel) {
+        if (!in_array($viewLevel,$viewLevelsArr)){
+          $viewLevelsSql.=' OR '.$tableName.'access="'.$viewLevel.'"';
+          $viewLevelsArr[]=$viewLevel;
+        }
+      }
+    }
+    unset($viewLevelsArr);
+    unset($viewLevels);
+    return substr($viewLevelsSql,3);
   }
 
   /**
    *  Funkce vracející seznam článků jako výstupní listObject databázového dotazu 
    */ 
-  function getArticles($section,$categorie,$filter,$order,$order_dir,$limitstart,$limit,$editor=false){
+  function getArticles($category,$filter,$order,$order_dir,$limitstart,$limit,$editor=false){
     $db = & JFactory::getDBO();
+    $user =& JFactory::getUser();
   
     //nastavení where částí SQL dotazu
-    $whereClause="";
-    if ($section!=-1){
-      $whereClause.=" AND ct.sectionid='".$section."'";
-    }
-    if ($categorie!=-1){
-      $whereClause.=" AND ct.catid='".$categorie."'";
+    $whereClause="(".$this->getAccessWhereSql('ct').")";
+    if ($category>-1){
+      $whereClause.=" AND ct.catid='".$category."'";
     }
     if ($filter!=''){
       $whereClause.=" AND ct.title LIKE '%".$filter."%'";
     }
     //         
-    $user =& JFactory::getUser();
-    if ($editor){
-      /*ošetření přístupových práv pro editaci*/  
-        if (!$user->authorize('com_content', 'edit', 'content', 'all')){
-          /*uživatel nemůže upravovat vše*/       //echo 'edit';
-          if ($user->authorize('com_content', 'edit', 'content', 'own')){//echo 'sem';
-            $whereClause.=" AND ct.created_by='".$user->get('id')."'";
-          }else {  //echo 'no';
-            return null;
-          }
-        }
-      /**/
-      $whereClause.=" AND ct.checked_out='0'"; //kontrola, jestli daný článek neupravuje někdo jiný...
-    }else{
-      /*ošetření přístupových práv pro čtení*/
-        $whereClause.=" AND ct.access<='".$user->get('aid')."'";  
-      /**/
-    }     
             
-    $db->setQuery("SELECT ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,cat.title as categorie,sec.title as section FROM #__content ct LEFT JOIN #__sections sec ON ct.sectionid=sec.id LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE true $whereClause order by $order $order_dir",$limitstart,$limit);
-  
-    $rows = $db->loadObjectList();     
+    $db->setQuery("SELECT ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,cat.title as categoryTitle,ct.checked_out FROM #__content ct LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE $whereClause order by $order $order_dir",$limitstart,$limit);
+    
+    $rows = $db->loadObjectList();
+    if (($editor)&&(count($rows)>0)){
+      //musíme zkontrolovat, jestli může uživatel upravovat dané články
+      $userId=$user->get('id');
+      foreach ($rows as $row) {
+      	if ($row->checked_out>0){
+          if ($row->checked_out!=$userId){
+            $row->locked=2;
+          }else{
+            $row->locked=1;          
+          }
+        }elseif(!($user->authorise('core.edit','com_content.article.'.$row->id))){
+          $row->locked=2;
+        }
+      }
+    }
+                      
     return $rows;
   }
   
   /**
    *  Funkce vracející počet článků odpovídajících vybranému filtru
    */       
-  function getArticlesCount($section,$categorie,$filter,$editor=false){
+  function getArticlesCount($category,$filter,$editor=false){
     $db = & JFactory::getDBO();
     
     //nastavení where částí SQL dotazu
-      $whereClause="";
-      if ($section!=-1){
-        $whereClause.=" AND sectionid='".$section."'";
-      }
-      if ($categorie!=-1){
-        $whereClause.=" AND catid='".$categorie."'";
-      }
-      if ($filter!=''){
-        $whereClause.=" AND title LIKE '%".$filter."%'";
-      }
-    //
-    $user =& JFactory::getUser();
-    if ($editor){
-      /*ošetření přístupových práv pro editaci*/
-        if (!$user->authorize('com_content', 'edit', 'content', 'all')){
-          /*uživatel nemůže upravovat vše*/
-          if ($user->authorize('com_content', 'edit', 'content', 'own')){
-            $whereClause.=" AND created_by='".$user->get('id')."'";
-          }else {
-            return null;
-          }
-        }
-      /**/
-      $whereClause.=" AND checked_out='0'"; //kontrola, jestli daný článek neupravuje někdo jiný...
-    }else{
-      /*ošetření přístupových práv pro čtení*/
-        $whereClause.=" AND access<='".$user->get('aid')."'";  
-      /**/
+    $whereClause="(".$this->getAccessWhereSql('ct').")";
+    if ($category>-1){
+      $whereClause.=" AND ct.catid='".$category."'";
     }
-              
-    $db->setQuery( "SELECT count(id) as pocet FROM #__content WHERE true $whereClause");
-    $rows = $db->loadObjectList();     
-    return $rows[0]->pocet;
+    if ($filter!=''){
+      $whereClause.=" AND ct.title LIKE '%".$filter."%'";
+    }
+    $user =& JFactory::getUser();
+                                                                                   
+    $db->setQuery( "SELECT count(id) as pocet FROM #__content ct WHERE  $whereClause");
+    $row = $db->loadObject(); 
+    return $row->pocet;
   }
   
   /**
@@ -362,7 +378,7 @@ class GincludeModel extends JModel
    */             
   function getArticleDB($id){
     $db = & JFactory::getDBO();
-    $db->setQuery( "SELECT ct.created_by,ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,cat.title as categorie,sec.title as section FROM #__content ct LEFT JOIN #__sections sec ON ct.sectionid=sec.id LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE ct.id='".$id."' LIMIT 1;");
+    $db->setQuery( "SELECT ct.created_by,ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,cat.title as categorie FROM #__content ct LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE ct.id='".$id."' LIMIT 1;");
     return $db->loadObjectList();
   }        
   

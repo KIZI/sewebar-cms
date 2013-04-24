@@ -74,7 +74,7 @@ class GincludeController extends JController
     }else{
       $_SESSION['gInclude']['part']=-1;
     }
-
+                                 
     require_once (JPATH_COMPONENT.DS.'models'.DS.'ginclude.php');
     $model=new GincludeModel();
     

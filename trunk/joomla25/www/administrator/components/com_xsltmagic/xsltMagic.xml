@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.5.0">
+	<name>XSLT MAGIC</name>
+	<!-- The following elements are optional and free of formatting conttraints -->
+	<creationDate>May 2011</creationDate>
+	<author>David Fišer</author>
+	<authorEmail>fiser.david@gmail.com</authorEmail>
+	<copyright>(C) 2011 All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<!--  The version string is recorded in the components table -->
+	<version>1.5.0</version>
+	<!-- The description is optional and defaults to the name -->
+	  <description>
+    <![CDATA[
+    <h2>XSLT Magic 2.0</h2>
+	<p><strong>XSLT Editor:</strong> 
+	<p>Základní funkčností je zobrazení složky, která je nastavena jako výchozí. </p>
+	<p>Procházení jednotlivých složek podobně jako v operačním systému Windows.</p> 
+	<p>Lze vytvořit nebo přejmenovat složku, nahrát  soubor, upravit soubor, pokud je tento soubor editovatelný. Seznam přípon souborů, které považujeme za upravitelné, je možno  nastavit. </p>
+    
+  <p><strong>Magic 2 Menu:</strong></p>
+	<p>vylepšené uživatelské rozhraní pro content plugin XSLT Magic</p>
+    ]]></description> 
+
+	<!-- Custom Install Script to execute 
+	<installfile>install.eventlist.php</installfile>
+	-->
+	<!-- Custom Uninstall Script to execute 
+	<uninstallfile>uninstall.eventlist.php</uninstallfile>
+  -->
+	<!-- Install Database Section -->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/01.db.sql</file>
+		</sql>
+	</install>
+
+	<!-- Uninstall Database Section -->
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/00.uninstall.sql</file>
+		</sql>
+	</uninstall>
+		
+	<administration>
+	
+		<!-- Administration Menu Section -->
+		<menu>COM_MAGIC</menu>
+		<submenu>
+			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+			<menu link="option=com_xsltmagic&amp;controller=xslts">COM_EDITOR</menu>
+      <menu link="option=com_xsltmagic&amp;controller=magic">COM_MENU</menu>
+		</submenu>
+	
+
+  	
+		<!-- Administration Main File Copy Section -->
+		<!-- Note the folder attribute: This attribute describes the folder
+			to copy FROM in the package to install therefore files copied
+			in this section are copied from /admin/ in the package -->
+		<files folder="administrator">
+			<folder>controllers</folder>
+			<folder>css</folder>
+			<folder>js</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>sql</folder>
+			<folder>views</folder>
+			<filename>admin.xsltmagic.php</filename>
+      <filename>config.xml</filename>
+
+		</files>
+		
+		<!-- Administration Language File Copy Section -->
+
+    <languages>
+			<language tag="en-GB">language/en-GB/en-GB.com_xsltMagic.ini</language>
+      <language tag="en-GB">language/en-GB/en-GB.com_xsltMagic.sys.ini</language>
+		</languages>
+
+	</administration>
+	
+	<config>
+ <fields name="params">
+ <fieldset name="basic" label="Module Parameters" description="Configure Module">
+		  <field name="root" type="text"  default="xml" label="Root" description="Folder with XSLT transformations"/>
+      <field name="edFiles" type="text"  default="htm,html,css,js,txt,log,xml,xsd,xsl,sch,php" label="Editable Files" description="Editable files through XSLT Editor"/>
+      <field name="maxSize" type="text"  default="1500" label="Max size (kb)" description="Max size of upload file through XSLT editor"/>
+      <field name="cache" type="text"  default="cache" label="Cache dir" description="Cache dir"/>
+  </fieldset>  
+ </fields>
+</config>
+
+</install>

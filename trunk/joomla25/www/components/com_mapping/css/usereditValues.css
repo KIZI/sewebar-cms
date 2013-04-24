@@ -1,0 +1,74 @@
+div.keyDiv {
+        background-color:#D0E0FF;
+        margin:2px;
+        padding:5px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        border:1px solid #1020FF;
+        width:700px;
+      }
+      div.noDiv{
+        display:none;
+      }
+      div.nameDiv {
+        font-size:14px;
+        font-weight:bold;
+      }
+      div.valuesDiv {
+        background-color:white;
+        margin:2px;
+        padding:5px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        border:1px solid gray;
+      }
+      div.valuesDiv table{
+        border-spacing:0px;
+        width:100%;
+      }
+      div.valuesDiv tr td{
+        border-bottom:1px dotted gray;
+        vertical-align:top;
+      }
+      div.valuesDiv td.nameTd{
+        font-weight:bold;
+        width:50%;
+        padding-left:10px;
+      }
+      div.valuesDiv tr:hover td{
+        background-color:#FFF0B0;
+      }
+      div.userMappedValueDiv,div.autoMappedValueDiv{
+        position:relative;
+      }
+      div.linksDiv{
+        position:absolute;
+        right:0px;
+        top:0px;
+      }
+      
+      .viewA,.viewB{
+        display:none;
+      }
+      
+      .userMappedValueDiv{
+        background-color: rgb(200,255,200);
+        border:1px solid #006600;
+      }
+      div.autoMappedValueDiv,span.autoMappedValueDiv {
+        background-color: rgb(255,255,200);
+        border:1px solid orange;
+      }
+      div.noMappedValueDiv,span.noMappedValueDiv {
+        background-color: rgb(255,200,200);
+        border:1px solid red;
+      }
+      div.ignoreMerge,span.ignoreMerge {
+        background-color: rgb(230,230,230);
+        border:1px solid #717171;
+      }
+      div.valuesDiv tr td div{
+        padding-left:5px;
+      }

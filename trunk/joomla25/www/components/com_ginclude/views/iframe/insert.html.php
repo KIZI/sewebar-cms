@@ -20,7 +20,7 @@ class GincludeViewInsert extends JView
   function insertHTML(){
     $article=$this->article;
     $model=$this->getModel();
-    global $mainframe;
+    $mainframe=JFactory::getApplication();
     $doc = & JFactory::getDocument();
         if (JPATH_BASE!=JPATH_ADMINISTRATOR){
           $doc->addStyleSheet('components/com_ginclude/css/general.css');
