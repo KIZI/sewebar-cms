@@ -1,0 +1,63 @@
+div.userMerge,span.userMerge {
+        background-color: rgb(200,255,200);
+        border:1px solid #006600;
+      }
+      div.autoMerge,span.autoMerge {
+        background-color: rgb(255,255,200);
+        border:1px solid orange;
+      }
+      div.ignoreMerge,span.ignoreMerge {
+        background-color: rgb(230,230,230);
+        border:1px solid #717171;
+      }
+      div.nonMerge,span.nonMerge {
+        background-color: rgb(255,200,200);
+        border:1px solid red;
+      }
+      div.userMerge,span.userMerge,div.autoMerge,span.autoMerge,div.ignoreMerge,span.ignoreMerge,div.nonMerge,span.nonMerge {
+        margin-bottom:1px;
+        padding:2px;
+        width:700px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+      }
+      span.ratio {
+        font-style:italic;
+        color:gray;
+        padding-left:10px;
+        padding-right:10px;
+      }
+      .nameDiv{
+        font-size:12px;
+        font-weight:bold;
+      }
+      .assignName{
+        font-weight:bold;
+      }
+      div.itemsDiv{
+        background-color:white;
+        margin:2px;
+        padding:5px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+      }
+      div.userMerge div.itemsDiv{
+        border:1px solid #006600;
+      }
+      div.autoMerge div.itemsDiv{
+        border:1px solid orange;
+      }
+      div.nonMerge div.itemsDiv{
+        border:1px solid red;
+      }
+      a.buttonA{
+        border:1px solid black;
+        padding:2px;
+        color:black !important;
+        background-color:rgb(230,230,230);
+      }
+      .selectedItem{
+        font-weight:bold;
+      }

@@ -19,7 +19,7 @@ class GincludeViewChangeArticle extends JView
    *  Funkce pro zobrazení přehledu článků pro jejich výběr
    */ 
   function articlesHtml(){
-    global $mainframe;
+    $mainframe=JFactory::getApplication();
     $model=$this->getModel();
     
     $limit = JRequest::getVar('limit',$mainframe->getCfg(list_limit));

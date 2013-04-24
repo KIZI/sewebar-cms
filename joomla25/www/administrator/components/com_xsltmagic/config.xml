@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fieldset name="component"
+		label="Nastaveni komponenty XSLT magic"
+>
+		<field name="root" type="text"  default="xml" label="Root" description="Folder with XSLT transformations">     </field>
+         <field name="edFiles" type="text"  default="htm,html,css,js,txt,log,xml,xsd,xsl,sch,php" label="Editable Files" description="Editable files through XSLT Editor"> </field>
+        <field name="maxSize" type="text"  default="1500" label="Max size (kb)" description="Max size of upload file through XSLT editor"> </field>
+       <field name="cache" type="text"  default="cache" label="Cache dir" description="Cache dir">          </field>
+   </fieldset>
+</config>

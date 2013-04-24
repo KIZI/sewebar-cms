@@ -1,0 +1,28 @@
+/**
+ * @package Quasar Template - RocketTheme
+ * @version 1.0 September 11, 2011
+ * @author RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Gantry uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+
+body {word-wrap:break-word;}
+body.rtl #rt-menu ul, body.rtl #rt-menu ul li {direction:ltr;float:left !important;}
+body span.inset-left, body span.inset-right {width:45%;}
+body .rt-wrapper {overflow:hidden;}
+
+body .rt-container {background: transparent;}
+body #rt-logo {width:100px !important; height: 32px !important;background:url(../images/iphone/logo.png) center center no-repeat;}
+body #rt-header {-webkit-background-size-x: 100%;}
+body #rt-menu ul li {list-style: none;margin-left: 0px;}
+body .rt-articleinfo {border:0;padding:0;-webkit-border-radius:0;background:transparent;}
+body .rt-date-posted {font-size:110%;}
+body h1 {border-bottom:0;}
+body .module-title-surround {margin: -10px -10px -30px;}
+body #gantry-resetsettings {float:none;text-align:center;}
+body #rt-copyright {padding:0;text-align:center;}
+body #rt-showcase .rt-container .rt-block {background: none;border-radius:0;-webkit-border-radius:0;border:0;-webkit-box-shadow:none;color:#fff;text-shadow:1px 1px 1px #000;}
+body #rt-showcase a.readon span {text-shadow:none;}

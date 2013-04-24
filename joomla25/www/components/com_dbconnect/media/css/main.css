@@ -1,0 +1,102 @@
+/* CSS Document */
+@import url(general.css);
+
+.icon-48-dbconnect{
+  background: url('../images/dbconnect_icon.png') 0 0 no-repeat;
+}
+
+table.myPlainTable{
+  border-spacing:0px;
+  border:none;
+}
+table.myPlainTable td, table.myPlainTable th{
+  padding:5px 7px;
+  text-align:left;
+}
+
+table.myAdminTable th{
+  background: #f7f7f7;
+}
+table.myAdminTable tr{
+  background: white;
+}
+
+table.myAdminTable {
+  border-spacing: 0px;
+  border: 1px dotted #cccccc ;
+  border-bottom: none ;
+}
+table.myAdminTable td,table.myAdminTable th{
+  padding: 5px 7px ;
+  border-bottom: 1px dotted #cccccc;;
+  text-align: left;
+}
+table.myAdminTable.looser td,table.myAdminTable.looser th{
+  padding: 5px 30px 5px 7px;
+}
+table.myAdminTable.looser td:last-child,table.myAdminTable.looser th:last-child{
+  padding: 5px 7px 5px 7px;
+}
+table.myAdminTable th{
+  background: #f7f7f7;
+}
+table.myAdminTable tr{
+  background: white;
+}
+table.myAdminTable tr.row1{
+  background:#f0f0f0;
+}
+table.myAdminTable tr:hover{
+  background:rgb(232,246,254)
+}
+table.myAdminTable th{
+  color:rgb(23,101,152);
+}
+
+table.myAdminTable td.actionsTd a,a.button,input.button,div.actionsDiv a,
+table.myPlainTable td.actionsTd a{
+  display: inline-block;
+  border: 1px solid #cccccc;
+  padding: 2px 4px;
+  text-decoration: none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  background: #f7f7f7;
+  color: rgb(2,90,141);
+}
+
+table.myAdminTable td.actionsTd a.disabled{
+  border:1px solid rgb(200,200,200);
+  color: rgb(200,200,200);
+  background: rgb(247,247,247);
+}
+table.myAdminTable td.actionsTd a.disabled:hover{
+  border:1px solid rgb(200,200,200);
+  color: rgb(200,200,200);
+  background: rgb(247,247,247);
+}
+
+table.myAdminTable td.actionsTd a:hover,a.button:hover,input.button:hover,div.actionsDiv a:hover,
+table.myPlainTable td.actionsTd a:hover{
+  border: 1px solid rgb(2,90,141);
+  text-decoration: none;
+  color: rgb(2,90,141);
+}
+div.actionsDiv{
+  margin: 10px 5px;
+}
+
+input.button.disabled,input.button.disabled:hover{
+  color: #cccccc;
+  border: 1px solid #cccccc;
+  background: #f7f7f7;
+}
+.disabled{
+  color:#cccccc;
+}
+div.spinner{
+  width:32px;
+  height:32px;
+  background: url(../images/spinner.gif) right center no-repeat;
+}
