@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.5" type="plugin" group="kbi">
+<extension version="1.5" type="library" method="upgrade">
 	<name>Knowledge Base Integration Library</name>
+	<libraryname>kbi</libraryname>
 	<author>Andrej Hazucha</author>
 	<creationDate>April 2010</creationDate>
 	<copyright>Copyright (C) 2010. All rights reserved.</copyright>
@@ -12,13 +13,14 @@
 		The Knowledge Base Include (KBI) library, which consists of communication procedures and CMS interfaces. This allows to use one implementation in various CMSs.
 	</description>
 	<files>
-		<folder plugin="kbi">FirePHPCore</folder>
-		<folder plugin="kbi">Integrators</folder>
-		<filename plugin="kbi">Debug.php</filename>
-		<filename plugin="kbi">IKBIntegrator.php</filename>
-		<filename plugin="kbi">KBIntegratorSynchronable.php</filename>
-		<filename plugin="kbi">ISynchronable.php</filename>
-		<filename plugin="kbi">KBIntegrator.php</filename>
-		<filename plugin="kbi">Query.php</filename>
+		<folder>FirePHPCore</folder>
+		<folder>Integrators</folder>
+		<filename>Debug.php</filename>
+		<filename>IHasDataDictionary.php</filename>
+		<filename>IKBIntegrator.php</filename>
+		<filename>KBIntegratorSynchronable.php</filename>
+		<filename>ISynchronable.php</filename>
+		<filename>KBIntegrator.php</filename>
+		<filename>Query.php</filename>
 	</files>
-</install>
+</extension>

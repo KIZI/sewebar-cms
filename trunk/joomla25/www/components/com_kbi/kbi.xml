@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
-<install type="component" version="1.5.0">
+<extension type="component" version="2.5.0" method="upgrade">
 	<!--  The extension commercial name: make it different form others at JED http://extensions.joomla.org/-->
 	<name>KBI</name>
 	<!-- The following elements are optional and free of formatting constraints -->
 	<!-- Original creation date. Recommended: YYYY-MM-DD -->
-	<creationDate>2009-08-10</creationDate>
+	<creationDate>2013-04-09</creationDate>
 	<author>Andrej Hazucha</author>
-	<authorEmail>rewko@centrum.cz</authorEmail>
-	<authorUrl>http://www.rewko.eu</authorUrl>
-	<copyright>Copyright (C) 2010. All rights reserved.</copyright>
+	<authorEmail>andrej.hazucha@vse.cz</authorEmail>
+	<authorUrl>http://www.hazucha.com</authorUrl>
+	<copyright>Copyright (C) 2013. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
 	<version>0.91</version>
@@ -51,6 +50,7 @@
 		<folder>assets</folder>
 		<folder>models</folder>
 		<folder>views</folder>
+		<filename>controller.php</filename>
 		<filename>kbi.php</filename>
 	</files>
 
@@ -83,6 +83,7 @@
 			<folder>assets</folder>
 			<folder>controllers</folder>
 			<folder>models</folder>
+			<folder>helpers</folder>
 			<folder>tables</folder>
 			<folder>sql</folder>
 			<folder>views</folder>
@@ -95,6 +96,6 @@
 		</languages>
 
 		<!-- Administration Main Media File Copy Section -->
-		<media folder="administrator" destination="com_helloworld" />
+		<!--<media folder="administrator" destination="com_helloworld" />-->
 	</administration>
-</install>
+</extension>
