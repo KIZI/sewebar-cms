@@ -1,49 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project default="sewebar">
-	<description>Builds Joomla! installation packages</description>
+<project name="sewebar" default="all" description="Builds Joomla! installation packages">
+    <import file="phing-joomla-extension-builder.xml" />
 
-	<property name="dist" location="installers/"/>
-	<property name="www" location="www/"/>
-	<property name="tests" location="tests/"/>
-	<property name="docs" location="meta/docs/"/>
+	<property name="dist" value="installers/" />
+	<property name="tests" value="tests/" />
+	<property name="docs" value="meta/docs/"/>
 
-	<tstamp>
-		<format property="today" pattern="yyyy-MM-dd" locale="cs,CZ"/>
-	</tstamp>
-
-	<target name="all"
-		description="creates packages for all extensions"
-		depends="kbi, jucene, bkef, ginclude, uploadxml, xsltmagic">
-	</target>
-
-	<target name="sewebar"
+    <target name="all"
 		description="creates one package for all extensions (use with com_multiinstall)"
-		depends="all">
+		depends="kbi, jucene, bkef, ginclude, uploadxml, xsltmagic">
 			<!-- <property name="sewebar" location="${dist}/sewebar-r${Revision}.zip"/> -->
-			<property name="sewebar" location="${dist}/sewebar-${today}.zip"/>
-			<zip destfile="${sewebar}" basedir="${dist}">
-				<include name="${plg_kbilib}" />
-				<include name="${com_kbi}" />
-				<include name="${plg_kbi}" />
-				<include name="${plg_kbinclude}" />
-				<include name="${com_ardesigner}" />
+			<property name="sewebar" value="${dist}/sewebar-${today}.zip"/>
+			<zip destfile="${sewebar}">
+                <fileset dir="${dist}">
+                    <include name="${plg_kbilib}" />
+                    <include name="${com_kbi}" />
+                    <include name="${plg_kbi}" />
+                    <include name="${plg_kbinclude}" />
+                    <include name="${com_ardesigner}" />
 
-				<include name="${plg_jucene}" />
-				<include name="${com_jucene}" />
-				<include name="${mod_jucene}" />
-				<include name="${plg_library}" />
-				<include name="${plg_contindex}" />
-				
-				<include name="${com_bkef}" />
+                    <include name="${plg_jucene}" />
+                    <include name="${com_jucene}" />
+                    <include name="${mod_jucene}" />
+                    <include name="${plg_library}" />
+                    <include name="${plg_contindex}" />
 
-				<include name="${com_ginclude}" />
-				<include name="${plg_ginclude}" />
+                    <include name="${com_bkef}" />
 
-				<include name="${plg_uploadxml}" />
+                    <include name="${com_ginclude}" />
+                    <include name="${plg_ginclude}" />
 
-				<include name="${plg_xsltmagic}" />
+                    <include name="${plg_uploadxml}" />
+
+                    <include name="${plg_xsltmagic}" />
+                </fileset>
 			</zip>
-			<antcall target="clean-after"></antcall>
+			<phingcall target="clean-after" />
 	</target>
 
 	<!-- kbi -->
@@ -55,48 +47,48 @@
 	<target name="plg_kbilib">
 		<property name="plg_kbilib" value="lib_kbi-${today}.zip"/>
 		<zip destfile="${dist}/${plg_kbilib}">
-			<zipfileset dir="${www}/plugins/kbi/" excludes="**/.svn"/>
-			<zipfileset file="${docs}/kbi/readme.txt"/>
+            <fileset dir="${source.dir}/libraries/kbi/" excludes="**/.svn" />
+			<fileset includes="${docs}/kbi/readme.txt"/>
 		</zip>
 	</target>
 
 	<target name="com_kbi">
-		<property name="com_kbi" value="com_kbi-${today}.zip"/>
-		<zip destfile="${dist}/${com_kbi}">
-			<zipfileset dir="${www}/components/com_kbi/" excludes="**/.svn"/>
-			<zipfileset dir="${www}/administrator/components/com_kbi/" prefix="administrator" excludes="**/.svn"/>
-			<zipfileset file="${docs}/kbi/readme.txt"/>
+        <phingcall target="build">
+            <property name="extension" value="com_kbi" />
+        </phingcall>
+		<zip destfile="${dist}/com_kbi-${project.version}.zip">
+			<fileset dir="${build.dir}/com_kbi" defaultexcludes="true" />
 		</zip>
 	</target>
 
 	<target name="plg_kbi">
-		<property name="plg_kbi" value="plg_kbi-${today}.zip"/>
-		<zip destfile="${dist}/${plg_kbi}">
-			<zipfileset dir="${www}/plugins/content/" excludes="**/.svn">
-				<include name="kbi.php"/>
-				<include name="kbi.xml"/>
-			</zipfileset>
-			<zipfileset file="${docs}/kbi/readme.txt"/>
-		</zip>
+		<!--<property name="plg_kbi" value="plg_kbi-${today}.zip"/>-->
+		<!--<zip destfile="${dist}/${plg_kbi}">-->
+			<!--<zipfileset dir="${www}/plugins/content/" excludes="**/.svn">-->
+				<!--<include name="kbi.php"/>-->
+				<!--<include name="kbi.xml"/>-->
+			<!--</zipfileset>-->
+			<!--<zipfileset file="${docs}/kbi/readme.txt"/>-->
+		<!--</zip>-->
 	</target>
 
 	<target name="plg_kbinclude">
-		<property name="plg_kbinclude" value="plg_kbinclude-${today}.zip"/>
-		<zip destfile="${dist}/${plg_kbinclude}">
-			<zipfileset dir="${www}/plugins/editors-xtd/" excludes="**/.svn">
-				<include name="kbinclude.php"/>
-				<include name="kbinclude.xml"/>
-			</zipfileset>
-			<zipfileset file="${docs}/kbi/readme.txt"/>
-		</zip>
+		<!--<property name="plg_kbinclude" value="plg_kbinclude-${today}.zip"/>-->
+		<!--<zip destfile="${dist}/${plg_kbinclude}">-->
+			<!--<zipfileset dir="${www}/plugins/editors-xtd/" excludes="**/.svn">-->
+				<!--<include name="kbinclude.php"/>-->
+				<!--<include name="kbinclude.xml"/>-->
+			<!--</zipfileset>-->
+			<!--<zipfileset file="${docs}/kbi/readme.txt"/>-->
+		<!--</zip>-->
 	</target>
 
 	<target name="com_ardesigner">
-		<property name="com_ardesigner" value="com_ardesigner-${today}.zip"/>
-		<zip destfile="${dist}/${com_ardesigner}">
-			<zipfileset dir="${www}/components/com_ardesigner/" excludes="**/.svn"/>
-			<zipfileset file="${docs}/kbi/readme.txt"/>
-		</zip>
+		<!--<property name="com_ardesigner" value="com_ardesigner-${today}.zip"/>-->
+		<!--<zip destfile="${dist}/${com_ardesigner}">-->
+			<!--<zipfileset dir="${www}/components/com_ardesigner/" excludes="**/.svn"/>-->
+			<!--<zipfileset file="${docs}/kbi/readme.txt"/>-->
+		<!--</zip>-->
 	</target>
 	<!-- /kbi -->
 
@@ -109,41 +101,41 @@
 	<target name="plg_jucene">
 		<property name="plg_jucene" value="plg_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${plg_jucene}">
-			<zipfileset dir="${www}/plugins/search/" includes="jucene.*" excludes="**/.svn">
+			<fileset dir="${source.dir}/plugins/search/" includes="jucene.*" excludes="**/.svn">
 				<include name="index.html"/>
-			</zipfileset>
+			</fileset>
 		</zip>
 	</target>
 	
 	<target name="plg_contindex">
 		<property name="plg_contindex" value="plg_contindex-${today}.zip"/>
 		<zip destfile="${dist}/${plg_contindex}">
-			<zipfileset dir="${www}/plugins/content/" includes="contindex.*" excludes="**/.svn">
+			<fileset dir="${source.dir}/plugins/content/" includes="contindex.*" excludes="**/.svn">
 				<include name="index.html"/>
-			</zipfileset>
+			</fileset>
 		</zip>
 	</target>
 	
 	<target name="plg_library">
 		<property name="plg_library" value="plg_library-${today}.zip"/>
 		<zip destfile="${dist}/${plg_library}">
-			<zipfileset dir="${www}/plugins/system/" includes="library.*" excludes="**/.svn">
+			<fileset dir="${source.dir}/plugins/system/" includes="library.*" excludes="**/.svn">
 				<include name="index.html"/>
-			</zipfileset>
+			</fileset>
 		</zip>
 	</target>
 	<target name="com_jucene">
 		<property name="com_jucene" value="com_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${com_jucene}">
-			<zipfileset dir="${www}/components/com_jucene/" excludes="**/.svn"/>
-			<zipfileset dir="${www}/administrator/components/com_jucene/" prefix="administrator" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/components/com_jucene/" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/administrator/components/com_jucene/" prefix="administrator" excludes="**/.svn"/>
 		</zip>
 	</target>
 
 	<target name="mod_jucene">
 		<property name="mod_jucene" value="mod_jucene-${today}.zip"/>
 		<zip destfile="${dist}/${mod_jucene}">
-			<zipfileset dir="${www}/modules/mod_jucene/" excludes="**/.svn" />
+			<fileset dir="${source.dir}/modules/mod_jucene/" excludes="**/.svn" />
 		</zip>
 	</target>
 	<!-- /jucene -->
@@ -152,8 +144,8 @@
 	<target name="bkef">
 		<property name="com_bkef" value="com_bkef-${today}.zip"/>
 		<zip destfile="${dist}/${com_bkef}">
-			<zipfileset dir="${www}/components/com_bkef/" excludes="**/.svn"/>
-			<zipfileset dir="${www}/administrator/components/com_bkef/" prefix="administrator" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/components/com_bkef/" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/administrator/components/com_bkef/" prefix="administrator" excludes="**/.svn"/>
 		</zip>
 	</target>
 	<!-- /BKEF -->
@@ -166,16 +158,16 @@
 	<target name="com_ginclude">
 		<property name="com_ginclude" value="com_ginclude-${today}.zip"/>
 		<zip destfile="${dist}/${com_ginclude}">
-			<zipfileset dir="${www}/components/com_ginclude/" excludes="**/.svn"/>
-			<zipfileset dir="${www}/administrator/components/com_ginclude/" prefix="administrator" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/components/com_ginclude/" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/administrator/components/com_ginclude/" prefix="administrator" excludes="**/.svn"/>
 		</zip>
 	</target>
 
 	<target name="plg_ginclude">
 		<property name="plg_ginclude" value="plg_ginclude-${today}.zip"/>
 		<zip destfile="${dist}/${plg_ginclude}">
-			<zipfileset dir="${www}/plugins/editors-xtd/" includes="ginclude/**" excludes="**/.svn"/>
-			<zipfileset dir="${www}/plugins/editors-xtd/" includes="ginclude.*" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/plugins/editors-xtd/" includes="ginclude/**" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/plugins/editors-xtd/" includes="ginclude.*" excludes="**/.svn"/>
 		</zip>
 	</target>
 	<!-- /ginclude -->
@@ -184,7 +176,7 @@
 	<target name="uploadxml">
 		<property name="plg_uploadxml" value="plg_uploadxml-${today}.zip"/>
 		<zip destfile="${dist}/${plg_uploadxml}">
-			<zipfileset dir="${www}/plugins/xmlrpc/" includes="uploadxml.*" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/plugins/xmlrpc/" includes="uploadxml.*" excludes="**/.svn"/>
 		</zip>
 	</target>
 	<!-- /uploadxml -->
@@ -193,8 +185,8 @@
 	<target name="xsltmagic">
 		<property name="plg_xsltmagic" value="plg_xsltmagic-${today}.zip"/>
 		<zip destfile="${dist}/${plg_xsltmagic}">
-			<zipfileset dir="${www}/plugins/content/" includes="xsltmagic.*" excludes="**/.svn"/>
-			<zipfileset dir="${www}/plugins/content/" includes="zendcache.php" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/plugins/content/" includes="xsltmagic.*" excludes="**/.svn"/>
+			<fileset dir="${source.dir}/plugins/content/" includes="zendcache.php" excludes="**/.svn"/>
 		</zip>
 	</target>
 	<!-- /xsltmagic -->
@@ -242,21 +234,8 @@
 		<exec command="phpunit ${tests}"/>
 	</target>
 
-	<!-- http://ccollins.wordpress.com/2008/01/30/getting-subversion-revision-in-ant/ -->
+	<!-- http://www.phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#SvnInfoTask -->
 	<target name="svn_revision">
-		<exec executable="svn">
-			<arg line="update ${www}"/>
-		</exec>
-		<exec executable="svn" output="svnlog.out">
-			<arg line="info -r HEAD ${www}"/>
-		</exec>
-		<loadproperties srcFile="svnlog.out">
-			<filterchain>
-				<linecontains>
-					<contains value="Revision"/>
-				</linecontains>
-			</filterchain>
-		</loadproperties>
-		<delete file="svnlog.out"/>
+        <svnlastrevision workingcopy="${source.dir}" propertyname="svn.lastrevision"/>
 	</target>
 </project>

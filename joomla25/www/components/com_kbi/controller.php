@@ -14,7 +14,7 @@ define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . 
 
 jimport( 'joomla.application.component.controller' );
 JPluginHelper::importPlugin('kbi', 'base');
-JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
+JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
 JLoader::import('transformator', JPATH_COMPONENT . DS . 'models');
 JLoader::import('sources', COM_KBI_ADMIN . DS . 'models');
 /**
