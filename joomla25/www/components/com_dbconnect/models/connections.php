@@ -95,16 +95,6 @@ class dbconnectModelConnections extends JModel
     return $db->loadObjectList();
   }   
 
-  public static function getDbPassword($dbConnection){
-    if (!($dbConnection instanceof DbConnection)){
-      $model=new dbconnectModelConnections();
-      $dbConnection=$model->getConnection($dbConnection);
-    }
-    $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>self::LM_URL);
-    JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');     
-    $kbi = KBIntegrator::create($configArr);
-    
-  } 
   
   public static function prepareKbi(){
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>self::LM_URL);
