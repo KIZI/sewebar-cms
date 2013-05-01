@@ -21,11 +21,14 @@ class dbconnectModelConnections extends JModel
   public function insertConnection($dbtype,$server,$username,$password,$dbname,$table,$primaryKey,$shared=false){
     $db=$this->getDBO();
     $user =& JFactory::getUser();  
-    $db->setQuery('INSERT INTO #__dbconnect_tables (`uid`,`db_type`,`server`,`username`,`password`,`db_name`,`table`,`primary_key`,`shared`)VALUES("'.$user->get('id').'","'.$db->getEscaped($dbtype).'","'.$db->getEscaped($server).'","'.$db->getEscaped($username).'","'.$db->getEscaped($password).'","'.$db->getEscaped($dbname).'","'.$db->getEscaped($table).'","'.$db->getEscaped($primaryKey).'","'.($shared?'1':'0').'");');
+    $db->setQuery('INSERT INTO #__dbconnect_tables (`uid`,`db_type`,`server`,`username`,`db_name`,`table`,`primary_key`,`shared`)VALUES("'.$user->get('id').'","'.$db->getEscaped($dbtype).'","'.$db->getEscaped($server).'","'.$db->getEscaped($username).'","'.$db->getEscaped($dbname).'","'.$db->getEscaped($table).'","'.$db->getEscaped($primaryKey).'","'.($shared?'1':'0').'");');
     if(!$db->query()){
       return false;
     }else{                  
-      return $db->insertid();
+      $returnId= $db->insertid();
+      //TODO uložení hesla
+      ///,"'.$db->getEscaped($password)
+      return $returnId;
     }
   }
   
@@ -36,7 +39,7 @@ class dbconnectModelConnections extends JModel
     $db=$this->getDBO();
     $user=&JFactory::getUser();
     $db->setQuery("SELECT * FROM #__dbconnect_tables WHERE id='".$connectionId."'".($userSafe?' AND (uid=\''.$user->get('id').'\' OR shared=1)':'')." LIMIT 1;");
-    return $db->loadObject();
+    return $db->loadObject('DbConnection');
   } 
   
   /**
@@ -91,5 +94,22 @@ class dbconnectModelConnections extends JModel
     return $db->loadObjectList();
   }   
 
+
+}
+
+/**
+ *  Class pro DB připojení
+ */     
+class DbConnection{
+  /**
+   *  Funkce vracející heslo konkrétního připojení
+   */     
+  public function getPassword(){
+    //TODO
+    return $this->password;
+  }   /*
+  public function setPassword(){
+    //TODO
+  }     */
 }
 ?>

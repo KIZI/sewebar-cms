@@ -169,7 +169,7 @@ class IziController extends JController{
     
     $dbusersModel=&$this->getModel('Dbusers','dbconnectModel');   
     $dbUser=$dbusersModel->getDbUser();     
-    $unidbModel=&$this->getModel('Unidb','dbconnectModel');             
+    $unidbModel=&$this->getModel('Unidb','dbconnectModel');           //TODO tady musíme nějak dořešit heslo DB uživatele...  
     $unidbModel->setDB($dbUser->db_type,$dbUser->server,$dbUser->username,$dbUser->password,$dbUser->db_name);
     $connectionsModel=&$this->getModel('Connections','dbconnectModel');       
                                               //TODO tady by to asi chtělo kontrolu, jestli to prošlo!
@@ -793,7 +793,7 @@ class IziController extends JController{
                                     'server'=>$connection->server,
                                     'database'=>$connection->db_name,
                                     'username'=>$connection->username,
-                                    'password'=>$connection->password,
+                                    'password'=>$connection->getPassword(),
                                     'type'=>$dbType
                                   ));                               
       if ($lispminerId){
@@ -897,7 +897,7 @@ class IziController extends JController{
       
       //nastavíme uniDB model
       $unidbModel=&$this->getModel('Unidb','dbconnectModel');    
-      $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->password,$connection->db_name);
+      $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->getPassword(),$connection->db_name);
       if ($dbError!=''){        
         JError::raiseError(500,$dbError);
         return ;                                
@@ -935,7 +935,7 @@ class IziController extends JController{
       return;
     }              
     $unidbModel=&$this->getModel('Unidb','dbconnectModel');
-    $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->password,$connection->db_name);
+    $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->getPassword(),$connection->db_name);
     if ($dbError!=''){
       JError::raiseError(500,$dbError);
       return ;
@@ -1093,7 +1093,7 @@ class IziController extends JController{
     $connection=$connectionsModel->getConnection($task->db_table);
     
     $unidbModel=&$this->getModel('Unidb','dbconnectModel');    
-    $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->password,$connection->db_name);
+    $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->getPassword(),$connection->db_name);
     if ($dbError!=''){        
       JError::raiseError(500,$dbError);
       return ;                                
