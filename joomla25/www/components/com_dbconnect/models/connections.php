@@ -11,6 +11,8 @@ jimport('joomla.application.component.model');
  */
 class dbconnectModelConnections extends JModel
 {
+  const LM_URL='http://connect-dev.lmcloud.vse.cz/SewebarConnect';
+
 	public function getDBTypes(){
     return array('mysql'=>"MySQL",'mysqli'=>"MySQLi");
   }
@@ -26,8 +28,7 @@ class dbconnectModelConnections extends JModel
       return false;
     }else{                  
       $returnId= $db->insertid();
-      //TODO uložení hesla
-      ///,"'.$db->getEscaped($password)
+      self::setDbPassword($returnId,$password);
       return $returnId;
     }
   }
@@ -94,6 +95,48 @@ class dbconnectModelConnections extends JModel
     return $db->loadObjectList();
   }   
 
+  public static function getDbPassword($dbConnection){
+    if (!($dbConnection instanceof DbConnection)){
+      $model=new dbconnectModelConnections();
+      $dbConnection=$model->getConnection($dbConnection);
+    }
+    $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>self::LM_URL);
+    JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');     
+    $kbi = KBIntegrator::create($configArr);
+    
+  } 
+  
+  public static function prepareKbi(){
+    $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>self::LM_URL);
+    JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');     
+    return KBIntegrator::create($configArr);
+  }
+  
+  public static function getDbPassword($dbConnection){
+    if (!($dbConnection instanceof DbConnection)){
+      $model=new dbconnectModelConnections();
+      $dbConnection=$model->getConnection($dbConnection);
+    }
+    if (!$dbConnection){return '';}
+    $kbi=self::prepareKbi();
+    $session =& JFactory::getSession();
+    $userData=$session->get('user',array('username'=>'','password'=>''),'sewebar');
+    return $kbi->getDatabasePassword($userData['username'],$userData['password'],$dbConnection->id);
+  }
+  
+  public static function setDbPassword($dbConnection,$password){
+    if (!($dbConnection instanceof DbConnection)){
+      $model=new dbconnectModelConnections();
+      $dbConnection=$model->getConnection($dbConnection);
+    }
+    if (!$dbConnection){return '';}
+    $kbi=self::prepareKbi();
+    $session =& JFactory::getSession();
+    $userData=$session->get('user',array('username'=>'','password'=>''),'sewebar');
+    return $kbi->registerUserDatabase($userData['username'],$userData['password'],$dbConnection->id,$password);
+  } 
+  
+  
 
 }
 
@@ -105,11 +148,16 @@ class DbConnection{
    *  Funkce vracející heslo konkrétního připojení
    */     
   public function getPassword(){
-    //TODO
-    return $this->password;
-  }   /*
-  public function setPassword(){
-    //TODO
-  }     */
+    if (@$this->password!=''){ //TODO jen dočasné kvůli přechodu
+      return $this->password;
+    }
+    return dbconnectModelConnections::getDbPassword($this);
+  }   
+  /**
+   *  Funkce pro uložení hesla konkrétního připojení
+   */     
+  public function setPassword($password){
+    dbconnectModelConnections::setDbPassword($this,$password);
+  }     
 }
 ?>

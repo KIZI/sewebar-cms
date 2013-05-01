@@ -300,7 +300,7 @@
         //zatím není připravený objekt pro práci s uniDb
         require_once (JPATH_COMPONENT.DS.'models'.DS.'unidb.php');
         $this->uniDb=new dbconnectModelUnidb(); 
-        if ($this->uniDb->setDB($connection->db_type,$connection->server,$connection->username,$connection->password,$connection->db_name)!=""){
+        if ($this->uniDb->setDB($connection->db_type,$connection->server,$connection->username,$connection->getPassword(),$connection->db_name)!=""){
           $this->uniDb=null;
           return false;
         }
