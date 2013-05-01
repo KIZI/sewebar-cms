@@ -256,7 +256,7 @@ class ApiController extends JController{
                                         'server'=>$connection->server,
                                         'database'=>$connection->db_name,
                                         'username'=>$connection->username,
-                                        'password'=>$connection->password,
+                                        'password'=>$connection->getPassword(),
                                         'type'=>$dbType
                                       ));                   
         }catch(Exception $e){
