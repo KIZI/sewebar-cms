@@ -1212,7 +1212,25 @@ class IziController extends JController{
    *  Akce pro vyvolání úpravy preprocessing hintu
    */
   public function newReportArticle(){
-    exit('not yet implemented');
+    $categoryId=JRequest::getInt('catid',-1); //TODO zadání konkrétní kategorie
+    if ($categoryId==-1){
+      JError::raiseError(500,JText::_('FORBIDDEN'));
+      return;
+    }
+    $title=JRequest::getString('title','');
+    $view=&$this->getView('IziNewReportArticle',$this->document->getType());
+    $view->assign('categoryId',$categoryId);
+    if ($title!=''){     //TODO dodělání vytvoření nového článku
+                    /*
+      //vytvorime novy clanek
+      $articlesModel=$this->getModel('Articles','sewebarModel');
+      if ($articlesModel->newArticle($title,$categoryId)){
+        $view->assign('confirm','created');
+      }else{
+        $view->assign('confirm','storno');
+      }         */
+    }
+    $view->display();
   } 
 
   /**

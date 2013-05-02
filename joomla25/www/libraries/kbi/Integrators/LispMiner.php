@@ -311,7 +311,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	}
 
 	public function updateUser($username, $password, $new_username, $new_password)
-	{
+	{    //TODO tady nemohu předávat původní heslo...
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/Users/Update";
 
@@ -329,7 +329,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseResponse($response, 'User successfully updated.');
 	}
 
-  public function deleteUser($username,$password){
+  public function deleteUser($username){
     //TODO doplnit imlementaci smazání uživatele
   }
 
