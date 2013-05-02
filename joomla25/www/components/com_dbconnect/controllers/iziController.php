@@ -1213,9 +1213,10 @@ class IziController extends JController{
    */
   public function newReportArticle(){
     $categoryId=JRequest::getInt('catid',-1); //TODO zadání konkrétní kategorie
-    if ($categoryId==-1){
+    if ($categoryId==-1){  /*
       JError::raiseError(500,JText::_('FORBIDDEN'));
-      return;
+      return;                */
+      $categoryId=0;
     }
     $title=JRequest::getString('title','');
     $view=&$this->getView('IziNewReportArticle',$this->document->getType());
