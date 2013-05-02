@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SewebarConnect</RootNamespace>
     <AssemblyName>SewebarConnect</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
@@ -32,6 +32,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -67,6 +69,8 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Data.SQLite.1.0.84.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.identitymodel.services" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -76,9 +80,9 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -129,6 +133,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\APIErrorHandlerAttribute.cs" />
     <Compile Include="API\ErrorHandlerAttribute.cs" />
     <Compile Include="API\Exceptions\InvalidTaskResultXml.cs" />
     <Compile Include="API\Exceptions\IXmlException.cs" />
@@ -152,19 +157,24 @@
     <Compile Include="API\Responses\Users\UsersResponse.cs" />
     <Compile Include="API\Status.cs" />
     <Compile Include="API\XmlFileResult.cs" />
+    <Compile Include="API\ResponseMediaTypeFormatter.cs" />
     <Compile Include="API\XmlResult.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SecurityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DataDictionaryController.cs" />
+    <Compile Include="Controllers\MinersController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TaskGen\GridPoolController.cs" />
     <Compile Include="Controllers\TaskGen\ProcPoolController.cs" />
     <Compile Include="Controllers\TaskGen\TaskGenBaseController.cs" />
     <Compile Include="Controllers\TaskGen\TaskPoolController.cs" />
+    <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\NHibernateSessionAttribute.cs" />
     <Compile Include="Filters\NHibernateTransactionAttribute.cs" />
@@ -173,6 +183,12 @@
     </Compile>
     <Compile Include="OneWayRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\AuthenticationConfiguration.cs" />
+    <Compile Include="Security\AuthenticationHandler.cs" />
+    <Compile Include="Security\AuthenticationOptions.cs" />
+    <Compile Include="Security\BasicAuthenticationSecurityTokenHandler.cs" />
+    <Compile Include="Security\HttpAuthentication.cs" />
+    <Compile Include="Security\SecurityExceptionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\styles.css" />

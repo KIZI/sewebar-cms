@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E9FEC9
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewebarConnectClient", "SewebarConnectClient\SewebarConnectClient.csproj", "{59655A85-2B2C-42E3-97E9-1B9012927372}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,16 @@ Global
 		{122BB171-8121-4000-AC1A-D45FCC707567}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{122BB171-8121-4000-AC1A-D45FCC707567}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{122BB171-8121-4000-AC1A-D45FCC707567}.Release|x86.ActiveCfg = Release|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

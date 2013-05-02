@@ -53,14 +53,6 @@
     <Compile Include="WebApiTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestCases\ETReeMiner.Task52.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestCases\Import3.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

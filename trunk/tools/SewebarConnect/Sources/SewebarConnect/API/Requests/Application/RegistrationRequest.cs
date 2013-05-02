@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Web.Mvc;
+using System.Web;
 using LMWrapper.ODBC;
 
 namespace SewebarConnect.API.Requests.Application
@@ -45,10 +45,14 @@ namespace SewebarConnect.API.Requests.Application
 			}
 		}
 
-		public RegistrationRequest(Controller controller)
-			: base(null, controller.HttpContext)
+		public RegistrationRequest(HttpContextBase context)
+			: base(null, context)
 		{
+		}
 
+		public RegistrationRequest(HttpContext context)
+			: this(new HttpContextWrapper(context))
+		{
 		}
 	}
 }
