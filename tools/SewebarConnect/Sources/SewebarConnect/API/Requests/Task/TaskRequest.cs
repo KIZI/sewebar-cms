@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 using SewebarConnect.Controllers;
@@ -11,6 +12,7 @@ namespace SewebarConnect.API.Requests.Task
 	{
 		private static readonly string InvalidChars = String.Format(@"[{0}]+", Regex.Escape(new string(Path.GetInvalidFileNameChars())));
 
+		private string _task;
 		private string _taskName;
 		private string _taskFileName;
 		private string _taskPath;
@@ -19,7 +21,7 @@ namespace SewebarConnect.API.Requests.Task
 		{
 			get
 			{
-				return this.HttpContext.Request["content"];
+				return this._task ?? (this._task = this.ReadTask());
 			}
 		}
 
@@ -88,8 +90,21 @@ namespace SewebarConnect.API.Requests.Task
 			}
 		}
 
+		public string Alias
+		{
+			get
+			{
+				return this.HttpContext.Request["alias"];
+			}
+		}
+
 		public TaskRequest(BaseController controller)
 			: base(controller.LISpMiner, controller.HttpContext)
+		{
+		}
+
+		public TaskRequest(ApiBaseController controller)
+			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
 		}
 
@@ -105,11 +120,14 @@ namespace SewebarConnect.API.Requests.Task
 			return template;
 		}
 
-		public string Alias
+		private string ReadTask()
 		{
-			get
+			var stream = this.HttpContext.Request.InputStream;
+
+			using (var input = new StreamReader(stream))
 			{
-				return this.HttpContext.Request["alias"];
+				stream.Position = 0;
+				return input.ReadToEnd();
 			}
 		}
 	}

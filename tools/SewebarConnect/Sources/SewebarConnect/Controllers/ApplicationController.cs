@@ -79,7 +79,7 @@ namespace SewebarConnect.Controllers
 		[ErrorHandler]
 		public XmlResult Register()
 		{
-			var request = new RegistrationRequest(this);
+			var request = new RegistrationRequest(this.HttpContext);
 			var id = ShortGuid.NewGuid();
 			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
 

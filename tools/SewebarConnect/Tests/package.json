@@ -1,11 +1,11 @@
 {
-  "name": "SewebarConnect API Tester",
+  "name": "SewebarConnectTests",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "restify": "2.4.1"
+      "should": "1.2.2"
   }
 }
