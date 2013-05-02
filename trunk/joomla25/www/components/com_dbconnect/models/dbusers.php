@@ -15,7 +15,11 @@ class dbconnectModelDbusers extends JModel
   const DB_ADMIN_USER='vojir';
   const DB_ADMIN_PASSWORD='V-3p58GDw_CehhYA';
   const DB_TYPE='mysql';
-	
+
+  public function getDbAdminPassword(){
+    return self::DB_ADMIN_PASSWORD;
+  }
+
 	/**
 	 *   Funkce pro uložení informací o uživatelských přístupech do pracovní databáze
 	 */   	
@@ -65,7 +69,7 @@ class dbconnectModelDbusers extends JModel
     
     try{            
       $dsn=dbconnectModelDbusers::DB_TYPE.':host='.dbconnectModelDbusers::DB_SERVER; 
-      $db=new PDO($dsn,self::DB_ADMIN_USER,self::DB_ADMIN_PASSWORD);
+      $db=new PDO($dsn,self::DB_ADMIN_USER,$this->getDbAdminPassword());
       //kontrola na jméno uživatele
       $queryUsers=$db->prepare('SELECT DISTINCT User FROM mysql.user;');
       $queryUsers->execute();
