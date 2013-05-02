@@ -1240,49 +1240,6 @@
       <pmml:MiningField name="District"/>
     </pmml:MiningSchema>
 
-    <ETreeRules>
-
-      <!-- Include Template: Task.FTCedentI.Include.Template -->
-      <!-- Version: 2012-02-06 -->
-      <!-- Item: LiteralI -->  
-      <BBA id="BBA_FTLiteralI_1760" literal="false">
-        <Text>District(Praha)</Text>
-        <FieldRef>District</FieldRef>
-        <CatRef>Praha</CatRef>
-      </BBA>
-      <!-- DBA: Sign (Gace) -->  
-      <DBA id="DBA_FTLiteralI_Sign_1760" connective="Conjunction" literal="true">
-        <Text>District(Praha)</Text>
-        <BARef>BBA_FTLiteralI_1760</BARef>
-      </DBA>
-      <!-- DBA: CedentI -->  
-      <DBA id="DBA_FTCedentI_1760" connective="Conjunction">
-        <Text>District(Praha)</Text>
-        <BARef>DBA_FTLiteralI_Sign_1760</BARef>
-      </DBA>
-      <!-- DBA: CedentBag -->  
-        <DBA id="DBA_Condition_1761" connective="Conjunction">
-          <Text>District(Praha)</Text>
-          <BARef>DBA_FTCedentI_1760</BARef>
-        </DBA>
-
-  <!-- Hypothesis -->
-
-      <ETRule id="1761"
-	FreqTree="711"
-	FreqQuality="657"
-	ClassCategory="good"
-	FreqClass="657"
-        condition="DBA_Condition_1761"
-      >
-        <Text>1: Quality: 0.924, Freq: 711 / District(Praha)</Text>
-
-	<ETTree>
-	</ETTree>
-
-	<ETSplitArray>
-	</ETSplitArray>
-      </ETRule>  
-    </ETreeRules>
+ 
   </guha:ETreeModel>
 </PMML>
