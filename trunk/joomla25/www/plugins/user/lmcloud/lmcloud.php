@@ -16,6 +16,14 @@ defined('_JEXEC') or die;
  */
 class plgUserLmcloud extends JPlugin
 {
+
+  public static function prepareKbi(){
+    //TODO vazba na totožnou metodu v dbconnectModelConnections
+    $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>self::LM_URL);
+    JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
+    return KBIntegrator::create($configArr);
+  }
+
   /**
    *  Funkce pro zakódování hesla pro použití v rámci LMCloud serveru
    */     
@@ -51,13 +59,14 @@ class plgUserLmcloud extends JPlugin
 		$args['fullname']	= $user['name'];
 		$args['password']	= $user['password'];
 
+    $username=$this->prepareUserName($user['id']);
 		if ($isnew) {
-			// Call a function in the external app to create the user
-			// ThirdPartyApp::createUser($user['id'], $args);
+      $kbi=self::prepareKbi();
+      $kbi->registerUser($username,$user['password']);
 		}
 		else {
-			// Call a function in the external app to update the user
-			// ThirdPartyApp::updateUser($user['id'], $args);
+			$kbi=self::prepareKbi();
+      $kbi->updateUser($username,'',$username,$user['password']);
 		}
 	}
 
@@ -79,8 +88,12 @@ class plgUserLmcloud extends JPlugin
 
 		// only the $user['id'] exists and carries valid information
 
-		// Call a function in the external app to delete the user
-		// ThirdPartyApp::deleteUser($user['id']);
+    //TODO odstranění všech úloh navázaných na konkrétního uživatele
+
+    $kbi=self::prepareKbi();
+    $session =& JFactory::getSession();
+    $userData=$session->get('user','sewebar');
+    $kbi->deleteUser($userData['username']);
 	}
 
 	/**
@@ -104,7 +117,7 @@ class plgUserLmcloud extends JPlugin
 		$userObject = $db->loadObject();
     
     if ($userObject){
-      $username=$this->params->get('servername','').'_'.$userObject->id;
+      $username=$this->prepareUsername($userObject->id);
       //uložení přihlašovacích údajů do JSession    
       $session =& JFactory::getSession();
       $session->set('user',array('username'=>$username,'password'=>self::encodePassword($user['username'],$user['password'])),'sewebar');
@@ -113,6 +126,15 @@ class plgUserLmcloud extends JPlugin
     
     return false;
 	}
+
+  /**
+   * Private funkce pro vytvoření uživatelského jména pro lmcloud server
+   * @param $userId
+   * @return string
+   */
+  private function prepareUserName($userId){
+    return $this->params->get('servername','').'_'.$userId;
+  }
 
 	/**
 	 * This method should handle any logout logic and report back to the subject
