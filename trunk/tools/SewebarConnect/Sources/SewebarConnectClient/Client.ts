@@ -3,7 +3,7 @@
 
 import restify = module('restify');
 var request = require('request');
-var http = require("http");
+var http = require('http');
 var xml2js = require('xml2js');
 var S = require('string');
 
@@ -22,7 +22,7 @@ function errorHandler(err, info, callback: (err, ...params: any[]) => void) {
     var e = err ? err.body : '',
         error = S(e).trim().s;
 
-    xml2js.parseString(error, function (parseError, result) {
+    xml2js.parseString(error, (parseError, result) => {
         var message = 'Uknonwn error - ' + info;
 
         if(parseError) {
@@ -34,7 +34,7 @@ function errorHandler(err, info, callback: (err, ...params: any[]) => void) {
         if (callback && typeof callback === 'function') {
             callback(message, null);
         }
-    })
+    });
 }
 
 export class SewebarConnectClient implements IClient {
@@ -55,6 +55,7 @@ export class SewebarConnectClient implements IClient {
     }
 
     register(connection, metabase, callback: (err, id) => void) {
+        // TODO: create correct data object
         var data = connection,
             url = this.server + '/miners';        
 
@@ -78,18 +79,15 @@ export class Miner {
     private server = application;
 
     constructor(private id: string, private restClient: restify.StringClient) {
-
     }
 
     init(dictionary: string, callback: (err) => void) {
         var url = this.server + '/miners/' + this.id;
 
-        this.restClient.patch(url, dictionary, function (e, req, res, data) {
+        this.restClient.patch(url, dictionary, (e, req, res, data) => {
             if (e) {
                 errorHandler(e, 'PATCH ' + url, callback);
             } else {
-                console.log(data);
-
                 if (callback && typeof callback === 'function') {
                     callback(null);
                 }
@@ -106,7 +104,7 @@ export class Miner {
             'task'
         ].join('');
 
-        this.restClient.post(url, task, function (e, req, res, data) {
+        this.restClient.post(url, task, (e, req, res, data) => {
             if (e) {
                 errorHandler(e, 'POST ' + url, callback);
             } else if (callback && typeof callback === 'function') {
