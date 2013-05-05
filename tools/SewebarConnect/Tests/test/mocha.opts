@@ -1,0 +1,4 @@
+--timeout 30000
+--slow 6000
+--reporter spec
+--check-leaks

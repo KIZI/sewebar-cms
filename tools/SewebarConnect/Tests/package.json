@@ -6,6 +6,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+      "mocha": "1.9.0",
       "should": "1.2.2"
   }
 }
