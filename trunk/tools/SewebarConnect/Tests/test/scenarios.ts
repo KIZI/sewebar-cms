@@ -1,33 +1,37 @@
 ///<reference path='../node.d.ts'/>
 ///<reference path='../mocha.d.ts'/>
+///<reference path='../should.d.ts'/>
+///<reference path='../node_modules/SewebarConnect/Client.d.ts'/>
 
-var connect = require('../../Sources/SewebarConnectClient/Client');
-var fs = require('fs');
-var should = require('should');
+import connect = module('SewebarConnect');
+import fs = module('fs');
+import should = module('should');
 
 var scenarios = process.cwd() + '/scenarios';
-
-declare var should : {
-    exist(o);
-    not;
-}
 
 describe('SewebarConnect', function() {
 	describe('Scenario 02', function() {
 		var client,
-            miner,
+            miner: connect.Miner,
             resource = {},
 		    dataDictionary = '',
-            task = '';
+            task = '',
+            config;
 
-		before(function() {
-            client = connect.createClient({
-                url: 'http://192.168.23.108'
+		before((done) => {
+            fs.readFile(process.cwd() + '/config.json', 'utf8', (err, data) => {
+                should.not.exist(err)
+
+                config = JSON.parse(data);
+
+                client = connect.createClient(config);
+
+                resource = fs.readFileSync(scenarios + '/02/registration.xml', 'utf8');
+                dataDictionary = fs.readFileSync(scenarios + '/02/Import3.xml', 'utf8');
+                task = fs.readFileSync(scenarios + '/02/ETReeMiner.Task52.xml', 'utf8');
+
+                done();
             });
-
-            resource = fs.readFileSync(scenarios + '/02/registration.xml', 'utf8');
-            dataDictionary = fs.readFileSync(scenarios + '/02/Import3.xml', 'utf8');
-            task = fs.readFileSync(scenarios + '/02/ETReeMiner.Task52.xml', 'utf8');
 		});
 
         it('should successfully register', (done) => {
@@ -54,6 +58,19 @@ describe('SewebarConnect', function() {
                 should.not.exist(err);
 
                 results.should.be.ok;
+
+                done();
+            });
+        });
+
+        it('should get existing miner', (done) => {
+            var client2 = connect.createClient(config);
+
+            client2.get(miner.id, (err, m: connect.Miner) => {
+                should.not.exist(err);
+
+                should.exist(m);
+                (<any>m.id).should.eql(miner.id);
 
                 done();
             });
