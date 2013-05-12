@@ -1,4 +1,7 @@
+.PHONY: test
+
 test:
 	./node_modules/.bin/mocha
 
-.PHONY: test
+install:
+	npm install ../Sources/SewebarConnectClient/
