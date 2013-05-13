@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using LMWrapper.LISpMiner;
+using SewebarConnect.Controllers;
 
 namespace SewebarConnect.API
 {
@@ -46,6 +47,11 @@ namespace SewebarConnect.API
 
 				this.LISpMiner = miner;
 			}
+		}
+
+		public Request(ApiBaseController controller)
+			: this(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
+		{
 		}
 
 		public Request(HttpContextBase httpContext)

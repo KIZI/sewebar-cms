@@ -6,11 +6,10 @@ using SewebarConnect.API.Responses.DataDictionary;
 
 namespace SewebarConnect.Controllers
 {
-	public class DataDictionaryController : BaseController
+	[APIErrorHandler]
+	public class DataDictionaryController : ApiBaseController
 	{
-		[ValidateInput(false)]
-		[ErrorHandler]
-		public XmlResult Import()
+		private XmlResult Import()
 		{
 			var request = new ImportRequest(this);
 
@@ -39,7 +38,7 @@ namespace SewebarConnect.Controllers
 
 		[ValidateInput(false)]
 		[ErrorHandler]
-		public ActionResult Export()
+		public ExportResponse Get()
 		{
 			var request = new ExportRequest(this);
 
@@ -57,10 +56,7 @@ namespace SewebarConnect.Controllers
 			response.Status = Status.Success;
 			response.OutputFilePath = exporter.Output;
 
-			return new XmlFileResult
-					{
-						Data = response
-					};
+			return response;
 		}
 	}
 }
