@@ -9,6 +9,7 @@
 
 require_once 'IKBIntegrator.php';
 require_once 'Query.php';
+require_once 'RESTClient.php';
 
 /**
  * Generic implementation for IKBIntegrator.
@@ -56,6 +57,9 @@ class KBIntegrator implements IKBIntegrator
 	/** @var string */
 	protected $config;
 
+	/** @var RESTClient */
+	private $restClient = null;
+
 	public function getName()
 	{
 		return isset($this->config['name']) ? $this->config['name'] : '';
@@ -89,6 +93,15 @@ class KBIntegrator implements IKBIntegrator
 	public function setPort($value)
 	{
 		$this->config['port'] = $value;
+	}
+
+	protected function getRestClient()
+	{
+		if ($this->restClient === null) {
+			$this->restClient = new RESTClient();
+		}
+
+		return $this->restClient;
 	}
 
 	public function __construct(Array $config = array())
@@ -202,51 +215,6 @@ class KBIntegrator implements IKBIntegrator
 		return $p;
 	}
 
-	public function requestCurl($url, $_data)
-	{
-		$data = array();
-	    while(list($n,$v) = each($_data)){
-	        $data[] = "$n=" . urlencode($v);
-	    }
-	    $data = implode('&', $data);
-
-		KBIDebug::info("$url?$data");
-
-		$ch = curl_init("$url?$data");
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$response = curl_exec($ch);
-
-		//optionally you can check the response and see what the HTTP Code returned was
-		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-
-    	return $response;
-	}
-
-	protected function encodeData($array)
-	{
-		$data = "";
-		foreach ($array as $key=>$value) $data .= "{$key}=".urlencode($value).'&';
-		return $data;
-	}
-
-	public function requestCurlPost($url, $postdata)
-	{
-		$ch = curl_init();
-
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($postdata));
-		curl_setopt($ch, CURLOPT_VERBOSE, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
-
-		$response = curl_exec($ch);
-		$info = curl_getinfo($ch);
-		curl_close($ch);
-
-		return $response;
-	}
-
 	public function requestPost($url, $_data, $referer = NULL)
 	{
 	    // convert variables array to string:
@@ -305,6 +273,24 @@ class KBIntegrator implements IKBIntegrator
 	    // return as array:
 	    return $content;
 	}
+
+	//region cURL
+
+	public function requestCurl($url, $_data)
+	{
+		$client = $this->getRestClient();
+
+		return $client->get($url, $_data);
+	}
+
+	public function requestCurlPost($url, $_data)
+	{
+		$client = $this->getRestClient();
+
+		return $client->post($url, $_data);
+	}
+
+	//endregion
 
 	public function parseNameValues($text)
 	{

@@ -64,7 +64,7 @@ export module SewebarConnect {
             this.restClient = restify.createStringClient(this.opts);
         }
 
-        register(connection, metabase, callback: (err, miner: Miner) => void) {
+        public register(connection, metabase, callback: (err, miner: Miner) => void) {
             // TODO: create correct data object
             var data = connection,
                 url = this.server + 'miners';
@@ -72,7 +72,6 @@ export module SewebarConnect {
             this.opts.path = url;
 
             this.restClient.post(this.opts, data, (err, req, res, body) => {
-                console.log(res);
                 var xml = S(body).trim().s;
 
                 parser.parseString(xml, (err, result) => {
@@ -123,7 +122,7 @@ export module SewebarConnect {
             this.opts = this.client.opts;
         }
 
-        init(dictionary: string, callback: (err) => void) {
+        public init(dictionary: string, callback: (err) => void) {
             var url = [
                 this.server,
                 'miners/',
@@ -143,13 +142,25 @@ export module SewebarConnect {
             });
         }
 
-        runTask(task: string, callback: (err, results) => void) {
+        public runTask(task: string, callback: (err, results) => void): void {
+            this.run('task', task, callback);
+        }
+
+        public runGrid(task: string, callback: (err, results) => void): void {
+            this.run('grid', task, callback);
+        }
+
+        public runProc(task: string, callback: (err, results) => void): void {
+            this.run('proc', task, callback);
+        }
+
+        private run(taskType: string, task: string, callback: (err, results) => void): void {
             var url = [
                 this.server,
                 'miners/',
                 this.id,
                 '/tasks/',
-                'task'
+                taskType
             ].join('');
 
             this.opts.path = url;
@@ -157,6 +168,77 @@ export module SewebarConnect {
             this.client.restClient.post(this.opts, task, (e, req, res, data) => {
                 if (e) {
                     errorHandler(e, 'POST ' + url, callback);
+                } else if (callback && typeof callback === 'function') {
+                    callback(null, data);
+                }
+            });
+        }
+
+        public cancelTask(task: string, callback: (err, results) => void): void {
+            this.cancel('task', task, callback);
+        }
+
+        public cancelGrid(task: string, callback: (err, results) => void): void {
+            this.cancel('grid', task, callback);
+        }
+
+        public cancelProc(task: string, callback: (err, results) => void): void {
+            this.cancel('proc', task, callback);
+        }
+
+        private cancel(taskType: string, task: string, callback: (err, results) => void) {
+            var url = [
+                this.server,
+                'miners/',
+                this.id,
+                '/tasks/',
+                taskType
+            ].join('');
+
+            this.opts.path = url;
+
+            this.client.restClient.post(this.opts, task, (e, req, res, data) => {
+                if (e) {
+                    errorHandler(e, 'POST ' + url, callback);
+                } else if (callback && typeof callback === 'function') {
+                    callback(null, data);
+                }
+            });
+        }
+
+        public remove(callback: (err: any) => void): void {
+            var url = [
+                this.server,
+                'miners/',
+                this.id
+            ].join('');
+
+            this.opts.path = url;
+
+            this.client.restClient.del(this.opts, (e, req, res, data) => {
+                if (e) {
+                    errorHandler(e, 'DELETE ' + url, callback);
+                } else if (callback && typeof callback === 'function') {
+                    callback(null);
+                }
+            });
+        }
+
+        public getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary: string) => void): void {
+            var url = [
+                this.server,
+                'miners/',
+                this.id,
+                '/DataDictionary',
+                '?matrix=', matrix,
+                '&template=', template
+            ].join('');
+
+            this.opts.path = url;
+
+            this.client.restClient.get(this.opts, (e, req, res, data) => {
+                if (e) {
+                    errorHandler(e, 'GET ' + url, callback);
                 } else if (callback && typeof callback === 'function') {
                     callback(null, data);
                 }

@@ -63,6 +63,23 @@ describe('SewebarConnect', function() {
             });
         });
 
+        it.skip('should export existing task', (done) => {
+            done();
+        });
+
+        it.skip('should cancel running task', (done) => {
+            done();
+        });
+
+        it('should get datadictionary with empty string as matrix and template', (done) => {
+            miner.getDataDictionary('', '', (err, dd) => {
+                should.not.exist(err);
+                should.exist(dd);
+
+                done();
+            });
+        });
+
         it('should get existing miner', (done) => {
             var client2 = connect.createClient(config);
 
@@ -71,6 +88,14 @@ describe('SewebarConnect', function() {
 
                 should.exist(m);
                 (<any>m.id).should.eql(miner.id);
+
+                done();
+            });
+        });
+
+        it('should remove miner', (done) => {
+            miner.remove((err) => {
+                should.not.exist(err);
 
                 done();
             });
