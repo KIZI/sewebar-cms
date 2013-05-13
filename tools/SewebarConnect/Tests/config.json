@@ -1,4 +1,4 @@
 {
-    "url": "http://connect.lmcloud.vse.cz",
-    "app": ""
+    "url": "localhost",
+    "app": "SewebarConnect"
 }

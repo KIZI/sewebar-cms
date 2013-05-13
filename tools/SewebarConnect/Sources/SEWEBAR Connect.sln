@@ -58,7 +58,6 @@ Global
 		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|x86.ActiveCfg = Release|Any CPU
 		{6B6A0A83-A72A-46A0-9AF3-67199AB0F597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6B6A0A83-A72A-46A0-9AF3-67199AB0F597}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -88,7 +87,6 @@ Global
 		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Any CPU.Build.0 = Release|Any CPU
 		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{59655A85-2B2C-42E3-97E9-1B9012927372}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
