@@ -17,6 +17,8 @@ require_once dirname(__FILE__).'/../IHasDataDictionary.php';
  */
 class LispMiner extends KBIntegrator implements IHasDataDictionary
 {
+	//region Getters
+
 	public function getMethod()
 	{
 		return isset($this->config['method']) ? $this->config['method'] : 'POST';
@@ -42,6 +44,8 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return isset($this->config['pooler']) ? $this->config['pooler'] : 'task';
 	}
 
+	//endregion
+
 	public function __construct($config)
 	{
 		parent::__construct($config);
@@ -64,8 +68,9 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function register($db_cfg)
 	{
 		$url = trim($this->getUrl(), '/');
+		$url = "$url/miners";
 
-		$response = $this->requestPost("$url/Application/Register", $db_cfg);
+		$response = $this->requestPost($url, $db_cfg);
 
 		KBIDebug::log(array('config' => $db_cfg, 'response' => $response, 'url' => $url), "Miner registered");
 
@@ -88,8 +93,11 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function unregister($server_id = null)
 	{
 		$url = trim($this->getUrl(), '/');
+		$url = "$url/miners/{$this->getMinerId($server_id)}";
 
-		$response = $this->requestCurl("$url/Application/Remove", array('guid' => $this->getMinerId($server_id)));
+		$client = $this->getRestClient();
+
+		$response = $client->delete($url);
 
 		$xml_response = simplexml_load_string($response);
 
@@ -111,23 +119,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			throw new Exception('LISpMiner ID was not provided.');
 		}
 
+		$client = $this->getRestClient();
+
 		$url = trim($this->getUrl(), '/');
+		$url = "$url/miners/{$server_id}";
 
-		$data = array(
-			'content' => $dataDictionary,
-			'guid' => $server_id
-		);
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "$url/DataDictionary/Import");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
-		curl_setopt($ch, CURLOPT_VERBOSE, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
-
-		$response = curl_exec($ch);
-		$info = curl_getinfo($ch);
-		curl_close($ch);
+		$response = $client->patch($url, $dataDictionary);
 
 		KBIDebug::log($response, "Import executed");
 
@@ -149,17 +146,25 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function getDataDescription($params=null)
 	{
+		$server_id = $this->getMinerId();
+
+		if($server_id === null) {
+			throw new Exception('LISpMiner ID was not provided.');
+		}
+
+		$client = $this->getRestClient();
+
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/DataDictionary/Export";
+		$url = "$url/miners/{$server_id}/DataDictionary";
 
 		$data = array(
-			'guid' => $this->getMinerId(),
 			'matrix' => $this->getMatrixName(),
 			'template' => (@$params['template']?$params['template']:'')
 		);
 
-		KBIDebug::info(array($url, $data));
-		$dd = $this->requestCurlPost($url, $data);
+		KBIDebug::info(array($url, $data), "getting DataDictionary");
+
+		$dd = $client->get($url, $data);
 
 		return trim($dd);
 	}
@@ -167,6 +172,9 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function queryPost($query, $options)
 	{
 		// $options['export'] = '9741046ed676ec7470cb043db2881a094e36b554';
+		// TODO: add user credentials to options
+
+		$server_id = $this->getMinerId();
 
 		if($this->getMinerId() === null) {
 			throw new Exception('LISpMiner ID was not provided.');
@@ -174,15 +182,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$url = trim($this->getUrl(), '/');
 
-		$data = array(
-			'guid' => $this->getMinerId()
-		);
+		$data = array();
+		$client = $this->getRestClient();
 
 		if(isset($options['export'])) {
 			$task = $options['export'];
-			$url = "$url/Task/Export";
-                         
-			$data['task'] = $task;
+			$url = "$url/miners/{$server_id}/tasks/{$task}";
 
 			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
 		} else {
@@ -195,17 +200,15 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 			switch($pooler) {
 				case 'grid':
-					$url = "$url/TaskGen/GridPool";
+					$url = "$url/miners/{$server_id}/grid";
 				break;
 				case 'proc':
-					$url = "$url/TaskGen/ProcPool";
+					$url = "$url/miners/{$server_id}/proc";
 					break;
 				case 'task':
 				default:
-					$url = "$url/TaskGen/TaskPool";
+					$url = "$url/miners/{$server_id}/task";
 			}
-
-			$data['content'] = $query;
 		}
 
 		if(isset($options['template'])) {
@@ -213,50 +216,37 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			KBIDebug::info("Using LM exporting template {$data['template']}", 'LISpMiner');
 		}
 
-		KBIDebug::log(array('URL' => $url, 'POST' => $data), 'LM Query');
+		KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeData($data));
-		curl_setopt($ch, CURLOPT_VERBOSE, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
-
-		// gain task results from LISpMiner
-		$response = curl_exec($ch);
-		$info = curl_getinfo($ch);
-		curl_close($ch);
-
-		return $response;
+		return $client->post("$url?{$client->encodeData($data)}", $query);
 	}
 
 	public function cancelTask($taskName)
 	{
+		$server_id = $this->getMinerId();
+
+		if($this->getMinerId() === null) {
+			throw new Exception('LISpMiner ID was not provided.');
+		}
+
 		$url = trim($this->getUrl(), '/');
+		$client = $this->getRestClient();
 
 		switch($this->getPooler()) {
 			case 'grid':
-				$url = "$url/TaskGen/GridPool/Cancel";
+				$url = "$url/miners/{$server_id}/grid/{$taskName}/cancel";
 				break;
 			case 'proc':
-				$url = "$url/TaskGen/ProcPool/Cancel";
+				$url = "$url/miners/{$server_id}/proc/{$taskName}/cancel";
 			break;
 			case 'task':
 			default:
-				$url = "$url/TaskGen/TaskPool/Cancel";
+				$url = "$url/miners/{$server_id}/task/{$taskName}/cancel";
 		}
 
-		$data = array(
-			'guid' => $this->getMinerId(),
-			'taskName' => $taskName
-		);
+		KBIDebug::info(array($url), 'Canceling task');
 
-		KBIDebug::info(array($url, $data));
-
-		$dd = $this->requestCurl($url, $data);
-
-		return trim($dd);
+		return $client->post($url);
 	}
 
 	public function test()
@@ -268,18 +258,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 				throw new Exception('LISpMiner ID was not provided.');
 			}
 
+			$client = $this->getRestClient();
+
 			$url = trim($this->getUrl(), '/');
+			$url = "$url/miners/{$server_id}";
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "$url/Application/Miner?guid=$server_id");
-			curl_setopt($ch, CURLOPT_VERBOSE, false);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Accept: application/xml'
-			));
-
-			$response = curl_exec($ch);
-			curl_close($ch);
+			$response = $client->get($url);
 
 			KBIDebug::log($response, "Test executed");
 
@@ -293,13 +277,16 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 	}
 
-  /**
-   * @param string $username
-   * @param string $password
-   * @return mixed
-   */
-  public function registerUser($username, $password)
+	//region SewebarKey
+
+	/**
+	 * @param string $username
+	 * @param string $password
+	 * @return mixed
+	 */
+	public function registerUser($username, $password)
 	{
+		// TODO: credentials for given user (from session)
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/Users/Register";
 
@@ -315,26 +302,28 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseResponse($response, 'User successfully registered.');
 	}
 
-  /**
-   * @param string $username
-   * @param string $new_username
-   * @param string $new_password
-   * @param string $new_email
-   * @param string $email_from - e-mail address for "From:" field for confirmation e-mail
-   * @param string $email_link - link for user confirmation / string {code} should be on server replaced with security code value
-   */
-  public function updateOtherUser($username, $new_username, $new_password,$new_email, $email_from, $email_link){
-    //TODO funkce pro změnu "nevlastního" uživatelského účtu
-  }
-  /**
-   * @param string $username
-   * @param string $password
-   * @param string $new_username
-   * @param string $new_password
-   * @param string $new_email
-   * @return mixed
-   */
-  public function updateUser($username, $password, $new_username, $new_password, $new_email)
+	/**
+	 * @param string $username
+	 * @param string $new_username
+	 * @param string $new_password
+	 * @param string $new_email
+	 * @param string $email_from - e-mail address for "From:" field for confirmation e-mail
+	 * @param string $email_link - link for user confirmation / string {code} should be on server replaced with security code value
+	 */
+	public function updateOtherUser($username, $new_username, $new_password,$new_email, $email_from, $email_link)
+	{
+		//TODO funkce pro změnu "nevlastního" uživatelského účtu
+	}
+
+	/**
+	 * @param string $username
+	 * @param string $password
+	 * @param string $new_username
+	 * @param string $new_password
+	 * @param string $new_email
+	 * @return mixed
+	 */
+	public function updateUser($username, $password, $new_username, $new_password, $new_email)
 	{    //TODO přibyl sem nový parametr $new_email
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/Users/Update";
@@ -353,29 +342,31 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseResponse($response, 'User successfully updated.');
 	}
 
-  /**
-   * @param string $username
-   */
-  public function deleteUser($username){
-    //TODO doplnit imlementaci smazání uživatele
-  }
+	/**
+	 * @param string $username
+	 */
+	public function deleteUser($username)
+	{
+		//TODO doplnit imlementaci smazání uživatele
+	}
 
-  /**
-   * @param string $username
-   * @param string $security_code
-   */
-  public function confirmUserPasswordUpdate($username,$security_code){
-    //TODO uživatelem vyvolané potvrzení hesla
-  }
+	/**
+	 * @param string $username
+	 * @param string $security_code
+	 */
+	public function confirmUserPasswordUpdate($username,$security_code)
+	{
+		//TODO uživatelem vyvolané potvrzení hesla
+	}
 
-  /**
-   * @param string $username
-   * @param string $password
-   * @param int $db_id
-   * @param string $db_password
-   * @return mixed
-   */
-  public function registerUserDatabase($username, $password, $db_id, $db_password)
+	/**
+	 * @param string $username
+	 * @param string $password
+	 * @param int $db_id
+	 * @param string $db_password
+	 * @return mixed
+	 */
+	public function registerUserDatabase($username, $password, $db_id, $db_password)
 	{
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/Users/Register";
@@ -394,13 +385,13 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseResponse($response, 'User successfully registered.');
 	}
 
-  /**
-   * @param string $username
-   * @param string $password
-   * @param int $db_id
-   * @return string
-   */
-  public function getDatabasePassword($username, $password, $db_id)
+	/**
+	 * @param string $username
+	 * @param string $password
+	 * @param int $db_id
+	 * @return string
+	 */
+	public function getDatabasePassword($username, $password, $db_id)
 	{
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/Users/Get";
@@ -418,6 +409,11 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseDatabasePassword($response);
 	}
 
+	public function setDatabasePassword($username, $password, $db_id, $old_password, $new_password)
+	{
+		// TODO:
+	}
+
 	protected function parseDatabasePassword($response)
 	{
 		$xml_response = simplexml_load_string($response);
@@ -430,4 +426,6 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		throw new Exception('Response not in expected format');
 	}
+
+	//endregion
 }
