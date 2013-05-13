@@ -1,4 +1,5 @@
-﻿using SewebarConnect.Controllers;
+﻿using System.Web;
+using SewebarConnect.Controllers;
 
 namespace SewebarConnect.API.Requests.DataDictionary
 {
@@ -6,6 +7,11 @@ namespace SewebarConnect.API.Requests.DataDictionary
 	{
 		public ExportRequest(BaseController controller)
 			: base(controller.LISpMiner, controller.HttpContext)
+		{
+		}
+
+		public ExportRequest(ApiBaseController controller)
+			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
 		}
 

@@ -13,9 +13,9 @@ namespace SewebarConnect.Controllers
 	[APIErrorHandler]
 	public class MinersController : ApiBaseController
 	{
-		public string Get()
+		public LISpMinerResponse Get()
 		{
-			return "All registered miner accessible for current user";
+			return new LISpMinerResponse(this.LISpMiner);
 		}
 
 		public RegistrationResponse Post()
@@ -53,6 +53,13 @@ namespace SewebarConnect.Controllers
 			}
 
 			throw new Exception("No DataDictionary given.");
+		}
+
+		public Response Delete()
+		{
+			MvcApplication.Environment.Unregister(this.LISpMiner);
+
+			return new Response {Status = Status.Success, Message = "LISpMiner removed."};
 		}
 	}
 }
