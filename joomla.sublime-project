@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "joomla",
+			"folder_exclude_patterns": [".idea"]
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "Sewebar",
+			"working_dir": "joomla",
+			"cmd": ["ant"]
+		}
+	]
+}
