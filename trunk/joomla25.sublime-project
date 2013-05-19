@@ -1,0 +1,32 @@
+{
+	"folders":
+	[
+		{
+			"path": "joomla25",
+			"folder_exclude_patterns": [".idea"]
+		},
+		{
+			"path": "resources"
+		},
+		{
+			"path": "tools",
+			"folder_exclude_patterns": [".idea", "bin", "obj"]
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "Sewebar",
+			"working_dir": "joomla",
+			"cmd": ["ant"]
+		},
+		{
+			"name": "SewebarConnect",
+			"working_dir": "tools/SewebarConnect",
+			"cmd": ["build.sh"],
+			"windows": {
+				"cmd": ["build.bat"]
+			}
+		}
+	]
+}
