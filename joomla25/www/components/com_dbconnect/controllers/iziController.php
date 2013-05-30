@@ -964,7 +964,7 @@ class IziController extends JController{
     $bkefArticleTitle=$connection->table.' - BKEF ('.$curDateStr.')';
     $fmlArticleTitle=$connection->table.' - FML ('.$curDateStr.')';
     $bkefXML=$generatorModel->getBkefXML($bkedArticleTitle);
-        
+         
     if ($bkefXML){
       if ($task->bkef_article>0){
         //update
@@ -974,18 +974,19 @@ class IziController extends JController{
         //new article
         $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML); //TODO doplnění zbylých parametrů
       }
-    }
-               exit("sem0");
+    }         
+           
     $taskParams=array();
-    if (@$bkefArticleId){
+    if (@$bkefArticleId){ 
       $taskParams['bkef']=$bkefArticleId;
       $fmlXML=$generatorModel->getFmlXML($bkefArticleId,$bkefArticleTitle,$task->id,$task->name);
+      
       if ($fmlXML){
-        if ($task->fml_article>0){
+        if ($task->fml_article>0){        
           //update
           $fmlArticleId=$task->fml_article;
           $dataModel->saveArticle($fmlArticleId,$fmlArticleTitle,$fmlXML);//TODO doplnění zbylých parametrů
-        }else{
+        }else{                  
           $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML);//TODO doplnění zbylých parametrů
         }
       }
@@ -995,7 +996,7 @@ class IziController extends JController{
       }else{
         $fmlArticleTitle='';
       }
-    }else{
+    }else{            
       $bkefArticleTitle='';
     }
              

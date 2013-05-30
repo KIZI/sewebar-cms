@@ -52,7 +52,24 @@ function checkAttributeName(name){
 /**
  *  Funkce pro získání přehledu existujících atributů
  */ 
-function getAttributesNames(kbiId,checkShow=true){ 
+function getAttributesNames(kbiId,checkShow=true){                                                        
+  var request = new Request({
+    url: '/index.php?option=com_dbconnect&controller=data&task=getExistingAttributes&format=raw&kbi='+kbiId,
+    method:'get',
+   // data: data,
+   // async: true,
+    onSuccess: function(response){   
+      var resp=JSON && JSON.parse(response) || eval("(function(){return " + response + ";})()");
+      if (resp.result=='ok'){
+        attributesNames=resp.attributes;
+      }
+      if (checkShow){
+        checkAttributeNameShow();
+      }
+    }
+  }).send();
+
+/*
   var a = new Ajax('/index.php?option=com_dbconnect&controller=data&task=getExistingAttributes&format=raw&kbi='+kbiId,{
     method:'get',
     onComplete:function(response){  
@@ -64,7 +81,7 @@ function getAttributesNames(kbiId,checkShow=true){
          checkAttributeNameShow();
        }
     }
-  }).request();  
+  }).request();  */
 }
 
 

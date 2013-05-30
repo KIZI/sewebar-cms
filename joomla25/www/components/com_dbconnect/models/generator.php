@@ -50,6 +50,8 @@
     }
                                                           
     public function processData($contentXML,$tableName,$generatePreprocessing=false,$fmlId=0,$bkefId=0,$dataModel=null,$fmlModel=null,$bkefModel=null){
+      //exit(var_dump(array($contentXML,$tableName,$generatePreprocessing,$fmlId,$bkefId,$dataModel,$fmlModel,$bkefModel)));
+    
       $content=simplexml_load_string($contentXML);   //exit('sem');      
       //načteme existující struktury FML a BKEF, nebo vytvoříme nové
       if (($bkefId>0)&&($dataModel)){

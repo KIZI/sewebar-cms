@@ -33,14 +33,14 @@
                     groupsCount++;
                     var groupDivId="group_"+groupsCount;
                     var groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-                    groupDiv.setHTML('<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang['DELETE_GROUP']+'</a><div><label for="'+groupDivId+'_name">'+lang['GROUP_NAME']+'</label> <input  onblur="binNameCheck(this);" type="text" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+htmlspecialchars(bin.name)+'" class="binNameInput" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
+                    groupDiv.set('html','<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang['DELETE_GROUP']+'</a><div><label for="'+groupDivId+'_name">'+lang['GROUP_NAME']+'</label> <input  onblur="binNameCheck(this);" type="text" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+htmlspecialchars(bin.name)+'" class="binNameInput" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
                     groupDiv.inject("testDiv");
                     
                     bin.values.each(function(value){
                       valuesCount++;
                       valueDiv=new Element("div",{"id":"value_"+valuesCount});
                       value=htmlspecialchars(value);
-                      valueDiv.setHTML(value+"<input type=\"hidden\" name=\""+groupDivId+"_value_"+valuesCount+"\" value=\""+value+"\" class=\"valueInput\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\""+lang['DELETE']+"\">x</a>");
+                      valueDiv.set('html',value+"<input type=\"hidden\" name=\""+groupDivId+"_value_"+valuesCount+"\" value=\""+value+"\" class=\"valueInput\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\""+lang['DELETE']+"\">x</a>");
                       valueDiv.inject(groupDivId+"_itemsDiv");
                     });
                  });
@@ -110,9 +110,9 @@
       if (itemsHTML==""){
         alert(lang['NO_ITEMS_TO_ADD']);
       }
-      $(group+"_addDiv").setHTML("<label for=\""+group+"_valueInput\">"+lang['VALUE_TO_ADD']+"</label> <select id=\""+group+"_valueInput\" onkeydown=\"return checkValueSubmit('"+group+"',event);\" >"+itemsHTML+"</select> <a href=\"javascript:addValueSubmit('"+group+"');\" class=\"smallButton\">"+lang['ADD_TO_GROUP']+"</a><a href=\"javascript:addValueCancel('"+group+"');\" class=\"smallButton\">"+lang['CANCEL']+"</a>");
+      $(group+"_addDiv").set('html',"<label for=\""+group+"_valueInput\">"+lang['VALUE_TO_ADD']+"</label> <select id=\""+group+"_valueInput\" onkeydown=\"return checkValueSubmit('"+group+"',event);\" >"+itemsHTML+"</select> <a href=\"javascript:addValueSubmit('"+group+"');\" class=\"smallButton\">"+lang['ADD_TO_GROUP']+"</a><a href=\"javascript:addValueCancel('"+group+"');\" class=\"smallButton\">"+lang['CANCEL']+"</a>");
     }else{
-      $(group+"_addDiv").setHTML("<label for=\""+group+"_valueInput\">"+lang['VALUE_TO_ADD']+"</label> <input id=\""+group+"_valueInput\" value=\"\" type=\"text\" onkeydown=\"return checkValueSubmit('"+group+"',event);\" /> <a href=\"javascript:addValueSubmit('"+group+"');\" class=\"smallButton\">"+lang['ADD_TO_GROUP']+"</a><a href=\"javascript:addValueCancel('"+group+"');\" class=\"smallButton\">"+lang['CANCEL']+"</a>");
+      $(group+"_addDiv").set('html',"<label for=\""+group+"_valueInput\">"+lang['VALUE_TO_ADD']+"</label> <input id=\""+group+"_valueInput\" value=\"\" type=\"text\" onkeydown=\"return checkValueSubmit('"+group+"',event);\" /> <a href=\"javascript:addValueSubmit('"+group+"');\" class=\"smallButton\">"+lang['ADD_TO_GROUP']+"</a><a href=\"javascript:addValueCancel('"+group+"');\" class=\"smallButton\">"+lang['CANCEL']+"</a>");
     }
   }
   
@@ -127,12 +127,12 @@
   
   function deleteValue(id){
     parentDiv=$(id).getParent();
-    parentDiv.remove();
+    parentDiv.destroy();
   }
   
   function addValueCancel(group){
     editedGroup=""; 
-    $(group+"_addDiv").setHTML('<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a>');
+    $(group+"_addDiv").set('html','<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a>');
   }
   
   function addValueSubmit(group){
@@ -145,10 +145,10 @@
       valuesCount++;
       valueDiv=new Element("div",{"id":"value_"+valuesCount});
       value=htmlspecialchars(value);
-      valueDiv.setHTML(value+"<input type=\"hidden\" name=\""+group+"_value_"+valuesCount+"\" value=\""+value+"\" class=\"valueInput\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\""+lang['DELETE']+"\">x</a>");
+      valueDiv.set('html',value+"<input type=\"hidden\" name=\""+group+"_value_"+valuesCount+"\" value=\""+value+"\" class=\"valueInput\" /><a href=\"#\" onclick=\"deleteValue(this);\" title=\""+lang['DELETE']+"\">x</a>");
       valueDiv.inject(group+"_itemsDiv");
     }
-    $(group+"_addDiv").setHTML('<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a>');
+    $(group+"_addDiv").set('html','<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a>');
   }
   
   function addGroup(){
@@ -156,7 +156,7 @@
     groupsCount++;
     groupDivId="group_"+groupsCount;
     groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-    groupDiv.setHTML('<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang['DELETE_GROUP']+'</a><div><label for="'+groupDivId+'_name">'+lang['GROUP_NAME']+'</label> <input type="text" onblur="binNameCheck(this);" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+groupDivId+'" class="binNameInput" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
+    groupDiv.set('html','<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang['DELETE_GROUP']+'</a><div><label for="'+groupDivId+'_name">'+lang['GROUP_NAME']+'</label> <input type="text" onblur="binNameCheck(this);" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+groupDivId+'" class="binNameInput" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
     groupDiv.inject("testDiv");
     
     groupName=$(groupDivId+"_name");

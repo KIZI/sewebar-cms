@@ -66,16 +66,16 @@
     /**
      *  Funkce pro vytvoření/uložení článku
      */         
-    public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){  
+    public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){    
       $db=$this->getDBO();
       $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
-      if (($articleId)&&$db->loadObject()){
+      if (($articleId)&&$db->loadObject()){ 
         //budeme updatovat
-        $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', fulltext="", sectionId='.$db->quote($sectionId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
-        if ($db->query()){
+        $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', `fulltext`="", sectionId='.$db->quote($sectionId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
+        if ($db->query()){     
           return $articleId;
         }
-      }else{    
+      }else{ 
         //budeme ukládat
         $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`sectionid`,`created`,`created_by`,`modified`,`modified_by`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($sectionId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).');');
         //TODO asset!!!
