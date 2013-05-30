@@ -1,4 +1,4 @@
-package xquerysearch.logging;
+package xquerysearch.logging.search;
 
 /**
  * Logger providing logging of obtained queries and their results.

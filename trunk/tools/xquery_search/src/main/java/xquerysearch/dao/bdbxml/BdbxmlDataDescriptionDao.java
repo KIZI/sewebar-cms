@@ -151,7 +151,7 @@ public class BdbxmlDataDescriptionDao extends AbstractDao implements DataDescrip
     		XmlDocument doc = cont.getDocument(DATA_DESCRIPTION_DOCUMENT);
     		return doc.getContentAsString();
 		} catch (XmlException e) {
-			logger.warn("Getting data description failed!");
+			logger.logWarning(this.getClass().toString(), "Getting data description failed!");
 			return null;
 		} finally {
 			commitAndClose(trans, cont);
@@ -170,7 +170,7 @@ public class BdbxmlDataDescriptionDao extends AbstractDao implements DataDescrip
 			cont.putDocument(DATA_DESCRIPTION_DOCUMENT, dataDescription);
 			return true;
 		} catch (XmlException e) {
-			logger.warn("Saving data description failed!");
+			logger.logWarning(this.getClass().toString(), "Saving data description failed!");
 			return false;
 		} finally {
 			commitAndClose(trans, cont);

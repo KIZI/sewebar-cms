@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import xquerysearch.dao.DocumentDao;
 import xquerysearch.domain.Document;
+import xquerysearch.logging.event.EventLogger;
 import xquerysearch.transformation.XsltTransformer;
 import xquerysearch.validation.DocumentValidator;
 
@@ -20,6 +21,9 @@ import xquerysearch.validation.DocumentValidator;
 @Service
 public class DocumentServiceImpl extends AbstractService implements DocumentService {
 
+	@Autowired
+	private EventLogger logger;
+	
 	@Autowired
 	private DocumentDao dao;
 
@@ -56,7 +60,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		if (transform) {
 			if (documentBody.toLowerCase().contains("<pmml")) {
 				if (DocumentValidator.validate(documentBody, pmmlValidationPath) == false) {
-					logger.warn("PMML validation failed!");
+					logger.logWarning(this.getClass().toString(), "PMML validation failed!");
 					return false;
 				}
 				transFile = new File(pmmlTransPath);
@@ -69,15 +73,15 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		if (transFile != null) {
 			String transformedBody = XsltTransformer.transform(documentBody, transFile, document.getDocId(),
-					document.getCreationTime(), document.getReportUri());
+					document.getCreationTime(), document.getReportUri(), logger);
 			if (transformedBody != null) {
 				document.setDocBody(transformedBody);
 			} else {
-				logger.warn("XSLT transformation process failed!");
+				logger.logWarning(this.getClass().toString(), "XSLT transformation process failed!");
 				return false;
 			}
 		} else {
-			logger.warn("XSLT file error!");
+			logger.logWarning(this.getClass().toString(), "XSLT file error!");
 			return false;
 		}
 		return dao.insertDocument(document);

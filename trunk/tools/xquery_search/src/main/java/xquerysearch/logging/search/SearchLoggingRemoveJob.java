@@ -1,11 +1,13 @@
-package xquerysearch.logging;
+package xquerysearch.logging.search;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Job for log files removal.
@@ -19,27 +21,32 @@ public class SearchLoggingRemoveJob extends QuartzJobBean {
 	private String targetDirPath;
 	private long keepMinutes;
 
-	Logger logger = Logger.getLogger(getClass());
+	@Autowired
+	private EventLogger logger;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
-		logger.info("Job started");
+		logger.logInfo(this.getClass().toString(), "Job started");
 
 		if (targetDirPath == null) {
-			logger.warn("Unable to remove old log files - no target folder specified!");
+			// TODO exclude from output?
+			logger.logWarning(this.getClass().toString(), "Unable to remove old log files - no target folder specified!");
 		} else {
 			File targetDir = new File(targetDirPath);
 
-			logger.info("Job will remove old log files from " + targetDir.getAbsolutePath());
+			// TODO exclude from output?
+			logger.logInfo(this.getClass().toString(), "Job will remove old log files from " + targetDir.getAbsolutePath());
 
 			int removed = remover.removeLogs(keepMinutes, targetDir);
 
-			logger.info("Job removed " + removed + " files older than " + keepMinutes + " minutes");
+			// TODO exclude from output?
+			logger.logInfo(this.getClass().toString(), "Job removed " + removed + " files older than " + keepMinutes + " minutes");
 		}
-		logger.info("Job finished");
+		// TODO exclude from output?
+		logger.logInfo(this.getClass().toString(), "Job finished");
 	}
 
 	/**

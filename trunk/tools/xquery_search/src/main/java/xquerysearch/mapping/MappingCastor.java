@@ -6,9 +6,11 @@ import java.io.InputStream;
 
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
+
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Class used to map source information to object representation.
@@ -18,7 +20,8 @@ import org.springframework.oxm.castor.CastorMarshaller;
  */
 public class MappingCastor<T> {
 	
-	private static final Logger log = Logger.getLogger("MappingCastor");
+	@Autowired
+	private EventLogger logger;
 	
 	/**
 	 * Maps string source data to domain object specified in {@link CastorMarshaller} bean.
@@ -36,10 +39,10 @@ public class MappingCastor<T> {
 		try {
 			return (T) castorMarshaller.unmarshal(inSource);
 		} catch (XmlMappingException e) {
-			log.warn("Mapping String to domain object failed! - XmlMappingException");
+			logger.logWarning(this.getClass().toString(), "Mapping String to domain object failed! - XmlMappingException");
 			return null;
 		} catch (IOException e) {
-			log.warn("Mapping String to domain object failed! - I/O exception");
+			logger.logWarning(this.getClass().toString(), "Mapping String to domain object failed! - I/O exception");
 			return null;
 		} 
 	}

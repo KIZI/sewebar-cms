@@ -3,7 +3,6 @@ package xquerysearch.clustering.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import xquerysearch.clustering.computing.ClusterCharacteristicsComputer;
@@ -15,6 +14,7 @@ import xquerysearch.domain.arbquery.Params;
 import xquerysearch.domain.arbquery.QuerySettings;
 import xquerysearch.domain.result.Result;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Implementation of {@link ClusteringService}.
@@ -24,7 +24,8 @@ import xquerysearch.fuzzysearch.service.FuzzySearchService;
  */
 public class ClusteringServiceImpl implements ClusteringService {
 
-	Logger logger = Logger.getLogger(getClass());
+	@Autowired
+	private EventLogger logger;
 	
 	@Autowired
 	private FuzzySearchService fuzzySearchService;
@@ -44,7 +45,7 @@ public class ClusteringServiceImpl implements ClusteringService {
 	@Override
 	public List<Cluster> clusterResults(List<Result> results, Params params, List<Cluster> clusters) {
 		if (results == null) {
-			logger.info("CLUSTERING - Results null!");
+			logger.logInfo(this.getClass().toString(), "CLUSTERING - Results null!");
 			return clusters;
 		}
 		
@@ -60,7 +61,7 @@ public class ClusteringServiceImpl implements ClusteringService {
 			formulaType = params.getClusterDistanceFormula();
 		}
 
-		logger.info("CLUSTERING - Settings: BelongingLimit = " + belongingLimit + " | DistanceFormula = " + formulaType);
+		logger.logInfo(this.getClass().toString(), "CLUSTERING - Settings: BelongingLimit = " + belongingLimit + " | DistanceFormula = " + formulaType);
 		
 		for (Result result : results) {
 			if (clusters.size() == 0) {
@@ -86,7 +87,7 @@ public class ClusteringServiceImpl implements ClusteringService {
 		}
 		
 		List<Result> resultsToReprocess = getResultsToReproces(clusters, belongingLimit, formulaType);
-		logger.info("CLUSTERING - Results to reprocess: " + resultsToReprocess.size());
+		logger.logInfo(this.getClass().toString(), "CLUSTERING - Results to reprocess: " + resultsToReprocess.size());
 		
 		if (resultsToReprocess.size() > 0) {
 			clusterResults(resultsToReprocess, params, clusters);
