@@ -282,7 +282,6 @@ class IziController extends JController{
     
     $fml=$dataModel->loadArticleXML($task->fml_article);
     $bkef=$dataModel->loadArticleXML($task->bkef_article);
-    
                            
     if (!$fmlModel->setFml($fml)){      exit('Neplatné mapování! Spusťte prosím znovu krok mapování...');      //TODO
       //TODO vyřešit chybu - nejde o mapování PMML na BKEF!!!
@@ -916,7 +915,7 @@ class IziController extends JController{
   /**
    *  Akce pro vygenerování quick task
    */    
-  public function quickDMTask_generate(){  
+  public function quickDMTask_generate(){ 
     $taskId=JRequest::getInt('task_id');     
     $tasksModel= & $this->getModel('Tasks','dbconnectModel');
     $connectionsModel=&$this->getModel('Connections','dbconnectModel');
@@ -933,14 +932,14 @@ class IziController extends JController{
     if (!$connection){
       JError::raiseError(500,JText::_('FORBIDDEN'));
       return;
-    }              
+    }               
     $unidbModel=&$this->getModel('Unidb','dbconnectModel');
     $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->getPassword(),$connection->db_name);
     if ($dbError!=''){
       JError::raiseError(500,$dbError);
       return ;
     }
-    
+     
           
     //potřebujeme vygenerovat BKEF a FML article
     $curDateStr=date(JText::_('DATETIME_FORMAT'));
@@ -964,19 +963,19 @@ class IziController extends JController{
     $dataModel=&$this->getModel('Data','dbconnectModel');
     $bkefArticleTitle=$connection->table.' - BKEF ('.$curDateStr.')';
     $fmlArticleTitle=$connection->table.' - FML ('.$curDateStr.')';
-    $bkefXML=$generatorModel->getBkefXML();
+    $bkefXML=$generatorModel->getBkefXML($bkedArticleTitle);
         
     if ($bkefXML){
       if ($task->bkef_article>0){
         //update
         $bkefArticleId=$task->bkef_article;
-        $dataModel->saveArticle($bkefArticleId,$bkefXML);
+        $dataModel->saveArticle($bkefArticleId,$bkefArticleTitle,$bkefXML);//TODO doplnění zbylých parametrů
       }else{   
         //new article
-        $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML);
+        $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML); //TODO doplnění zbylých parametrů
       }
     }
-        
+               exit("sem0");
     $taskParams=array();
     if (@$bkefArticleId){
       $taskParams['bkef']=$bkefArticleId;
@@ -985,9 +984,9 @@ class IziController extends JController{
         if ($task->fml_article>0){
           //update
           $fmlArticleId=$task->fml_article;
-          $dataModel->saveArticle($fmlArticleId,$fmlXML);
+          $dataModel->saveArticle($fmlArticleId,$fmlArticleTitle,$fmlXML);//TODO doplnění zbylých parametrů
         }else{
-          $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML);
+          $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML);//TODO doplnění zbylých parametrů
         }
       }
       if (@$fmlArticleId){
