@@ -124,19 +124,19 @@
       //budeme zpracovavat jen platne sloupce z ulohy 
       $columns=simplexml_load_string($task->columns);
       if (!$columns){return $xml->asXML();}          
-      
+                                        
       foreach ($columns->column as $column){
         //zpracovavame jen sloupce, ktere se maji pouzit
         if ((string)$column['use']!='1'){continue;}
         //pripravime vystupni XML pro dany sloupec
-        $columnXML=$xml->addChild('col');
+        $columnXML=$xml->addChild('col'); 
         $columnXML->addChild('name',(string)$column['name']);
 //        $columnXML->addChild('type',$this->getGenericDataType($column['Type']));
         $columnXML->addChild('type',(string)$column['type']);
         $this->prepareColItemsXML($tableName,$column['name'],$columnXML);
       }
                      
-      $xmlResult=$xml->asXML();
+      $xmlResult=$xml->asXML();       
       if (!$cacheresult){
         $db->setQuery("INSERT INTO #__dbconnect_task_table_content (id,content) VALUES (".$db->quote((string)$task->id).",".$db->quote($xmlResult).")");
       }else{

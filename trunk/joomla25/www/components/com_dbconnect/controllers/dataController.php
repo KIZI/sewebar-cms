@@ -228,8 +228,8 @@ class DataController extends JController{
       $kbiModel=$this->getKbiModel($kbiId);   
       $xmlStr=$kbiModel->getDataDescription(array('template'=>'LMDataSource.Matrix.ARD.Attributes.Template.XML'));
       $xml=simplexml_load_string($xmlStr);
-      $attributesArr=array();
-      if (($xml)&&(count($xml->Attribute)>0)){
+      if (($xml instanceof SimpleXMLElement)&&($xml->getName()=='Attributes')&&(($xml->count()==0)||(count($xml->Attribute)>0))){
+        $attributesArr=array();
         foreach ($xml->Attribute as $attribute){
           $attributesArr[]=(string)$attribute;	
         }

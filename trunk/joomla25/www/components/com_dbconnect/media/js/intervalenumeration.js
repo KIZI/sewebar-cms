@@ -80,7 +80,7 @@
   function addItem(group){
     if (!checkIntervalSubmitted()){return;}
     editedGroup=group;
-    $(group+"_addDiv").setHTML(lang["INTERVAL_TO_ADD"]+" <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"alert('checkX'); return checkIntervalSubmit('"+group+"',event);\"><option value=\"closed\">"+lang["INTERVAL_LEFT_CLOSED"]+"</option><option value=\"open\">"+lang["INTERVAL_LEFT_OPEN"]+"</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit('"+group+"',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit('"+group+"',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit('"+group+"',event);\"><option value=\"Closed\">"+lang["INTERVAL_RIGHT_CLOSED"]+"</option><option value=\"Open\" selected=\"selected\">"+lang["INTERVAL_RIGHT_OPEN"]+"</option></select><a href=\"javascript:addIntervalSubmit('"+group+"');\" class=\"smallButton\">"+lang["ADD_TO_GROUP"]+"</a><a href=\"javascript:addIntervalCancel('"+group+"');\" class=\"smallButton\">"+lang["CANCEL"]+"</a>");
+    $(group+"_addDiv").set('html',lang["INTERVAL_TO_ADD"]+" <select name=\""+group+"_leftBound\" id=\""+group+"_leftBound\" onkeydown=\"alert('checkX'); return checkIntervalSubmit('"+group+"',event);\"><option value=\"closed\">"+lang["INTERVAL_LEFT_CLOSED"]+"</option><option value=\"open\">"+lang["INTERVAL_LEFT_OPEN"]+"</option></select> <input id=\""+group+"_startValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit('"+group+"',event);\" /> <strong>;</strong> <input id=\""+group+"_endValueInput\" value=\"\" type=\"text\" onkeydown=\"return checkIntervalSubmit('"+group+"',event);\" /> <select name=\""+group+"_rightBound\" id=\""+group+"_rightBound\" onkeydown=\"return checkIntervalSubmit('"+group+"',event);\"><option value=\"Closed\">"+lang["INTERVAL_RIGHT_CLOSED"]+"</option><option value=\"Open\" selected=\"selected\">"+lang["INTERVAL_RIGHT_OPEN"]+"</option></select><a href=\"javascript:addIntervalSubmit('"+group+"');\" class=\"smallButton\">"+lang["ADD_TO_GROUP"]+"</a><a href=\"javascript:addIntervalCancel('"+group+"');\" class=\"smallButton\">"+lang["CANCEL"]+"</a>");
   }
   
   function deleteGroup(group){
@@ -88,18 +88,18 @@
       if (editedGroup==group){
         editedGroup="";
       }
-      $(group).remove();
+      $(group).destroy();
     }
   }
   
   function deleteInterval(id){
     parentDiv=$(id).getParent();
-    parentDiv.remove();
+    parentDiv.destroy();
   }
   
   function addIntervalCancel(group){ 
     editedGroup="";
-    $(group+"_addDiv").setHTML('<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_INTERVAL"]+'</a>');
+    $(group+"_addDiv").set('html','<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_INTERVAL"]+'</a>');
   }
   
   
@@ -181,10 +181,10 @@
     intervalsCount++;
     valueDiv=new Element("div",{"id":"interval_"+intervalsCount});
     value=htmlspecialchars(intervalData);
-    valueDiv.setHTML(intervalHTML+"<input type=\"hidden\" name=\""+group+"_interval_"+intervalsCount+"\" value=\""+intervalData+"\" class=\"intervalInput\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\""+lang["DELETE"]+"\">x</a>");
+    valueDiv.set('html',intervalHTML+"<input type=\"hidden\" name=\""+group+"_interval_"+intervalsCount+"\" value=\""+intervalData+"\" class=\"intervalInput\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\""+lang["DELETE"]+"\">x</a>");
     valueDiv.inject(group+"_itemsDiv");
     
-    $(group+"_addDiv").setHTML('<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a>');
+    $(group+"_addDiv").set('html','<a href="javascript:addItem('+"'"+group+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a>');
   }
   
   function addGroup(){
@@ -192,7 +192,7 @@
     groupsCount++;
     groupDivId="group_"+groupsCount;
     groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-    groupDiv.setHTML('<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang["DELETE_GROUP"]+'</a><div><label for="'+groupDivId+'_name">'+lang["GROUP_NAME"]+'</label> <input onblur="binNameCheck(this);" class="binNameInput" type="text" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+groupDivId+'" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
+    groupDiv.set('html','<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang["DELETE_GROUP"]+'</a><div><label for="'+groupDivId+'_name">'+lang["GROUP_NAME"]+'</label> <input onblur="binNameCheck(this);" class="binNameInput" type="text" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+groupDivId+'" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
     groupDiv.inject("testDiv");
     
     groupName=$(groupDivId+"_name");
@@ -272,7 +272,7 @@
                     groupsCount++;
                     var groupDivId="group_"+groupsCount;
                     var groupDiv=new Element("div",{"id":groupDivId,"class":"groupDiv"});
-                    groupDiv.setHTML('<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang["DELETE_GROUP"]+'</a><div><label for="'+groupDivId+'_name">'+lang["GROUP_NAME"]+'</label> <input  onblur="binNameCheck(this);" type="text" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+htmlspecialchars(bin.name)+'" class="binNameInput" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
+                    groupDiv.set('html','<a class="deleteGroupA" href="javascript:deleteGroup('+"'"+groupDivId+"'"+')">'+lang["DELETE_GROUP"]+'</a><div><label for="'+groupDivId+'_name">'+lang["GROUP_NAME"]+'</label> <input  onblur="binNameCheck(this);" type="text" name="'+groupDivId+'_name" id="'+groupDivId+'_name" value="'+htmlspecialchars(bin.name)+'" class="binNameInput" /></div><div id="'+groupDivId+'_itemsDiv" class="itemsDiv"></div><div id="'+groupDivId+'_addDiv"><a href="javascript:addItem('+"'"+groupDivId+"'"+')" class="smallButton">'+lang["ADD_ITEM"]+'</a></div>');
                     groupDiv.inject("testDiv");
                     
                     bin.intervals.each(function(interval){
@@ -294,7 +294,7 @@
                         intervalValue+="Open";
                       }
                       intervalValue+="#"+interval.leftMargin+"#"+interval.rightMargin;
-                      valueDiv.setHTML(intervalText+"<input type=\"hidden\" name=\""+groupDivId+"_interval_"+intervalsCount+"\" value=\""+intervalValue+"\" class=\"intervalInput\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\""+lang["DELETE"]+"\">x</a>");
+                      valueDiv.set('html',intervalText+"<input type=\"hidden\" name=\""+groupDivId+"_interval_"+intervalsCount+"\" value=\""+intervalValue+"\" class=\"intervalInput\" /><a href=\"#\" onclick=\"deleteInterval(this);\" title=\""+lang["DELETE"]+"\">x</a>");
                       valueDiv.inject(groupDivId+"_itemsDiv");
                     });
                  });
