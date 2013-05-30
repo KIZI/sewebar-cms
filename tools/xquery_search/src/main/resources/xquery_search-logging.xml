@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-						http://www.springframework.org/schema/beans/spring-beans.xsd
-						http://www.springframework.org/schema/context 
-						http://www.springframework.org/schema/context/spring-context.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<beans profile="devel">
 		<context:property-placeholder location="${xquery_search.config.location:classpath:}logging-devel.properties"
@@ -17,12 +19,16 @@
 	</beans>
 
 	<beans>
-		<bean id="searchLogger" class="xquerysearch.logging.SearchLoggerImpl" />
+		<bean id="eventLogger" class="xquerysearch.logging.event.EventLoggerImpl" scope="request">
+			<aop:scoped-proxy proxy-target-class="false" />
+		</bean>
+	
+		<bean id="searchLogger" class="xquerysearch.logging.search.SearchLoggerImpl" />
 
-		<bean id="loggingRemover" class="xquerysearch.logging.SearchLoggingRemover" />
+		<bean id="loggingRemover" class="xquerysearch.logging.search.SearchLoggingRemover" />
 
 		<bean id="logRemoveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-			<property name="jobClass" value="xquerysearch.logging.SearchLoggingRemoveJob" />
+			<property name="jobClass" value="xquerysearch.logging.search.SearchLoggingRemoveJob" />
 			<property name="jobDataAsMap">
 				<map>
 					<entry key="remover" value-ref="loggingRemover" />

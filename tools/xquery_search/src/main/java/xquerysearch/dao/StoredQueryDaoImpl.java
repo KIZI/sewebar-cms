@@ -10,8 +10,10 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Default implementation of {@link StoredQueryDao}.
@@ -21,7 +23,8 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class StoredQueryDaoImpl implements StoredQueryDao {
 
-	private static final Logger logger = Logger.getLogger("StoredQueryDao");
+	@Autowired
+	private EventLogger logger; 
 	
 	@Value("${dir.queries}")
 	private String queriesDirectory;
@@ -45,10 +48,10 @@ public class StoredQueryDaoImpl implements StoredQueryDao {
                 out.close();
                 return query;
             } catch (FileNotFoundException e) {
-            	logger.warn("Getting query with id \"" + queryId + "\" failed! - File not found");
+            	logger.logWarning(this.getClass().toString(), "Getting query with id \"" + queryId + "\" failed! - File not found");
             	return null;
             } catch (IOException e) {
-            	logger.warn("Getting query with id \"" + queryId + "\" failed! - IO exception");
+            	logger.logWarning(this.getClass().toString(), "Getting query with id \"" + queryId + "\" failed! - IO exception");
             	return null;
             }
         }

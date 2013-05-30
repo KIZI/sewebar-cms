@@ -1,8 +1,9 @@
 package xquerysearch.dao.bdbxml;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import xquerysearch.logging.event.EventLogger;
 
 import com.sleepycat.dbxml.XmlContainer;
 import com.sleepycat.dbxml.XmlException;
@@ -17,7 +18,8 @@ import com.sleepycat.dbxml.XmlTransaction;
  */
 public abstract class AbstractDao {
 
-	protected static final Logger logger = Logger.getRootLogger();
+	@Autowired
+	protected EventLogger logger;
 	
 	@Value("${container.name}")
 	protected String containerName;
@@ -36,9 +38,9 @@ public abstract class AbstractDao {
 		try {
 			xmlTransaction.commit();
 		} catch (XmlException e) {
-			logger.error("Could not commit and close transaction!");
+			logger.logError(this.getClass().toString(), "Could not commit and close transaction!");
 		} catch (NullPointerException e) {
-			logger.error("Could not commit and close transaction!");
+			logger.logError(this.getClass().toString(), "Could not commit and close transaction!");
 		}
 	}
 

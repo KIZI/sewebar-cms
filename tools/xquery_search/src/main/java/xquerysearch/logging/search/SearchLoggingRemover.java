@@ -1,4 +1,4 @@
-package xquerysearch.logging;
+package xquerysearch.logging.search;
 
 import java.io.File;
 

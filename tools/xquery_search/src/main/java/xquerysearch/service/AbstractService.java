@@ -1,6 +1,8 @@
 package xquerysearch.service;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Abstract service - parent child for all services.
@@ -10,6 +12,6 @@ import org.apache.log4j.Logger;
  */
 public class AbstractService {
 
-	protected static final Logger logger = Logger.getLogger("service");
-
+	@Autowired
+	protected EventLogger logger;
 }

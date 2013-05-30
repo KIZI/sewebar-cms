@@ -10,7 +10,9 @@ import java.io.UnsupportedEncodingException;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Class providing XSLT transformation features.
@@ -19,9 +21,10 @@ import org.apache.log4j.Logger;
  * 
  */
 public class XsltTransformer {
-
-	private static Logger logger = Logger.getLogger("transformer");
-
+	
+	@Autowired
+	private EventLogger logger;
+	
 	/**
 	 * Default constructor - made private, class provides only static methods
 	 */
@@ -45,10 +48,10 @@ public class XsltTransformer {
 	 *         when error occurs
 	 */
 	public static String transform(File xmlFile, File xsltFile, String docID, String creationTime,
-			String reportUri) {
+			String reportUri, EventLogger logger) {
 		try {
 			FileInputStream fis = new FileInputStream(xmlFile);
-			return transformInternal(fis, xsltFile, docID, creationTime, reportUri);
+			return transformInternal(fis, xsltFile, docID, creationTime, reportUri, logger);
 		} catch (FileNotFoundException e) {
 
 			return null;
@@ -72,14 +75,14 @@ public class XsltTransformer {
 	 *         when error occurs
 	 */
 	public static String transform(String xmlString, File xsltFile, String docID, String creationTime,
-			String reportUri) {
+			String reportUri, EventLogger logger) {
 		try {
 			byte[] bytes = xmlString.getBytes("UTF-8");
 			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
-			return transformInternal(bais, xsltFile, docID, creationTime, reportUri);
+			return transformInternal(bais, xsltFile, docID, creationTime, reportUri, logger);
 		} catch (UnsupportedEncodingException e) {
-			logEncoding();
+			logEncoding(logger);
 			return null;
 		}
 	}
@@ -94,7 +97,7 @@ public class XsltTransformer {
 	 * @return
 	 */
 	private static String transformInternal(InputStream xmlStream, File xsltFile, String docID,
-			String creationTime, String reportUri) {
+			String creationTime, String reportUri, EventLogger logger) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -116,10 +119,10 @@ public class XsltTransformer {
 
 			return baos.toString("UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			logEncoding();
+			logEncoding(logger);
 			return null;
 		} catch (TransformerException e) {
-			logger.warn("Error during transformation occured - transformer exception");
+			logger.logWarning(XsltTransformer.class.getName(), "Error during transformation occured - transformer exception");
 			return null;
 		}
 	}
@@ -127,8 +130,8 @@ public class XsltTransformer {
 	/**
 	 * Sends warning with unsupported encoding message to logger
 	 */
-	private static void logEncoding() {
-		logger.warn("Error during transformation occured - unsupported encoding");
+	private static void logEncoding(EventLogger logger) {
+		logger.logWarning(XsltTransformer.class.getName(), "Error during transformation occured - unsupported encoding");
 	}
 
 }

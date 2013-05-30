@@ -1,9 +1,11 @@
-package xquerysearch.logging;
+package xquerysearch.logging.search;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import xquerysearch.logging.event.EventLogger;
 
 /**
  * Implementation of {@link SearchLogger}.
@@ -13,7 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class SearchLoggerImpl implements SearchLogger {
 
-	Logger logger = Logger.getLogger(getClass());
+	@Autowired
+	private EventLogger logger;
 
 	@Value("${logging.target.dir}")
 	private String targetDirPath;
@@ -36,7 +39,8 @@ public class SearchLoggerImpl implements SearchLogger {
 	@Override
 	public void logQuery(String query, long timestamp) {
 		if (targetDirPath == null) {
-			logger.warn("Search logging - no target directory specified!");
+			// TODO exclude from output?
+			logger.logWarning(this.getClass().toString(), "Search logging - no target directory specified!");
 		} else {
 			if (timestamp == 0) {
 				timestamp = System.currentTimeMillis();
@@ -56,7 +60,8 @@ public class SearchLoggerImpl implements SearchLogger {
 	@Override
 	public void logResult(String result, long timestamp) {
 		if (targetDirPath == null) {
-			logger.warn("Search logging - no target directory specified!");
+			// TODO exclude from output?
+			logger.logWarning(this.getClass().toString(), "Search logging - no target directory specified!");
 		} else {
 			if (timestamp == 0) {
 				timestamp = System.currentTimeMillis();

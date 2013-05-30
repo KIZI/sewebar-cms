@@ -5,12 +5,108 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>XQuery search (Part of SEWEBAR project) - search PMML documents stored in Berkeley XML DB</title>
+    <title>IZI Repository - Part of SEWEBAR project</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <style>
+    	body{
+			font-family: sans-serif;
+			margin: 20px;
+		}
+		i{
+			margin-left: 10px;
+			color: gray;
+			font-size: 10pt;
+		}
+		h1{
+			color: #4682B4;
+		}
+		input, select{
+			padding: 1px 1px 1px 5px;
+			border-width: 1px;
+			border-color: black;
+			border-style: solid;
+			font-family: sans-serif;
+		}
+		select {
+			min-width: 300px;
+		}
+		textarea{
+			padding: 2px 5px 2px 5px;
+			border-width: 1px;
+			border-color: black;
+			border-style: solid;
+			font-family: Consolas, Monospaced, serif;
+			font-size: 9pt;
+		}
+		#send_btn{
+			font-weight: bold;
+		}
+		.mainpage .right {
+			text-align: right;
+		}
+		.mainpage .left {
+		  	text-align: left;
+		}
+    </style>
+    <script type="text/javascript">
+    	function showField(selected){
+	        if (selected == "getDocsNames" || selected == "getQueriesNames" || selected == "completeTest" || selected == "listIn" || selected == "getDescription" || selected == "removeAllDocuments" || selected == "actDescription") {
+	            window.document.getElementById("id").style.display = "none";
+	            window.document.getElementById("content").style.display = "none";
+	            window.document.getElementById("docName").style.display = "none";
+	            window.document.getElementById("creationTime").style.display = "none";
+	            window.document.getElementById("reportUri").style.display = "none";
+	            window.document.getElementById("restructure").style.display = "none";
+	        } else if (selected == "directQuery10" || selected == "addIndex" || selected == "delIndex" || selected == "addDocumentMultiple" || selected == "jaxpQuery") {
+	            window.document.getElementById("id").style.display = "none";
+	            window.document.getElementById("docName").style.display = "none";
+	            window.document.getElementById("creationTime").style.display = "none";
+	            window.document.getElementById("content").style.display = "table-row";
+	            window.document.getElementById("reportUri").style.display = "none";
+	            window.document.getElementById("restructure").style.display = "none";
+	        } else if (selected == "getQuery" || selected == "deleteQuery" || selected == "getDocument" || selected == "deleteDocument") {
+	            window.document.getElementById("id").style.display = "table-row";
+	            window.document.getElementById("content").style.display = "none";
+	            window.document.getElementById("docName").style.display = "none";
+	            window.document.getElementById("creationTime").style.display = "none";
+	            window.document.getElementById("reportUri").style.display = "none";
+	            window.document.getElementById("restructure").style.display = "none";
+	        } else if (selected == "addDocument") {
+	            window.document.getElementById("id").style.display = "table-row";
+	            window.document.getElementById("content").style.display = "table-row";
+	            window.document.getElementById("docName").style.display = "table-row";
+	            window.document.getElementById("creationTime").style.display = "table-row";
+	            window.document.getElementById("reportUri").style.display = "table-row";
+	            window.document.getElementById("restructure").style.display = "none";
+	        } else if (selected == "directQuery") {
+	            window.document.getElementById("id").style.display = "none";
+	            window.document.getElementById("docName").style.display = "none";
+	            window.document.getElementById("creationTime").style.display = "none";
+	            window.document.getElementById("content").style.display = "table-row";
+	            window.document.getElementById("reportUri").style.display = "none";
+	            window.document.getElementById("restructure").style.display = "table-row";
+	        } else if (selected == "useQuery") {
+	            window.document.getElementById("id").style.display = "table-row";
+	            window.document.getElementById("docName").style.display = "none";
+	            window.document.getElementById("creationTime").style.display = "none";
+	            window.document.getElementById("content").style.display = "table-row";
+	            window.document.getElementById("reportUri").style.display = "none";
+	            window.document.getElementById("restructure").style.display = "table-row";
+	        } else {
+	            window.document.getElementById("id").style.display = "table-row";
+	            window.document.getElementById("content").style.display = "table-row";
+	            window.document.getElementById("docName").style.display = "none";
+	            window.document.getElementById("creationTime").style.display = "none";
+	            window.document.getElementById("reportUri").style.display = "none";
+	            window.document.getElementById("restructure").style.display = "none";
+	        }
+	    }
+    </script>
   </head>
   <script type="text/javascript" src="script.js"></script>
   <body  onLoad="showField(document.formular.action.value)">
-    <h1>XQuery search (Part of SEWEBAR project) - search PMML documents stored in Berkeley XML DB</h1>
+    <h1>IZI Repository - Part of SEWEBAR project</h1>
+    <h2>Search PMML documents stored in Berkeley XML DB</h2>
     <table class="mainpage">
     <form action="xquery_servlet" method="post" name="formular" target="_blank">
     <tr style="display: table-row;"><td class="right"><b>Action: </b></td><td class="left">

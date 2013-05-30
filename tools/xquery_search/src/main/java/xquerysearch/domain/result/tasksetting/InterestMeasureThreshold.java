@@ -166,7 +166,9 @@ public class InterestMeasureThreshold {
 		ret.append("<Extension name=\"Order\">" + order + "</Extension>");
 		ret.append("<InterestMeasure>" + interestMeasure + "</InterestMeasure>");
 		ret.append("<CompareType>" + compareType + "</CompareType>");
-		ret.append(threshold.toString());
+		if (threshold != null) {
+			ret.append(threshold.toString());
+		}
 		ret.append("</InterestMeasureThreshold>");
 		return ret.toString();
 	}

@@ -20,7 +20,7 @@ import xquerysearch.domain.grouping.Group;
 import xquerysearch.domain.result.Result;
 import xquerysearch.fuzzysearch.service.FuzzySearchService;
 import xquerysearch.grouping.service.GroupingService;
-import xquerysearch.logging.SearchLogger;
+import xquerysearch.logging.search.SearchLogger;
 import xquerysearch.transformation.OutputTransformer;
 import xquerysearch.transformation.QueryArBuilderQueryHybridTransformer;
 import xquerysearch.transformation.QueryArBuilderQueryTransformer;

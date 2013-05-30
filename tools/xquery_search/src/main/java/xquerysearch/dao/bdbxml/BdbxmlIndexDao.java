@@ -37,11 +37,11 @@ public class BdbxmlIndexDao extends AbstractDao implements IndexDao {
                 cont.setIndexSpecification(indexSpec);
                 return true;
 			} else {
-				logger.warn("Adding index \"" + index + "\" failed! - Not 3 params");
+				logger.logWarning(this.getClass().toString(), "Adding index \"" + index + "\" failed! - Not 3 params");
 				return false;
 			}
     	} catch (XmlException e) {
-    		logger.warn("Adding index \"" + index + "\" failed! - Xml exception");
+    		logger.logWarning(this.getClass().toString(), "Adding index \"" + index + "\" failed! - Xml exception");
     		return false;
     	} finally {
     		indexSpec.delete();
@@ -67,11 +67,11 @@ public class BdbxmlIndexDao extends AbstractDao implements IndexDao {
                 cont.setIndexSpecification(indexSpec);
                 return true;
             } else {
-            	logger.warn("Removing index \"" + index + "\" failed! - Not 3 params");
+            	logger.logWarning(this.getClass().toString(), "Removing index \"" + index + "\" failed! - Not 3 params");
             	return false;
             }
         } catch (XmlException e) {
-        	logger.warn("Removing index \"" + index + "\" failed! - Xml exception");
+        	logger.logWarning(this.getClass().toString(), "Removing index \"" + index + "\" failed! - Xml exception");
         	return false;
         } finally {
         	indexSpec.delete(); 	
