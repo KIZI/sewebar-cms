@@ -69,7 +69,7 @@
     public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){  
       $db=$this->getDBO();
       $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
-      if ($db->loadObject()){
+      if (($articleId)&&$db->loadObject()){
         //budeme updatovat
         $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', fulltext="", sectionId='.$db->quote($sectionId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
         if ($db->query()){
@@ -85,6 +85,13 @@
           return false;
         }
       }
+    }
+    
+    /**
+     *  Funkce pro vytvoření/uložení článku
+     */         
+    public function newArticle($title,$data,$sectionId=0,$userId=0){  
+      return $this->saveArticle(0,$title,$data,$sectionId,$userId);
     }
     
     /**
