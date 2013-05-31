@@ -105,7 +105,7 @@
   
   function addIntervalSubmit(group){
     //TODO kontrola, jestli neni zadana hodnota v jine kategorii!
-    startValue=$(group+'_startValueInput').getValue();
+    startValue=$(group+'_startValueInput').get('value');
     startValue=startValue.trim();
     if (startValue!='0'){
       startValue=parseFloat(startValue.replace(',','.')) || 'X';
@@ -115,7 +115,7 @@
       return;
     }
     
-    endValue=$(group+'_endValueInput').getValue();
+    endValue=$(group+'_endValueInput').get('value');
     endValue=endValue.trim();
     if (endValue!='0'){
       endValue=parseFloat(endValue.replace(',','.')) || 'X';
@@ -124,8 +124,8 @@
       alert(lang["END_VALUE_IS_NOT_NUMBER"]);
       return;
     }
-    leftBound=$(group+'_leftBound').getValue();
-    rightBound=$(group+'_rightBound').getValue();
+    leftBound=$(group+'_leftBound').get('value');
+    rightBound=$(group+'_rightBound').get('value');
     
     if ((startValue>endValue)||((startValue==endValue)&&(!((leftBound=='closed')&&(rightBound=='Closed'))))){
       alert(lang["START_VALUE_BIGGER_THAN_END_OR_SAME"]);

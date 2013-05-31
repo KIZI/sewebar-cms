@@ -137,7 +137,7 @@
   
   function addValueSubmit(group){
     //TODO kontrola, jestli neni zadana hodnota v jine kategorii!
-    value=$(group+'_valueInput').getValue();
+    value=$(group+'_valueInput').get('value');
     value=value.trim();
     editedGroup="";
     if (value!=""){
