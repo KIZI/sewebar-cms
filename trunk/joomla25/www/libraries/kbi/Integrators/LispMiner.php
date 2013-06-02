@@ -200,14 +200,14 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 			switch($pooler) {
 				case 'grid':
-					$url = "$url/miners/{$server_id}/grid";
+					$url = "$url/miners/{$server_id}/tasks/grid";
 				break;
 				case 'proc':
-					$url = "$url/miners/{$server_id}/proc";
+					$url = "$url/miners/{$server_id}/tasks/proc";
 					break;
 				case 'task':
 				default:
-					$url = "$url/miners/{$server_id}/task";
+					$url = "$url/miners/{$server_id}/tasks/task";
 			}
 		}
 
