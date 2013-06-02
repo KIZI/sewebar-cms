@@ -9,20 +9,28 @@ function KbiPostAjax(url)
 		o:composed_by($OPERA  : o:Work, o:Puccini : o:Composer)?
 	]]></r>).toString();*/
 
-	var myAjax = new Ajax(url,
+	var myAjax = new Request(
 		{
+			url: url,
 			method: 'post',
-			update: $('results'),
+			// update: 
+			onRequest: function(){
+				$('messages').empty();
+			},
+			onSuccess: function(responseText){
+				$('results').set('text', responseText);
+			},
+			onFailure: function(){
+				$('results').set('text', 'Sorry, your request failed :(');
+			},
 			data:
 			{
-				source: $('source').getValue(),
-				query: $('query').getValue(),
-				xslt: $('xslt').getValue(),
-                parameters: $('params').getValue()
+				source: $('source').value,
+				query: $('query').value,
+				xslt: $('xslt').value,
+                parameters: $('params').value
 			}
-		}).request();
-
-	$('messages').empty();
+		}).send();	
 
 	return false;
 }
