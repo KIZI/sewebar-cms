@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+	<description>ARQuery mapping - query using Task Setting</description>
+
+	<class name="xquerysearch.domain.arbquery.tasksetting.ArTsQuery">
+		<map-to xml="ARQuery" />
+		<field name="querySettings" type="xquerysearch.domain.arbquery.QuerySettings">
+			<bind-xml name="QuerySettings" node="element" />
+		</field>
+		<field name="bbaSettings" collection="arraylist" type="xquerysearch.domain.arbquery.tasksetting.BBASetting">
+			<bind-xml name="BBASetting" location="BBASettings" node="element" />
+		</field>
+		<field name="dbaSettings" collection="arraylist" type="xquerysearch.domain.arbquery.tasksetting.DBASetting">
+			<bind-xml name="DBASetting" location="DBASettings" node="element" />
+		</field>
+		<field name="antecedentSetting" type="string">
+			<bind-xml name="AntecedentSetting" node="element" />
+		</field>
+		<field name="consequentSetting" type="string">
+			<bind-xml name="ConsequentSetting" node="element" />
+		</field>
+		<field name="conditionSetting" type="string">
+			<bind-xml name="ConditionSetting" node="element" />
+		</field>
+		<field name="interestMeasureSetting" type="xquerysearch.domain.arbquery.InterestMeasureSetting"
+			get-method="getImSetting" set-method="setImSetting">
+			<bind-xml name="InterestMeasureSetting" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.arbquery.tasksetting.BBASetting">
+		<map-to xml="BBASetting" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="name" type="string">
+			<bind-xml name="Name" node="element" />
+		</field>
+		<field name="fieldRef" type="string">
+			<bind-xml name="FieldRef" node="element" />
+		</field>
+		<field name="coefficient" type="xquerysearch.domain.arbquery.tasksetting.Coefficient">
+			<bind-xml name="Coefficient" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.arbquery.tasksetting.Coefficient">
+		<map-to xml="FieldRef" />
+		<field name="type" type="string">
+			<bind-xml name="Type" node="element" />
+		</field>
+		<field name="minimalLength" type="integer">
+			<bind-xml name="MinimalLength" node="element" />
+		</field>
+		<field name="maximalLength" type="integer">
+			<bind-xml name="MaximalLength" node="element" />
+		</field>
+		<field name="category" type="string">
+			<bind-xml name="Category" node="element" />
+		</field>
+	</class>
+
+	<class name="xquerysearch.domain.arbquery.tasksetting.DBASetting">
+		<map-to xml="DBASetting" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="type" type="string">
+			<bind-xml name="type" node="attribute" />
+		</field>
+		<field name="match" type="string">
+			<bind-xml name="match" node="attribute" />
+		</field>
+		<field name="baSettingRefs" collection="arraylist" type="string">
+			<bind-xml name="BASettingRef" node="element" />
+		</field>
+		<field name="literalSign" type="string">
+			<bind-xml name="LiteralSign" node="element" />
+		</field>
+	</class>
+
+</mapping>
