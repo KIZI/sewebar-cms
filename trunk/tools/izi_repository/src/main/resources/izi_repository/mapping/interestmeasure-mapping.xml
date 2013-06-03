@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+	<description>Interest Measure Setting mapping</description>
+
+	<class name="izi_repository.domain.arbquery.InterestMeasureSetting">
+		<map-to xml="InterestMeasureSetting" />
+		<field name="imThresholds" collection="arraylist" type="izi_repository.domain.arbquery.InterestMeasureThreshold">
+			<bind-xml name="InterestMeasureThreshold" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.arbquery.InterestMeasureThreshold">
+		<map-to xml="InterestMeasureThreshold" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="interestMeasure" type="string">
+			<bind-xml name="InterestMeasure" node="element" />
+		</field>
+		<field name="compareType" type="string">
+			<bind-xml name="CompareType" node="element" />
+		</field>
+		<field name="significanceLevel" type="double">
+			<bind-xml name="SignificanceLevel" node="element" />
+		</field>
+	</class>
+</mapping>

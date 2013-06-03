@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+	<description>Result Data Description mapping</description>
+
+	<class name="izi_repository.domain.result.datadescription.ResultDataDescription">
+		<map-to xml="DataDescription" />
+		<field name="dataFields" collection="arraylist" type="izi_repository.domain.result.datadescription.DataField">
+			<bind-xml name="DataField " node="element" />
+		</field>
+		<field name="fieldCount" type="integer">
+			<bind-xml name="fieldCount" node="attribute" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.datadescription.DataField">
+		<map-to xml="DataField" />
+		<field name="name" type="string">
+			<bind-xml name="name" node="attribute" />
+		</field>
+		<field name="type" type="string">
+			<bind-xml name="type" node="attribute" />
+		</field>
+		<field name="categories" collection="arraylist" type="string">
+			<bind-xml name="Category" node="element" />
+		</field>
+	</class>
+
+</mapping>
