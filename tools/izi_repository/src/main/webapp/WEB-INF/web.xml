@@ -3,14 +3,14 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<servlet>
-		<servlet-name>xquery_search</servlet-name>
+		<servlet-name>izi_repository</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>xquery_search</servlet-name>
-		<url-pattern>/xquery_servlet</url-pattern>
+		<servlet-name>izi_repository</servlet-name>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
  	<listener>
@@ -22,12 +22,12 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:xquery_search-*.xml</param-value>
+		<param-value>classpath:izi_repository-*.xml</param-value>
 	</context-param>
 
 	<context-param>
 		<param-name>log4jConfigLocation</param-name>
-		<param-value>${xquery_search.config.location}log4j.properties</param-value>
+		<param-value>${izi_repository.config.location}log4j.properties</param-value>
 	</context-param>
 
 </web-app>

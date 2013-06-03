@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+	<description>Result mapping</description>
+
+	<class name="izi_repository.domain.result.Result">
+		<map-to xml="Hit" />
+		<field name="ruleId" type="string">
+			<bind-xml name="ruleID" node="attribute" />
+		</field>
+		<field name="docId" type="string">
+			<bind-xml name="docID" node="attribute" />
+		</field>
+		<field name="docName" type="string">
+			<bind-xml name="docName" node="attribute" />
+		</field>
+		<field name="reportUri" type="string">
+			<bind-xml name="reportURI" node="attribute" />
+		</field>
+		<field name="database" type="string">
+			<bind-xml name="database" node="attribute" />
+		</field>
+		<field name="table" type="string">
+			<bind-xml name="table" node="attribute" />
+		</field>
+		<field name="text" type="string">
+			<bind-xml name="Text" node="element" />
+		</field>
+		<field name="rule" type="izi_repository.domain.result.Rule">
+			<bind-xml name="Detail" node="element" />
+		</field>
+		<field name="taskSetting" type="izi_repository.domain.result.tasksetting.TaskSetting">
+			<bind-xml name="TaskSetting" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.Rule">
+		<map-to xml="Detail" />
+		<field name="antecedent" type="izi_repository.domain.result.Antecedent">
+			<bind-xml name="Antecedent" node="element" />
+		</field>
+		<field name="consequent" type="izi_repository.domain.result.Consequent">
+			<bind-xml name="Consequent" node="element" />
+		</field>
+		<field name="condition" type="izi_repository.domain.result.Condition">
+			<bind-xml name="Condition" node="element" />
+		</field>
+		<field name="imValues" collection="arraylist" type="izi_repository.domain.result.ImValue">
+			<bind-xml name="IMValue" node="element" />
+		</field>
+		<field name="annotation" type="izi_repository.domain.result.Annotation">
+			<bind-xml name="Annotation" node="element" />
+		</field>
+		<field name="fourFtTable" type="izi_repository.domain.result.FourFtTable">
+			<bind-xml name="FourFtTable" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.Antecedent">
+		<map-to xml="Antecedent" />
+		<field name="dbas" collection="arraylist" type="izi_repository.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.Consequent">
+		<map-to xml="Consequent" />
+		<field name="dbas" collection="arraylist" type="izi_repository.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.Condition">
+		<map-to xml="Condition" />
+		<field name="dbas" collection="arraylist" type="izi_repository.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.DBA">
+		<map-to xml="DBA" />
+		<field name="connective" type="string">
+			<bind-xml name="connective" node="attribute" />
+		</field>
+		<field name="dbas" collection="arraylist" type="izi_repository.domain.result.DBA">
+			<bind-xml name="DBA" node="element" />
+		</field>
+		<field name="bbas" collection="arraylist" type="izi_repository.domain.result.BBA">
+			<bind-xml name="BBA" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.BBA">
+		<map-to xml="DBA" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="transformationDictionary" type="izi_repository.domain.result.TransformationDictionary">
+			<bind-xml name="TransformationDictionary" node="element" />
+		</field>
+		<field name="dataDictionary" type="izi_repository.domain.result.DataDictionary">
+			<bind-xml name="DataDictionary" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.TransformationDictionary">
+		<map-to xml="TransformationDictionary" />
+		<field name="fieldName" type="string">
+			<bind-xml name="FieldName" node="element" />
+		</field>
+		<field name="catNames" collection="arraylist" type="string">
+			<bind-xml name="CatName" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.DataDictionary">
+		<map-to xml="DataDictionary" />
+	</class>
+
+	<class name="izi_repository.domain.result.ImValue">
+		<map-to xml="IMValue" />
+		<field name="name" type="string">
+			<bind-xml name="name" node="attribute" />
+		</field>
+		<field name="value" type="string">
+			<bind-xml name="." node="text" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.Annotation">
+		<map-to xml="Annotation" />
+		<field name="interestingness" type="string">
+			<bind-xml name="Interestingness" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.FourFtTable">
+		<map-to xml="FourFtTable" />
+		<field name="a" type="integer">
+			<bind-xml name="a" node="attribute" />
+		</field>
+		<field name="b" type="integer">
+			<bind-xml name="b" node="attribute" />
+		</field>
+		<field name="c" type="integer">
+			<bind-xml name="c" node="attribute" />
+		</field>
+		<field name="d" type="integer">
+			<bind-xml name="d" node="attribute" />
+		</field>
+	</class>
+	
+	<class name="izi_repository.domain.result.tasksetting.TaskSetting">
+		<map-to xml="TaskSetting" />
+		<field name="extension" type="izi_repository.domain.result.tasksetting.Extension">
+			<bind-xml name="Extension" node="element" />
+		</field>
+		<field name="antecedentSetting" type="izi_repository.domain.result.tasksetting.AntecedentSetting">
+			<bind-xml name="AntecedentSetting" node="element" />
+		</field>
+		<field name="consequentSetting" type="izi_repository.domain.result.tasksetting.ConsequentSetting">
+			<bind-xml name="ConsequentSetting" node="element" />
+		</field>
+		<field name="conditionSetting" type="izi_repository.domain.result.tasksetting.ConditionSetting">
+			<bind-xml name="ConditionSetting" node="element" />
+		</field>
+		<field name="imSetting" type="izi_repository.domain.result.tasksetting.InterestMeasureSetting">
+			<bind-xml name="InterestMeasureSetting" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.Extension">
+		<map-to xml="Extension" />
+		<field name="name" type="string">
+			<bind-xml name="name" node="attribute" />
+		</field>
+		<field name="taskGroup" type="string">
+			<bind-xml name="TaskGroup" node="element" />
+		</field>
+		<field name="taskState" type="string">
+			<bind-xml name="TaskState" node="element" />
+		</field>
+		<field name="numberOfVerifications" type="integer">
+			<bind-xml name="NumberOfVerifications" node="element" />
+		</field>
+		<field name="taskStartTime" type="string">
+			<bind-xml name="TaskStartTime" node="element" />
+		</field>
+		<field name="taskDuration" type="string">
+			<bind-xml name="TaskDuration" node="element" />
+		</field>
+		<field name="ftMissingsType" type="string">
+			<bind-xml name="FTMissingsType" node="element" />
+		</field>
+		<field name="ftTaskParamProlong100aFlag" type="string">
+			<bind-xml name="FTTaskParamProlong100AFlag" node="element" />
+		</field>
+		<field name="ftTaskParamProlong100sFlag" type="string">
+			<bind-xml name="FTTaskParamProlong100SFlag" node="element" />
+		</field>
+		<field name="ftTaskParamPrimeCheckMinLen" type="string">
+			<bind-xml name="FTTaskParamPrimeCheckMinLen" node="element" />
+		</field>
+		<field name="ftTaskParamPrimeCheck" type="string">
+			<bind-xml name="FTTaskParamPrimeCheck" node="element" />
+		</field>
+		<field name="ftTaskParamIncludeSymetricFlag" type="string">
+			<bind-xml name="FTTaskParamIncludeSymetricFlag" node="element" />
+		</field>
+		<field name="hypothesesCountMax" type="integer">
+			<bind-xml name="HypothesesCountMax" node="element" />
+		</field>
+		<field name="taskNotice" type="string">
+			<bind-xml name="TaskNotice" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.AntecedentSetting">
+		<map-to xml="AntecedentSetting" />
+		<field name="dbaSettings" collection="arraylist" type="izi_repository.domain.result.tasksetting.DBASetting">
+			<bind-xml name="DBASetting" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.ConsequentSetting">
+		<map-to xml="ConsequentSetting" />
+		<field name="dbaSettings" collection="arraylist" type="izi_repository.domain.result.tasksetting.DBASetting">
+			<bind-xml name="DBASetting" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.ConditionSetting">
+		<map-to xml="ConditionSetting" />
+		<field name="dbaSettings" collection="arraylist" type="izi_repository.domain.result.tasksetting.DBASetting">
+			<bind-xml name="DBASetting" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.DBASetting">
+		<map-to xml="DBASetting" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="type" type="string">
+			<bind-xml name="type" node="attribute" />
+		</field>
+		<field name="name" type="string">
+			<bind-xml name="Name" node="element" />
+		</field>
+		<field name="baSettingRefs" collection="arraylist" type="string">
+			<bind-xml name="BASettingRef" node="element" />
+		</field>
+		<field name="minimalLength" type="integer">
+			<bind-xml name="MinimalLength" node="element" />
+		</field>
+		<field name="maximalLength" type="integer">
+			<bind-xml name="MaximalLength" node="element" />
+		</field>
+		<field name="literalSign" type="string">
+			<bind-xml name="LiteralSign" node="element" />
+		</field>
+		<field name="literalType" type="string">
+			<bind-xml name="LiteralType" node="element" />
+		</field>
+		<field name="equivalenceClass" type="string">
+			<bind-xml name="EquivalenceClass" node="element" />
+		</field>
+		<field name="dbaSettings" collection="arraylist" type="izi_repository.domain.result.tasksetting.DBASetting">
+			<bind-xml name="DBASetting" node="element" />
+		</field>
+		<field name="bbaSettings" collection="arraylist" type="izi_repository.domain.result.tasksetting.BBASetting">
+			<bind-xml name="BBASetting" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.BBASetting">
+		<map-to xml="BBASetting" />
+		<field name="name" type="string">
+			<bind-xml name="Name" node="element" />
+		</field>
+		<field name="fieldRef" type="string">
+			<bind-xml name="FieldRef" node="element" />
+		</field>
+		<field name="coefficient" type="izi_repository.domain.result.tasksetting.Coefficient">
+			<bind-xml name="Coefficient" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.Coefficient">
+		<map-to xml="Coefficient" />
+		<field name="type" type="string">
+			<bind-xml name="Type" node="element" />
+		</field>
+		<field name="minimalLength" type="integer">
+			<bind-xml name="MinimalLength" node="element" />
+		</field>
+		<field name="maximalLength" type="integer">
+			<bind-xml name="MaximalLength" node="element" />
+		</field>
+		<field name="category" type="string">
+			<bind-xml name="Category" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.InterestMeasureSetting">
+		<map-to xml="InterestMeasureSetting" />
+		<field name="imThresholds" collection="arraylist"
+			type="izi_repository.domain.result.tasksetting.InterestMeasureThreshold">
+			<bind-xml name="Category" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.InterestMeasureThreshold">
+		<map-to xml="InterestMeasureThreshold" />
+		<field name="id" type="string">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="longName" type="string">
+			<bind-xml name="LongName" node="element" />
+		</field>
+		<field name="shortName" type="string">
+			<bind-xml name="ShortName" node="element" />
+		</field>
+		<field name="description" type="string">
+			<bind-xml name="Description" node="element" />
+		</field>
+		<field name="order" type="string">
+			<bind-xml name="Order" node="element" />
+		</field>
+		<field name="interestMeasure" type="string">
+			<bind-xml name="InterestMeasure" node="element" />
+		</field>
+		<field name="compareType" type="string">
+			<bind-xml name="CompareType" node="element" />
+		</field>
+		<field name="thresholdString" type="string">
+			<bind-xml name="Threshold" node="element" />
+		</field>
+		<field name="threshold" type="izi_repository.domain.result.tasksetting.Threshold">
+			<bind-xml name="Threshold" node="element" />
+		</field>
+	</class>
+
+	<class name="izi_repository.domain.result.tasksetting.Threshold">
+		<map-to xml="Threshold" />
+		<field name="type" type="string">
+			<bind-xml name="type" node="attribute" />
+		</field>
+		<field name="value" type="double">
+			<bind-xml name="." node="text" />
+		</field>
+	</class>
+</mapping>
