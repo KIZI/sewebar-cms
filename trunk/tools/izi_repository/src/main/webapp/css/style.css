@@ -1,0 +1,39 @@
+body{
+	font-family: sans-serif;
+	margin: 20px;
+}
+i{
+	margin-left: 10px;
+	color: gray;
+	font-size: 10pt;
+}
+h1{
+	color: #4682B4;
+}
+input, select{
+	padding: 1px 1px 1px 5px;
+	border-width: 1px;
+	border-color: black;
+	border-style: solid;
+	font-family: sans-serif;
+}
+select {
+	min-width: 300px;
+}
+textarea{
+	padding: 2px 5px 2px 5px;
+	border-width: 1px;
+	border-color: black;
+	border-style: solid;
+	font-family: Consolas, Monospaced, serif;
+	font-size: 9pt;
+}
+#send_btn{
+	font-weight: bold;
+}
+.mainpage .right {
+	text-align: right;
+}
+.mainpage .left {
+  	text-align: left;
+}
