@@ -1254,7 +1254,7 @@ class IziController extends JController{
           }
         }
         $view->assign('result','ok');
-        $view->assign('editUrl',JRoute::_('index.php?option=com_content&task=article.edit&a_id='.$article->id));
+        $view->assign('editUrl',JRoute::_('index.php?option=com_content&task=article.edit&a_id='.$articleId));
       }else{
         $view->assign('result','error');
       }       
