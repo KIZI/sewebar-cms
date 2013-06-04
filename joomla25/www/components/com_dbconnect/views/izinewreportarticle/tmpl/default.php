@@ -5,7 +5,7 @@ defined('_JEXEC') or die('Restricted access');
   echo '<h1>'.JText::_('NEW_ARTICLE').'</h1>';
   
   if (isset($this->error)){
-    echo '<div class="error">'.$this->error.'</div>'
+    echo '<div class="error">'.$this->error.'</div>';
   }
                        
   echo '<form method="post">
