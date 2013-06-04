@@ -1222,23 +1222,42 @@ class IziController extends JController{
     }
     $title=JRequest::getString('title','');
     $todo=JRequest::getString('todo','');
+    $kbiId=JRequest::getInt('kbi',0);
     $view=&$this->getView('IziNewReportArticle',$this->document->getType());
     $view->assign('categoryId',$categoryId);
+    $view->kbiId=$kbiId;
     if ($todo=='newReportArticle'){
       $title=trim(strip_tags($title));
       if ($title==''){
-        $view->assign('error',JText::_('ERROR_TITLE_NOT_SET'));////TODO
+        $view->assign('error',JText::_('ARTICLE_TITLE_NOT_SET'));////TODO
       }
     }
     if ($title!=''){     //TODO dodělání vytvoření nového článku
-                    /*
-      //vytvorime novy clanek
-      $articlesModel=$this->getModel('Articles','sewebarModel');
-      if ($articlesModel->newArticle($title,$categoryId)){
-        $view->assign('confirm','created');
+      //připravení meta dat pro článek
+      $userId=JRequest::getInt('user',-1);
+      if (!($userId>=0)){
+        $user =& JFactory::getUser();
+        $userId=$user->get('id');    
+      }
+      $sectionId=JRequest::getInt('sectionId',0);
+      //uložení článku
+      $dataModel=&$this->getModel('Data','dbconnectModel');
+      $articleId=$dataModel->newArticle($title,'',$sectionId,$userId);  
+      //povedlo se článek uložit?
+      if ($articleId){
+        if ($kbiId>0){
+          $type=JRequest::getVar('type','report');
+          $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+          $task=$tasksModel->getTaskByKbi($kbiId);
+          if ($task){
+            $dataModel->saveTaskArticle($task->id,$articleId,$type);
+          }
+        }
+        $view->assign('result','ok');
+        $view->assign('editUrl',JRoute::_('index.php?view=article&id='.$articleId.'&task=edit'));
       }else{
-        $view->assign('confirm','storno');
-      }         */
+        $view->assign('result','error');
+      }       
     }
     $view->display();
   } 
