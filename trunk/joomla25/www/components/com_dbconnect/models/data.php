@@ -55,6 +55,7 @@
     public function saveTaskArticle($taskId,$articleId,$type){
       $db=$this->getDBO();
       $db->setQuery('INSERT INTO #__dbconnect_tasks_articles (article,task,`type`)VALUES('.$db->quote($articleId).','.$db->quote($taskId).','.$db->quote($type).');');
+      exit( 'INSERT INTO #__dbconnect_tasks_articles (article,task,`type`)VALUES('.$db->quote($articleId).','.$db->quote($taskId).','.$db->quote($type).');');
       if (!$db->query()){
         $db->setQuery('UPDATE #__dbconnect_tasks_articles SET `type`='.$db->quote($type).' WHERE task='.$db->quote($taskId).' AND article='.$db->quote($articleId).' LIMIT 1;');
         $db->query();
