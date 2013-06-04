@@ -1213,14 +1213,23 @@ class IziController extends JController{
    */
   public function newReportArticle(){
     $categoryId=JRequest::getInt('catid',-1); //TODO zadání konkrétní kategorie
-    if ($categoryId==-1){  /*
+    if ($categoryId==-1){ 
+      //TODO výběr kategorie, do které se mají články přidávat
+     /*
       JError::raiseError(500,JText::_('FORBIDDEN'));
       return;                */
       $categoryId=0;
     }
     $title=JRequest::getString('title','');
+    $todo=JRequest::getString('todo','');
     $view=&$this->getView('IziNewReportArticle',$this->document->getType());
     $view->assign('categoryId',$categoryId);
+    if ($todo=='newReportArticle'){
+      $title=trim(strip_tags($title));
+      if ($title==''){
+        $view->assign('error',JText::_('ERROR_TITLE_NOT_SET'));////TODO
+      }
+    }
     if ($title!=''){     //TODO dodělání vytvoření nového článku
                     /*
       //vytvorime novy clanek
