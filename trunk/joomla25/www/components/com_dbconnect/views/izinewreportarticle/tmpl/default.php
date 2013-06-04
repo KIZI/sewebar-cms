@@ -6,7 +6,8 @@ defined('_JEXEC') or die('Restricted access');
                        
   echo '<form method="post">
           <input type="hidden" name="catId" value="'.@$this->categoryId.'" />
-          '.JText::_('TITLE').'&nbsp;&nbsp;
-          <input type="text" name="title" value="" /><input type="submit" value="'.JText::_('CREATE_ARTICLE').'" class="button" />
+          <label for="newArticleTitle">'.JText::_('TITLE').'</label>&nbsp;&nbsp;
+          <input type="text" name="title" id="newArticleTitle" value="" />
+          <input type="submit" value="'.JText::_('CREATE_ARTICLE').'" class="button" />
         </form>';     
 ?>
