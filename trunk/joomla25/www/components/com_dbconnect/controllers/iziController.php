@@ -1232,7 +1232,7 @@ class IziController extends JController{
         $view->assign('error',JText::_('ARTICLE_TITLE_NOT_SET'));////TODO
       }
     }
-    if ($title!=''){     //TODO dodělání vytvoření nového článku
+    if ($title!=''){     
       //připravení meta dat pro článek
       $userId=JRequest::getInt('user',-1);
       if (!($userId>=0)){
