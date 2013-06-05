@@ -99,7 +99,9 @@ class UserController extends JController{
    */
   public function logout(){
     $app = JFactory::getApplication();
-    if ($app->logout()){
+    $app->logout();
+    
+    if (JFactory::getUser()->guest){
       $view=&$this->getView('IziLoginOK',$this->document->getType());
       $view->assign('title',JText::_('SUCCESSFULLY_LOGGED_OUT'));
       $text=JText::_('SUCCESSFULLY_LOGGED_OUT_TEXT');
