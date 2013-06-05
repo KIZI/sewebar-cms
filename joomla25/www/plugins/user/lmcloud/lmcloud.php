@@ -16,6 +16,7 @@ defined('_JEXEC') or die;
  */
 class plgUserLmcloud extends JPlugin
 {
+  const LM_URL='http://connect-dev.lmcloud.vse.cz/SewebarConnect';
 
   public static function prepareKbi(){
     //TODO vazba na totožnou metodu v dbconnectModelConnections
