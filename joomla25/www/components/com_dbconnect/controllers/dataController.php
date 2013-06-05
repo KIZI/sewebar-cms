@@ -12,7 +12,7 @@ class DataController extends JController{
   /**
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
-  public function savePMMLArticle(){      
+  public function savePMMLArticle(){     
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',-1);
@@ -33,6 +33,7 @@ class DataController extends JController{
       
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);      
+      exit(var_dump($result));
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
         //máme vyexportovaný PMML soubor => uložíme ho do článku 
         /*uložení článku*/
