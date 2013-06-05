@@ -32,8 +32,8 @@ class DataController extends JController{
       $source=$this->getKbiSource($kbiId);         
       
       $options=array('export'=>$lmtaskId,'template'=>$template);
-      $result=$source->queryPost(null,$options);      
-      exit(var_dump($result));
+      $result=$source->queryPost(null,$options);
+            
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
         //máme vyexportovaný PMML soubor => uložíme ho do článku 
         /*uložení článku*/
