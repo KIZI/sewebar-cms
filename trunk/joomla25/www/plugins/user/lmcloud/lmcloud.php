@@ -48,7 +48,7 @@ class plgUserLmcloud extends JPlugin
 	 * @throws	Exception on error.
 	 */
 	public function onUserAfterSave($user, $isnew, $success, $msg)
-	{
+	{          
 		$app = JFactory::getApplication();
 
 		// convert the user parameters passed to the event
@@ -61,14 +61,18 @@ class plgUserLmcloud extends JPlugin
 		$args['password']	= $user['password'];
 
     $username=$this->prepareUserName($user['id']);
-		if ($isnew) {
-      $kbi=self::prepareKbi();
-      $kbi->registerUser($username,$user['password']);
-		}
-		else {
-			$kbi=self::prepareKbi();
-      $kbi->updateUser($username,'',$username,$user['password']);
-		}
+    try{
+  		if ($isnew) {
+        $kbi=self::prepareKbi();
+        $kbi->registerUser($username,$user['password']);
+  		}
+  		else {
+  			$kbi=self::prepareKbi();
+        $kbi->updateUser($username,'',$username,$user['password'],$user['email']);
+  		}
+    }catch (Exception $e){
+      exit(var_dump($e));
+    }
 	}
 
 	/**
