@@ -7,8 +7,6 @@ namespace LMWrapper.LISpMiner
 {
 	public class LMTaskPooler : Executable, ITaskLauncher
 	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof(LMTaskPooler));
-
 		private Process _process;
 
 		private readonly Stopwatch _stopwatch;
@@ -29,7 +27,7 @@ namespace LMWrapper.LISpMiner
 															},
 										};
 
-					this._process.Exited += new EventHandler(ProcessExited);
+					this._process.Exited += ProcessExited;
 				}
 
 				return this._process;
@@ -51,7 +49,10 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public int? TimeOut { get; set; }
 
-		public int KeepAlive { get; set; }
+		/// <summary>
+		/// /ShutdownDelaySec:<n>		... (O) number of seconds <0;86400> before the LM TaskPooler server is shutted down after currently the last waiting task is solved (default: 10)
+		/// </summary>
+		public int? ShutdownDelaySec { get; set; }
 
 		/// <summary>
 		/// /TaskCancel			... (O) to cancel task of given TaskID or name (if already running) or to remove it from queue
@@ -109,6 +110,12 @@ namespace LMWrapper.LISpMiner
 					arguments.AppendFormat("/TimeOut:{0} ", this.TimeOut);
 				}
 
+				// /ShutdownDelaySec:<n>
+				if (this.ShutdownDelaySec != null)
+				{
+					arguments.AppendFormat("/ShutdownDelaySec:{0} ", this.ShutdownDelaySec);
+				}
+
 				// /Quiet
 				if (this.Quiet)
 				{
@@ -152,11 +159,11 @@ namespace LMWrapper.LISpMiner
 
 			if (this.CancelAll || this.TaskCancel)
 			{
-				Log.Debug(String.Format("Launching Task cancelation: {0} {1}", this.ApplicationName, this.Arguments));
+				ExecutableLog.Debug(String.Format("Launching Task cancelation: {0} {1}", this.ApplicationName, this.Arguments));
 			}
 			else
 			{
-				Log.Debug(String.Format("Launching: {0} {1}", this.ApplicationName, this.Arguments));
+				ExecutableLog.Debug(String.Format("Launching: {0} {1}", this.ApplicationName, this.Arguments));
 			}
 
 			this._stopwatch.Start();
@@ -168,17 +175,24 @@ namespace LMWrapper.LISpMiner
 
 		private void ProcessExited(object sender, EventArgs e)
 		{
+			// we most probably already exited - there was an issue that this function was called twice
+			// using WaitForExit we are mixing synchronous and asynchronous way of process termination notification
+			if (this.Status == ExecutableStatus.Ready)
+			{
+				return;
+			}
+
 			this._stopwatch.Stop();
 			this.Status = ExecutableStatus.Ready;
 
 			if (this.CancelAll || this.TaskCancel)
 			{
-				Log.InfoFormat("Task cancelation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
+				ExecutableLog.DebugFormat("Task cancelation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
 							   this._stopwatch.Elapsed);
 			}
 			else
 			{
-				Log.InfoFormat("Result generation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
+				ExecutableLog.DebugFormat("Result generation finished in {2} ms: {0} {1}", this.ApplicationName, this.Arguments,
 							   this._stopwatch.Elapsed);
 			}
 

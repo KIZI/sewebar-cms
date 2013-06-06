@@ -157,7 +157,7 @@ namespace SewebarConnect.Controllers.TaskGen
 						case "Running":
 						// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
 						case "Waiting":
-							definition.Launcher.KeepAlive = 10;
+							definition.Launcher.ShutdownDelaySec = 10;
 							break;
 						// * Solved (úspěšně dokončena)
 						case "Solved":

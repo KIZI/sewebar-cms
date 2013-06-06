@@ -10,7 +10,7 @@
 
 		bool CancelAll { get; set; }
 
-		int KeepAlive { get; set; }
+		int? ShutdownDelaySec { get; set; }
 
 		void Execute();
 	}
