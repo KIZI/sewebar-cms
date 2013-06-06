@@ -144,6 +144,8 @@ namespace SewebarConnect.Controllers
 							{
 								var taskLauncher = definition.Launcher;
 								taskLauncher.TaskName = request.TaskName;
+								taskLauncher.ShutdownDelaySec = 0;
+
 								taskLauncher.Execute();
 							}
 							else
@@ -161,7 +163,7 @@ namespace SewebarConnect.Controllers
 						case "Running":
 						// * Waiting (čeká na spuštění -- pro TaskPooler, zatím neimplementováno)
 						case "Waiting":
-							definition.Launcher.KeepAlive = 10;
+							definition.Launcher.ShutdownDelaySec = 10;
 							break;
 						// * Solved (úspěšně dokončena)
 						case "Solved":

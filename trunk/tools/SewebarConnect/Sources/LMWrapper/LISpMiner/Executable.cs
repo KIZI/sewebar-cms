@@ -7,7 +7,7 @@ namespace LMWrapper.LISpMiner
 {
 	public abstract class Executable
 	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof(Executable));
+		protected static readonly ILog ExecutableLog = LogManager.GetLogger(typeof(Executable));
 
 		private readonly Stopwatch _stopwatch;
 
@@ -83,7 +83,7 @@ namespace LMWrapper.LISpMiner
 
 			this.Status = ExecutableStatus.Running;
 			
-			Log.DebugFormat("Launching: {0} {1}", this.ApplicationName, this.Arguments);
+			ExecutableLog.DebugFormat("Launching: {0} {1}", this.ApplicationName, this.Arguments);
 
 			this._stopwatch.Start();
 
@@ -93,7 +93,7 @@ namespace LMWrapper.LISpMiner
 			this.Status = ExecutableStatus.Ready;
 
 			this._stopwatch.Stop();
-			Log.InfoFormat("Finished: {0} ms. ({1} {2})", this._stopwatch.Elapsed, this.ApplicationName, this.Arguments);
+			ExecutableLog.DebugFormat("Finished: {0} ms. ({1} {2})", this._stopwatch.Elapsed, this.ApplicationName, this.Arguments);
 			this._stopwatch.Reset();
 		}
 	}

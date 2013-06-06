@@ -21,7 +21,10 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public string TaskName { get; set; }
 
-		public int KeepAlive { get; set; }
+		/// <summary>
+		/// /ShutdownDelaySec:<n>		... (O) number of seconds <0;86400> before the LM TaskPooler server is shutted down after currently the last waiting task is solved (default: 10)
+		/// </summary>
+		public int? ShutdownDelaySec { get; set; }
 
 		/// <summary>
 		/// /TaskCancel			... (O) to cancel task of given TaskID or name (if already running) or to remove it from queue
@@ -97,6 +100,12 @@ namespace LMWrapper.LISpMiner
 				if (this.TimeOut != null)
 				{
 					arguments.AppendFormat("/TimeOut:{0} ", this.TimeOut);
+				}
+
+				// /ShutdownDelaySec:<n>
+				if (this.ShutdownDelaySec != null)
+				{
+					arguments.AppendFormat("/ShutdownDelaySec:{0} ", this.ShutdownDelaySec);
 				}
 
 				// /Quiet
