@@ -18,6 +18,7 @@ namespace SewebarConnect.Controllers
 	public class TasksController : ApiBaseController
 	{
 		private static readonly ILog log = LogManager.GetLogger(typeof(TasksController));
+		private const string DefaultTemplate = "ETreeMiner.Task.Template.PMML";
 
 		protected ILog Log
 		{
@@ -198,6 +199,54 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
+		private TaskResponse ExportTask(string taskName)
+		{
+			LMSwbExporter exporter = this.LISpMiner.Exporter;
+
+			try
+			{
+				var request = new TaskInfoRequest(this);
+				var response = new TaskResponse();
+
+				request.TaskName = taskName;
+
+				if (this.LISpMiner != null && request.TaskName != null)
+				{
+					exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
+													request.TaskFileName, DateTime.Now);
+
+					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
+													  request.GetTemplate(DefaultTemplate));
+
+					exporter.TaskName = request.TaskName;
+					exporter.NoEscapeSeqUnicode = true;
+
+					// try to export results
+					exporter.Execute();
+
+					if (!System.IO.File.Exists(exporter.Output))
+					{
+						throw new LISpMinerException("Results generation did not succeed. Task possibly does not exist but no appLog generated.");
+					}
+
+					response.OutputFilePath = exporter.Output;
+				}
+				else
+				{
+					throw new Exception("No LISpMiner instance or task defined.");
+				}
+
+				return response;
+			}
+			finally
+			{
+				// clean up
+				exporter.Output = String.Empty;
+				exporter.Template = String.Empty;
+				exporter.TaskName = String.Empty;
+			}
+		}
+
 		private Response CancelTask(TaskDefinition definition)
 		{
 			var taskPooler = definition.Launcher;
@@ -242,13 +291,21 @@ namespace SewebarConnect.Controllers
 			return "List of all Tasks for given miner";
 		}
 
+		public TaskResponse Get(string taskName)
+		{
+			// when exporting we dont need to know what was task type
+			var name = taskName ?? this.ControllerContext.RouteData.Values["taskType"] as string;
+
+			return this.ExportTask(name);
+		}
+
 		public TaskResponse Post()
 		{
 			var taskType = this.ControllerContext.RouteData.Values["taskType"] as string ?? "task";
 
 			var definition = new TaskDefinition
 				{
-					DefaultTemplate = "ETreeMiner.Task.Template.PMML"
+					DefaultTemplate = DefaultTemplate
 				};
 
 			switch (taskType)

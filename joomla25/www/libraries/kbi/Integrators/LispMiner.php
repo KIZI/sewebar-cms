@@ -185,11 +185,19 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$data = array();
 		$client = $this->getRestClient();
 
+		if(isset($options['template'])) {
+			$data['template'] = $options['template'];
+			KBIDebug::info("Using LM exporting template {$data['template']}", 'LISpMiner');
+		}
+
 		if(isset($options['export'])) {
 			$task = $options['export'];
 			$url = "$url/miners/{$server_id}/tasks/{$task}";
 
 			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
+			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
+
+			return $client->get("$url?{$client->encodeData($data)}");
 		} else {
 			$pooler = $this->getPooler();
 
@@ -209,16 +217,11 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 				default:
 					$url = "$url/miners/{$server_id}/tasks/task";
 			}
+
+			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
+
+			return $client->post("$url?{$client->encodeData($data)}", $query);
 		}
-
-		if(isset($options['template'])) {
-			$data['template'] = $options['template'];
-			KBIDebug::info("Using LM exporting template {$data['template']}", 'LISpMiner');
-		}
-
-		KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
-
-		return $client->post("$url?{$client->encodeData($data)}", $query);
 	}
 
 	public function cancelTask($taskName)

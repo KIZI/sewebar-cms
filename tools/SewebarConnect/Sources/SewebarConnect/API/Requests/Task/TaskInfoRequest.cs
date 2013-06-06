@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Web;
 using SewebarConnect.Controllers;
 
 namespace SewebarConnect.API.Requests.Task
@@ -11,6 +12,7 @@ namespace SewebarConnect.API.Requests.Task
 
 		private string _taskFileName;
 		private string _taskPath;
+	    private string _taskName = null;
 
 		private string Task
 		{
@@ -22,7 +24,8 @@ namespace SewebarConnect.API.Requests.Task
 
 		public string TaskName
 		{
-			get { return this.Task; }
+			get { return this._taskName ?? this.Task; }
+			set { this._taskName = value; }
 		}
 
 		public string TaskFileName
@@ -65,6 +68,11 @@ namespace SewebarConnect.API.Requests.Task
 
 		public TaskInfoRequest(BaseController controller)
 			: base(controller.LISpMiner, controller.HttpContext)
+		{
+		}
+
+		public TaskInfoRequest(ApiBaseController controller)
+			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
 		}
 
