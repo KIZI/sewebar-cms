@@ -197,7 +197,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
 			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
 
-			return $client->get("$url?{$client->encodeData($data)}");
+			return $client->get("$url", $data);
 		} else {
 			$pooler = $this->getPooler();
 
