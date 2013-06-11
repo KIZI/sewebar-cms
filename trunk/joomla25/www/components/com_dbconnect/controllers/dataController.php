@@ -93,7 +93,7 @@ class DataController extends JController{
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
         var_dump($result);
       }
-    }catch (Exception e){
+    }catch (Exception $e){
       echo 'EXPORT FAILED, PLEASE TRY IT AGAIN LATER...';
     }
   }
