@@ -98,17 +98,17 @@ class DataController extends JController{
         //TODO doplnění příznaku vybraných pravidel
 
         $pmml2arXslt=new DOMDocument();
-        $pmml2arXslt->load('media/com_dbconnect/css/pmml2ar.xslt');
+        $pmml2arXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/pmml2ar.xslt');
 
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($pmml2arXslt);
         $arXml=$proc->transformToDoc($pmmlXml);
 
         $pmml2arXslt=new DOMDocument();
-        $pmml2arXslt->load('media/com_dbconnect/css/pmml2ar.xslt');
+        $pmml2arXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/pmml2ar.xslt');
 
         $proc2 = new XSLTProcessor();
-        $proc2->importStylesheet('media/com_dbconnect/css/ar2drl_demo.xslt');
+        $proc2->importStylesheet(JPATH_SITE.'/media/com_dbconnect/xml/ar2drl_demo.xslt');
 
         $drlStr=$proc2->transformToXml($arXml);
 
