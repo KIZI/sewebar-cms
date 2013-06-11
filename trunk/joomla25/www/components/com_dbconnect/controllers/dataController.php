@@ -74,8 +74,28 @@ class DataController extends JController{
     $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
   }
   
+  /**
+   *  Akce pro export pravidel pro BR server
+   */     
   public function exportBR(){
-    exit('export BR');
+    $kbiId=JRequest::getInt('kbi',-1);
+    $lmtaskId=JRequest::getVar('lmtask','');
+    $articleId=JRequest::getInt('articleId',-1);
+    $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
+    
+    try{
+    
+      $source=$this->getKbiSource($kbiId);         
+      
+      $options=array('export'=>$lmtaskId,'template'=>$template);
+      $result=$source->queryPost(null,$options);
+      //exit(var_dump($result));      
+      if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
+        var_dump($result);
+      }
+    }catch (Exception e){
+      echo 'EXPORT FAILED, PLEASE TRY IT AGAIN LATER...';
+    }
   }
   
   
