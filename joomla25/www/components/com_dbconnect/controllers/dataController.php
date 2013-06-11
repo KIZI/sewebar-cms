@@ -73,7 +73,52 @@ class DataController extends JController{
 	  }
     $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
   }
-  
+
+  /**
+   * Funkce pro označení vybraných asociačních pravidel v rámci PMML (na základě seznamu jejich IDček)
+   * @param $domDocument
+   * @param $idsArr
+   */
+  private function markSelectedRules(&$domDocument,$idsArr){
+    if (!is_array($idsArr)){
+      $idsArr=array(0=>$idsArr);
+    }
+    if (count($idsArr)>0){
+      $xpath = new DOMXpath($domDocument);
+      foreach($idsArr as $id){
+        //označíme jednotlivá pravidla
+        /** @var $elements DomNode[] */
+        $elements = $xpath->query("//AssociationRule[@id=".$id."]");
+
+        if (!empty($elements)){
+          foreach ($elements as $element) {
+            //projdeme potomky a zkusíme najít FourFtTable
+            $nodeInsertBefore=null;
+            if ($element->hasChildNodes){
+              /** @var $childNodes DomNode[] */
+              $childNodes=$element->childNodes;
+              foreach ($childNodes as $childNode){
+                if ($childNode->name=='FourFtTable'){
+                  $nodeInsertBefore=$childNode;
+                  break;
+                }
+              }
+            }
+
+            $annotationNode=$domDocument->createElement('Annotation');
+            $annotationNode->appendChild($domDocument->createElement('RuleAnnotation','interesting'));
+
+            if (!is_null($nodeInsertBefore)){
+              $nodeInsertBefore->insertBefore($annotationNode);
+            }else{
+              $element->appendChild($annotationNode);
+            }
+          }
+        }
+      }
+    }
+  }
+
   /**
    *  Akce pro export pravidel pro BR server
    */     
@@ -82,41 +127,61 @@ class DataController extends JController{
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',-1);
     $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
-    
+
+    if (JRequest::getVar('show','')!='ok'){
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=exportBR&show=ok&tmpl=component&kbi='.$kbiId.'&lmtask='.$lmtaskId.'&rules='.JRequest::getString('rules'),false));
+    }
+
     try{
-    
       $source=$this->getKbiSource($kbiId);         
       
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);
-      //exit(var_dump($result));      
+      //exit(var_dump($result));
+
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
         //máme k dispozicii PMML dokument - doplníme označení pravidel a následně spustíme transformace
+
         $pmmlXml=new DOMDocument();
         $pmmlXml->loadXML($result);
-        //var_dump($pmmlXml);
-        //TODO doplnění příznaku vybraných pravidel
+
+        //zpracování IDček a jejich označení v PMMLku
+        $selectedRulesIds=JRequest::getString('rules');
+        if (!($rulesIdsArr=json_decode($selectedRulesIds))){
+          $rulesIdsArr=explode(',',$selectedRulesIds);
+        }
+        if (empty($rulesIdsArr)){
+          JError::raiseError(500,'No selected rules!');
+        }
+        $this->markSelectedRules($pmmlXml,$rulesIdsArr);
 
         $pmml2arXslt=new DOMDocument();
-        $pmml2arXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/pmml2ar.xslt');
+        $pmml2arXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/pmml2ar_demo.xslt');
 
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($pmml2arXslt);
         $arXml=$proc->transformToDoc($pmmlXml);
 
-        $pmml2arXslt=new DOMDocument();
-        $pmml2arXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/pmml2ar.xslt');
+        //exit(var_dump($arXml->saveXML()));
+
+        $ar2drlXslt=new DOMDocument();
+        $ar2drlXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/ar2drl_demo.xslt');
 
         $proc2 = new XSLTProcessor();
-        $proc2->importStylesheet(JPATH_SITE.'/media/com_dbconnect/xml/ar2drl_demo.xslt');
+        $proc2->importStylesheet($ar2drlXslt);
 
-        $drlStr=$proc2->transformToXml($arXml);
+        $drlRulesXml=$proc2->transformToDoc($arXml);
 
+        $drlRulesXml=simplexml_import_dom($drlRulesXml);
         //--máme k dispozicii PMML dokument - doplníme označení pravidel a následně spustíme transformace
-        var_dump($drlStr);
+
+        //zobrazíme view s přehledem
+        $view=&$this->getView('DataExportBR','html');
+        $view->assignRef('drlXml',$drlRulesXml);
+        $view->display();
       }
     }catch (Exception $e){
-      echo 'EXPORT FAILED, PLEASE TRY IT AGAIN LATER...';
+      JError::raiseError(500, 'EXPORT FAILED, PLEASE TRY IT AGAIN LATER...');
     }
   }
   
@@ -336,9 +401,9 @@ class DataController extends JController{
     require_once (JPATH_COMPONENT.DS.'../com_kbi/models/transformator.php');
     $config = array(
           			'source' => $kbiId,
-          			'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
-          			'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
-          			'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
+          			'query' => JRequest::getVar('query', null, 'default', 'none', JREQUEST_ALLOWRAW),
+          			'xslt' => JRequest::getVar('xslt', null, 'default', 'none', JREQUEST_ALLOWRAW),
+          			'parameters' => JRequest::getVar('parameters', null, 'default', 'none', JREQUEST_ALLOWRAW)
           		);                          
 		return new KbiModelTransformator($config);
   }

@@ -15,7 +15,7 @@
 
     <xsl:template match="guha:AssociationModel/AssociationRules">
         <AssociationRules>
-            <xsl:apply-templates select="AssociationRule" /><!--TODO výběr jen vybraných pravidel pomocí atributu! -->
+            <xsl:apply-templates select="AssociationRule[./Annotation//RuleAnnotation/text()='interesting']" /><!--TODO výběr jen vybraných pravidel pomocí atributu! -->
         </AssociationRules>
     </xsl:template>
     
