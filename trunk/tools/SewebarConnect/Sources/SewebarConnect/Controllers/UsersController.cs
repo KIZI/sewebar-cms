@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Http;
 using System.Web.Mvc;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.Users;
@@ -9,7 +10,7 @@ using SewebarKey.Repositories;
 
 namespace SewebarConnect.Controllers
 {
-    public class UsersController : BaseController
+    public class UsersController : ApiBaseController
     {
 	    private IRepository _repository;
 
@@ -22,9 +23,33 @@ namespace SewebarConnect.Controllers
 		}
 
 		[Filters.NHibernateTransaction]
-		public ActionResult Register()
+		public UsersResponse Get()
 		{
-			var request = new UserRequest(this.HttpContext);
+			var users = Repository.FindAll<SewebarKey.User>();
+
+			return new UsersResponse(users);
+		}
+
+		[Filters.NHibernateTransaction]
+		public DatabaseResponse Get([FromUri]string name, [FromUri]string password, [FromUri]string db_id)
+		{
+			Database database = null;
+
+			User user = this.Repository.Query<User>()
+				.FirstOrDefault(u => u.Username == name && u.Password == password);
+
+			if (user != null)
+			{
+				database = user.Databases.FirstOrDefault(d => d.Name == db_id);
+			}
+
+			return new DatabaseResponse(database);
+		}
+
+		[Filters.NHibernateTransaction]
+		public UserResponse Post()
+		{
+			var request = new UserRequest(this);
 			
 			User user = this.Repository.Query<User>()
 				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
@@ -50,35 +75,13 @@ namespace SewebarConnect.Controllers
 
 			Repository.Add(user);
 
-			return new XmlResult
-				{
-					Data = new UserResponse(user)
-				};
+			return new UserResponse(user);
 		}
 
 		[Filters.NHibernateTransaction]
-		public ActionResult Get(string name, string password, string db_id)
+		public UserResponse Put()
 		{
-			Database database = null;
-
-			User user = this.Repository.Query<User>()
-				.FirstOrDefault(u => u.Username == name && u.Password == password);
-			
-			if (user != null)
-			{
-				database = user.Databases.FirstOrDefault(d => d.Name == db_id);
-			}
-
-			return new XmlResult
-				{
-					Data = new DatabaseResponse(database)
-				};
-		}
-
-		[Filters.NHibernateTransaction]
-		public ActionResult Update()
-		{
-			var request = new UserRequest(this.HttpContext);
+			var request = new UserRequest(this);
 
 			User user = this.Repository.Query<User>()
 				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
@@ -100,21 +103,7 @@ namespace SewebarConnect.Controllers
 
 			this.Repository.Save(user);
 
-			return new XmlResult
-			{
-				Data = new UserResponse(user)
-			};
+			return new UserResponse(user);
 		}
-
-	    [Filters.NHibernateTransaction]
-        public ActionResult List()
-	    {
-		    var users = Repository.FindAll<SewebarKey.User>();
-
-			return new XmlResult
-				{
-					Data = new UsersResponse(users)
-				};
-	    }
     }
 }

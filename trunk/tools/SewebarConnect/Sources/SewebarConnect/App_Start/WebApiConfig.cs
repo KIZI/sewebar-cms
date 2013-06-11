@@ -19,6 +19,16 @@ namespace SewebarConnect
 					}
 			);
 
+			config.Routes.MapHttpRoute(
+				name: "UsersApi",
+				routeTemplate: "users/{id}",
+				defaults: new
+				{
+					controller = "Users",
+					id = UrlParameter.Optional
+				}
+			);
+
 			config.Formatters.Remove(config.Formatters.JsonFormatter);
 			config.Formatters.Remove(config.Formatters.XmlFormatter);
 			config.Formatters.Add(new API.ResponseMediaTypeFormatter());

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Web.Mvc;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
 using NHibernate;
 using NHibernate.Context;
 
@@ -13,13 +14,13 @@ namespace SewebarConnect.Filters
 			get { return MvcApplication.SessionFactory; }
 		}
 
-		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		public override void OnActionExecuting(HttpActionContext actionContext)
 		{
 			ISession session = SessionFactory.OpenSession();
 			CurrentSessionContext.Bind(session);
 		}
 
-		public override void OnResultExecuted(ResultExecutedContext filterContext)
+		public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
 		{
 			ISession session = CurrentSessionContext.Unbind(SessionFactory);
 			session.Close();

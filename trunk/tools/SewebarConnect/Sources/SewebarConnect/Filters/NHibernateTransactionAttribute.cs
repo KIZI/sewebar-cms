@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Web.Mvc;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
 using NHibernate;
 
 namespace SewebarConnect.Filters
@@ -12,14 +15,14 @@ namespace SewebarConnect.Filters
 			get { return SessionFactory.GetCurrentSession(); }
 		}
 
-		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		public override void OnActionExecuting(HttpActionContext filterContext)
 		{
 			base.OnActionExecuting(filterContext);
 
 			Session.BeginTransaction();
 		}
 
-		public override void OnResultExecuted(ResultExecutedContext filterContext)
+		public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
 		{
 			ITransaction tx = Session.Transaction;
 
@@ -28,24 +31,27 @@ namespace SewebarConnect.Filters
 				Session.Transaction.Commit();
 			}
 
-			base.OnResultExecuted(filterContext);
+			base.OnActionExecuted(actionExecutedContext);
 		}
 
-		public void OnException(ExceptionContext filterContext)
+		public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
 		{
-			try
-			{
-				ITransaction tx = Session.Transaction;
-
-				if (tx != null && tx.IsActive)
+			return Task.Factory.StartNew(() =>
 				{
-					Session.Transaction.Rollback();
-				}
-			}
-			catch
-			{
-				// possibly no session...
-			}
+					try
+					{
+						ITransaction tx = Session.Transaction;
+
+						if (tx != null && tx.IsActive)
+						{
+							Session.Transaction.Rollback();
+						}
+					}
+					catch
+					{
+						// possibly no session...
+					}
+				});
 		}
 	}
 }

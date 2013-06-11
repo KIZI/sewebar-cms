@@ -42,6 +42,24 @@ namespace SewebarConnect.Controllers
 			return View();
 		}
 
+		#region Miners
+
+		[HttpPost]
+		[ErrorHandler]
+		public XmlResult Register()
+		{
+			var request = new RegistrationRequest(this.HttpContext);
+			var id = ShortGuid.NewGuid();
+			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
+
+			MvcApplication.Environment.Register(miner);
+
+			return new XmlResult
+			{
+				Data = new RegistrationResponse { Id = id }
+			};
+		}
+
 		public ActionResult Miners()
 		{
 			return View();
@@ -75,21 +93,7 @@ namespace SewebarConnect.Controllers
 			       	};
 		}
 
-		[HttpPost]
-		[ErrorHandler]
-		public XmlResult Register()
-		{
-			var request = new RegistrationRequest(this.HttpContext);
-			var id = ShortGuid.NewGuid();
-			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
-
-			MvcApplication.Environment.Register(miner);
-
-			return new XmlResult
-			       	{
-			       		Data = new RegistrationResponse {Id = id}
-			       	};
-		}
+		#endregion
 
 		[ErrorHandler]
 		public XmlResult RemoveDsn()
