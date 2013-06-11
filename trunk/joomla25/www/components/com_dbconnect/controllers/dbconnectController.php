@@ -90,7 +90,7 @@ class dbconnectController extends JController{
   /**
    *  Akce pro vylistovani všech připojení daného uživatele
    */     
-  public function selectConnection(){ 
+  public function selectConnection(){
     $view=&$this->getView('selectConnection',$this->document->getType());
     $connectionsModel= & $this->getModel('Connections', 'dbconnectModel');
     $view->setModel($connectionsModel,true);
