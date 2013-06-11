@@ -290,17 +290,18 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function registerUser($username, $password)
 	{
 		// TODO: credentials for given user (from session)
+		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users/Register";
+		$url = "$url/Users";
 
 		$data = array(
 			'name' => $username,
 			'password' => $password
 		);
 
-		$response = $this->requestPost($url, $data);
+		$response = $client->post($url, $data);
 
-		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "User registered");
+		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User registered");
 
 		return $this->parseResponse($response, 'User successfully registered.');
 	}
@@ -327,20 +328,22 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 * @return mixed
 	 */
 	public function updateUser($username, $password, $new_username, $new_password, $new_email)
-	{    //TODO přibyl sem nový parametr $new_email
+	{
+		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users/Update";
+		$url = "$url/Users";
 
 		$data = array(
 			'name' => $username,
 			'password' => $password,
 			'new_name' => $new_username,
-			'new_password' => $new_password
+			'new_password' => $new_password,
+			'new_email' => $new_email
 		);
 
-		$response = $this->requestCurlPost($url, $data);
+		$response = $client->put($url, $data);
 
-		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "User updated");
+		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User updated");
 
 		return $this->parseResponse($response, 'User successfully updated.');
 	}
@@ -371,8 +374,9 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 */
 	public function registerUserDatabase($username, $password, $db_id, $db_password)
 	{
+		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users/Register";
+		$url = "$url/Users";
 
 		$data = array(
 			'name' => $username,
@@ -381,9 +385,9 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			'db_password' => $db_password
 		);
 
-		$response = $this->requestPost($url, $data);
+		$response = $client->post($url, $data);
 
-		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "User registered");
+		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User registered");
 
 		return $this->parseResponse($response, 'User successfully registered.');
 	}
@@ -396,8 +400,9 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 */
 	public function getDatabasePassword($username, $password, $db_id)
 	{
+		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users/Get";
+		$url = "$url/Users";
 
 		$data = array(
 			'name' => $username,
@@ -405,9 +410,9 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			'db_id' => $db_id
 		);
 
-		$response = $this->requestGet($url, $data);
+		$response = $client->get($url, $data);
 
-		KBIDebug::log(array('data' => $data, 'response' => $response, 'url' => $url), "Password retring");
+		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "Password retring");
 
 		return $this->parseDatabasePassword($response);
 	}
