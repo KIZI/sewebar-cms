@@ -91,7 +91,28 @@ class DataController extends JController{
       $result=$source->queryPost(null,$options);
       //exit(var_dump($result));      
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
-        var_dump($result);
+        //máme k dispozicii PMML dokument - doplníme označení pravidel a následně spustíme transformace
+        $pmmlXml=new DOMDocument();
+        $pmmlXml->loadXML($result);
+        //TODO doplnění příznaku vybraných pravidel
+
+        $pmml2arXslt=new DOMDocument();
+        $pmml2arXslt->load('media/com_dbconnect/css/pmml2ar.xslt');
+
+        $proc = new XSLTProcessor();
+        $proc->importStyleSheet($pmml2arXslt);
+        $arXml=$proc->transformToDoc($pmmlXml);
+
+        $pmml2arXslt=new DOMDocument();
+        $pmml2arXslt->load('media/com_dbconnect/css/pmml2ar.xslt');
+
+        $proc2 = new XSLTProcessor();
+        $proc2->importStylesheet('media/com_dbconnect/css/ar2drl_demo.xslt');
+
+        $drlStr=$proc2->transformToXml($arXml);
+
+        //--máme k dispozicii PMML dokument - doplníme označení pravidel a následně spustíme transformace
+        var_dump($drlStr);
       }
     }catch (Exception $e){
       echo 'EXPORT FAILED, PLEASE TRY IT AGAIN LATER...';
