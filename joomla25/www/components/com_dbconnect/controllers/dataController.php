@@ -94,7 +94,7 @@ class DataController extends JController{
         //máme k dispozicii PMML dokument - doplníme označení pravidel a následně spustíme transformace
         $pmmlXml=new DOMDocument();
         $pmmlXml->loadXML($result);
-        var_dump($pmmlXml);
+        //var_dump($pmmlXml);
         //TODO doplnění příznaku vybraných pravidel
 
         $pmml2arXslt=new DOMDocument();
