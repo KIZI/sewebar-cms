@@ -11,7 +11,7 @@
   echo '<div class="font-style:italic;">In following code, variable blocks <strong>%RULEID%</strong> and <strong>%PROJECTID%</strong> should be replaced with IDs (while saving into drl rules base)</div>';
   echo '<div>';
   //vypsani jednotlivych pravidel
-  $drlStr="import net.vojir.droolsserver.drools.DrlObj;\nimport net.vojir.droolsserver.drools.DrlResult;\n\n";
+  $drlStr="import cz.vse.droolsserver.drools.DrlObj;\nimport cz.vse.droolsserver.drools.DrlResult;\n\n";
 
   if (count($this->drlXml->Rule)){
     foreach ($this->drlXml->Rule as $rule){

@@ -2,9 +2,12 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://keg.vse.cz/ns/arbuilder0_2" xmlns:ar="http://keg.vse.cz/ns/arbuilder0_2"
     xmlns:arf="http://keg.vse.cz/ns/arfeatures_02" xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1"
-    xmlns:data="http://keg.vse.cz/ns/datadescription0_2" xmlns:bkef="http://keg.vse.cz/bkef_patterns" elementFormDefault="unqualified" >
+    xmlns:data="http://keg.vse.cz/ns/datadescription0_2" xmlns:bkef="http://keg.vse.cz/bkef_patterns" elementFormDefault="unqualified"  version="0.3.1">
     <xs:annotation>
-        <xs:documentation>Version 0.3. 
+        <xs:documentation>Version 0.3.1
+            Change from 0.3 to 0.3.1
+            * Moved definition of RuleAnnotation to GUHA0.1rev1.xsd
+            
             Change from 0.2 to 0.3
             * Removed TaskSetting and AssociationRules modes as it is not used (GUHA AR PMML is used instead)
             * Added AnnotatedAssociationRules - used to send rules with user feedback to xquery 
@@ -80,12 +83,14 @@
     <xs:element type="ar:BBA" name="BBA"/>
     <xs:element type="guha:DBA" name="DBA"/>
    </xs:choice>
-   <xs:element name="AssociationRule" type="ar:AnnotatedAssociationRule" maxOccurs="unbounded"/>
+   <xs:element name="AssociationRule" type="guha:AssociationRule" maxOccurs="unbounded"/>
    
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="AnnotatedAssociationRule">
-  <!-- redefine  guha:AssociationRule  so that UserFeedback is added-->
+    
+    <!-- Moved to GUHA0.1rev1.xsd -->
+ <!--xs:complexType name="AnnotatedAssociationRule">
+  
   <xs:complexContent>
    <xs:extension base="guha:AssociationRule">
     <xs:sequence>
@@ -107,7 +112,7 @@
    <xs:enumeration value="interesting"/>   
    <xs:enumeration value="not interesting"/>
   </xs:restriction>
- </xs:simpleType>
+ </xs:simpleType-->
  
     <xs:complexType name="BBA">
         <xs:sequence>
