@@ -74,6 +74,9 @@ class DataController extends JController{
     $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
   }
   
+  public function exportBR(){
+    exit('export BR');
+  }
   
   
   /**
