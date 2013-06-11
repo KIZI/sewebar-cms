@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using SewebarConnect.Controllers;
 
 namespace SewebarConnect.API.Requests.Users
 {
@@ -37,7 +38,8 @@ namespace SewebarConnect.API.Requests.Users
 			get { return this.HttpContext.Request["db_password"]; }
 		}
 
-		public UserRequest(HttpContextBase httpContext) : base(httpContext)
+		public UserRequest(ApiBaseController controller)
+			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
 		}
 	}

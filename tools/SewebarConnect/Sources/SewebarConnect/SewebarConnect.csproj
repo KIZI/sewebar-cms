@@ -169,7 +169,6 @@
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DataDictionaryController.cs" />
     <Compile Include="Controllers\MinersController.cs" />
-    <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TaskGen\GridPoolController.cs" />
     <Compile Include="Controllers\TaskGen\ProcPoolController.cs" />
     <Compile Include="Controllers\TaskGen\TaskGenBaseController.cs" />
