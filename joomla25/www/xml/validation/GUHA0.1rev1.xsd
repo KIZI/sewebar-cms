@@ -4,15 +4,18 @@
     xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1" xmlns:pmml="http://www.dmg.org/PMML-4_0"
     elementFormDefault="unqualified">
     <!--  CHANGE LOG
+        29/4/13: added RuleAnnotation element on AssociationRule. This element was moved from the ARBuilder0_2.xsd.
+                
         5/7/11: added id attribute to CatRef element. Changed type from string to CatRefType on Coefficient element.
         purpose: allow references to FDML dictionaries by category id        
+        
     -->
     <!-- http://www.xfront.com/HideVersusExpose.html -->
     <xs:annotation>
         <xs:documentation>The only root-level declarations in the schema are the models, their direct children and reference types.</xs:documentation>
     </xs:annotation>
     <xs:import namespace="http://www.dmg.org/PMML-4_0"
-        schemaLocation="http://dmg.org/v4-0/pmml-4-0.xsd"/>
+        schemaLocation="http://www.dmg.org/v4-0-1/pmml-4-0.xsd"/>
 
     <xs:complexType name="Extension">
         <xs:complexContent mixed="true">
@@ -238,6 +241,7 @@
         <xs:sequence>
             <xs:element name="Text" type="Text" minOccurs="0"/>
             <xs:element name="IMValue" type="IMValue" maxOccurs="unbounded"/>
+            <xs:element name="Annotation" type="RuleAnnotation" minOccurs="0"></xs:element>
             <xs:element name="FourFtTable" type="FourFtTable" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="antecedent" type="BARef"/>
@@ -246,6 +250,20 @@
         <xs:attribute name="id" type="xs:NMTOKEN"/>
     </xs:complexType>
 
+    <xs:complexType name="RuleAnnotation">
+        <xs:sequence>
+            <xs:element name="Interestingness" type="InterestingnessEnum"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="InterestingnessEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="interesting"/>   
+            <xs:enumeration value="not interesting"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
     <xs:complexType name="SD4ftRules">
         <xs:sequence>
             <xs:element name="BBA" type="BBA" minOccurs="0" maxOccurs="unbounded"/>
