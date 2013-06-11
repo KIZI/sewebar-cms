@@ -1,6 +1,7 @@
 <?php
 
-class RESTClient {
+class RESTClient
+{
 	private function getData($_data)
 	{
 		$data = $_data;
@@ -57,6 +58,25 @@ class RESTClient {
 		curl_setopt($ch, CURLOPT_VERBOSE, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
+
+		$response = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+
+		return $response;
+	}
+
+	public function put($url, $_data)
+	{
+		$data = $this->getData($_data);
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_VERBOSE, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
