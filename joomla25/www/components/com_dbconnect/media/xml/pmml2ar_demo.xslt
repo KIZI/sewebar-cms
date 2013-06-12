@@ -35,7 +35,7 @@
     
     <xsl:template match="guha:AssociationModel/AssociationRules/DBA">
         <xsl:choose>
-            <xsl:when test="count(current()/BARef)>1">
+            <xsl:when test="(count(current()/BARef)>1) or (@connective!='Conjunction')">
                 <Cedent> 
                     <xsl:attribute name="connective"><xsl:value-of select="current()/@connective"/></xsl:attribute>
                     <xsl:apply-templates select="../DBA[@id=current()/BARef/text()]"></xsl:apply-templates>

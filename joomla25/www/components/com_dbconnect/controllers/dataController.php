@@ -88,7 +88,9 @@ class DataController extends JController{
       foreach($idsArr as $id){
         //označíme jednotlivá pravidla
         /** @var $elements DomNode[] */
-        $elements = $xpath->query("//AssociationRule[@id=".$id."]");
+        $xpath->registerNamespace('guha','http://keg.vse.cz/ns/GUHA0.1rev1');
+        $elements = $xpath->query("/guha:AssociationModel/AssociationRule[@id=".$id."]");//TODO možná sem přidat přesnou cestu
+        $elements = $xpath->query("//AssociationRule[@id=".$id."]"); //další varianta ||@id=".$id." or @id=".$id."||
 
         if (!empty($elements)){
           foreach ($elements as $element) {
