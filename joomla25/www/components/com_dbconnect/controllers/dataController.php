@@ -208,7 +208,7 @@ class DataController extends JController{
     $dataModel=&$this->getModel('Data','dbconnectModel');     
     $articles=$dataModel->getArticlesList($task->id,'report'); 
     $articlesArr=array();
-    if (count($articles)>0){  
+    if (count($articles)>0){                                                /**/
       foreach ($articles as $article){
       	$articlesArr[$article->id]=$article->title;
       }
@@ -220,7 +220,7 @@ class DataController extends JController{
    *  Akce pro zobrazení konkrétního článku v Joomle - na základě zadaného IDčka
    */
   public function showArticle(){
-    $articleId=JRequest::getInt('id',-1);
+    $articleId=JRequest::getInt('id',JRequest::getInt('article',-1));
     if ($articleId>0){
       $this->setRedirect(JRoute::_('index.php?view=article&id='.$articleId));
     }else{
