@@ -10,9 +10,10 @@ using SewebarKey.Repositories;
 
 namespace SewebarConnect.Controllers
 {
-    public class UsersController : ApiBaseController
-    {
-	    private IRepository _repository;
+	[APIErrorHandler]
+	public class UsersController : ApiBaseController
+	{
+		private IRepository _repository;
 
 		protected IRepository Repository 
 		{
@@ -31,12 +32,12 @@ namespace SewebarConnect.Controllers
 		}
 
 		[Filters.NHibernateTransaction]
-		public DatabaseResponse Get([FromUri]string name, [FromUri]string password, [FromUri]string db_id)
+		public DatabaseResponse Get([FromUri]string db_id, [FromUri]string name = "", [FromUri]string password = "")
 		{
 			Database database = null;
 
 			User user = this.Repository.Query<User>()
-				.FirstOrDefault(u => u.Username == name && u.Password == password);
+				.FirstOrDefault(u => u.Username == (name ?? "") && u.Password == (password ?? ""));
 
 			if (user != null)
 			{
