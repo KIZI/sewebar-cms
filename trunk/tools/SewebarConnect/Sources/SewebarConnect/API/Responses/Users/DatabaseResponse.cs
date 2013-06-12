@@ -9,16 +9,20 @@ namespace SewebarConnect.API.Responses.Users
 
 		protected override XElement GetBody()
 		{
-			var body = new XElement("database");
-
 			if (this.Database != null)
 			{
+				var body = new XElement("database");
+
 				body.Add(
 					new XAttribute("name", this.Database.Name),
 					new XAttribute("password", this.Database.Password));
-			}
 
-			return body;
+				return body;
+			}
+			else
+			{
+				return base.GetBody();
+			}
 		}
 
 		public DatabaseResponse(Database db)
