@@ -164,7 +164,7 @@ class DataController extends JController{
         $proc->importStyleSheet($pmml2arXslt);
         $arXml=$proc->transformToDoc($pmmlXml);
 
-        //exit(var_dump($arXml->saveXML()));
+        exit(var_dump($arXml->saveXML()));
 
         $ar2drlXslt=new DOMDocument();
         $ar2drlXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/ar2drl_demo.xslt');
@@ -222,7 +222,8 @@ class DataController extends JController{
   public function showArticle(){
     $articleId=JRequest::getInt('id',JRequest::getInt('article',-1));
     if ($articleId>0){
-      $this->setRedirect(JRoute::_('index.php?view=article&id='.$articleId));
+      //$this->setRedirect(JRoute::_('index.php?view=article&id='.$articleId));
+      $this->setRedirect(('index.php?view=article&id='.$articleId));
     }else{
       $this->setRedirect(JRoute::_('index.php'));
     }

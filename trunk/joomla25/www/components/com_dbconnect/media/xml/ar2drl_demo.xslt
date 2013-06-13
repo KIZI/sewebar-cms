@@ -77,7 +77,7 @@
     </xsl:template>
 
     <xsl:template match="Attribute" xml:space="preserve" >
-        DrlObj (name == "<xsl:value-of select="./FieldRef/Name/text()"/>", <xsl:apply-templates select="./CatRef/Data" />)    
+        DrlObj (name == "<xsl:value-of select="./FieldRef/Identity/text()"/>", <xsl:apply-templates select="./CatRef/Data" />)    
     </xsl:template>
     
     <xsl:template match="Data">
