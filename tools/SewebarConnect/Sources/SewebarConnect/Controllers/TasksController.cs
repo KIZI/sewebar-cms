@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.Http;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using LMWrapper;
@@ -78,6 +79,20 @@ namespace SewebarConnect.Controllers
 				{
 					throw new InvalidTaskResultXml("HypothesesCountMax cannot be resolved.", xmlPath, XPathHypothesesCountMax);
 				}
+			}
+		}
+
+		protected ITaskLauncher GetTaskLauncher(string taskType)
+		{
+			switch (taskType)
+			{
+				case "proc":
+					return this.LISpMiner.LMProcPooler;
+				case "grid":
+					return this.LISpMiner.LMGridPooler;
+				case "task":
+				default:
+					return this.LISpMiner.LMTaskPooler;
 			}
 		}
 
@@ -286,43 +301,62 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
-		public string Get()
+		private Response GetAllTasks()
 		{
-			return "List of all Tasks for given miner";
+			// TODO: List of all Tasks for given miner
+			return new Response
+				{
+					Message = "TODO: List of all Tasks for given miner"
+				};
 		}
 
-		public TaskResponse Get(string taskName)
+		public Response Get(string taskName)
 		{
 			// when exporting we dont need to know what was task type
 			var name = taskName ?? this.ControllerContext.RouteData.Values["taskType"] as string;
+
+			if (string.IsNullOrEmpty(name))
+			{
+				return this.GetAllTasks();
+			}
 
 			return this.ExportTask(name);
 		}
 
 		public TaskResponse Post()
 		{
+			// TODO: accept task as parameter (ModelBinding)
 			var taskType = this.ControllerContext.RouteData.Values["taskType"] as string ?? "task";
 
 			var definition = new TaskDefinition
 				{
-					DefaultTemplate = DefaultTemplate
+					DefaultTemplate = DefaultTemplate,
+					Launcher = this.GetTaskLauncher(taskType)
 				};
-
-			switch (taskType)
-			{
-				case "task":
-					definition.Launcher = this.LISpMiner.LMTaskPooler;
-					break;
-				case "proc":
-					definition.Launcher = this.LISpMiner.LMProcPooler;
-					break;
-				case "grid":
-					definition.Launcher = this.LISpMiner.LMGridPooler;
-					break;
-			}
 
 			return this.RunTask(definition);
 		}
 
+		//[HttpPost]
+		//public Response Cancel(string taskName)
+		//{
+		//	var taskType = this.ControllerContext.RouteData.Values["taskType"] as string ?? "task";
+
+		//	var definition = new TaskDefinition
+		//		{
+		//			DefaultTemplate = DefaultTemplate,
+		//			TaskName = taskName,
+		//			Launcher = this.GetTaskLauncher(taskType)
+		//		};
+
+		//	return this.CancelTask(definition);
+		//}
+
+		//[HttpPost]
+		//[HttpGet]
+		//public Response CancelAll()
+		//{
+		//	return this.Cancel(null);
+		//}
 	}
 }

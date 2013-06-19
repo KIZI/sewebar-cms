@@ -5,11 +5,6 @@ namespace SewebarConnect.API.Requests.DataDictionary
 {
 	public class ExportRequest : Request
 	{
-		public ExportRequest(BaseController controller)
-			: base(controller.LISpMiner, controller.HttpContext)
-		{
-		}
-
 		public ExportRequest(ApiBaseController controller)
 			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
 		{

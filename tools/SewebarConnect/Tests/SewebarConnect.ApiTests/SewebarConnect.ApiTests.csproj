@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProjectGuid>{59655A85-2B2C-42E3-97E9-1B9012927372}</ProjectGuid>
+    <ProjectGuid>{708F8211-3454-43FF-AA63-2AB98E3F9BCF}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <OutputPath>bin</OutputPath>
@@ -15,28 +15,6 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Client.d.ts" />
-    <Content Include="Client.js">
-      <DependentUpon>Client.ts</DependentUpon>
-    </Content>
-    <Content Include="Client.js.map">
-      <DependentUpon>Client.ts</DependentUpon>
-    </Content>
-    <Content Include="index.js" />
-    <Content Include="node.d.ts" />
-    <Content Include="restify.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Client.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="package.json" />
-    <Content Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".npmignore" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -64,5 +42,42 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="mocha.d.ts" />
+    <Content Include="node.d.ts" />
+    <Content Include="scenarios\01\registration.txt" />
+    <Content Include="scenarios\02\ETReeMiner.Task52.xml" />
+    <Content Include="scenarios\02\Import3.xml" />
+    <Content Include="scenarios\02\registration.xml" />
+    <Content Include="scenarios\apiary\ETReeMiner.Task52.xml" />
+    <Content Include="scenarios\apiary\Import3.xml" />
+    <Content Include="scenarios\apiary\registration.xml" />
+    <Content Include="should.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="test\scenarios.ts" />
+    <TypeScriptCompile Include="test\apiary.ts" />
+    <Content Include="test\apiary.js">
+      <DependentUpon>apiary.ts</DependentUpon>
+    </Content>
+    <Content Include="test\apiary.js.map">
+      <DependentUpon>apiary.ts</DependentUpon>
+    </Content>
+    <Content Include="test\scenarios.js">
+      <DependentUpon>scenarios.ts</DependentUpon>
+    </Content>
+    <Content Include="test\scenarios.js.map">
+      <DependentUpon>scenarios.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config.json" />
+    <Content Include="makefile" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="test\mocha.opts" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

@@ -66,11 +66,6 @@ namespace SewebarConnect.API.Requests.Task
 			}
 		}
 
-		public TaskInfoRequest(BaseController controller)
-			: base(controller.LISpMiner, controller.HttpContext)
-		{
-		}
-
 		public TaskInfoRequest(ApiBaseController controller)
 			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
 		{

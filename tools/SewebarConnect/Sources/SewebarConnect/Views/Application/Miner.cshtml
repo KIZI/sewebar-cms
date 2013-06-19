@@ -1,5 +1,6 @@
 ﻿@using LMWrapper.LISpMiner
 @model LISpMiner
+
 @{
 	ViewBag.Title = "Miner";
 	Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,13 +23,5 @@
 <pre>
 @Model.GetTaskList()
 </pre>
-<a href="@Url.Action("Cancel", "TaskPool", new { guid = Model.Id })" class="ajax">Cancel All</a>
 
-<h2>DSN</h2>
-<dl>
-	<dt>Database</dt>
-	<dd>@Model.Database.DSNFile</dd>
-
-	<dt>Metabase</dt>
-	<dd>@Model.Metabase.DSNFile</dd>
-</dl>
+<a href="@Url.HttpRouteUrl("MinersActionApi", new { controller = "Tasks", action = "CancelAll", minerId = Model.Id, taskType = "task" })" class="ajax">Cancel All</a>

@@ -17,8 +17,11 @@ declare module 'SewebarConnect' {
         cancelTask(task: string, callback: (err: any, results: any) => void): void;
         cancelGrid(task: string, callback: (err: any, results: any) => void): void;
         cancelProc(task: string, callback: (err: any, results: any) => void): void;
-        getTask(taskName: string, callback: (err: any, results: any) => void): void;
+        getTask(taskName: string, alias: string, template: string, callback: (err: any, results: string) => void ): void;
+        getTask(taskName: string, callback: (err: any, results: string) => void ): void;
+        getAllTasks(callback: (err: any, results: string) => void): void;
         getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary: string) => void);
+        getDataDictionary(callback: (err: any, dictionary: string) => void);
         remove(callback: (err: any) => void): void;
     }
 }

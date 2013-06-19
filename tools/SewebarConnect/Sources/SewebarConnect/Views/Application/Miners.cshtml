@@ -1,5 +1,5 @@
-﻿@using LMWrapper.ODBC
-@using SewebarConnect
+﻿@using SewebarConnect
+
 @model object
 
 @{
@@ -29,7 +29,7 @@
 	<ol>
 		@foreach (var miner in MvcApplication.Environment.ExistingMiners)
 		{
-			<li><a href="@Url.Action("Miner", new {guid = miner})">@miner</a>&nbsp;<a href="@Url.Action("Cancel", "TaskPool", new {guid = miner})" class="ajax">Cancel All Tasks</a>&nbsp;<a href="@Url.Action("Remove", new { guid = miner })" class="ajax">Remove</a></li>
+			<li><a href="@Url.Action("Miner", new {guid = miner})">@miner</a>&nbsp;(<a href="@Url.Action("Remove", new { guid = miner })" class="ajax">Remove</a>)</li>
         }
 	</ol>
 }

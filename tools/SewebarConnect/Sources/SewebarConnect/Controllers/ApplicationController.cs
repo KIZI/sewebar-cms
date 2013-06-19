@@ -1,18 +1,48 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Web.Mvc;
-using LMWrapper;
 using LMWrapper.LISpMiner;
-using LMWrapper.ODBC;
 using SewebarConnect.API;
-using SewebarConnect.API.Requests.Application;
-using SewebarConnect.API.Responses.Application;
 
 namespace SewebarConnect.Controllers
 {
-	public class ApplicationController : BaseController
+	public class ApplicationController : Controller
 	{
+		protected const string PARAMS_GUID = "guid";
+
+		private LISpMiner _miner;
+
+		protected LISpMiner LISpMiner
+		{
+			get
+			{
+				if (this._miner == null)
+				{
+					if (this.HttpContext == null)
+					{
+						// we need a context
+						throw new Exception("Ensure to call base.ProcessRequest");
+					}
+
+					var guid = this.RouteData.Values[PARAMS_GUID] as string;
+
+					if (guid == null)
+					{
+						throw new Exception(String.Format("Not specified which LISpMiner to work with."));
+					}
+
+					if (!MvcApplication.Environment.Exists(guid))
+					{
+						throw new Exception(String.Format("Requested LISpMiner with ID {0}, does not exists", guid));
+					}
+
+					this._miner = MvcApplication.Environment.GetMiner(guid);
+				}
+
+				return this._miner;
+			}
+		}
+
 		public ActionResult Index()
 		{
 			return View();
@@ -26,7 +56,7 @@ namespace SewebarConnect.Controllers
 			{
 				throw new NotSupportedException();
 
-				path = Path.GetFullPath(this.LISpMiner.LMPath);
+				// path = Path.GetFullPath(this.LISpMiner.LMPath);
 			}
 			else
 			{
@@ -44,22 +74,6 @@ namespace SewebarConnect.Controllers
 
 		#region Miners
 
-		[HttpPost]
-		[ErrorHandler]
-		public XmlResult Register()
-		{
-			var request = new RegistrationRequest(this.HttpContext);
-			var id = ShortGuid.NewGuid();
-			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
-
-			MvcApplication.Environment.Register(miner);
-
-			return new XmlResult
-			{
-				Data = new RegistrationResponse { Id = id }
-			};
-		}
-
 		public ActionResult Miners()
 		{
 			return View();
@@ -67,18 +81,6 @@ namespace SewebarConnect.Controllers
 
 		public ActionResult Miner()
 		{
-			var acceptTypes = this.HttpContext.Request.AcceptTypes;
-
-			if (acceptTypes != null &&
-			    (acceptTypes.Contains("text/xml") ||
-			     acceptTypes.Contains("application/xml")))
-			{
-				return new XmlResult
-				       	{
-				       		Data = new LISpMinerResponse(this.LISpMiner)
-				       	};
-			}
-
 			return View(this.LISpMiner);
 		}
 
@@ -88,29 +90,11 @@ namespace SewebarConnect.Controllers
 			MvcApplication.Environment.Unregister(this.LISpMiner);
 
 			return new XmlResult
-			       	{
-			       		Data = new Response {Status = Status.Success, Message = "LISpMiner removed."}
-			       	};
+			{
+				Data = new Response { Status = Status.Success, Message = "LISpMiner removed." }
+			};
 		}
 
 		#endregion
-
-		[ErrorHandler]
-		public XmlResult RemoveDsn()
-		{
-			var dsn = this.HttpContext.Request["dsn"];
-
-			if (ODBCManagerRegistry.DSNExists(dsn))
-			{
-				ODBCManagerRegistry.RemoveDSN(dsn);
-
-				return new XmlResult
-				       	{
-				       		Data = new Response {Message = String.Format("Deleted DSN: {0}", dsn)}
-				       	};
-			}
-
-			throw new Exception(String.Format("Not existing DSN: {0}", dsn));
-		}
 	}
 }

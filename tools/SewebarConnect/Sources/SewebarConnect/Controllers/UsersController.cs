@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Mvc;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.Users;
 using SewebarConnect.API.Responses.Users;

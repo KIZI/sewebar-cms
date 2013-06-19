@@ -9,9 +9,9 @@ import should = module('should');
 
 var scenarios = process.cwd() + '/scenarios';
 
-describe('SewebarConnect', function() {
+describe.skip('SewebarConnect', function() {
 	describe('Scenario 02', function() {
-		var client,
+		var client: connect.SewebarConnectClient,
             miner: connect.Miner,
             resource = {},
 		    dataDictionary = '',
@@ -20,7 +20,7 @@ describe('SewebarConnect', function() {
 
 		before((done) => {
             fs.readFile(process.cwd() + '/config.json', 'utf8', (err, data) => {
-                should.not.exist(err)
+                should.not.exist(err);
 
                 config = JSON.parse(data);
 
@@ -93,7 +93,7 @@ describe('SewebarConnect', function() {
             });
         });
 
-        it('should remove miner', (done) => {
+        it.skip('should remove miner', (done) => {
             miner.remove((err) => {
                 should.not.exist(err);
 
