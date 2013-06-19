@@ -4,4 +4,4 @@ test:
 	./node_modules/.bin/mocha
 
 install:
-	npm install ../Sources/SewebarConnectClient/
+	npm install ../../Sources/SewebarConnectClient/

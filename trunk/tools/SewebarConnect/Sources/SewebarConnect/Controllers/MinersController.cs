@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Web.Http;
 using LMWrapper;
 using LMWrapper.LISpMiner;
 using SewebarConnect.API;
@@ -7,6 +8,7 @@ using SewebarConnect.API.Requests.Application;
 using SewebarConnect.API.Requests.DataDictionary;
 using SewebarConnect.API.Responses.Application;
 using SewebarConnect.API.Responses.DataDictionary;
+using SewebarConnect.API.Responses.Users;
 
 namespace SewebarConnect.Controllers
 {
@@ -15,7 +17,16 @@ namespace SewebarConnect.Controllers
 	{
 		public LISpMinerResponse Get()
 		{
-			return new LISpMinerResponse(this.LISpMiner);
+			try
+			{
+				var lm = this.LISpMiner;
+
+				return new LISpMinerResponse(lm);
+			}
+			catch (Exception)
+			{
+				return new LISpMinerResponse();
+			}
 		}
 
 		public RegistrationResponse Post()
@@ -61,5 +72,12 @@ namespace SewebarConnect.Controllers
 
 			return new Response {Status = Status.Success, Message = "LISpMiner removed."};
 		}
+
+		//[HttpGet]
+		//[ActionName("Remove")]
+		//public Response Remove()
+		//{
+		//	return this.Delete();
+		//}
 	}
 }

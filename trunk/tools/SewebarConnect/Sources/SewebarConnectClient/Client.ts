@@ -10,7 +10,7 @@ var S = require('string');
 export module SewebarConnect {
     var parser = new xml2js.Parser();
 
-    export function createClient(cfg) {
+    export function createClient(cfg): SewebarConnectClient {
         return new SewebarConnectClient(cfg);
     }
 
@@ -64,7 +64,7 @@ export module SewebarConnect {
             this.restClient = restify.createStringClient(this.opts);
         }
 
-        public register(connection, metabase, callback: (err, miner: Miner) => void) {
+        public register(connection, metabase, callback: (err, miner: Miner) => void): void {
             // TODO: create correct data object
             var data = connection,
                 url = this.server + 'miners';
@@ -86,7 +86,8 @@ export module SewebarConnect {
             });
         }
 
-        public get(id: string, callback: (err: any, miner: Miner) => void) {
+        public get (id: string, callback: (err: any, miner: Miner) => void ): void {
+            // GET miners/{minerId}
             var url = [
                 this.server,
                 'miners/',
@@ -122,11 +123,12 @@ export module SewebarConnect {
             this.opts = this.client.opts;
         }
 
-        public init(dictionary: string, callback: (err) => void) {
+        public init(dictionary: string, callback: (err) => void ) {
+            // PATCH miners/{minerId}
             var url = [
                 this.server,
                 'miners/',
-                this.id
+                encodeURIComponent(this.id)
             ].join('');
 
             this.opts.path = url;
@@ -154,7 +156,8 @@ export module SewebarConnect {
             this.run('proc', task, callback);
         }
 
-        private run(taskType: string, task: string, callback: (err, results) => void): void {
+        private run(taskType: string, task: string, callback: (err, results) => void ): void {
+            // miners/{minerId}/tasks/{taskType}{?alias,template}
             var url = [
                 this.server,
                 'miners/',
@@ -206,6 +209,56 @@ export module SewebarConnect {
             });
         }
 
+        public getTask(taskName: string, alias: string, template: string, callback: (err: any, results: string) => void ): void {
+            if (typeof alias === 'function') {
+                callback = <any>alias;
+                alias = '';
+                template = '';
+            }
+
+            // miners/{minerId}/tasks/{taskType}/{taskName}{?alias,template}
+            var url = [
+                this.server,
+                'miners/',
+                this.id,
+                '/tasks/',
+                '/',
+                taskName,
+                '?alias=', alias,
+                '&template=', template
+            ].join('');
+
+            this.opts.path = url;
+
+            this.client.restClient.get(this.opts, (e, req, res, data) => {
+                if (e) {
+                    errorHandler(e, 'GET ' + url, callback);
+                } else if (callback && typeof callback === 'function') {
+                    callback(null, data);
+                }
+            });
+        }
+
+        public getAllTasks(callback: (err: any, results: string) => void ): void {
+            // GET miners/{minerId}/tasks
+            var url = [
+                this.server,
+                'miners/',
+                this.id,
+                '/tasks',
+            ].join('');
+
+            this.opts.path = url;
+
+            this.client.restClient.get(this.opts, (e, req, res, data) => {
+                if (e) {
+                    errorHandler(e, 'GET ' + url, callback);
+                } else if (callback && typeof callback === 'function') {
+                    callback(null, data);
+                }
+            });
+        }
+
         public remove(callback: (err: any) => void): void {
             var url = [
                 this.server,
@@ -225,6 +278,13 @@ export module SewebarConnect {
         }
 
         public getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary: string) => void): void {
+            if (typeof matrix === 'function') {
+                callback = <any>matrix;
+                matrix = '';
+                template = '';
+            }
+
+            // GET miners/{minerId}/DataDictionary{?matrix,template}
             var url = [
                 this.server,
                 'miners/',

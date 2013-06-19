@@ -40,11 +40,6 @@ namespace SewebarConnect.API.Requests.DataDictionary
 			}
 		}
 
-		public ImportRequest(BaseController controller)
-			: base(controller.LISpMiner, controller.HttpContext)
-		{
-		}
-
 		public ImportRequest(ApiBaseController controller)
 			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
