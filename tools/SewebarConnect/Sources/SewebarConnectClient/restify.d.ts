@@ -1,5 +1,5 @@
 declare module 'restify' {
-    export declare class HttpClient {
+    export class HttpClient {
         get(resource: string, handler: (err, req, res, data) => void);
         get(options: Object, handler: (err, req, res, data) => void);
 
@@ -16,13 +16,13 @@ declare module 'restify' {
         patch(options: Object, data: any, handler: (err, req, res, data) => void);
     }
 
-    export declare function createStringClient(cfg: Object): StringClient;
+    export function createStringClient(cfg: Object): StringClient;
 
-    export declare function createJsonClient(cfg: Object): JsonClient;
+    export function createJsonClient(cfg: Object): JsonClient;
 
-    export declare class JsonClient extends HttpClient {
+    export class JsonClient extends HttpClient {
     }
 
-    export declare class StringClient extends HttpClient {
+    export class StringClient extends HttpClient {
     }
 }
