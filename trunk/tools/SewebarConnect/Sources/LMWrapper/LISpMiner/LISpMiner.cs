@@ -136,33 +136,13 @@ namespace LMWrapper.LISpMiner
 		}
 
 		/// <summary>
-		/// Creates LISpMiner with Access DB from given file.
-		/// </summary>
-		/// <param name="environment">Environment settings</param>
-		/// <param name="id">Desired ID.</param>
-		/// <param name="databasePrototypeFile">Original database.</param>
-		/// <param name="metabasePrototypeFile">Name of metabase file to use. Must exist in data folder.</param>
-		public LISpMiner(Environment environment, string id, string databasePrototypeFile, string metabasePrototypeFile)
-			: this(environment, id)
-		{
-			string databaseFile;
-			string databaseDSNFile;
-
-			this.GetDatabaseNames(databasePrototypeFile, out databaseFile, out databaseDSNFile);
-
-			this.Database = new AccessConnection(databaseDSNFile, databaseFile, databasePrototypeFile);
-
-			this.CreateMetabase(metabasePrototypeFile);
-		}
-
-		/// <summary>
-		/// Creates LISpMiner with given database. Metabase is created as Access DB.
+		/// Creates LISpMiner with given database. Only supported metabase is Access DB.
 		/// </summary>
 		/// <param name="environment">Environment settings.</param>
 		/// <param name="id">Desired ID.</param>
 		/// <param name="connection">Connection to original database.</param>
-		/// <param name="metabasePrototypeFile">Name of metabase file to use. Must exist in data folder.</param>
-		public LISpMiner(Environment environment, string id, DbConnection connection, string metabasePrototypeFile)
+		/// <param name="metabaseConnection">Name of metabase file to use. Must exist in data folder.</param>
+		public LISpMiner(Environment environment, string id, DbConnection connection, DbConnection metabaseConnection)
 			: this(environment, id)
 		{
 			string databaseFile;
@@ -185,7 +165,7 @@ namespace LMWrapper.LISpMiner
 				throw new NullReferenceException("Database can't be null.");
 			}
 
-			this.CreateMetabase(metabasePrototypeFile);
+			this.CreateMetabase(metabaseConnection);
 		}
 
 		/// <summary>
@@ -227,10 +207,11 @@ namespace LMWrapper.LISpMiner
 			this.Created = lmpath.CreationTime;
 		}
 
-		protected void CreateMetabase(string metabasePrototypeFile)
+		protected void CreateMetabase(DbConnection metabaseConnection)
 		{
 			string metabaseFile;
 			string dsnFile;
+			string metabasePrototypeFile = metabaseConnection.Filename;
 
 			this.GetMetabaseNames(out metabaseFile, ref metabasePrototypeFile, out dsnFile);
 
@@ -256,6 +237,7 @@ namespace LMWrapper.LISpMiner
 
 		protected string GetDatabaseNames(string databasePrototypeFile, out string file, out string dsnFile)
 		{
+			// TODO: make default database connection mandatory
 			const string defaultDatabase = "Barbora.mdb";
 			string databasePrototypePath = Path.Combine(this.Environment.DataPath, databasePrototypeFile ?? defaultDatabase);
 

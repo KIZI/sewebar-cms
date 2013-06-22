@@ -45,13 +45,10 @@
   <ItemGroup>
     <Content Include="mocha.d.ts" />
     <Content Include="node.d.ts" />
-    <Content Include="scenarios\01\registration.txt" />
     <Content Include="scenarios\02\ETReeMiner.Task52.xml" />
     <Content Include="scenarios\02\Import3.xml" />
-    <Content Include="scenarios\02\registration.xml" />
     <Content Include="scenarios\apiary\ETReeMiner.Task52.xml" />
     <Content Include="scenarios\apiary\Import3.xml" />
-    <Content Include="scenarios\apiary\registration.xml" />
     <Content Include="should.d.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="test\mocha.opts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="run.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="clean.cmd" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

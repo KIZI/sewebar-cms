@@ -1,4 +1,4 @@
-///<reference path='../node.d.ts'/>
+﻿///<reference path='../node.d.ts'/>
 ///<reference path='../mocha.d.ts'/>
 ///<reference path='../should.d.ts'/>
 ///<reference path='../node_modules/SewebarConnect/Client.d.ts'/>
@@ -10,15 +10,14 @@ import should = module('should');
 var scenarios = process.cwd() + '/scenarios';
 
 describe.skip('SewebarConnect', function() {
-	describe('Scenario 02', function() {
-		var client: connect.SewebarConnectClient,
+    describe('Scenario 02', function() {
+        var client: connect.SewebarConnectClient,
             miner: connect.Miner,
-            resource = {},
-		    dataDictionary = '',
+            dataDictionary = '',
             task = '',
             config;
 
-		before((done) => {
+        before((done) => {
             fs.readFile(process.cwd() + '/config.json', 'utf8', (err, data) => {
                 should.not.exist(err);
 
@@ -26,16 +25,28 @@ describe.skip('SewebarConnect', function() {
 
                 client = connect.createClient(config);
 
-                resource = fs.readFileSync(scenarios + '/02/registration.xml', 'utf8');
                 dataDictionary = fs.readFileSync(scenarios + '/02/Import3.xml', 'utf8');
                 task = fs.readFileSync(scenarios + '/02/ETReeMiner.Task52.xml', 'utf8');
 
                 done();
             });
-		});
+        });
 
         it('should successfully register', (done) => {
-            client.register(resource, {}, (err, m) => {
+            var database: connect.DbConnection,
+                metabase: connect.DbConnection;
+
+            database = {
+                type: 'Access',
+                file: 'Barbora.mdb'
+            };
+
+            metabase = {
+                type: 'Access',
+                file: 'LM Barbora.mdb'
+            }
+
+            client.register(database, metabase, (err, m) => {
                 miner = m;
 
                 should.not.exist(err);
@@ -45,13 +56,13 @@ describe.skip('SewebarConnect', function() {
             });
         });
 
-		it('should successfully init', (done) => {
+        it('should successfully init', (done) => {
             miner.init(dataDictionary, (err) => {
                 should.not.exist(err);
 
                 done();
-			});
-		});
+            });
+        });
 
         it('should run task', (done) => {
             miner.runTask(task, (err, results) => {
@@ -100,5 +111,5 @@ describe.skip('SewebarConnect', function() {
                 done();
             });
         });
-	});
+    });
 });

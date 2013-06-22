@@ -3,7 +3,7 @@ declare module 'SewebarConnect' {
 
     export class SewebarConnectClient {
         constructor(cfg: Object);
-        register(connection, metabase, callback: (err: any, miner: Miner) => void): void;
+        register(connection: DbConnection, metabase: DbConnection, callback: (err: any, miner: Miner) => void): void;
         get(id: string, callback: (err: any, miner: Miner) => void);
     }
 
@@ -23,5 +23,14 @@ declare module 'SewebarConnect' {
         getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary: string) => void);
         getDataDictionary(callback: (err: any, dictionary: string) => void);
         remove(callback: (err: any) => void): void;
+    }
+
+    export interface DbConnection {
+        type: string;
+        file?: string;
+        server?: string;
+        database?: string;
+        username?: string;
+        password?: string;
     }
 }
