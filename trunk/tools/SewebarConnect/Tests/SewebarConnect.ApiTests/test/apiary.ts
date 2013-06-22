@@ -65,7 +65,7 @@ describe('SewebarConnect', () => {
                 });
             });
 
-            it('#PATCH /miners/{minerId}', (done) => {
+            it('#POST /miners/{minerId}/DataDictionary', (done) => {
                 miner.init(dataDictionary, (err) => {
                     should.not.exist(err);
 
