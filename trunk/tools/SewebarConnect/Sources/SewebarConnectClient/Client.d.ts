@@ -1,7 +1,7 @@
 declare module 'SewebarConnect' {
-    export declare function createClient(cfg): SewebarConnectClient;
+    export function createClient(cfg): SewebarConnectClient;
 
-    export declare class SewebarConnectClient {
+    export class SewebarConnectClient {
         constructor(cfg: Object);
         register(connection, metabase, callback: (err: any, miner: Miner) => void): void;
         get(id: string, callback: (err: any, miner: Miner) => void);
