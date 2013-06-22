@@ -3,6 +3,7 @@
 
 import restify = module('restify');
 import http = module('http');
+
 var request = require('request');
 var xml2js = require('xml2js');
 var S = require('string');
@@ -14,8 +15,8 @@ export module SewebarConnect {
         return new SewebarConnectClient(cfg);
     }
 
-    function errorHandler(err, info, callback: (err, ...params: any[]) => void) {
-        var e = err ? err.body : '',
+    function errorHandler(err, info, callback: (err, ...params: any[]) => void ) {
+        var e = err && err.body ? err.body : '',
             error = S(e).trim().s;
 
         xml2js.parseString(error, (parseError, result) => {
@@ -66,9 +67,14 @@ export module SewebarConnect {
 
         public register(connection, metabase, callback: (err, miner: Miner) => void): void {
             // TODO: create correct data object
-            var data = connection,
-                url = this.server + 'miners';
 
+            // POST miners
+            var data = connection,
+                url = [
+                    this.server,
+                    'miners'
+                ].join('');
+            
             this.opts.path = url;
 
             this.restClient.post(this.opts, data, (err, req, res, body) => {
@@ -86,7 +92,7 @@ export module SewebarConnect {
             });
         }
 
-        public get (id: string, callback: (err: any, miner: Miner) => void ): void {
+        public get(id: string, callback: (err: any, miner: Miner) => void ): void {
             // GET miners/{minerId}
             var url = [
                 this.server,
@@ -124,18 +130,20 @@ export module SewebarConnect {
         }
 
         public init(dictionary: string, callback: (err) => void ) {
-            // PATCH miners/{minerId}
+            // POST miners/{minerId}/DataDictionary
             var url = [
                 this.server,
                 'miners/',
-                encodeURIComponent(this.id)
+                encodeURIComponent(this.id),
+                '/',
+                'DataDictionary'
             ].join('');
 
             this.opts.path = url;
 
-            this.client.restClient.patch(this.opts, dictionary, (e, req, res, data) => {
+            this.client.restClient.post(this.opts, dictionary, (e, req, res, data) => {
                 if (e) {
-                    errorHandler(e, 'PATCH ' + url, callback);
+                    errorHandler(e, 'POST ' + url, callback);
                 } else {
                     if (callback && typeof callback === 'function') {
                         callback(null);

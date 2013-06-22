@@ -1,0 +1,20 @@
+{
+	"folders":
+	[
+		{
+			"path": "./",
+			"folder_exclude_patterns": [".idea"]
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "SewebarConnect",
+			"working_dir": "./",
+			"cmd": ["build.sh"],
+			"windows": {
+				"cmd": ["build.bat"]
+			}
+		}
+	]
+}

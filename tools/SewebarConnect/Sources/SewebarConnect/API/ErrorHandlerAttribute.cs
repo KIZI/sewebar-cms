@@ -3,9 +3,7 @@ using System.IO;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Xml;
 using SewebarConnect.API.Responses;
-using SewebarConnect.Controllers;
 using log4net;
 
 namespace SewebarConnect.API
