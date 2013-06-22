@@ -17,17 +17,19 @@ namespace SewebarConnect.Controllers
 			{
 				var lm = this.LISpMiner;
 
+				// one miner
 				return new LISpMinerResponse(lm);
 			}
 			catch (Exception)
 			{
+				// all miners
 				return new LISpMinerResponse();
 			}
 		}
 
 		public RegistrationResponse Post()
 		{
-			var request = new RegistrationRequest(HttpContext.Current);
+			var request = new RegistrationRequest();
 			var id = ShortGuid.NewGuid();
 			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
 

@@ -1,4 +1,4 @@
-///<reference path='../node.d.ts'/>
+﻿///<reference path='../node.d.ts'/>
 ///<reference path='../mocha.d.ts'/>
 ///<reference path='../should.d.ts'/>
 ///<reference path='../node_modules/SewebarConnect/Client.d.ts'/>
@@ -10,7 +10,6 @@ import should = module('should');
 describe('SewebarConnect', () => {
     var client: connect.SewebarConnectClient,
         miner: connect.Miner,
-        resource = {},
         dataDictionary = '',
         task = '',
         config,
@@ -26,7 +25,6 @@ describe('SewebarConnect', () => {
 
             client = connect.createClient(config);
 
-            resource = fs.readFileSync(scenariosApiary + '/registration.xml', 'utf8');
             dataDictionary = fs.readFileSync(scenariosApiary + '/Import3.xml', 'utf8');
             task = fs.readFileSync(scenariosApiary + '/ETReeMiner.Task52.xml', 'utf8');
 
@@ -55,7 +53,20 @@ describe('SewebarConnect', () => {
             });
 
             it('#POST /miners', (done) => {
-                client.register(resource, {}, (err, m) => {
+                var database: connect.DbConnection,
+                    metabase: connect.DbConnection;
+
+                database = {
+                    type: 'Access',
+                    file: 'Barbora.mdb'
+                };
+
+                metabase = {
+                    type: 'Access',
+                    file: 'LM Barbora.mdb'
+                }
+
+                client.register(database, metabase, (err, m) => {
                     miner = m;
 
                     should.not.exist(err);
@@ -170,12 +181,16 @@ describe('SewebarConnect', () => {
         });
     });
 
-//    after((done) => {
-//        // remove miner
-//        miner.remove((err) => {
-//            should.not.exist(err);
-//
-//            done();
-//        });
-//    });
+    after((done) => {
+        // wait for tasks to finish
+        // TODO: dont wait "random" time
+        setTimeout(() => {
+            // remove miner
+            miner.remove((err) => {
+                should.not.exist(err);
+
+                done();
+            });
+        }, 4000);
+    });
 });

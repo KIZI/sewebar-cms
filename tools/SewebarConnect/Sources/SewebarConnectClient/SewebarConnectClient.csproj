@@ -23,6 +23,7 @@
     <Content Include="Client.js.map">
       <DependentUpon>Client.ts</DependentUpon>
     </Content>
+    <Content Include="data2xml.d.ts" />
     <Content Include="index.js" />
     <Content Include="node.d.ts" />
     <Content Include="restify.d.ts" />

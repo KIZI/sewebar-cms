@@ -1,58 +1,85 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 using LMWrapper.ODBC;
+using SewebarConnect.Controllers;
 
 namespace SewebarConnect.API.Requests.Application
 {
 	public class RegistrationRequest : Request
 	{
+		private XDocument _buffer;
 		private DbConnection _dbConnection;
+		private DbConnection _dbMetabase;
 
-		public string Metabase
+		public static DbConnection GetDbConnection(string which, XDocument requestBody)
 		{
-			get
+			OdbcDrivers type;
+			var conn = (from element in requestBody
+							.Elements("RegistrationRequest")
+							.Elements(which)
+						select element).ToList();
+
+			if (conn == null || conn.Count == 0)
 			{
-				string file = this.HttpContext.Request["metabase"];
-				return file ?? string.Empty;
+				throw new Exception(String.Format("Database was not correctly defined ({0}).", which));
 			}
+
+			var connType = (from element in conn
+							select (string)element.Attribute("type")).SingleOrDefault();
+
+
+			if (!OdbcDrivers.TryParse(connType + "Connection", true, out type))
+			{
+				throw new Exception(String.Format("Database was not correctly defined (type of {0}).", which));
+			}
+
+			switch (type)
+			{
+				case OdbcDrivers.AccessConnection:
+					return (from element in conn
+							select
+								new DbConnection
+								{
+									Type = type,
+									Filename = (string)element.Element("File")
+								}).SingleOrDefault();
+				case OdbcDrivers.MySqlConnection:
+					return (from element in conn
+							select
+								new DbConnection
+								{
+									Type = type,
+									Server = (string)element.Element("Server"),
+									Database = (string)element.Element("Database"),
+									Username = (string)element.Element("Username"),
+									Password = (string)element.Element("Password")
+								}).SingleOrDefault();
+			}
+
+			throw new Exception(String.Format("Database was not correctly defined ({0}).", which));
+		}
+
+		public DbConnection Metabase
+		{
+			get { return this._dbMetabase ?? (this._dbMetabase = GetDbConnection("Metabase", this.GetRequest())); }
 		}
 
 		public DbConnection DbConnection
 		{
-			get
-			{
-				if (this._dbConnection == null)
-				{
-					var parameters = this.HttpContext.Request.Params;
-					OdbcDrivers type;
-
-					if (!OdbcDrivers.TryParse(parameters["type"], true, out type))
-					{
-						throw new Exception("Database was not correctly defined (type).");
-					}
-
-					this._dbConnection = new DbConnection
-					                     	{
-												Type = type,
-												Server = parameters["server"],
-												Database = parameters["database"],
-												Password = parameters["password"],
-												Username = parameters["username"]
-					                     	};
-				}
-				
-				return this._dbConnection;
-			}
+			get { return this._dbConnection ?? (this._dbConnection = GetDbConnection("Connection", this.GetRequest())); }
 		}
 
-		public RegistrationRequest(HttpContextBase context)
-			: base(null, context)
+		public RegistrationRequest()
+			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
 		}
 
-		public RegistrationRequest(HttpContext context)
-			: this(new HttpContextWrapper(context))
+		private XDocument GetRequest()
 		{
+			return _buffer ?? (_buffer = XDocument.Load(this.HttpContext.Request.InputStream));
 		}
 	}
 }

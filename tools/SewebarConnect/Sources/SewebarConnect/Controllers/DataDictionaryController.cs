@@ -8,33 +8,6 @@ namespace SewebarConnect.Controllers
 	[APIErrorHandler]
 	public class DataDictionaryController : ApiBaseController
 	{
-		private XmlResult Import()
-		{
-			var request = new ImportRequest(this);
-
-			var response = new ImportResponse
-							{
-								Id = this.LISpMiner.Id
-							};
-
-			if (this.LISpMiner != null && request.DataDictionary != null)
-			{
-				var importer = this.LISpMiner.Importer;
-				importer.Input = request.DataDictionaryPath;
-				importer.Execute();
-
-				response.Message = String.Format("Data Dictionary imported to {0}", importer.LISpMiner.Id);
-				response.Status = Status.Success;
-
-				return new XmlResult
-						{
-							Data = response
-						};
-			}
-
-			throw new Exception("No DataDictionary given.");
-		}
-
 		public ExportResponse Get()
 		{
 			var request = new ExportRequest(this);
@@ -61,9 +34,9 @@ namespace SewebarConnect.Controllers
 			var request = new ImportRequest(this);
 
 			var response = new ImportResponse
-			{
-				Id = this.LISpMiner.Id
-			};
+				{
+					Id = this.LISpMiner.Id
+				};
 
 			if (this.LISpMiner != null && request.DataDictionary != null)
 			{

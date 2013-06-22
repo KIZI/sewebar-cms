@@ -1,21 +1,24 @@
 ///<reference path='node.d.ts'/>
 ///<reference path='restify.d.ts'/>
+///<reference path='data2xml.d.ts' />
 
-import restify = module('restify');
 import http = module('http');
+import restify = module('restify');
 
-var request = require('request');
 var xml2js = require('xml2js');
 var S = require('string');
+var data2xml = require('data2xml');
 
 export module SewebarConnect {
-    var parser = new xml2js.Parser();
+    var parser = new xml2js.Parser(),
+        xml = data2xml();
 
     export function createClient(cfg): SewebarConnectClient {
         return new SewebarConnectClient(cfg);
     }
 
     function errorHandler(err, info, callback: (err, ...params: any[]) => void ) {
+        // TODO: error when trying to reach nonexising server
         var e = err && err.body ? err.body : '',
             error = S(e).trim().s;
 
@@ -65,15 +68,48 @@ export module SewebarConnect {
             this.restClient = restify.createStringClient(this.opts);
         }
 
-        public register(connection, metabase, callback: (err, miner: Miner) => void): void {
-            // TODO: create correct data object
-
+        public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner: Miner) => void): void {
             // POST miners
-            var data = connection,
+            var mb, database, data,
                 url = [
                     this.server,
                     'miners'
                 ].join('');
+            
+            if (connection.type == 'Access') {
+                database = {
+                    _attr: { type: connection.type },
+                    File: connection.file
+                };
+            } else {
+                database = {
+                    _attr: { type: connection.type },
+                    Server: connection.server,
+                    Database: connection.database,
+                    Username: connection.username,
+                    Password: connection.password
+                };
+            }
+
+            if (metabase.type == 'Access') {
+                mb = {
+                    _attr: { type: metabase.type },
+                    File: metabase.file
+                };
+            } else {
+                mb = {
+                    _attr: { type: metabase.type },
+                    Server: metabase.server,
+                    Database: metabase.database,
+                    Username: metabase.username,
+                    Password: metabase.password
+                };
+            }
+
+            data = xml('RegistrationRequest', {
+                Metabase: mb,
+                Connection: database
+            });
             
             this.opts.path = url;
 
@@ -312,5 +348,14 @@ export module SewebarConnect {
                 }
             });
         }
+    }
+
+    export interface DbConnection {
+        type: string;
+        file?: string;
+        server?: string;
+        database?: string;
+        username?: string;
+        password?: string;
     }
 }

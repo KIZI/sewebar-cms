@@ -8,6 +8,9 @@ namespace LMWrapper.ODBC
 		[DataMember(Name = "type")]
 		public OdbcDrivers Type { get; set; }
 
+		[DataMember(Name = "filename")]
+		public string Filename { get; set; }
+
 		[DataMember(Name = "server")]
 		public string Server { get; set; }
 
