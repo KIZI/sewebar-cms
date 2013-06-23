@@ -264,40 +264,81 @@ namespace SewebarConnect.Controllers
 
 		private Response CancelTask(TaskDefinition definition)
 		{
-			var taskPooler = definition.Launcher;
+			var pooler = definition.Launcher;
 
 			try
 			{
-				if (String.IsNullOrWhiteSpace(definition.TaskName))
-				{
-					// cancel all
-					taskPooler.CancelAll = true;
-					taskPooler.Execute();
+				// cancel task
+				pooler.TaskCancel = true;
+				pooler.TaskName = definition.TaskName;
+				pooler.Execute();
 
-					return new Response
-						{
-							Message = "All tasks has been canceled."
-						};
-				}
-				else
-				{
-					// cancel task
-					taskPooler.TaskCancel = true;
-					taskPooler.TaskName = definition.TaskName;
-					taskPooler.Execute();
-
-					return new Response
-						{
-							Message = String.Format("Task {0} has been canceled.", definition.TaskName)
-						};
-				}
+				return new Response
+					{
+						Message = String.Format("Task {0} has been canceled.", definition.TaskName)
+					};
 			}
 			finally
 			{
 				// clean up
-				taskPooler.CancelAll = false;
-				taskPooler.TaskCancel = false;
-				taskPooler.TaskName = String.Empty;
+				pooler.CancelAll = false;
+				pooler.TaskCancel = false;
+				pooler.TaskName = String.Empty;
+			}
+		}
+
+		private Response CancelAll(TaskDefinition definition)
+		{
+			ITaskLauncher pooler = definition != null ? definition.Launcher : null;
+
+			try
+			{
+				if (pooler != null)
+				{
+					pooler.CancelAll = true;
+					pooler.Execute();
+				}
+				else
+				{
+					// cancel all
+					this.LISpMiner.LMTaskPooler.CancelAll = true;
+					this.LISpMiner.LMTaskPooler.Execute();
+
+					this.LISpMiner.LMProcPooler.CancelAll = true;
+					this.LISpMiner.LMProcPooler.Execute();
+
+					this.LISpMiner.LMGridPooler.CancelAll = true;
+					this.LISpMiner.LMGridPooler.Execute();
+				}
+
+				return new Response
+					{
+						Message = "All tasks has been canceled."
+					};
+			}
+			finally
+			{
+				if (pooler != null)
+				{
+					pooler.CancelAll = false;
+					pooler.TaskCancel = false;
+					pooler.TaskName = String.Empty;
+				}
+				else
+				{
+					// clean up
+					this.LISpMiner.LMTaskPooler.CancelAll = false;
+					this.LISpMiner.LMTaskPooler.TaskCancel = false;
+					this.LISpMiner.LMTaskPooler.TaskName = String.Empty;
+
+					this.LISpMiner.LMProcPooler.CancelAll = false;
+					this.LISpMiner.LMProcPooler.TaskCancel = false;
+					this.LISpMiner.LMProcPooler.TaskName = String.Empty;
+
+					this.LISpMiner.LMGridPooler.CancelAll = false;
+					this.LISpMiner.LMGridPooler.TaskCancel = false;
+					this.LISpMiner.LMGridPooler.TaskName = String.Empty;
+				}
 			}
 		}
 
@@ -337,26 +378,44 @@ namespace SewebarConnect.Controllers
 			return this.RunTask(definition);
 		}
 
-		//[HttpPost]
-		//public Response Cancel(string taskName)
-		//{
-		//	var taskType = this.ControllerContext.RouteData.Values["taskType"] as string ?? "task";
+		public Response Put(string taskType, string taskName)
+		{
+			var request = new TaskUpdateRequest(this);
+			var specific = request.GetRequestType() as TaskCancelationRequest;
+			var hasTaskType = !string.IsNullOrEmpty(taskType);
+			var hasTaskName = !string.IsNullOrEmpty(taskName);
 
-		//	var definition = new TaskDefinition
-		//		{
-		//			DefaultTemplate = DefaultTemplate,
-		//			TaskName = taskName,
-		//			Launcher = this.GetTaskLauncher(taskType)
-		//		};
+			if (specific == null)
+			{
+				throw new Exception("Unsupported task update request.");
+			}
 
-		//	return this.CancelTask(definition);
-		//}
+			var definition = new TaskDefinition
+				{
+					DefaultTemplate = DefaultTemplate
+				};
 
-		//[HttpPost]
-		//[HttpGet]
-		//public Response CancelAll()
-		//{
-		//	return this.Cancel(null);
-		//}
+			if (!hasTaskType && !hasTaskName)
+			{
+				return this.CancelAll(null);
+			}
+			else if (hasTaskType && !hasTaskName)
+			{
+				definition.Launcher = this.GetTaskLauncher(taskType);
+
+				return this.CancelAll(definition);
+			}
+			else if (hasTaskType && hasTaskName)
+			{
+				definition.Launcher = this.GetTaskLauncher(taskType);
+				definition.TaskName = taskName;
+
+				return this.CancelTask(definition);
+			}
+			else // if (!hasTaskType && hasTaskName)
+			{
+				throw new Exception();
+			}
+		}
 	}
 }

@@ -142,6 +142,8 @@
     <Compile Include="API\Requests\Application\RegistrationRequest.cs" />
     <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
     <Compile Include="API\Requests\DataDictionary\ImportRequest.cs" />
+    <Compile Include="API\Requests\Task\TaskCancelationRequest.cs" />
+    <Compile Include="API\Requests\Task\TaskUpdateRequest.cs" />
     <Compile Include="API\Requests\Task\TaskInfoRequest.cs" />
     <Compile Include="API\Requests\Task\TaskRequest.cs" />
     <Compile Include="API\Requests\Users\UserRequest.cs" />

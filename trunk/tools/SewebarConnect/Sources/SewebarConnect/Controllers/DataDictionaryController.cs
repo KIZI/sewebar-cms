@@ -29,7 +29,7 @@ namespace SewebarConnect.Controllers
 			return response;
 		}
 
-		public ImportResponse Post()
+		public ImportResponse Put()
 		{
 			var request = new ImportRequest(this);
 
