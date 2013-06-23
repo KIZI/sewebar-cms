@@ -76,7 +76,7 @@ describe('SewebarConnect', () => {
                 });
             });
 
-            it('#POST /miners/{minerId}/DataDictionary', (done) => {
+            it('#PUT /miners/{minerId}/DataDictionary', (done) => {
                 miner.init(dataDictionary, (err) => {
                     should.not.exist(err);
 
@@ -113,15 +113,7 @@ describe('SewebarConnect', () => {
                     fs.mkdirSync(out);
                 }
 
-                miner.runTask(task, (err, results) => {
-                    should.not.exist(err);
-                    should.exist(results);
-
-                    // wait for task to finish
-                    setTimeout(() => {
-                        done();
-                    }, 3000);
-                });
+                done();
             });
 
             it('#GET /miners/{minerId}/tasks', (done) => {
@@ -135,8 +127,13 @@ describe('SewebarConnect', () => {
                 });
             });
 
-            it.skip('#POST /miners/{minerId}/tasks/{taskType}{?alias,template}', (done) => {
-                done();
+            it('#POST /miners/{minerId}/tasks/{taskType}{?alias,template}', (done) => {
+                miner.runTask(task, (err, results) => {
+                    should.not.exist(err);
+                    should.exist(results);
+
+                    done();
+                });
             });
 
             it('#GET /miners/{minerId}/tasks/{taskName}{?alias,template}', (done) => {
@@ -157,12 +154,30 @@ describe('SewebarConnect', () => {
                 });
             });
 
-            it.skip('#POST /miners/{minerId}/tasks/{taskType}/{taskName}/definition', (done) => {
+            it.skip('#GET /miners/{minerId}/tasks/{taskType}/{taskName}/definition', (done) => {
                 done();
             });
 
-            it.skip('#POST /miners/{minerId}/tasks/{taskType}/{taskName}/cancel', (done) => {
-                done();
+            it('#PUT /miners/{minerId}/tasks/{taskType}/{taskName} (cancel task)', (done) => {
+                miner.cancelTask('9741046ed676ec7470cb043db2881a094e36b554', (err, data) => {
+                    should.not.exist(err);
+                    should.exist(data);
+
+                    fs.writeFileSync(out + '/miner.cancelTask01.xml', data);
+
+                    done();
+                });
+            });
+
+            it('#PUT /miners/{minerId}/tasks/{taskType}/{taskName} (cancel all tasks)', (done) => {
+                miner.cancelTask(null, (err, data) => {
+                    should.not.exist(err);
+                    should.exist(data);
+
+                    fs.writeFileSync(out + '/miner.cancelAllTasks01.xml', data);
+
+                    done();
+                });
             });
 
             it.skip('#DELETE /miners/{minerId}/tasks/{taskType}/{taskName}', (done) => {
@@ -181,7 +196,7 @@ describe('SewebarConnect', () => {
         });
     });
 
-    after((done) => {
+    /* after((done) => {
         // wait for tasks to finish
         // TODO: dont wait "random" time
         setTimeout(() => {
@@ -192,5 +207,5 @@ describe('SewebarConnect', () => {
                 done();
             });
         }, 4000);
-    });
+    });*/
 });

@@ -110,7 +110,7 @@ export module SewebarConnect {
                 Metabase: mb,
                 Connection: database
             });
-            
+
             this.opts.path = url;
 
             this.restClient.post(this.opts, data, (err, req, res, body) => {
@@ -166,7 +166,7 @@ export module SewebarConnect {
         }
 
         public init(dictionary: string, callback: (err) => void ) {
-            // POST miners/{minerId}/DataDictionary
+            // PUT miners/{minerId}/DataDictionary
             var url = [
                 this.server,
                 'miners/',
@@ -177,9 +177,9 @@ export module SewebarConnect {
 
             this.opts.path = url;
 
-            this.client.restClient.post(this.opts, dictionary, (e, req, res, data) => {
+            this.client.restClient.put(this.opts, dictionary, (e, req, res, data) => {
                 if (e) {
-                    errorHandler(e, 'POST ' + url, callback);
+                    errorHandler(e, 'PUT ' + url, callback);
                 } else {
                     if (callback && typeof callback === 'function') {
                         callback(null);
@@ -233,20 +233,31 @@ export module SewebarConnect {
             this.cancel('proc', task, callback);
         }
 
-        private cancel(taskType: string, task: string, callback: (err, results) => void) {
-            var url = [
-                this.server,
-                'miners/',
-                this.id,
-                '/tasks/',
-                taskType
-            ].join('');
+        public cancelAll(callback: (err, results) => void ): void {
+            this.cancel(null, null, callback);
+        }
 
-            this.opts.path = url;
+        private cancel(taskType: string, task: string, callback: (err, results) => void ) {
+            // PUT miners/{minerId}/tasks/{taskType}/{taskName}
+            var data,
+                url = [
+                    this.server,
+                    'miners/',
+                    this.id,
+                    '/tasks'
+                ];
 
-            this.client.restClient.post(this.opts, task, (e, req, res, data) => {
+            if (taskType) {
+                url.push('/', taskType, '/', task);
+            }
+            
+            this.opts.path = url.join('');
+
+            data = xml('CancelationRequest', {});
+
+            this.client.restClient.put(this.opts, data, (e, req, res, data) => {
                 if (e) {
-                    errorHandler(e, 'POST ' + url, callback);
+                    errorHandler(e, 'PUT ' + url, callback);
                 } else if (callback && typeof callback === 'function') {
                     callback(null, data);
                 }
