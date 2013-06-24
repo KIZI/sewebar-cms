@@ -186,13 +186,30 @@ describe('SewebarConnect', () => {
         });
 
         describe('User Management', () => {
+            // registerUser
+            // registerUserDatabase
             it.skip('#POST /users', (done) => {
                 done();
             });
 
-            it.skip('#GET /users/{userName}/{userPassword}?db={dbId}', (done) => {
+            // getDatabasePassword
+            it.skip('#GET /users/?dbId={dbId}', (done) => {
                 done();
             });
+
+            // updateOtherUser
+            // updateUser
+            it.skip('#PUT /users/{username}', (done) => {
+                done();
+            });
+
+            // deleteUser
+            it.skip('#DELETE /users/{username}', (done) => {
+                done();
+            });
+
+            // setDatabasePassword
+            // confirmUserPasswordUpdate
         });
     });
 

@@ -18,7 +18,7 @@ namespace SewebarConnect.Security
 		/// <param name="username">The username.</param>
 		/// <param name="password">The password.</param>
 		/// <returns>True when the credential could be validated succesfully. Otherwise false.</returns>
-		public delegate bool ValidateUserNameCredentialDelegate(string username, string password);
+		public delegate SewebarKey.User ValidateUserNameCredentialDelegate(string username, string password);
 
 		/// <summary>
 		/// Gets or sets the credential validation callback
@@ -91,7 +91,9 @@ namespace SewebarConnect.Security
 				throw new ArgumentException("SecurityToken is not a UserNameSecurityToken");
 			}
 
-			if (!ValidateUserNameCredentialCore(unToken.UserName, unToken.Password))
+			SewebarKey.User user = ValidateUserNameCredentialCore(unToken.UserName, unToken.Password);
+
+			if (user == null)
 			{
 				throw new SecurityTokenValidationException(unToken.UserName);
 			}
@@ -99,9 +101,15 @@ namespace SewebarConnect.Security
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, unToken.UserName),
+				new Claim(ClaimTypes.UserData, user.Id.ToString()),
 				new Claim(ClaimTypes.AuthenticationMethod, AuthenticationMethods.Password),
 				new Claim(ClaimTypes.AuthenticationInstant, XmlConvert.ToString(DateTime.UtcNow, "yyyy-MM-ddTHH:mm:ss.fffZ"), ClaimValueTypes.DateTime)
 			};
+
+			if (true)
+			{
+				claims.Add(new Claim(ClaimTypes.Role, "admin"));
+			}
 
 			var identity = new ClaimsIdentity(claims, "Basic");
 
@@ -159,7 +167,7 @@ namespace SewebarConnect.Security
 		/// <param name="userName">Name of the user.</param>
 		/// <param name="password">The password.</param>
 		/// <returns></returns>
-		protected virtual bool ValidateUserNameCredentialCore(string userName, string password)
+		protected virtual SewebarKey.User ValidateUserNameCredentialCore(string userName, string password)
 		{
 			if (ValidateUserNameCredential == null)
 			{

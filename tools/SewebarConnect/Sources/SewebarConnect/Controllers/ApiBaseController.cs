@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using LMWrapper.LISpMiner;
+using SewebarKey;
+using SewebarKey.Repositories;
 
 namespace SewebarConnect.Controllers
 {
@@ -9,6 +12,12 @@ namespace SewebarConnect.Controllers
 		protected const string PARAMS_GUID = "minerId";
 
 		private LISpMiner _miner;
+		private IRepository _users;
+
+		public virtual IRepository UsersRepository
+		{
+			get { return _users ?? (_users = new NHibernateRepository(MvcApplication.SessionFactory.GetCurrentSession())); }
+		}
 
 		public LISpMiner LISpMiner
 		{
@@ -39,6 +48,17 @@ namespace SewebarConnect.Controllers
 
 				return this._miner;
 			}
+		}
+
+		protected SewebarKey.User GetSewebarUser()
+		{
+			if (this.User == null)
+			{
+				return null;
+			}
+
+			return this.UsersRepository.Query<User>()
+				.FirstOrDefault(u => u.Username == (this.User.Identity.Name) /* && u.Password == password */);
 		}
 	}
 }

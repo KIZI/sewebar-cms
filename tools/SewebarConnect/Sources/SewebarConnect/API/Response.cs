@@ -20,6 +20,12 @@ namespace SewebarConnect.API
 			this.Status = Status.Success;
 		}
 
+		public Response(string message)
+			: this()
+		{
+			this.Message = message;
+		}
+
 		protected virtual XDocument XDocument
 		{
 			get
