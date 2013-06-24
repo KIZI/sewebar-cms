@@ -53,8 +53,6 @@ namespace SewebarConnect.Security
 						SetAuthenticateHeader(response);
 					}
 
-					response.Headers.Add("X-Magic", "ThisIsMagic");
-
 					return response;
 				});
 		}

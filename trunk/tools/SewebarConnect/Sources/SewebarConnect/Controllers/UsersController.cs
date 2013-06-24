@@ -22,6 +22,11 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
+		public override IRepository UsersRepository
+		{
+			get { return this.Repository; }
+		}
+
 		[Filters.NHibernateTransaction]
 		public UsersResponse Get()
 		{
@@ -30,22 +35,30 @@ namespace SewebarConnect.Controllers
 			return new UsersResponse(users);
 		}
 
+		/// <summary>
+		/// Tries to find database by it identification.
+		/// </summary>
+		/// <param name="dbId">Database identification.</param>
+		/// <returns>DatabaseResponse.</returns>
 		[Filters.NHibernateTransaction]
-		public DatabaseResponse Get([FromUri]string db_id, [FromUri]string name = "", [FromUri]string password = "")
+		[Authorize]
+		public DatabaseResponse Get(string dbId)
 		{
 			Database database = null;
-
-			User user = this.Repository.Query<User>()
-				.FirstOrDefault(u => u.Username == (name ?? "") && u.Password == (password ?? ""));
+			User user = this.GetSewebarUser();
 
 			if (user != null)
 			{
-				database = user.Databases.FirstOrDefault(d => d.Name == db_id);
+				database = user.Databases.FirstOrDefault(d => d.Name == dbId);
 			}
 
 			return new DatabaseResponse(database);
 		}
 
+		/// <summary>
+		/// Register user or database for existing user.
+		/// </summary>
+		/// <returns>Registered UserResponse.</returns>
 		[Filters.NHibernateTransaction]
 		public UserResponse Post()
 		{
@@ -61,6 +74,8 @@ namespace SewebarConnect.Controllers
 						Username = request.UserName,
 						Password = request.Password
 					};
+
+				Repository.Add(user);
 			}
 
 			if (request.DbId != null)
@@ -73,18 +88,22 @@ namespace SewebarConnect.Controllers
 					});
 			}
 
-			Repository.Add(user);
+			this.Repository.Save(user);
 
 			return new UserResponse(user);
 		}
 
+		/// <summary>
+		/// Update user or change user's password.
+		/// </summary>
+		/// <returns>UserResponse.</returns>
 		[Filters.NHibernateTransaction]
+		[Authorize]
 		public UserResponse Put()
 		{
+			// TODO: change password and username as admin
 			var request = new UserRequest(this);
-
-			User user = this.Repository.Query<User>()
-				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
+			var user = this.GetSewebarUser();
 
 			if (user == null)
 			{
@@ -104,6 +123,32 @@ namespace SewebarConnect.Controllers
 			this.Repository.Save(user);
 
 			return new UserResponse(user);
+		}
+
+		/// <summary>
+		/// Deletes existing user.
+		/// </summary>
+		/// <param name="username">Username of user to delete.</param>
+		/// <returns>Response with message.</returns>
+		[Filters.NHibernateTransaction]
+		[Authorize]
+		public Response Delete(string username)
+		{
+			User user = this.GetSewebarUser();
+
+			if (user != null && user.Username == username)
+			{
+				// deleting himself
+				this.Repository.Remove(user);
+
+				return new Response(string.Format("User \"{0}\" removed.", user.Username));
+			}
+			else if (user != null && this.User.IsInRole("admin"))
+			{
+				// deleting by admin
+			}
+
+			return new Response(string.Format("User \"{0}\" not found.", username));
 		}
     }
 }

@@ -34,7 +34,7 @@ namespace SewebarConnect
 
 			config.Routes.MapHttpRoute(
 				name: "UsersApi",
-				routeTemplate: "users/{id}",
+				routeTemplate: "users/{username}",
 				defaults: new
 				{
 					controller = "Users",
