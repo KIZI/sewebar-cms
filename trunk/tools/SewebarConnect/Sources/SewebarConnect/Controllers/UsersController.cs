@@ -1,58 +1,37 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.Users;
 using SewebarConnect.API.Responses.Users;
 using SewebarKey;
-using SewebarKey.Repositories;
 
 namespace SewebarConnect.Controllers
 {
 	[APIErrorHandler]
+	[Authorize]
 	public class UsersController : ApiBaseController
 	{
-		private IRepository _repository;
-
-		protected IRepository Repository 
-		{
-			get
-			{
-				return _repository ?? (_repository = new NHibernateRepository(MvcApplication.SessionFactory.GetCurrentSession()));
-			}
-		}
-
-		public override IRepository UsersRepository
-		{
-			get { return this.Repository; }
-		}
-
 		[Filters.NHibernateTransaction]
-		public UsersResponse Get()
+		[AllowAnonymous]
+		public Response Get(string username)
 		{
-			var users = Repository.FindAll<SewebarKey.User>();
-
-			return new UsersResponse(users);
-		}
-
-		/// <summary>
-		/// Tries to find database by it identification.
-		/// </summary>
-		/// <param name="dbId">Database identification.</param>
-		/// <returns>DatabaseResponse.</returns>
-		[Filters.NHibernateTransaction]
-		[Authorize]
-		public DatabaseResponse Get(string dbId)
-		{
-			Database database = null;
-			User user = this.GetSewebarUser();
-
-			if (user != null)
+			if (string.IsNullOrEmpty(username))
 			{
-				database = user.Databases.FirstOrDefault(d => d.Name == dbId);
+				var users = Repository.FindAll<SewebarKey.User>();
+
+				return new UsersResponse(users);
 			}
 
-			return new DatabaseResponse(database);
+			if (this.User.Identity.Name == username || this.User.IsInRole("admin"))
+			{
+				var user = this.Repository.Query<User>().FirstOrDefault(u => u.Username == username);
+
+				return new UserResponse(user);
+			}
+
+			throw new HttpResponseException(HttpStatusCode.Unauthorized);
 		}
 
 		/// <summary>
@@ -60,6 +39,7 @@ namespace SewebarConnect.Controllers
 		/// </summary>
 		/// <returns>Registered UserResponse.</returns>
 		[Filters.NHibernateTransaction]
+		[AllowAnonymous]
 		public UserResponse Post()
 		{
 			var request = new UserRequest(this);
@@ -69,23 +49,16 @@ namespace SewebarConnect.Controllers
 
 			if (user == null)
 			{
-				user = new User
-					{
-						Username = request.UserName,
-						Password = request.Password
-					};
+				user = request.GetUser();
 
-				Repository.Add(user);
+				this.Repository.Add(user);
 			}
 
-			if (request.DbId != null)
+			var database = request.GetDatabase(user);
+
+			if (database != null)
 			{
-				user.Databases.Add(new Database
-					{
-						Name = request.DbId,
-						Password = request.DbPassword,
-						Owner = user
-					});
+				user.Databases.Add(database);
 			}
 
 			this.Repository.Save(user);
@@ -98,7 +71,6 @@ namespace SewebarConnect.Controllers
 		/// </summary>
 		/// <returns>UserResponse.</returns>
 		[Filters.NHibernateTransaction]
-		[Authorize]
 		public UserResponse Put()
 		{
 			// TODO: change password and username as admin
@@ -131,7 +103,6 @@ namespace SewebarConnect.Controllers
 		/// <param name="username">Username of user to delete.</param>
 		/// <returns>Response with message.</returns>
 		[Filters.NHibernateTransaction]
-		[Authorize]
 		public Response Delete(string username)
 		{
 			User user = this.GetSewebarUser();

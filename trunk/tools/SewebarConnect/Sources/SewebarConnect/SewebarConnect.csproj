@@ -168,6 +168,7 @@
     <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
+    <Compile Include="Controllers\DatabasesController.cs" />
     <Compile Include="Controllers\DataDictionaryController.cs" />
     <Compile Include="Controllers\MinersController.cs" />
     <Compile Include="Controllers\TasksController.cs" />

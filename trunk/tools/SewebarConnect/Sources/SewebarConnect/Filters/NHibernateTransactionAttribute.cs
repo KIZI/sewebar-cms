@@ -10,6 +10,12 @@ namespace SewebarConnect.Filters
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 	public class NHibernateTransactionAttribute : NHibernateSessionAttribute, IExceptionFilter
 	{
+		private struct Void
+		{
+		}
+
+		private readonly Task _completedTask = Task.FromResult<Void>(new Void());
+
 		protected ISession Session
 		{
 			get { return SessionFactory.GetCurrentSession(); }
@@ -36,22 +42,21 @@ namespace SewebarConnect.Filters
 
 		public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
 		{
-			return Task.Factory.StartNew(() =>
-				{
-					try
-					{
-						ITransaction tx = Session.Transaction;
+			try
+			{
+				ITransaction tx = Session.Transaction;
 
-						if (tx != null && tx.IsActive)
-						{
-							Session.Transaction.Rollback();
-						}
-					}
-					catch
-					{
-						// possibly no session...
-					}
-				});
+				if (tx != null && tx.IsActive)
+				{
+					Session.Transaction.Rollback();
+				}
+			}
+			catch
+			{
+				// possibly no session...
+			}
+
+			return _completedTask;
 		}
 	}
 }

@@ -106,10 +106,11 @@ namespace SewebarConnect.Security
 				new Claim(ClaimTypes.AuthenticationInstant, XmlConvert.ToString(DateTime.UtcNow, "yyyy-MM-ddTHH:mm:ss.fffZ"), ClaimValueTypes.DateTime)
 			};
 
-			if (true)
-			{
-				claims.Add(new Claim(ClaimTypes.Role, "admin"));
-			}
+			// TODO: roles
+			//if (true)
+			//{
+			//	claims.Add(new Claim(ClaimTypes.Role, "admin"));
+			//}
 
 			var identity = new ClaimsIdentity(claims, "Basic");
 

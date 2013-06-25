@@ -6,6 +6,7 @@
 import connect = module('SewebarConnect');
 import fs = module('fs');
 import should = module('should');
+import request = module('request');
 
 describe('SewebarConnect', () => {
     var client: connect.SewebarConnectClient,
@@ -186,30 +187,128 @@ describe('SewebarConnect', () => {
         });
 
         describe('User Management', () => {
-            // registerUser
-            // registerUserDatabase
-            it.skip('#POST /users', (done) => {
-                done();
+            var uriBase,
+                user = {
+                    name: 'rnd',
+                    password: 'heslo'
+                },
+                auth = 'Basic ' + new Buffer(user.name + ':' + user.password).toString('base64');
+
+            before(() => {
+                var server: string = config.app == null ? 'SewebarConnect' : config.app;
+
+                if (server.substring(0, 1) !== '/') {
+                    server = '/' + server;
+                }
+
+                if (server.slice(-1) === '/') {
+                    server = server.slice(0, -1);
+                }
+
+                uriBase = config.url + server;
             });
 
-            // getDatabasePassword
-            it.skip('#GET /users/?dbId={dbId}', (done) => {
-                done();
+            // registerUser
+            it('#POST /users', (done) => {
+                var uri = [uriBase, '/users'].join('');
+
+                request.post(uri, (e, r, body) => {
+                    should.not.exist(e);
+                    should.exist(body);
+
+                    r.statusCode.should.eql(200);
+
+                    done();
+                }).form(user);
+            });
+            
+            it('#GET /users/{username}', (done) => {
+                var uri = [uriBase, '/users/', user.name].join('');
+
+                request.get({ url: uri, headers: { Authorization: auth }}, (e, r, body) => {
+                    should.not.exist(e);
+                    should.exist(body);
+
+                    r.statusCode.should.eql(200);
+
+                    done();
+                });
             });
 
             // updateOtherUser
             // updateUser
+            // confirmUserPasswordUpdate
             it.skip('#PUT /users/{username}', (done) => {
                 done();
             });
 
             // deleteUser
-            it.skip('#DELETE /users/{username}', (done) => {
-                done();
+            it('#DELETE /users/{username}', (done) => {
+                var uri = [uriBase, '/users/', user.name].join('');
+
+                request.del({ url: uri, headers: { Authorization: auth } }, (e, r, body) => {
+                    should.not.exist(e);
+                    should.exist(body);
+                    
+                    r.statusCode.should.eql(200);
+
+                    done();
+                });
             });
 
-            // setDatabasePassword
-            // confirmUserPasswordUpdate
+            describe('Databases', () => {
+                var user2 = {
+                    name: 'rnd2',
+                    password: 'simple'
+                }, database = {
+                        db_id: 'db01',
+                        db_password: 'secret'
+                    }, auth2 = 'Basic ' + new Buffer(user2.name + ':' + user2.password).toString('base64');
+
+                before((done) => {
+                    var uri = [uriBase, '/users'].join('');
+
+                    request.post(uri, (e, r, body) => {
+                        done();
+                    }).form(user2);
+                });
+
+                // registerUserDatabase
+                it('#POST /users/{username}/databases', (done) => {
+                    var uri = [uriBase, '/users/', user2.name, '/databases'].join('');
+
+                    request.post({ url: uri, headers: { Authorization: auth2 } }, (e, r, body) => {
+                        should.not.exist(e);
+                        should.exist(body);
+                        
+                        r.statusCode.should.eql(200);
+
+                        done();
+                    }).form(database);
+                });
+
+                // getDatabasePassword
+                it.skip('#GET /users/{username}/databases/{id}', (done) => {
+                    done();
+                });
+
+                // setDatabasePassword
+                it.skip('#GET /users/{username}/databases/{id}', (done) => {
+                    done();
+                });
+
+                it.skip('#DELETE /users/{username}/databases/{id}', (done) => {
+                    done();
+                });
+
+                after((done) => {
+                    var uri = [uriBase, '/users/', user2.name].join('');
+
+                    request.del({ url: uri, headers: { Authorization: auth2 } }, (e, r, body) => {
+                        done();
+                    });
+                });
+            });
         });
     });
 

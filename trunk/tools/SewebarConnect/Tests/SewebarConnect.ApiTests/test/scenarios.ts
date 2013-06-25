@@ -9,7 +9,7 @@ import should = module('should');
 
 var scenarios = process.cwd() + '/scenarios';
 
-describe.skip('SewebarConnect', function() {
+describe('SewebarConnect', function() {
     describe('Scenario 02', function() {
         var client: connect.SewebarConnectClient,
             miner: connect.Miner,

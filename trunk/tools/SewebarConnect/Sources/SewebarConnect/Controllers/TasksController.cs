@@ -364,11 +364,8 @@ namespace SewebarConnect.Controllers
 			return this.ExportTask(name);
 		}
 
-		public TaskResponse Post()
+		public TaskResponse Post(string taskType = "task")
 		{
-			// TODO: accept task as parameter (ModelBinding)
-			var taskType = this.ControllerContext.RouteData.Values["taskType"] as string ?? "task";
-
 			var definition = new TaskDefinition
 				{
 					DefaultTemplate = DefaultTemplate,

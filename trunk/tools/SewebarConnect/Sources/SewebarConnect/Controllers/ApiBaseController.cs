@@ -12,11 +12,11 @@ namespace SewebarConnect.Controllers
 		protected const string PARAMS_GUID = "minerId";
 
 		private LISpMiner _miner;
-		private IRepository _users;
+		private IRepository _repository;
 
-		public virtual IRepository UsersRepository
+		protected virtual IRepository Repository
 		{
-			get { return _users ?? (_users = new NHibernateRepository(MvcApplication.SessionFactory.GetCurrentSession())); }
+			get { return _repository ?? (_repository = new NHibernateRepository(MvcApplication.SessionFactory.GetCurrentSession())); }
 		}
 
 		public LISpMiner LISpMiner
@@ -57,7 +57,7 @@ namespace SewebarConnect.Controllers
 				return null;
 			}
 
-			return this.UsersRepository.Query<User>()
+			return this.Repository.Query<User>()
 				.FirstOrDefault(u => u.Username == (this.User.Identity.Name) /* && u.Password == password */);
 		}
 	}

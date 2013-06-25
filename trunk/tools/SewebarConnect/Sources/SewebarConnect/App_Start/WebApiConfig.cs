@@ -7,18 +7,6 @@ namespace SewebarConnect
 	{
 		public static void Register(HttpConfiguration config)
 		{
-			// TODO: routes for canceling
-			//config.Routes.MapHttpRoute(
-			//	name: "MinersActionApi",
-			//	routeTemplate: "miners/{minerId}/{controller}/{taskType}/{action}",
-			//	defaults: new
-			//	{
-			//		controller = "Miners",
-			//		minerId = UrlParameter.Optional,
-			//		taskType = UrlParameter.Optional
-			//	}
-			//);
-
 			config.Routes.MapHttpRoute(
 				name: "MinersApi",
 				routeTemplate: "miners/{minerId}/{controller}/{taskType}/{taskName}/{action}",
@@ -34,10 +22,11 @@ namespace SewebarConnect
 
 			config.Routes.MapHttpRoute(
 				name: "UsersApi",
-				routeTemplate: "users/{username}",
+				routeTemplate: "users/{username}/{controller}/{id}",
 				defaults: new
 				{
 					controller = "Users",
+					username = UrlParameter.Optional,
 					id = UrlParameter.Optional
 				}
 			);

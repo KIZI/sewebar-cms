@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
       "mocha": "1.9.0",
-      "should": "1.2.2"
+      "should": "1.2.2",
+      "request": "2.21.0"
   }
 }
