@@ -6,11 +6,11 @@
 		</id>
 		<property name="Username" column="name" type="string" length="255" unique="true" not-null="true" />
 		<property name="Password" column="password" type="string" />
-		<set name="Databases" inverse="true" lazy="false" cascade="persist">
+		<set name="Databases" inverse="true" lazy="false" cascade="delete">
 			<key column="id_user"/>
 			<one-to-many class="SewebarKey.Database, SewebarKey"/>
 		</set>
-		<set name="Miners" inverse="true" lazy="false" cascade="persist">
+		<set name="Miners" inverse="true" lazy="false" cascade="delete">
 			<key column="id_user"/>
 			<one-to-many class="SewebarKey.Miner, SewebarKey"/>
 		</set>

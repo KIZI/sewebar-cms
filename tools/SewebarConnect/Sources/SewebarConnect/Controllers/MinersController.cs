@@ -46,12 +46,5 @@ namespace SewebarConnect.Controllers
 
 			return new Response {Status = Status.Success, Message = "LISpMiner removed."};
 		}
-
-		//[HttpGet]
-		//[ActionName("Remove")]
-		//public Response Remove()
-		//{
-		//	return this.Delete();
-		//}
 	}
 }

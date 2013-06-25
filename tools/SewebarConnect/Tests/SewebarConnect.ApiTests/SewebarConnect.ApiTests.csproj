@@ -43,8 +43,10 @@
     <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="form-data.d.ts" />
     <Content Include="mocha.d.ts" />
     <Content Include="node.d.ts" />
+    <Content Include="request.d.ts" />
     <Content Include="scenarios\02\ETReeMiner.Task52.xml" />
     <Content Include="scenarios\02\Import3.xml" />
     <Content Include="scenarios\apiary\ETReeMiner.Task52.xml" />

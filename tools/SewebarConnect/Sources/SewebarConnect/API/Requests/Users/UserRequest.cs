@@ -5,6 +5,7 @@ namespace SewebarConnect.API.Requests.Users
 {
 	/// <summary>
 	/// POST name=username1&password=pwd1&db_id=database1&db_password=uknown
+	/// TODO: UserRequest as XML
 	/// </summary>
 	public class UserRequest : Request
 	{
@@ -28,12 +29,12 @@ namespace SewebarConnect.API.Requests.Users
 			get { return this.HttpContext.Request["new_password"]; }
 		}
 
-		public string DbId
+		protected string DbId
 		{
 			get { return this.HttpContext.Request["db_id"]; }
 		}
 
-		public string DbPassword
+		protected string DbPassword
 		{
 			get { return this.HttpContext.Request["db_password"]; }
 		}
@@ -41,6 +42,30 @@ namespace SewebarConnect.API.Requests.Users
 		public UserRequest(ApiBaseController controller)
 			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
+		}
+
+		public SewebarKey.Database GetDatabase(SewebarKey.User owner)
+		{
+			if (this.DbId == null)
+			{
+				return null;
+			}
+
+			return new SewebarKey.Database
+				{
+					Name = this.DbId,
+					Password = this.DbPassword,
+					Owner = owner
+				};
+		}
+
+		public SewebarKey.User GetUser()
+		{
+			return new SewebarKey.User
+				{
+					Username = this.UserName,
+					Password = this.Password
+				};
 		}
 	}
 }
