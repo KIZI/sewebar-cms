@@ -7,9 +7,9 @@ class RESTClient
 		$data = $_data;
 
 		// convert variables array to string:
-		if (is_array($_data)) {
-			// format --> test1=a&test2=b etc.
-			$data = $this->encodeData($data);
+		if (is_array($_data) || is_object($_data)) {
+			// $data = $this->encodeData($data);
+			$data = http_build_query($_data);
 		} else if (is_string($_data)) {
 			$data = $_data;
 		}
@@ -30,24 +30,38 @@ class RESTClient
 		return implode('&', $data);
 	}
 
-	public function get($url, $_data = array())
+	/**
+	 * @param $url
+	 * @param array $_data
+	 * @param null $credentials
+	 * @return RESTClientResponse
+	 */
+	public function get($url, $_data = array(), $credentials = null)
 	{
 		$data = $this->getData($_data);
 
-		KBIDebug::info("$url?$data");
-
 		$ch = curl_init("$url?$data");
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$response = curl_exec($ch);
 
-		//optionally you can check the response and see what the HTTP Code returned was
-		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		if ($credentials != null) {
+			curl_setopt($ch, CURLOPT_USERPWD, $credentials['username'] . ":" . $credentials['password']);
+		}
+
+		$response = curl_exec($ch);
+		$info = curl_getinfo($ch);
 		curl_close($ch);
 
-		return $response;
+		return new RESTClientResponse($response, $info);
 	}
 
-	public function post($url, $_data = array())
+	/**
+	 * @param $url
+	 * @param array $_data
+	 * @param null $credentials
+	 * @return RESTClientResponse
+	 */
+	public function post($url, $_data = array(), $credentials = null)
 	{
 		$data = $this->getData($_data);
 
@@ -59,14 +73,24 @@ class RESTClient
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 
+		if ($credentials != null) {
+			curl_setopt($ch, CURLOPT_USERPWD, $credentials['username'] . ":" . $credentials['password']);
+		}
+
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
-		return $response;
+		return new RESTClientResponse($response, $info);
 	}
 
-	public function put($url, $_data)
+	/**
+	 * @param $url
+	 * @param $_data
+	 * @param null $credentials
+	 * @return RESTClientResponse
+	 */
+	public function put($url, $_data, $credentials = null)
 	{
 		$data = $this->getData($_data);
 
@@ -78,14 +102,29 @@ class RESTClient
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 
+		// enable tracking
+		// curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+		if ($credentials != null) {
+			curl_setopt($ch, CURLOPT_USERPWD, $credentials['username'] . ":" . $credentials['password']);
+		}
+
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
-		return $response;
+		// KBIDebug::log(array('info' => $info, 'raw_data' => $data), "PUT");
+
+		return new RESTClientResponse($response, $info);
 	}
 
-	public function patch($url, $_data)
+	/**
+	 * @param $url
+	 * @param $_data
+	 * @param null $credentials
+	 * @return RESTClientResponse
+	 */
+	public function patch($url, $_data, $credentials = null)
 	{
 		$data = $this->getData($_data);
 
@@ -97,19 +136,39 @@ class RESTClient
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
 
+		if ($credentials != null) {
+			curl_setopt($ch, CURLOPT_USERPWD, $credentials['username'] . ":" . $credentials['password']);
+		}
+
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 
-		return $response;
+		return new RESTClientResponse($response, $info);
 	}
 
 	/**
 	 * @param $url
-	 * @return string
+	 * @param null $credentials
+	 * @return RESTClientResponse
 	 */
-	public function delete($url)
+	public function delete($url, $credentials = null)
 	{
-		return '';
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_VERBOSE, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+		if ($credentials != null) {
+			curl_setopt($ch, CURLOPT_USERPWD, $credentials['username'] . ":" . $credentials['password']);
+		}
+
+		$response = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+
+		return new RESTClientResponse($response, $info);
 	}
 }
