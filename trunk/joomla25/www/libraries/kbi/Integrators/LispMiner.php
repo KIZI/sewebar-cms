@@ -51,20 +51,6 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		parent::__construct($config);
 	}
 
-	protected function parseResponse($response, $message)
-	{
-		$xml_response = simplexml_load_string($response);
-
-		if($xml_response['status'] == 'failure') {
-			throw new Exception($xml_response->message);
-		} else if($xml_response['status'] == 'success') {
-			// everything is OK
-			return $message;
-		}
-
-		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
-	}
-
 	public function register($db_cfg)
 	{
 		$url = trim($this->getUrl(), '/');
@@ -292,7 +278,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		// TODO: credentials for given user (from session)
 		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users";
+		$url = "$url/users/${username}";
 
 		$data = array(
 			'name' => $username,
@@ -353,7 +339,15 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 */
 	public function deleteUser($username)
 	{
-		//TODO doplnit imlementaci smazání uživatele
+		$client = $this->getRestClient();
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/users/$username";
+
+		$response = $client->delete($url, array('username' => 'admin', 'password' => 'sewebar'));
+
+		KBIDebug::log(array('url' => "DELETE $url", 'response' => $response), "User removed");
+
+		return $this->parseResponse($response, 'User successfully removed.');
 	}
 
 	/**
@@ -376,20 +370,18 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	{
 		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users";
+		$url = "$url/users/$username/databases";
 
 		$data = array(
-			'name' => $username,
-			'password' => $password,
 			'db_id' => $db_id,
 			'db_password' => $db_password
 		);
 
-		$response = $client->post($url, $data);
+		$response = $client->post($url, $data, array('username' => $username, 'password' => $password));
 
 		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User registered");
 
-		return $this->parseResponse($response, 'User successfully registered.');
+		return $this->parseResponse($response, "User's database successfully registered.");
 	}
 
 	/**
@@ -402,15 +394,11 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	{
 		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users";
+		$url = "$url/users/$username/databases/$db_id";
 
-		$data = array(
-			'name' => $username,
-			'password' => $password,
-			'db_id' => $db_id
-		);
+		$data = array();
 
-		$response = $client->get($url, $data);
+		$response = $client->get($url, $data, array('username' => $username, 'password' => $password));
 
 		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "Password retring");
 
@@ -419,20 +407,57 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function setDatabasePassword($username, $password, $db_id, $old_password, $new_password)
 	{
-		// TODO:
+		$client = $this->getRestClient();
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/users/$username/databases/$db_id";
+
+		$data = array(
+			'db_id' => $db_id,
+			'db_password' => $new_password
+		);
+
+		$response = $client->put($url, $data, array('username' => $username, 'password' => $password));
+
+		KBIDebug::log(array('url' => "PUT $url", 'data' => $data, 'response' => $response), "Password changed");
+
+		return $this->parseResponse($response, "User's datbases password changed successfully.");
 	}
 
+	/**
+	 * @param RESTClientResponse $response
+	 * @return string
+	 * @throws Exception
+	 */
 	protected function parseDatabasePassword($response)
 	{
-		$xml_response = simplexml_load_string($response);
+		$body = $response->getBodyAsXml();
 
-		if($xml_response['status'] == 'failure') {
-			throw new Exception($xml_response->message);
-		} else if($xml_response['status'] == 'success') {
-			return (string)$xml_response->database['password'];
+		if($response->getStatusCode() != 200 || $body['status'] == 'failure') {
+			throw new Exception($body->message);
+		} else if($body['status'] == 'success') {
+			return (string)$body->database['password'];
 		}
 
 		throw new Exception('Response not in expected format');
+	}
+
+	/**
+	 * @param RESTClientResponse $response
+	 * @param $message
+	 * @return mixed
+	 * @throws Exception
+	 */
+	protected function parseResponse($response, $message)
+	{
+		$body = $response->getBodyAsXml();
+
+		if($response->getStatusCode() != 200 || $body['status'] == 'failure') {
+			throw new Exception($body->message);
+		} else if($body['status'] == 'success') {
+			return $message;
+		}
+
+		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
 	}
 
 	//endregion

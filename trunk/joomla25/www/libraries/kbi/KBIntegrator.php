@@ -287,7 +287,7 @@ class KBIntegrator implements IKBIntegrator
 	{
 		$client = $this->getRestClient();
 
-		return $client->post($url, $_data);
+		return $client->post($url, $_data)->getBody();
 	}
 
 	//endregion
