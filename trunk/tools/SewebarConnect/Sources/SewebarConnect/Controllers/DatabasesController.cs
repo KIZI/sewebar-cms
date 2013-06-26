@@ -96,12 +96,14 @@ namespace SewebarConnect.Controllers
 			Database database = this.Repository.Query<Database>()
 			                        .FirstOrDefault(d => d.Name == id && d.Owner.Username == username);
 
-			if (database != null)
+			if (database == null)
 			{
-				this.Repository.Remove(database);
+				throw new HttpResponseException(HttpStatusCode.NotFound);
 			}
 
-			throw new HttpResponseException(HttpStatusCode.NotFound);
+			this.Repository.Remove(database);
+
+			return new Response(string.Format("Database {0} removed.", id));
 		}
-    }
+ 	}
 }
