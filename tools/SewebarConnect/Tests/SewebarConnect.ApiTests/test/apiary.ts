@@ -24,8 +24,6 @@ describe('SewebarConnect', () => {
 
             config = JSON.parse(data);
 
-            client = connect.createClient(config);
-
             dataDictionary = fs.readFileSync(scenariosApiary + '/Import3.xml', 'utf8');
             task = fs.readFileSync(scenariosApiary + '/ETReeMiner.Task52.xml', 'utf8');
 
@@ -195,7 +193,7 @@ describe('SewebarConnect', () => {
                 auth = 'Basic ' + new Buffer(user.name + ':' + user.password).toString('base64');
 
             before(() => {
-                var server: string = config.app == null ? 'SewebarConnect' : config.app;
+                var server: string = config.app ? config.app : 'SewebarConnect';
 
                 if (server.substring(0, 1) !== '/') {
                     server = '/' + server;
