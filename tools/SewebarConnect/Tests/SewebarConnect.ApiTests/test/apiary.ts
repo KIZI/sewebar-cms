@@ -24,6 +24,8 @@ describe('SewebarConnect', () => {
 
             config = JSON.parse(data);
 
+            client = connect.createClient(config);
+
             dataDictionary = fs.readFileSync(scenariosApiary + '/Import3.xml', 'utf8');
             task = fs.readFileSync(scenariosApiary + '/ETReeMiner.Task52.xml', 'utf8');
 
