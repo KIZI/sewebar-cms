@@ -4,10 +4,10 @@
 // https://github.com/mikeal/request
 
 declare module "request" {
-	import request = module('request');
-	import stream = module('stream');
-	import http = module('http');
-	import FormData = module('form-data');
+	import request = require('request');
+	import stream = require('stream');
+	import http = require('http');
+	import FormData = require('form-data');
     
 	// export function(uri: string, options?: Options, callback?: (error: any, response: any, body: any) => void): Request;
 	// export function(uri: string, callback?: (error: any, response: any, body: any) => void): Request;

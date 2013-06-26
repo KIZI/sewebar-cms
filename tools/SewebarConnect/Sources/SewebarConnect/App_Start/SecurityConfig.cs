@@ -29,6 +29,15 @@ namespace SewebarConnect
 
 		private static User OnValidationDelegate(string userName, string password)
 		{
+			// TODO: roles (administrator)
+			if (userName == "admin" && password == "sewebar")
+			{
+				return new User()
+					{
+						Username = userName
+					};
+			}
+
 			ISession session = MvcApplication.SessionFactory.OpenSession();
 			var repo = new NHibernateRepository(session);
 			User user = repo.Query<SewebarKey.User>().FirstOrDefault(u => u.Username == userName && u.Password == password);

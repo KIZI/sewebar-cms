@@ -2,8 +2,8 @@
 ///<reference path='restify.d.ts'/>
 ///<reference path='data2xml.d.ts' />
 
-import http = module('http');
-import restify = module('restify');
+import http = require('http');
+import restify = require('restify');
 
 var xml2js = require('xml2js');
 var S = require('string');

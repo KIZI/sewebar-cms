@@ -3,10 +3,10 @@
 ///<reference path='../should.d.ts'/>
 ///<reference path='../node_modules/SewebarConnect/Client.d.ts'/>
 
-import connect = module('SewebarConnect');
-import fs = module('fs');
-import should = module('should');
-import request = module('request');
+import connect = require('SewebarConnect');
+import fs = require('fs');
+import should = require('should');
+import request = require('request');
 
 describe('SewebarConnect', () => {
     var client: connect.SewebarConnectClient,
@@ -209,8 +209,8 @@ describe('SewebarConnect', () => {
             });
 
             // registerUser
-            it('#POST /users', (done) => {
-                var uri = [uriBase, '/users'].join('');
+            it('#POST /users/{username}', (done) => {
+                var uri = [uriBase, '/users/', user.name].join('');
 
                 request.post(uri, (e, r, body) => {
                     should.not.exist(e);
@@ -266,7 +266,7 @@ describe('SewebarConnect', () => {
                     }, auth2 = 'Basic ' + new Buffer(user2.name + ':' + user2.password).toString('base64');
 
                 before((done) => {
-                    var uri = [uriBase, '/users'].join('');
+                    var uri = [uriBase, '/users/', user2.name].join('');
 
                     request.post(uri, (e, r, body) => {
                         done();
@@ -288,17 +288,66 @@ describe('SewebarConnect', () => {
                 });
 
                 // getDatabasePassword
-                it.skip('#GET /users/{username}/databases/{id}', (done) => {
-                    done();
+                it('#GET /users/{username}/databases/{id}', (done) => {
+                    var uri = [uriBase, '/users/', user2.name, '/databases/', database.db_id].join(''),
+                        reg = new RegExp('password="' + database.db_password + '"', 'gi');
+
+                    request.get({ url: uri, headers: { Authorization: auth2 } }, (e, r, body) => {
+                        should.not.exist(e);
+                        should.exist(body);
+
+                        body.should.match(reg);
+
+                        r.statusCode.should.eql(200);
+
+                        done();
+                    });
                 });
 
                 // setDatabasePassword
-                it.skip('#GET /users/{username}/databases/{id}', (done) => {
-                    done();
+                it('#PUT /users/{username}/databases/{id}', (done) => {
+                    var uri = [uriBase, '/users/', user2.name, '/databases/' + database.db_id].join('');
+
+                    // update record
+                    request.put({ url: uri, headers: { Authorization: auth2 } }, (e, r, body) => {
+                        // check updated
+                        request.get({ url: uri, headers: { Authorization: auth2 } }, (e, r, body) => {
+                            should.not.exist(e);
+                            should.exist(body);
+                            
+                            body.should.match(/password="new"/gi);
+
+                            r.statusCode.should.eql(200);
+
+                            done();
+                        });
+                    }).form({
+                        db_id: database.db_id,
+                        db_password: 'new'
+                        });
                 });
 
-                it.skip('#DELETE /users/{username}/databases/{id}', (done) => {
-                    done();
+                it('#DELETE /users/{username}/databases/{id}', (done) => {
+                    var uri = [uriBase, '/users/', user2.name, '/databases'].join(''),
+                        database2 = {
+                            db_id: 'db02',
+                            db_password: 'secret2'
+                        };
+
+                    // create record to remove
+                    request.post({ url: uri, headers: { Authorization: auth2 } }, (e, r, body) => {
+                        var uri_del = [uriBase, '/users/', user2.name, '/databases/' + database2.db_id].join('');
+
+                        // remove
+                        request.del({ url: uri_del, headers: { Authorization: auth2 } }, (e, r, body) => {
+                            should.not.exist(e);
+                            should.exist(body);
+                            
+                            r.statusCode.should.eql(200);
+
+                            done();
+                        });
+                    }).form(database2);
                 });
 
                 after((done) => {

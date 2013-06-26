@@ -3,9 +3,9 @@
 ///<reference path='../should.d.ts'/>
 ///<reference path='../node_modules/SewebarConnect/Client.d.ts'/>
 
-import connect = module('SewebarConnect');
-import fs = module('fs');
-import should = module('should');
+import connect = require('SewebarConnect');
+import fs = require('fs');
+import should = require('should');
 
 var scenarios = process.cwd() + '/scenarios';
 
