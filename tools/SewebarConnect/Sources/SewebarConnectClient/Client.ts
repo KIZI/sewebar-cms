@@ -52,6 +52,7 @@ export module SewebarConnect {
                 }
             };
 
+            // TODO: avoid changing cfg itself
             this.opts = cfg;
             this.server = this.opts.app == null ? 'SewebarConnect' : this.opts.app;
 
