@@ -20,16 +20,25 @@ namespace SewebarConnect.API.Requests.Application
 							.Elements(which)
 						select element).ToList();
 
-			if (conn == null || conn.Count == 0)
+			if (conn.Count == 0)
 			{
+				if (which == "Metabase")
+				{
+					return null;
+				}
+
 				throw new Exception(String.Format("Database was not correctly defined ({0}).", which));
 			}
 
 			var connType = (from element in conn
 							select (string)element.Attribute("type")).SingleOrDefault();
 
+			if (connType != null && !connType.EndsWith("Connection"))
+			{
+				connType = connType + "Connection";
+			}
 
-			if (!OdbcDrivers.TryParse(connType + "Connection", true, out type))
+			if (!OdbcDrivers.TryParse(connType, true, out type))
 			{
 				throw new Exception(String.Format("Database was not correctly defined (type of {0}).", which));
 			}

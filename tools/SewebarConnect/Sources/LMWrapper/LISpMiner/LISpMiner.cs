@@ -211,7 +211,7 @@ namespace LMWrapper.LISpMiner
 		{
 			string metabaseFile;
 			string dsnFile;
-			string metabasePrototypeFile = metabaseConnection.Filename;
+			string metabasePrototypeFile = metabaseConnection != null ? metabaseConnection.Filename : string.Empty;
 
 			this.GetMetabaseNames(out metabaseFile, ref metabasePrototypeFile, out dsnFile);
 
