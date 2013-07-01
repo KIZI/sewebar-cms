@@ -222,7 +222,7 @@ class XQuery extends KBIntegratorSynchronable
 		}
 	}
 
-	public function getDataDescription()
+	public function getDataDescription($params = null)
 	{
 		$postdata = array(
 			'action' => 'getDescription',

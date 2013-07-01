@@ -110,7 +110,7 @@ class KBIQuery
 	 *
 	 * @return string
 	 */
-	public function proccessQuery(&$options)
+	public function proccessQuery(&$options = array())
 	{
 		$parameters = $this->getParameters();
 		$xslt = $this->getXslt();

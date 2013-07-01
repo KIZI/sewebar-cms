@@ -180,7 +180,7 @@ class Jucene extends KBIntegratorSynchronable
 	 *
 	 * @return string  data description from PMML documents if possible
 	 */
-	public function getDataDescription()
+	public function getDataDescription($params = null)
 	{
 		return '';
 	}

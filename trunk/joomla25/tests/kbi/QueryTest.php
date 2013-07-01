@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../www/plugins/kbi/KBIntegrator.php';
+require_once dirname(__FILE__).'/../../www/libraries/kbi/KBIntegrator.php';
 require_once dirname(__FILE__).'/../data/queries.php';
 
 /**
@@ -17,6 +17,8 @@ class KBIQueryTest extends PHPUnit_Framework_TestCase
 
 	protected function setUp()
     {
+		KBIDebug::setEnabled(false);
+
 		$this->object = new KBIQuery();
 		//$this->_testObjects = json_decode(file_get_contents(dirname(__FILE__).'/../data/kbiqueries.json'), true);
 		
@@ -25,6 +27,8 @@ class KBIQueryTest extends PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
+		KBIDebug::setEnabled(true);
+
 		unset($this->object);
     }
 

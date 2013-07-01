@@ -1,5 +1,7 @@
 <?php
 
+require_once 'RESTClientResponse.php';
+
 class RESTClient
 {
 	private function getData($_data)

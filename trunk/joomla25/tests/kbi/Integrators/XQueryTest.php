@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../../www/plugins/kbi/Integrators/XQuery.php';
+require_once dirname(__FILE__).'/../../../www/libraries/kbi/Integrators/XQuery.php';
 
 /**
  * Test class for XQuery.
