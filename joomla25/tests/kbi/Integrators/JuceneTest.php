@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../../www/plugins/kbi/Integrators/Jucene.php';
+require_once dirname(__FILE__).'/../../../www/libraries/kbi/Integrators/Jucene.php';
 
 /**
  * Test class for Jucene.

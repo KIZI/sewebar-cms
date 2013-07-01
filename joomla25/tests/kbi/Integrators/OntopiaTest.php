@@ -1,6 +1,6 @@
 <?php
 
-	require_once dirname(__FILE__).'/../../../www/plugins/kbi/Integrators/Ontopia.php';
+	require_once dirname(__FILE__).'/../../../www/libraries/kbi/Integrators/Ontopia.php';
 
 /**
  * Test class for Ontopia.

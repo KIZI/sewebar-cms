@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../www/plugins/kbi/KBIntegrator.php';
+require_once dirname(__FILE__).'/../../www/libraries/kbi/KBIntegrator.php';
 require_once dirname(__FILE__).'/../data/integrators.php';
 
 /**

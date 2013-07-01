@@ -51,26 +51,76 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		parent::__construct($config);
 	}
 
+	/**
+	 * @param array|SimpleXMLElement $db_cfg
+	 * @return string ID of registered miner.
+	 * @throws Exception
+	 */
 	public function register($db_cfg)
 	{
+		$client = $this->getRestClient();
+		$data = $db_cfg;
+
+		if (is_array($db_cfg)) {
+			$request_xml = new SimpleXMLElement("<RegistrationRequest></RegistrationRequest>");
+
+			if (isset($db_cfg['metabase'])) {
+				$request_xml_metabase = $request_xml->addChild('Metabase');
+				$request_xml_metabase->addAttribute('type', 'Access');
+				$request_xml_metabase->addChild('File', $db_cfg['metabase']);
+			}
+
+			if (isset($db_cfg['type'])) {
+				$request_xml_connection = $request_xml->addChild('Connection');
+				$request_xml_connection->addAttribute('type', $db_cfg['type']);
+
+				if (isset($db_cfg['server'])) {
+					$request_xml_connection->addChild('Server', $db_cfg['server']);
+				}
+
+				if (isset($db_cfg['database'])) {
+					$request_xml_connection->addChild('Database', $db_cfg['database']);
+				}
+
+				if (isset($db_cfg['username'])) {
+					$request_xml_connection->addChild('Username', $db_cfg['username']);
+				}
+
+				if (isset($db_cfg['password'])) {
+					$request_xml_connection->addChild('Password', $db_cfg['password']);
+				}
+			} else {
+				throw new Exception('Database configuration does not specify connection type.');
+			}
+
+			$data = $request_xml->asXML();
+		} else if (is_a($db_cfg, 'SimpleXMLElement')) {
+			$data = $db_cfg->asXML();
+		}
+
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners";
 
-		$response = $this->requestPost($url, $db_cfg);
+		$response = $client->post($url, $data);
 
 		KBIDebug::log(array('config' => $db_cfg, 'response' => $response, 'url' => $url), "Miner registered");
 
 		return $this->parseRegisterResponse($response);
 	}
 
+	/**
+	 * @param RESTClientResponse $response
+	 * @return string
+	 * @throws Exception
+	 */
 	protected function parseRegisterResponse($response)
 	{
-		$xml_response = simplexml_load_string($response);
+		$body = $response->getBodyAsXml();
 
-		if($xml_response['status'] == 'failure') {
-			throw new Exception($xml_response->message);
-		} else if($xml_response['status'] == 'success') {
-			return (string)$xml_response['id'];
+		if($response->getStatusCode() != 200 || $body['status'] == 'failure') {
+			throw new Exception($body->message);
+		} else if($body['status'] == 'success') {
+			return (string)$body['id'];
 		}
 
 		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
@@ -78,23 +128,14 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function unregister($server_id = null)
 	{
+		$client = $this->getRestClient();
+
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$this->getMinerId($server_id)}";
 
-		$client = $this->getRestClient();
-
 		$response = $client->delete($url);
 
-		$xml_response = simplexml_load_string($response);
-
-		if($xml_response['status'] == 'failure') {
-			throw new Exception($xml_response->message);
-		} else if($xml_response['status'] == 'success') {
-			KBIDebug::log("Miner unregistered/removed");
-			return;
-		}
-
-		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
+		return $this->parseResponse($response, "Miner unregistered/removed.");
 	}
 
 	public function importDataDictionary($dataDictionary, $server_id = null)
@@ -108,29 +149,21 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$client = $this->getRestClient();
 
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/miners/{$server_id}";
+		$url = "$url/miners/{$server_id}/DataDictionary";
 
-		$response = $client->patch($url, $dataDictionary);
+		$response = $client->put($url, $dataDictionary);
 
 		KBIDebug::log($response, "Import executed");
 
-		return $this->parseImportDataDictionaryResponse($response);
+		return $this->parseResponse($response);
 	}
 
-	protected function parseImportDataDictionaryResponse($response)
-	{
-		$xml_response = simplexml_load_string($response);
-
-		if($xml_response['status'] == 'failure') {
-			throw new Exception($xml_response->message);
-		} else if($xml_response['status'] == 'success') {
-			return (string)$xml_response->message;
-		}
-
-		throw new Exception('Response not in expected format');
-	}
-
-	public function getDataDescription($params=null)
+	/**
+	 * @param $params
+	 * @return string
+	 * @throws Exception
+	 */
+	public function getDataDescription($params = null)
 	{
 		$server_id = $this->getMinerId();
 
@@ -150,9 +183,13 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		KBIDebug::info(array($url, $data), "getting DataDictionary");
 
-		$dd = $client->get($url, $data);
+		$response = $client->get($url, $data);
 
-		return trim($dd);
+		if ($response->isSuccess()) {
+			return trim($response->getBody());
+		}
+
+		return $this->parseResponse($response);
 	}
 
 	public function queryPost($query, $options)
@@ -183,7 +220,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
 			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
 
-			return $client->get("$url", $data);
+			$response = $client->get("$url", $data);
 		} else {
 			$pooler = $this->getPooler();
 
@@ -206,12 +243,19 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
 
-			return $client->post("$url?{$client->encodeData($data)}", $query);
+			$response = $client->post("$url?{$client->encodeData($data)}", $query);
 		}
+
+		if ($response->isSuccess()) {
+			return $response->getBody();
+		}
+
+		return $this->parseResponse($response);
 	}
 
 	public function cancelTask($taskName)
 	{
+		$request_xml = new SimpleXMLElement("<CancelationRequest></CancelationRequest>");
 		$server_id = $this->getMinerId();
 
 		if($this->getMinerId() === null) {
@@ -223,19 +267,25 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		switch($this->getPooler()) {
 			case 'grid':
-				$url = "$url/miners/{$server_id}/grid/{$taskName}/cancel";
+				$url = "$url/miners/{$server_id}/tasks/grid/{$taskName}";
 				break;
 			case 'proc':
-				$url = "$url/miners/{$server_id}/proc/{$taskName}/cancel";
+				$url = "$url/miners/{$server_id}/tasks/proc/{$taskName}";
 			break;
 			case 'task':
 			default:
-				$url = "$url/miners/{$server_id}/task/{$taskName}/cancel";
+				$url = "$url/miners/{$server_id}/tasks/task/{$taskName}";
 		}
 
 		KBIDebug::info(array($url), 'Canceling task');
 
-		return $client->post($url);
+		$response = $client->put($url, $request_xml->asXML());
+
+		if ($response->isSuccess()) {
+			return $response->getBody();
+		}
+
+		return $this->parseResponse($response);
 	}
 
 	public function test()
@@ -441,24 +491,24 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		throw new Exception('Response not in expected format');
 	}
 
+	//endregion
+
 	/**
 	 * @param RESTClientResponse $response
 	 * @param $message
-	 * @return mixed
+	 * @return string
 	 * @throws Exception
 	 */
-	protected function parseResponse($response, $message)
+	protected function parseResponse($response, $message = '')
 	{
 		$body = $response->getBodyAsXml();
 
-		if($response->getStatusCode() != 200 || $body['status'] == 'failure') {
-			throw new Exception($body->message);
+		if(!$response->isSuccess() || $body['status'] == 'failure') {
+			throw new Exception(isset($body->message) ? (string)$body->message : $response->getStatus());
 		} else if($body['status'] == 'success') {
-			return $message;
+			return isset($body->message) ? (string)$body->message : $message;
 		}
 
-		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response)));
+		throw new Exception(sprintf('Response not in expected format (%s)', htmlspecialchars($response->getBody())));
 	}
-
-	//endregion
 }

@@ -39,4 +39,9 @@ class KBIDebug
 		$instance->info($Object, $Label);
 	}
 
+	public static function setEnabled($enabled)
+	{
+		$instance = self::getInstance();
+		$instance->setEnabled($enabled);
+	}
 }
