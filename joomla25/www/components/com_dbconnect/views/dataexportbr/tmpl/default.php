@@ -8,7 +8,7 @@
   
   echo '<h1>Exported DRL Rules</h1>';
 
-  echo '<div class="font-style:italic;">In following code, variable blocks <strong>%RULEID%</strong> and <strong>%PROJECTID%</strong> should be replaced with IDs (while saving into drl rules base)</div>';
+  echo '<div class="font-style:italic;">In following code, variable blocks <strong>%RULEID%</strong> should be replaced with IDs (while saving into drl rules base)</div>';
   echo '<div>';
   //vypsani jednotlivych pravidel
   $drlStr="import cz.vse.droolsserver.drools.DrlObj;\nimport cz.vse.droolsserver.drools.DrlResult;\n\n";
@@ -17,7 +17,7 @@
     foreach ($this->drlXml->Rule as $rule){
       $drlStr.="\n//".$rule->Text."\n";
       $drlStr.='rule "Rule_%RULEID%"'."\n";
-      $drlStr.="when\n".trim($rule->Condition);
+      $drlStr.="when\n\t".trim($rule->Condition);
       $drlStr.="\nthen\n\t".trim($rule->Execute)."\nend\n\n";
     }
   }

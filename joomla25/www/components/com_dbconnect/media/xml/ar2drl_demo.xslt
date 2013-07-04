@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     
-    <xsl:output encoding="UTF-8" method="xml" indent="no" xml:space="default"/>
+    <xsl:output encoding="UTF-8" method="xml" indent="no" xml:space="default" />
     
     <xsl:template match="/">
         <Rules>
@@ -16,7 +16,16 @@
                 <xsl:apply-templates select="./Antecedent" />
             </Condition>
             <Execute>
-                DrlResult.processFiredRule(%PROJECTID%,%RULEID%);
+                <xsl:choose>
+                    <xsl:when test="(count(./Consequent/Attribute/CatRef/Data/Value)=1)">
+                        processResult(kcontext, "<xsl:value-of select="./Consequent/Attribute/FieldRef/Name" />", "<xsl:value-of select="./Consequent/Attribute/CatRef/Data/Value" />");
+                    </xsl:when>
+                    <xsl:otherwise>
+                        //provisional construct - rule with complex consequent 
+                        processComplexResult(%RULEID%);    
+                    </xsl:otherwise>
+                </xsl:choose>
+                
             </Execute>
         </Rule>
     </xsl:template>
@@ -76,7 +85,7 @@
         </xsl:choose>-->
     </xsl:template>
 
-    <xsl:template match="Attribute" xml:space="preserve" >
+ <xsl:template match="Attribute" xml:space="preserve" >
         DrlObj (name == "<xsl:value-of select="./FieldRef/Identity/text()"/>", <xsl:apply-templates select="./CatRef/Data" />)    
     </xsl:template>
     

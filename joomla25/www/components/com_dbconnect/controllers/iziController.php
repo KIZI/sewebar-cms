@@ -963,7 +963,7 @@ class IziController extends JController{
     $dataModel=&$this->getModel('Data','dbconnectModel');
     $bkefArticleTitle=$connection->table.' - BKEF ('.$curDateStr.')';
     $fmlArticleTitle=$connection->table.' - FML ('.$curDateStr.')';
-    $bkefXML=$generatorModel->getBkefXML($bkedArticleTitle);
+    $bkefXML=$generatorModel->getBkefXML($bkefArticleTitle);
          
     if ($bkefXML){
       if ($task->bkef_article>0){
@@ -1215,10 +1215,10 @@ class IziController extends JController{
     $categoryId=JRequest::getInt('catid',-1); //TODO zadání konkrétní kategorie
     if ($categoryId==-1){ 
       //TODO výběr kategorie, do které se mají články přidávat
+      $categoryId=2;
      /*
       JError::raiseError(500,JText::_('FORBIDDEN'));
       return;                */
-      $categoryId=0;
     }
     $title=JRequest::getString('title','');
     $todo=JRequest::getString('todo','');
@@ -1239,10 +1239,11 @@ class IziController extends JController{
         $user =& JFactory::getUser();
         $userId=$user->get('id');    
       }
-      $sectionId=JRequest::getInt('sectionId',0);
+
       //uložení článku
+      /** @var $dataModel dbconnectModelData */
       $dataModel=&$this->getModel('Data','dbconnectModel');
-      $articleId=$dataModel->newArticle($title,'',$sectionId,$userId);  
+      $articleId=$dataModel->newArticle($title,'',$categoryId,$userId);
       //povedlo se článek uložit?
       if ($articleId){
         if ($kbiId>0){

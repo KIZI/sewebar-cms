@@ -66,21 +66,52 @@
     /**
      *  Funkce pro vytvoření/uložení článku
      */         
-    public function saveArticle($articleId,$title,$data,$sectionId=0,$userId=0){    
+    public function saveArticle($articleId,$title,$data,$categoryId=0,$userId=0){
       $db=$this->getDBO();
       $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
       if (($articleId)&&$db->loadObject()){ 
         //budeme updatovat
-        $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', `fulltext`="", sectionId='.$db->quote($sectionId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
+        $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', `fulltext`="", sectionId='.$db->quote($categoryId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
         if ($db->query()){     
           return $articleId;
         }
-      }else{ 
+      }else{
+        //najdeme příslušnou kategorii
+        $db->setQuery('SELECT asset_id FROM #__categories WHERE id='.$db->quote($categoryId));
+        $db->query();
+        $category=$db->loadObject();
+        if (!$category){     exit('no category');
+          //TODO vrácení chyby
+          return false;
+        }
+        $db->setQuery('SELECT * FROM #__assets WHERE id='.$db->quote($category->asset_id).' LIMIT 1;');
+        $db->query();
+        $parentAsset=$db->loadObject();
         //budeme ukládat
-        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`sectionid`,`created`,`created_by`,`modified`,`modified_by`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($sectionId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).');');
-        //TODO asset!!!
+        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`sectionid`,`created`,`created_by`,`modified`,`modified_by`,`access`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($categoryId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).',1);');
         if ($db->query()){
-          return $db->insertid();
+          $articleId=$db->insertid();
+          //vyřešení ASSETS //TODO dodělat možnost příslušenství ke skupině (kvůli výuce)
+          $parentAssetRgt=$parentAsset->rgt;
+          $db->setQuery('UPDATE #__assets SET lft=lft+2 WHERE lft>'.$db->quote($parentAssetRgt));
+          $db->query();
+          $db->setQuery('UPDATE #__assets SET rgt=rgt+2 WHERE rgt>='.$db->quote($parentAssetRgt));
+          $db->query();
+          $db->setQuery('INSERT INTO #__assets (`parent_id`,`lft`,`rgt`,`level`,`name`,`title`,`rules`)VALUES (
+            '.$db->quote($parentAsset->id).',
+            '.$db->quote($parentAssetRgt).',
+            '.$db->quote(($parentAssetRgt+1)).',
+            '.$db->quote($parentAsset->level+1).',
+            '.$db->quote('com_content.article.'.$articleId).',
+            '.$db->quote($title).',
+            "{}"
+          );');
+          $db->query();
+          $assetId=$db->insertid();
+          //doplníme asset_id k záznamu článku
+          $db->setQuery('UPDATE #__content SET asset_id='.$db->quote($assetId).' WHERE id='.$db->quote($articleId).' LIMIT 1;');
+          $db->query();
+          return $articleId;
         }else{
           return false;
         }

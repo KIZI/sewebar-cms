@@ -14,7 +14,7 @@ echo '<div id="iziDiv">';
   if (($this->result=='ok')&&(isset($this->editUrl))){
     echo '<a href="'.$this->editUrl.'" class="button" target="_blank">'.JText::_('EDIT_ARTICLE').'</a>';
   }
-  echo '  <a class="button" href="javascript:parent.close();">OK</a>
+  echo '  <a class="button" href="javascript:parent.reloadReports();parent.close();">OK</a>
         </div>';
 echo '</div>';              
 ?>
