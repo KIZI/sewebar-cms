@@ -164,7 +164,7 @@ class DataController extends JController{
         $proc->importStyleSheet($pmml2arXslt);
         $arXml=$proc->transformToDoc($pmmlXml);
 
-        exit(var_dump($arXml->saveXML()));
+        
 
         $ar2drlXslt=new DOMDocument();
         $ar2drlXslt->load(JPATH_SITE.'/media/com_dbconnect/xml/ar2drl_demo.xslt');
