@@ -191,13 +191,15 @@ class DataController extends JController{
   /**
    *  Akce pro získání seznamu článků s uživatelskými zprávami 
    */
-  public function listKBIArticles(){        
+  public function listKBIArticles(){
+    var_dump($_REQUEST['kbi']);
     $kbiId=JRequest::getInt('kbi',-1);
     if ($kbiId<0){//TODO kontrola, jestli má uživatel přístup k danému KBI zdroji
       $this->outputJSON(array('result'=>'error','message'=>JText::_('KBI_NOT_DEFINED'),'kbi'=>$kbiId));
       return;
     }
-                        
+
+    /** @var $tasksModel dbconnectModelTasks */
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTaskByKbi($kbiId);
     if (!$task){
@@ -238,14 +240,15 @@ class DataController extends JController{
       $user =& JFactory::getUser();
       $userId=$user->get('id');    
     }
-    $sectionId=JRequest::getInt('sectionId',0);
+    $sectionId=JRequest::getInt('sectionId',2);//TODO id výchozí kategorie
     $title=JRequest::getString('title','');
     if ($title==''){
       $title=date('r');
     }
-    
+
+    /** @var $dataModel dbconnectModelData */
     $dataModel=&$this->getModel('Data','dbconnectModel');
-    $articleId=$dataModel->saveArticle(0,$title,@$_POST['data'],$sectionId,$userId);
+    $articleId=$dataModel->newArticle($title,@$_POST['data'],$sectionId,$userId);
     if ($articleId){
       
       $kbiId=JRequest::getInt('kbi',0);

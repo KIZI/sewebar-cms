@@ -60,10 +60,10 @@ class dbconnectModelTasks extends JModel
   /**
    *  Funkce vracející jednu uloženou úlohu na základě ID KBI zdroje
    */
-  public function getTaskByKbi($kbiId){
+  public function getTaskByKbi($kbiId,$ignoreUserID=false){
     $db=$this->getDBO();
     $user=&JFactory::getUser();
-    $db->setQuery("SELECT * FROM #__dbconnect_tasks WHERE kbi_source='".$kbiId."' AND uid='".$user->get('id')."' LIMIT 1;");
+    $db->setQuery("SELECT * FROM #__dbconnect_tasks WHERE kbi_source='".$kbiId."' ".($ignoreUserID?'':'AND uid="'.$user->get('id').'"')." LIMIT 1;");
     return $db->loadObject();
   }      
 
