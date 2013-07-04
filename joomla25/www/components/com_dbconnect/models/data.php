@@ -67,6 +67,10 @@
      *  Funkce pro vytvoření/uložení článku
      */         
     public function saveArticle($articleId,$title,$data,$categoryId=0,$userId=0){
+      //TODO
+      if ($categoryId<2){
+        $categoryId=2;
+      }
       $db=$this->getDBO();
       $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
       if (($articleId)&&$db->loadObject()){ 
@@ -80,9 +84,9 @@
         $db->setQuery('SELECT asset_id FROM #__categories WHERE id='.$db->quote($categoryId));
         $db->query();
         $category=$db->loadObject();
-        if (!$category){     exit('no category');
+        if (!$category){    exit('no category');
           //TODO vrácení chyby
-          return false;
+          //return false;
         }
         $db->setQuery('SELECT * FROM #__assets WHERE id='.$db->quote($category->asset_id).' LIMIT 1;');
         $db->query();
