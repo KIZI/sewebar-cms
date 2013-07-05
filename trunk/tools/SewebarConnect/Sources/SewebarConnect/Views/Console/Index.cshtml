@@ -1,6 +1,4 @@
-﻿@using LMWrapper.ODBC
-@using SewebarConnect
-@{
+﻿@{
 	ViewBag.Title = "Console";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -11,45 +9,59 @@
 
 <h1>Sewebar Debug Console</h1>
 
-<form action="#" class="user console">
-	<label for="user_username">Username</label>
-	<input type="text" id="user_username" name="user_username" />
-	<label for="user_password">Password</label>
-	<input type="text" id="user_password" name="user_password" />
+<form action="#" class="credentials console">
+	<fieldset class="id">
+		<legend>Private miner credentials</legend>
+		<label for="user_username">Username</label>
+		<input type="text" id="user_username" name="user_username" />
+		<label for="user_password">Password</label>
+		<input type="text" id="user_password" name="user_password" />
+	</fieldset>
 </form>
 
 <h2 class="reg">Registration</h2>
 <form action="#" class="reg console">
-<fieldset>
-	<label for="reg_type">Database Type</label>
-	<select name="reg_type" id="reg_type">
-		<option value="MySQLConnection">MySQL</option>
-		<option value="AccessConnection" selected="selected">Access</option>
-	</select>
-	<br/>
-	<label for="reg_metabase">Metabase</label>
-	<input type="text" id="reg_metabase" name="reg_metabase"/>
-	<br/>
-	<label for="reg_server">Server</label>
-	<input type="text" id="reg_server" name="reg_server"/>
-	<br/>
-	<label for="reg_database">Database</label>
-	<input type="text" id="reg_database" name="reg_database"/>
-	<br/>
-	<label for="reg_username">Username</label>
-	<input type="text" id="reg_username" name="reg_username"/>
-	<br/>
-	<label for="reg_password">Password</label>
-	<input type="password" id="reg_password" name="reg_password"/>
-	<br/>
-</fieldset>
-<fieldset class="output">
-	<legend>Response</legend>
-	<textarea name="reg_response" id="reg_response" rows="10" cols="80"></textarea>
-</fieldset>
-<div class="buttons">
-	<button name="reg">Register</button>
-</div>
+	<fieldset>
+		<legend>Connections</legend>
+		<fieldset>
+			<legend>Database connection</legend>
+			<label for="reg_type">Database Type</label>
+			<select name="reg_type" id="reg_type">
+				<option value="MySQL" selected="selected">MySQL</option>
+				<option value="Access">Access</option>
+			</select>
+			<br/>
+			<label for="reg_server">Server / Filename</label>
+			<input type="text" id="reg_server" name="reg_server"/>
+			<br/>
+			<label for="reg_database">Database</label>
+			<input type="text" id="reg_database" name="reg_database"/>
+			<br/>
+			<label for="reg_username">Username</label>
+			<input type="text" id="reg_username" name="reg_username"/>
+			<br/>
+			<label for="reg_password">Password</label>
+			<input type="password" id="reg_password" name="reg_password"/>
+			<br/>
+		</fieldset>
+		<fieldset>
+			<legend>Metabase connection (Optional)</legend>
+			<label for="reg_metabase_type">Database Type</label>
+			<select name="reg_metabase_type" id="reg_metabase_type">
+				<option value="Access">Access</option>
+			</select>
+			<br/>
+			<label for="reg_metabase">Metabase filename</label>
+			<input type="text" id="reg_metabase" name="reg_metabase"/>
+		</fieldset>
+	</fieldset>
+	<fieldset class="output">
+		<legend>Response</legend>
+		<textarea name="reg_response" id="reg_response" rows="10" cols="80"></textarea>
+	</fieldset>
+	<div class="buttons">
+		<button name="reg">Register</button>
+	</div>
 </form>
 
 <h2 class="import">Import DataDictionary</h2>
@@ -130,9 +142,12 @@
 	<legend>LM ID</legend>
 	<input type="text" value="" name="export_id" id="export_id" size="32" />
 	&nbsp;
+	<label>Task to export</label>
+	<input type="text" value="" name="export_task" id="export_task" size="32" />
+	&nbsp;
 	<label for="export_template">Matrix (MatrixName to export)</label>
 	<input type="text" value="" name="export_matrix" id="export_matrix" size="32" />
-	&nbsp;
+	<br/>
 	<label for="export_template">Template (used for exporting task results)</label>
 	<input type="text" value="" name="export_template" id="export_template" size="64" />
 </fieldset>
@@ -145,6 +160,7 @@
 	<textarea name="export_response" id="export_response" rows="20" cols="80"></textarea>
 </fieldset>
 <div class="buttons">
-	<button name="export">Export</button>
+	<button name="b_export_dd">Export DataDictionary</button>
+	<button name="b_export_task">Export Task</button>
 </div>
 </form>

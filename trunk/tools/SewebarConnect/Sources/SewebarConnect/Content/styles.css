@@ -6,50 +6,42 @@ li dl {
 	margin-left: 25px;
 }
 
-body
-{
+body {
 	font-size: 11px;
 	color: black;
 	font-family: Verdana, Arial;
 }
 
-h1, h2
-{
+h1, h2 {
 	color: #800000;
 	text-decoration: underline;
 }
 
-h1
-{
+h1 {
 	font-size: 20px;
 	text-align: center;
 	text-decoration: underline;
 }
 
-h2
-{
+h2 {
 	font-size: 15px;
 	cursor: pointer;
 }
 
-p
-{
+p {
 	margin-left: 20px;
 }
 
-p.withsymbols
-{
+p.withsymbols {
 	line-height: 2em;
 }
 
-h3
-{
+h3 {
 	font-size: 11px;
 	font-weight: bold;
 }
 
-.symbol
-{
+.symbol {
 	font-size: 15px;
 	font-weight:bold;
 }
@@ -59,35 +51,29 @@ p.image
 	text-align: center;
 }
 
-table
-{
+table {
 	margin: auto;
 }
 
-#header span
-{
+#header span {
 	color: #c0c0c0;
 }
 
-#classes
-{
+#classes {
 	margin-left: 10%;
 	line-height: 1.3em;
 }
 
-#references
-{
+#references {
 	list-style-type: decimal;
 }
 
-#content
-{
+#content {
 	width: 74%;
 	margin: auto;
 }
 
-.console
-{
+.console {
 }
 
 form.reg,
@@ -98,8 +84,7 @@ form.export {
 	display: none;
 }
 
-.console fieldset, .console fieldset.output
-{
+.console fieldset, .console fieldset.output {
 	float: left;
 	border: none;
 	margin: 0;
@@ -108,62 +93,70 @@ form.export {
 	padding-bottom: 10px;
 }
 
-.console fieldset.id
-{
+.console fieldset fieldset {
+	float: none;
+}
+
+.console fieldset legend {
+	font-weight: bold;
+	margin-bottom: 3px;
+}
+
+.console fieldset.id {
 	width: 100%;
 }
 
-.console fieldset.id input
-{
+.console fieldset.id input {
 	border: 1px solid #ccc;
+}
+
+form.console.credentials fieldset {
+	width: 100%;
+}
+
+form.console.credentials fieldset label {
+	margin-left: 5px
 }
 
 form.console.reg fieldset input,
-form.console.reg fieldset select
-{
+form.console.reg fieldset select {
 	border: 1px solid #ccc;
 	display: block;
 }
 
-form.console.reg fieldset label
-{
+form.console.reg fieldset label {
 	width: 110px;
 	display: block;
 	float: left;
+	margin-left: 5px
 }
 
-.console fieldset.output
-{
+.console fieldset.output {
 	padding-left: 2%;
 }
 
-.console fieldset textarea
-{
+.console fieldset textarea {
 	width: 100%;
 	padding: 0;
 	resize: vertical;
 	border: 1px solid #ccc;
 }
 
-.console fieldset textarea.failure
-{
+.console fieldset textarea.failure {
 	color: red;
 }
 
-.console fieldset textarea.success
-{
+.console fieldset textarea.success {
 	color: green;
 }
 
-.console div.buttons
-{
+.console div.buttons {
 	margin: 10px auto;
 	text-align: center;
 	clear: both;
 }
 
-.console div.buttons button
-{
+.console div.buttons button {
 	border: 1px solid #000;
 	background-color: #ccc;
 }
