@@ -44,6 +44,11 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return isset($this->config['pooler']) ? $this->config['pooler'] : 'task';
 	}
 
+	protected function getAnonymousUser()
+	{
+		return array('username' => 'anonymous', 'password' => '');
+	}
+
 	//endregion
 
 	public function __construct($config)
@@ -350,7 +355,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 * @param string $email_from - e-mail address for "From:" field for confirmation e-mail
 	 * @param string $email_link - link for user confirmation / string {code} should be on server replaced with security code value
 	 */
-	public function updateOtherUser($username, $new_username, $new_password,$new_email, $email_from, $email_link)
+	public function updateOtherUser($username, $new_username, $new_password, $new_email, $email_from, $email_link)
 	{
 		//TODO funkce pro změnu "nevlastního" uživatelského účtu
 	}
@@ -385,15 +390,29 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	}
 
 	/**
-	 * @param string $username
+	 * Removes existing user.
+	 * @param $username string User to remove
+	 * @param $admin_password string Password for authorized user (admin or user itself).
+	 * @param $admin_username string Authorized user to remove this user (admin or user itself).
+	 * @return string
+	 * @throws Exception
 	 */
-	public function deleteUser($username)
+	public function deleteUser($username, $admin_password, $admin_username = null)
 	{
+		if (empty($username)) {
+			throw new Exception('Username cannot be empty!');
+		}
+
+		$credentials = array(
+			'username' => empty($admin_username) ? $username : $admin_username,
+			'password' => $admin_password
+		);
+
 		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
-		$url = "$url/users/$username";
+		$url = "$url/users/${username}";
 
-		$response = $client->delete($url, array('username' => 'admin', 'password' => 'sewebar'));
+		$response = $client->delete($url, null, $credentials);
 
 		KBIDebug::log(array('url' => "DELETE $url", 'response' => $response), "User removed");
 
@@ -410,6 +429,8 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	}
 
 	/**
+	 * Creates user's database.
+	 *
 	 * @param string $username
 	 * @param string $password
 	 * @param int $db_id
@@ -418,6 +439,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 */
 	public function registerUserDatabase($username, $password, $db_id, $db_password)
 	{
+		if (empty($username)) {
+			$anonymous = $this->getAnonymousUser();
+			$username = $anonymous['username'];
+			$password = $anonymous['password'];
+		}
+
 		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/users/$username/databases";
@@ -429,12 +456,41 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$response = $client->post($url, $data, array('username' => $username, 'password' => $password));
 
-		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User registered");
+		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User's database registered");
 
 		return $this->parseResponse($response, "User's database successfully registered.");
 	}
 
 	/**
+	 * Removes user's database.
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @param string $db_id
+	 * @return mixed
+	 */
+	public function unregisterUserDatabase($username, $password, $db_id)
+	{
+		if (empty($username)) {
+			$anonymous = $this->getAnonymousUser();
+			$username = $anonymous['username'];
+			$password = $anonymous['password'];
+		}
+
+		$client = $this->getRestClient();
+		$url = trim($this->getUrl(), '/');
+		$url = "$url/users/$username/databases/{$db_id}";
+
+		$response = $client->delete($url, null, array('username' => $username, 'password' => $password));
+
+		KBIDebug::log(array('url' => $url, 'response' => $response), "User's database removed");
+
+		return $this->parseResponse($response, "User's database successfully unregistered.");
+	}
+
+	/**
+	 * Retrieves user's database's password.
+	 *
 	 * @param string $username
 	 * @param string $password
 	 * @param int $db_id
@@ -442,15 +498,19 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 */
 	public function getDatabasePassword($username, $password, $db_id)
 	{
+		if (empty($username)) {
+			$anonymous = $this->getAnonymousUser();
+			$username = $anonymous['username'];
+			$password = $anonymous['password'];
+		}
+
 		$client = $this->getRestClient();
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/users/$username/databases/$db_id";
 
-		$data = array();
+		$response = $client->get($url, null, array('username' => $username, 'password' => $password));
 
-		$response = $client->get($url, $data, array('username' => $username, 'password' => $password));
-
-		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "Password retring");
+		KBIDebug::log(array('url' => $url, 'response' => $response), "Password retring");
 
 		return $this->parseDatabasePassword($response);
 	}
@@ -482,8 +542,8 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	{
 		$body = $response->getBodyAsXml();
 
-		if($response->getStatusCode() != 200 || $body['status'] == 'failure') {
-			throw new Exception($body->message);
+		if(!$response->isSuccess() || $body['status'] == 'failure') {
+			throw new Exception(isset($body->message) ? (string)$body->message : $response->getStatus());
 		} else if($body['status'] == 'success') {
 			return (string)$body->database['password'];
 		}

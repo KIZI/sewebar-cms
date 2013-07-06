@@ -152,7 +152,70 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 
 	// region SewebarKey
 
-	// TODO
+	public function test_registerUser()
+	{
+		$username = 'testUser';
+
+		$result = self::$miner->registerUser($username, 'heslo');
+
+		$this->assertNotEmpty($result);
+
+		return $username;
+	}
+
+	/**
+	 * @depends test_registerUser
+	 */
+	public function test_deleteUser_byAdmin($username)
+	{
+		$result = self::$miner->deleteUser($username, 'sewebar', 'admin');
+
+		$this->assertNotEmpty($result);
+	}
+
+	public function test_RegisterUser_and_deleteUser()
+	{
+		$username = 'testUser2';
+		$password = 'pwd2';
+
+		$user = self::$miner->registerUser($username, $password);
+		$this->assertNotEmpty($user);
+
+		$result = self::$miner->deleteUser($username, $password);
+		$this->assertNotEmpty($result);
+	}
+
+	public function test_registerUserDatabase_forAnonymous()
+	{
+		$database = array('name' => 'test_registerUserDatabase_forAnonymous', 'password' => 'pwd');
+
+		$result = self::$miner->registerUserDatabase('', '', $database['name'], $database['password']);
+
+		$this->assertNotEmpty($result);
+
+		return $database;
+	}
+
+	/**
+	 * @depends test_registerUserDatabase_forAnonymous
+	 */
+	public function test_getDatabasePassword_forAnonymous($database)
+	{
+		$result = self::$miner->getDatabasePassword('', '', $database['name']);
+
+		$this->assertNotEmpty($result);
+		$this->assertEquals($database['password'], $result);
+	}
+
+	/**
+	 * @depends test_registerUserDatabase_forAnonymous
+	 */
+	public function test_unregisterUserDatabase_forAnonymous($database)
+	{
+		$result = self::$miner->unregisterUserDatabase('', '', $database['name']);
+
+		$this->assertNotEmpty($result);
+	}
 
 	// endregion
 }

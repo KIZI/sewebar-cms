@@ -6,6 +6,10 @@ class RESTClient
 {
 	private function getData($_data)
 	{
+		if ($_data == null) {
+			return '';
+		}
+
 		$data = $_data;
 
 		// convert variables array to string:
@@ -38,7 +42,7 @@ class RESTClient
 	 * @param null $credentials
 	 * @return RESTClientResponse
 	 */
-	public function get($url, $_data = array(), $credentials = null)
+	public function get($url, $_data = null, $credentials = null)
 	{
 		$data = $this->getData($_data);
 
@@ -151,10 +155,11 @@ class RESTClient
 
 	/**
 	 * @param $url
+	 * @param array $_data
 	 * @param null $credentials
 	 * @return RESTClientResponse
 	 */
-	public function delete($url, $credentials = null)
+	public function delete($url, $_data = null, $credentials = null)
 	{
 		$ch = curl_init();
 
