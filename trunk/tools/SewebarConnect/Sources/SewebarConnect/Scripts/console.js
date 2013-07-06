@@ -136,7 +136,15 @@
 	$('button[name="task_pool"]').click(function () {
 		$.ajax({
 			type: 'POST',
-			url: 'miners/' + $('#import_id').val() + '/tasks/task' + '?alias=' + $('#task_alias').val() + '&template=' + $('#task_template').val(),
+			url: [
+				'miners/',
+				$('#task_id').val(),
+				'/tasks/task',
+				'?alias=',
+				$('#task_alias').val(),
+				'&template=',
+				$('#task_template').val()
+			].join(''),
 			data: $('#task_request').val(),
 			contentType: 'text/xml',
 			dataType: 'xml',
@@ -156,13 +164,21 @@
 	$('button[name="proc_pool"]').click(function () {
 		$.ajax({
 			type: 'POST',
-			url: 'miners/' + $('#import_id').val() + '/tasks/proc' + '?alias=' + $('#task_alias').val() + '&template=' + $('#task_template').val(),
+			url: [
+				'miners/',
+				$('#task_id').val(),
+				'/tasks/proc',
+				'?alias=',
+				$('#task_alias').val(),
+				'&template=',
+				$('#task_template').val()
+			].join(''),
 			data: $('#task_request').val(),
 			contentType: 'text/xml',
 			dataType: 'xml',
 			cache: false,
 			headers: createHeaders(),
-			complete: function (data) {
+			complete: function(data) {
 				var textarea = $('#task_response');
 				setStatusClass(textarea, data.status == 200 ? 'success' : 'failure');
 				textarea.val(data.responseText);
@@ -176,7 +192,15 @@
 	$('button[name="grid_pool"]').click(function () {
 		$.ajax({
 			type: 'POST',
-			url: 'miners/' + $('#import_id').val() + '/tasks/grid' + '?alias=' + $('#task_alias').val() + '&template=' + $('#task_template').val(),
+			url: [
+				'miners/',
+				$('#task_id').val(),
+				'/tasks/grid',
+				'?alias=',
+				$('#task_alias').val(),
+				'&template=',
+				$('#task_template').val()
+			].join(''),
 			data: $('#task_request').val(),
 			contentType: 'text/xml',
 			dataType: 'xml',
