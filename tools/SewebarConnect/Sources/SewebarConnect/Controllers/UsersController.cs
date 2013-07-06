@@ -79,7 +79,7 @@ namespace SewebarConnect.Controllers
 
 			if (user == null)
 			{
-				throw new Exception("User not found.");
+				throw new HttpResponseException(HttpStatusCode.NotFound);
 			}
 
 			if (!string.IsNullOrEmpty(request.NewUserName))
@@ -114,12 +114,21 @@ namespace SewebarConnect.Controllers
 
 				return new Response(string.Format("User \"{0}\" removed.", user.Username));
 			}
-			else if (user != null && this.User.IsInRole("admin"))
+			else if (this.User.IsInRole("admin"))
 			{
 				// deleting by admin
+				User deletion = this.Repository.Query<User>()
+				                    .FirstOrDefault(u => u.Username == username);
+
+				if (deletion != null)
+				{
+					this.Repository.Remove(deletion);
+
+					return new Response(string.Format("User \"{0}\" removed by admin.", deletion.Username));
+				}
 			}
 
-			return new Response(string.Format("User \"{0}\" not found.", username));
+			throw new HttpResponseException(HttpStatusCode.NotFound);
 		}
-    }
+	}
 }
