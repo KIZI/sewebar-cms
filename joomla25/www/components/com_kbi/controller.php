@@ -10,7 +10,9 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi');
+if (!defined('COM_KBI_ADMIN')) {
+	define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi');
+}
 
 jimport( 'joomla.application.component.controller' );
 JPluginHelper::importPlugin('kbi', 'base');

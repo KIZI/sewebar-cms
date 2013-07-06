@@ -7,7 +7,9 @@
  * @license		GNU/GPL, see LICENSE.php
  */
 
-define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi');
+if (!defined('COM_KBI_ADMIN')) {
+	define('COM_KBI_ADMIN', JPATH_ROOT . DS . 'administrator' . DS . 'components' . DS . 'com_kbi');
+}
 
 jimport( 'joomla.application.component.model' );
 JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
