@@ -6,6 +6,10 @@
 		</id>
 		<property name="Username" column="name" type="string" length="255" unique="true" not-null="true" />
 		<property name="Password" column="password" type="string" />
+		<property name="Email" column="email" type="string" />
+		<property name="Role" type="string" not-null="true">
+			<column name="role" default="user" />
+		</property>
 		<set name="Databases" inverse="true" lazy="false" cascade="delete">
 			<key column="id_user"/>
 			<one-to-many class="SewebarKey.Database, SewebarKey"/>

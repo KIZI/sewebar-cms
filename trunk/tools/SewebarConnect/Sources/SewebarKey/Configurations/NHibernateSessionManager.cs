@@ -9,6 +9,8 @@ namespace SewebarKey.Configurations
 	{
 		private Configuration _cfg;
 
+		protected string ConfigurationXmlPath { get; private set; }
+
 		public Configuration Configuration
 		{
 			get
@@ -16,7 +18,7 @@ namespace SewebarKey.Configurations
 				if (_cfg == null)
 				{
 					_cfg = new Configuration();
-					_cfg.Configure(string.Format("{0}\\hibernate.cfg.xml", AppDomain.CurrentDomain.BaseDirectory));
+					_cfg.Configure(this.ConfigurationXmlPath);
 
 					//TODO: workaround pro threading SQLite. Problem pri uploadu souboru pres backgroundworkera a relativnim linkem na datasource. 
 					if (_cfg.Properties["connection.driver_class"] == "NHibernate.Driver.SQLite20Driver" &&
@@ -30,8 +32,14 @@ namespace SewebarKey.Configurations
 			}
 		}
 
-		public NHibernateSessionManager()
-		{	
+		public NHibernateSessionManager() :
+			this(string.Format("{0}\\hibernate.cfg.xml", AppDomain.CurrentDomain.BaseDirectory))
+		{
+		}
+
+		public NHibernateSessionManager(string cfg)
+		{
+			this.ConfigurationXmlPath = cfg;
 		}
 
 		public void CreateDatabase()

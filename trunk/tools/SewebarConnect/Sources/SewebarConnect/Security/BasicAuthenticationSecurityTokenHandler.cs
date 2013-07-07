@@ -101,15 +101,10 @@ namespace SewebarConnect.Security
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, unToken.UserName),
+				new Claim(ClaimTypes.Role, user.Role),
 				new Claim(ClaimTypes.AuthenticationMethod, AuthenticationMethods.Password),
 				new Claim(ClaimTypes.AuthenticationInstant, XmlConvert.ToString(DateTime.UtcNow, "yyyy-MM-ddTHH:mm:ss.fffZ"), ClaimValueTypes.DateTime)
 			};
-
-			// TODO: roles
-			if (user.Username == "admin" && user.Id == Guid.Empty)
-			{
-				claims.Add(new Claim(ClaimTypes.Role, "admin"));
-			}
 
 			var identity = new ClaimsIdentity(claims, "Basic");
 

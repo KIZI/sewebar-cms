@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using LMWrapper.LISpMiner;
-using SewebarKey;
+using SewebarConnect.API;
 using SewebarKey.Repositories;
 
 namespace SewebarConnect.Controllers
@@ -50,6 +52,10 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Searches database for authorized Sewebar.User.
+		/// </summary>
+		/// <returns>Authorized Sewebar.User.</returns>
 		protected SewebarKey.User GetSewebarUser()
 		{
 			if (this.User == null)
@@ -57,8 +63,35 @@ namespace SewebarConnect.Controllers
 				return null;
 			}
 
-			return this.Repository.Query<User>()
+			return this.Repository.Query<SewebarKey.User>()
 				.FirstOrDefault(u => u.Username == (this.User.Identity.Name) /* && u.Password == password */);
+		}
+
+		protected T ThrowHttpReponseException<T>(string message = null, HttpStatusCode code = HttpStatusCode.InternalServerError)
+		{
+			if (!string.IsNullOrEmpty(message))
+			{
+				var body = new Response(message)
+					{
+						Status = Status.Failure
+					};
+
+				var reponse = ControllerContext.Request.CreateResponse(code, body);
+
+				throw new HttpResponseException(reponse);
+			}
+
+			throw new HttpResponseException(code);
+		}
+
+		protected Response ThrowHttpReponseException(string message = null, HttpStatusCode code = HttpStatusCode.InternalServerError)
+		{
+			return this.ThrowHttpReponseException<Response>(message, code);
+		}
+
+		protected T ThrowHttpReponseException<T>(HttpStatusCode code = HttpStatusCode.InternalServerError)
+		{
+			return this.ThrowHttpReponseException<T>(null, code);
 		}
 	}
 }

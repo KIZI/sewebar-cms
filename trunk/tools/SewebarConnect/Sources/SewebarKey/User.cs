@@ -7,12 +7,21 @@ namespace SewebarKey
 	{
 		private ISet<Database> _databases;
 		private ISet<Miner> _miners;
+		private string _role;
 
 		public virtual Guid Id { get; set; }
 
 		public virtual string Username { get; set; }
 
 		public virtual string Password { get; set; }
+
+		public virtual string Email { get; set; }
+
+		public virtual string Role
+		{
+			get { return _role ?? "user"; }
+			set { _role = value; }
+		}
 
 		public virtual ISet<Database> Databases
 		{

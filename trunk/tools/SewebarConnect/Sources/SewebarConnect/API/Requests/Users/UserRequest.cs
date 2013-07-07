@@ -19,6 +19,11 @@ namespace SewebarConnect.API.Requests.Users
 			get { return this.HttpContext.Request["password"]; }
 		}
 
+		protected string Email
+		{
+			get { return this.HttpContext.Request["email"]; }
+		}
+
 		public string NewUserName
 		{
 			get { return this.HttpContext.Request["new_name"]; }
@@ -29,12 +34,12 @@ namespace SewebarConnect.API.Requests.Users
 			get { return this.HttpContext.Request["new_password"]; }
 		}
 
-		protected string DbId
+		public string DbId
 		{
 			get { return this.HttpContext.Request["db_id"]; }
 		}
 
-		protected string DbPassword
+		public string DbPassword
 		{
 			get { return this.HttpContext.Request["db_password"]; }
 		}
@@ -64,7 +69,8 @@ namespace SewebarConnect.API.Requests.Users
 			return new SewebarKey.User
 				{
 					Username = this.UserName,
-					Password = this.Password
+					Password = this.Password,
+					Email = this.Email
 				};
 		}
 	}
