@@ -326,9 +326,10 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	/**
 	 * @param string $username
 	 * @param string $password
+	 * @param string $email
 	 * @return mixed
 	 */
-	public function registerUser($username, $password)
+	public function registerUser($username, $password, $email = '')
 	{
 		// TODO: credentials for given user (from session)
 		$client = $this->getRestClient();
@@ -337,7 +338,8 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$data = array(
 			'name' => $username,
-			'password' => $password
+			'password' => $password,
+			'email' => $email
 		);
 
 		$response = $client->post($url, $data);
