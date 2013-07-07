@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Http;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.Users;
 using SewebarConnect.API.Responses.Users;
-using SewebarKey;
 
 namespace SewebarConnect.Controllers
 {
@@ -13,25 +11,34 @@ namespace SewebarConnect.Controllers
 	[Authorize]
 	public class UsersController : ApiBaseController
 	{
+		/// <summary>
+		/// Lists all user or specific user.
+		/// </summary>
+		/// <param name="username">User to describe.</param>
+		/// <returns>List of user or specific user description.</returns>
 		[Filters.NHibernateTransaction]
-		[AllowAnonymous]
 		public Response Get(string username)
 		{
-			if (string.IsNullOrEmpty(username))
+			if (string.IsNullOrEmpty(username) && this.User.IsInRole("admin"))
 			{
-				var users = Repository.FindAll<SewebarKey.User>();
+				var users = this.Repository.FindAll<SewebarKey.User>();
 
 				return new UsersResponse(users);
 			}
-
-			if (this.User.Identity.Name == username || this.User.IsInRole("admin"))
+			else if (this.User.Identity.Name == username || this.User.IsInRole("admin"))
 			{
-				var user = this.Repository.Query<User>().FirstOrDefault(u => u.Username == username);
+				var user = this.Repository.Query<SewebarKey.User>()
+				               .FirstOrDefault(u => u.Username == username);
 
-				return new UserResponse(user);
+				if (user != null)
+				{
+					return new UserResponse(user);
+				}
+
+				return this.ThrowHttpReponseException<Response>(HttpStatusCode.NotFound);
 			}
 
-			throw new HttpResponseException(HttpStatusCode.Unauthorized);
+			return this.ThrowHttpReponseException<Response>(HttpStatusCode.Unauthorized);
 		}
 
 		/// <summary>
@@ -44,7 +51,7 @@ namespace SewebarConnect.Controllers
 		{
 			var request = new UserRequest(this);
 			
-			User user = this.Repository.Query<User>()
+			var user = this.Repository.Query<SewebarKey.User>()
 				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
 
 			if (user == null)
@@ -73,28 +80,40 @@ namespace SewebarConnect.Controllers
 		[Filters.NHibernateTransaction]
 		public UserResponse Put()
 		{
-			// TODO: change password and username as admin
 			var request = new UserRequest(this);
 			var user = this.GetSewebarUser();
 
-			if (user == null)
+			if (user.Username == request.UserName)
 			{
-				throw new HttpResponseException(HttpStatusCode.NotFound);
+				// updating himself
+				if (!string.IsNullOrEmpty(request.NewUserName))
+				{
+					user.Username = request.NewUserName;
+				}
+
+				if (!string.IsNullOrEmpty(request.NewPassword))
+				{
+					user.Password = request.NewPassword;
+				}
+
+				this.Repository.Save(user);
+
+				return new UserResponse(user);
+			}
+			else if (this.User.IsInRole("admin"))
+			{
+				// updating by admin
+				SewebarKey.User modified = this.Repository.Query<SewebarKey.User>()
+									.FirstOrDefault(u => u.Username == request.UserName);
+
+				return this.ThrowHttpReponseException<UserResponse>(
+					"This feature is not yet implemented",
+					HttpStatusCode.NotImplemented);
 			}
 
-			if (!string.IsNullOrEmpty(request.NewUserName))
-			{
-				user.Username = request.NewUserName;
-			}
-
-			if (!string.IsNullOrEmpty(request.NewPassword))
-			{
-				user.Password = request.NewPassword;
-			}
-
-			this.Repository.Save(user);
-
-			return new UserResponse(user);
+			return this.ThrowHttpReponseException<UserResponse>(
+				string.Format("User \"{0}\" not found or you are not auhtorized to modify him.", request.UserName),
+				HttpStatusCode.NotFound);
 		}
 
 		/// <summary>
@@ -105,30 +124,26 @@ namespace SewebarConnect.Controllers
 		[Filters.NHibernateTransaction]
 		public Response Delete(string username)
 		{
-			User user = this.GetSewebarUser();
-
-			if (user != null && user.Username == username)
+			if (this.User.Identity.Name == username || this.User.IsInRole("admin"))
 			{
-				// deleting himself
-				this.Repository.Remove(user);
+				SewebarKey.User user = this.Repository.Query<SewebarKey.User>()
+				                           .FirstOrDefault(u => u.Username == username);
 
-				return new Response(string.Format("User \"{0}\" removed.", user.Username));
-			}
-			else if (this.User.IsInRole("admin"))
-			{
-				// deleting by admin
-				User deletion = this.Repository.Query<User>()
-				                    .FirstOrDefault(u => u.Username == username);
-
-				if (deletion != null)
+				if (user != null)
 				{
-					this.Repository.Remove(deletion);
+					this.Repository.Remove(user);
 
-					return new Response(string.Format("User \"{0}\" removed by admin.", deletion.Username));
+					return new Response(string.Format("User \"{0}\" removed.", user.Username));
 				}
+
+				return this.ThrowHttpReponseException(
+					string.Format("User \"{0}\" not found.", username),
+					HttpStatusCode.NotFound);
 			}
 
-			throw new HttpResponseException(HttpStatusCode.NotFound);
+			return this.ThrowHttpReponseException(
+				string.Format("User \"{0}\" not found or you are not auhtorized to delete him.", username),
+				HttpStatusCode.NotFound);
 		}
 	}
 }

@@ -34,7 +34,6 @@ namespace SewebarConnect.API
 				throw new ArgumentNullException("filterContext");
 			}
 
-
 			Exception exception = filterContext.Exception;
 			ExceptionResponse exceptionResponse = new ExceptionResponse(exception);
 
@@ -47,6 +46,8 @@ namespace SewebarConnect.API
 				// return;
 			}
 
+			// TODO: test if works
+			// var response = filterContext.Request.CreateResponse(this.StatusCode, exceptionResponse);
 			var response = new HttpResponseMessage
 				{
 					StatusCode = this.StatusCode,

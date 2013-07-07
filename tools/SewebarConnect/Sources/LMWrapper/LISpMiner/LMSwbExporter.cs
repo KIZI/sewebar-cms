@@ -75,11 +75,6 @@ namespace LMWrapper.LISpMiner
 			{
 				var arguments = new StringBuilder("");
 
-				if (!String.IsNullOrEmpty(this.Dsn))
-				{
-					arguments.AppendFormat("\"/DSN:{0}\" ", this.Dsn);
-				}
-
 				if (!String.IsNullOrEmpty(this.OdbcConnectionString))
 				{
 					arguments.AppendFormat("/ODBCConnectionString=\"{0}\" ", this.OdbcConnectionString);
@@ -88,7 +83,7 @@ namespace LMWrapper.LISpMiner
 				// /MatrixID:<MatrixID>
 				if (!String.IsNullOrEmpty(this.MatrixId))
 				{
-					arguments.AppendFormat("\"/MatrixID:{0}\" ", this.Dsn);
+					arguments.AppendFormat("\"/MatrixID:{0}\" ", this.MatrixId);
 				}
 
 				// /MatrixName:<MatrixName>

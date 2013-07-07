@@ -18,12 +18,6 @@ namespace LMWrapper.LISpMiner
 		public ExecutableStatus Status { get; protected set; }
 
 		/// <summary>
-		/// /DSN:[data-source-name] ... data source name of metabase (if the data source name contains spaces, the whole /DSN paramater has to be enclosed in quatations mark, e.g. "/DSN:LM Barbora MB")
-		/// </summary>
-		[Obsolete]
-		public string Dsn { get; set; }
-
-		/// <summary>
 		/// /ODBCConnectionString="FILEDSN=X:\Path\File" ... 'File' is DSN file without extension (eg. IZIMiner.MB.dsn)
 		/// </summary>
 		public string OdbcConnectionString { get; protected set; }
@@ -38,7 +32,7 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// /NoProgress   ... no progress dialog is displayed
 		/// </summary>
-		public bool NoProgress { get; set; }		
+		public bool NoProgress { get; set; }
 
 		/// <summary>
 		/// /AppLog:[log_file]		... (O) alternative path and file name for logging

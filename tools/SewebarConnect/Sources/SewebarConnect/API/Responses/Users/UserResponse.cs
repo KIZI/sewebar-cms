@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
-using SewebarKey;
 
 namespace SewebarConnect.API.Responses.Users
 {
 	public class UserResponse : Response
 	{
-		private User User { get; set; }
+		private SewebarKey.User User { get; set; }
 
-		public UserResponse(User user)
+		public UserResponse(SewebarKey.User user)
 		{
 			User = user;
 		}
@@ -22,14 +21,15 @@ namespace SewebarConnect.API.Responses.Users
 		{
 			return new XElement("user",
 								new XElement("username", user.Username),
+								new XElement("email", user.Email),
 								new XElement("databases", user.Databases.Select(FromDatabase))
 				);
 		}
 
-		private static object FromDatabase(Database db)
+		private static object FromDatabase(SewebarKey.Database db)
 		{
 			return new XElement("database",
-			                    new XAttribute("id", db.Name));
+								new XAttribute("id", db.Name));
 		}
 	}
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using LMWrapper;
 using LMWrapper.LISpMiner;
+using SewebarKey;
 using SewebarKey.Configurations;
+using SewebarKey.Repositories;
 
 namespace SewebarConsole
 {
@@ -10,18 +13,27 @@ namespace SewebarConsole
 	{
 		public static void Main(string[] args)
 		{
-			var command = args.Length > 0 ? args[0].ToLower() : string.Empty;
+			string command = string.Empty;
+			string module = string.Empty;
+			string[] parameters = args.Skip(2).ToArray();
 
-			switch (command)
+			if (args.Length == 1)
 			{
-				case "update":
-					Update(args.Length > 1 ? args[1] : null);
-					break;
-				case "remove":
-					Remove();
+				command = args[0].ToLower();
+			}
+			else if (args.Length > 1)
+			{
+				module = args[0].ToLower();
+				command = args[1].ToLower();
+			}
+
+			switch (module)
+			{
+				case "lm":
+					LM(command, parameters);
 					break;
 				case "key":
-					ManageDatabase();
+					ManageDatabase(command, parameters);
 					break;
 				default:
 					Help();
@@ -31,23 +43,37 @@ namespace SewebarConsole
 			Console.WriteLine();
 
 			Console.WriteLine("Done.");
-
-			Console.Read();
-		}
-
-		private static void ManageDatabase()
-		{
-			ISessionManager databaseManager = new NHibernateSessionManager();
-
-			databaseManager.CreateDatabase();
 		}
 
 		private static void Help()
 		{
-			Console.WriteLine("Possible commands:");
+			Console.WriteLine("Usage: SewebarConsole [module] [command] [arguments]");
 			Console.WriteLine();
-			Console.WriteLine("\tupdate LM_LIB_PATH");
-			// Console.WriteLine("\tremove");
+			Console.WriteLine("modules:");
+			Console.WriteLine("\tLM");
+			Console.WriteLine("\t\tupdate [LM_LIB_PATH]");
+			Console.WriteLine("\tKey");
+			Console.WriteLine("\t\tcreate [nHibernate config]");
+			Console.WriteLine("\t\tupdate [nHibernate config]");
+			Console.WriteLine("\t\tinit [nHibernate config]");
+		}
+
+		#region LM module 
+
+		private static void LM(string command, string[] args)
+		{
+			switch (command)
+			{
+				case "update":
+					Update(args.Length > 1 ? args[1] : null);
+					break;
+				case "remove":
+					Remove();
+					break;
+				default:
+					Help();
+					break;
+			}
 		}
 
 		private static void Update(string lmLibPath)
@@ -92,5 +118,84 @@ namespace SewebarConsole
 				}
 			}
 		}
+
+		#endregion
+
+		#region Key module
+
+		private static void ManageDatabase(string command, string[] args)
+		{
+			ISessionManager databaseManager;
+
+			if (args.Length > 0)
+			{
+				string cfg = args[0];
+				
+				if (!File.Exists(cfg))
+				{
+					cfg = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, cfg);
+					// normalize
+					cfg = Path.GetFullPath((new Uri(cfg)).LocalPath);
+				}
+				
+				databaseManager = new NHibernateSessionManager(cfg);
+			}
+			else
+			{
+				databaseManager = new NHibernateSessionManager();
+			}
+			
+			switch (command)
+			{
+				case "update":
+					databaseManager.UpdateDatabase();
+					break;
+				case "create":
+					databaseManager.CreateDatabase();
+					break;
+				case "init":
+					InitDatabase(databaseManager);
+					break;
+				default:
+					Help();
+					break;
+			}
+		}
+
+		public static void InitDatabase(ISessionManager sessionManager)
+		{
+			using (var session = sessionManager.BuildSessionFactory().OpenSession())
+			{
+				using (var tx = session.BeginTransaction())
+				{
+					IRepository repository = new NHibernateRepository(session);
+
+					var admin = repository.Query<User>()
+						.FirstOrDefault(u => u.Username == "admin") ?? new User();
+
+					admin.Username = "admin";
+					admin.Password = "sewebar";
+					admin.Email = "andrej.hazucha@vse.cz";
+					admin.Role = "admin";
+
+					repository.Save(admin);
+
+					var anon = repository.Query<User>()
+						.FirstOrDefault(u => u.Username == "anonymous") ?? new User();
+
+					anon.Username = "anonymous";
+					anon.Password = "";
+					anon.Role = "user";
+
+					repository.Save(anon);
+
+					tx.Commit();
+				}
+
+				session.Close();
+			}
+		}
+
+		#endregion
 	}
 }

@@ -1,0 +1,1 @@
+Build\Release\SewebarConsole.exe key update ..\..\Sources\SewebarConnect\hibernate.cfg.xml
