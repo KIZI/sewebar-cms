@@ -10,6 +10,10 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 {
 	protected static $cfg = array(
 		'url' => 'http://connect-dev.lmcloud.vse.cz/SewebarConnectNext',
+		'admin' => array(
+			'username' => 'admin',
+			'password' => 'sewebar'
+		),
 		'params' => array(
 			'martix' => 'Loans'
 		)
@@ -154,34 +158,63 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 
 	public function test_registerUser()
 	{
-		$username = 'testUser';
+		$user = array(
+			'username' => 'testUser',
+			'password' => 'heslo'
+		);
 
-		$result = self::$miner->registerUser($username, 'heslo');
+		$result = self::$miner->registerUser($user['username'], $user['password'], 'info@test.com');
 
 		$this->assertNotEmpty($result);
 
-		return $username;
+		return $user;
 	}
 
 	/**
 	 * @depends test_registerUser
 	 */
-	public function test_deleteUser_byAdmin($username)
+	public function test_registerUserDatabase($user)
 	{
-		$result = self::$miner->deleteUser($username, 'sewebar', 'admin');
+		$database = array('name' => 'test_registerUserDatabase', 'db_password' => 'pwdDb');
+
+		$result = self::$miner->registerUserDatabase(
+			$user['username'],
+			$user['password'],
+			$database['name'],
+			$database['db_password']
+		);
 
 		$this->assertNotEmpty($result);
+
+		return array_merge($user, $database);
 	}
 
-	public function test_RegisterUser_and_deleteUser()
+	/**
+	 * @depends test_registerUserDatabase
+	 */
+	public function test_getDatabasePassword($database)
 	{
-		$username = 'testUser2';
-		$password = 'pwd2';
+		$result = self::$miner->getDatabasePassword(
+			$database['username'],
+			$database['password'],
+			$database['name']
+		);
 
-		$user = self::$miner->registerUser($username, $password);
-		$this->assertNotEmpty($user);
+		$this->assertNotEmpty($result);
+		$this->assertEquals($database['db_password'], $result);
+	}
 
-		$result = self::$miner->deleteUser($username, $password);
+	/**
+	 * @depends test_registerUserDatabase
+	 */
+	public function test_unregisterUserDatabase($database)
+	{
+		$result = self::$miner->unregisterUserDatabase(
+			$database['username'],
+			$database['password'],
+			$database['name']
+		);
+
 		$this->assertNotEmpty($result);
 	}
 
@@ -214,6 +247,32 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 	{
 		$result = self::$miner->unregisterUserDatabase('', '', $database['name']);
 
+		$this->assertNotEmpty($result);
+	}
+
+	/**
+	 * @depends test_registerUser
+	 */
+	public function test_deleteUser_byAdmin($user)
+	{
+		$result = self::$miner->deleteUser(
+			$user['username'],
+			self::$cfg['admin']['password'],
+			self::$cfg['admin']['username']
+		);
+
+		$this->assertNotEmpty($result);
+	}
+
+	public function test_RegisterUser_and_deleteUser()
+	{
+		$username = 'testUser2';
+		$password = 'pwd2';
+
+		$user = self::$miner->registerUser($username, $password);
+		$this->assertNotEmpty($user);
+
+		$result = self::$miner->deleteUser($username, $password);
 		$this->assertNotEmpty($result);
 	}
 

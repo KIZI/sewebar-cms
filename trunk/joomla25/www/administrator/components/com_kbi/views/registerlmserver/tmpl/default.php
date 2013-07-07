@@ -97,6 +97,7 @@
 						</label>
 					</td>
 					<td width="80%">
+						<?php //TODO: remove stupid file reference ?>
 						<textarea class="text_area" name="dataDictionary" id="dataDictionary" cols="80" rows="30" style="width:90%"><?php echo file_get_contents('/Volumes/Data/svn/sewebar/trunk/joomla/www/components/com_arbuilder/assets/barboraForLMImport.pmml');?></textarea>
 					</td>
 				</tr>
