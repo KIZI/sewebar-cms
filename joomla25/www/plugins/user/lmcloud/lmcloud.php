@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  */
 class plgUserLmcloud extends JPlugin
 {
-  const LM_URL='http://connect-dev.lmcloud.vse.cz/SewebarConnect';
+  const LM_URL='http://connect-dev.lmcloud.vse.cz/SewebarConnectNext';
 
   public static function prepareKbi(){
     //TODO vazba na totožnou metodu v dbconnectModelConnections
@@ -48,7 +48,7 @@ class plgUserLmcloud extends JPlugin
 	 * @throws	Exception on error.
 	 */
 	public function onUserAfterSave($user, $isnew, $success, $msg)
-	{          
+	{
 		$app = JFactory::getApplication();
 
 		// convert the user parameters passed to the event
@@ -64,15 +64,15 @@ class plgUserLmcloud extends JPlugin
     try{
   		if ($isnew) {
         $kbi=self::prepareKbi();
-        $kbi->registerUser($username,$user['password']);
+        $kbi->registerUser($username,self::encodePassword($user['username'],$user['password_clear']),$user['email']);
   		}
   		else {
   			$kbi=self::prepareKbi();
-        $kbi->updateUser($username,'',$username,$user['password'],$user['email']);
+        $kbi->updateUser($username,'',$username,self::encodePassword($user['username'],$user['password_clear']),$user['email']);
   		}
     }catch (Exception $e){
       exit(var_dump($e));
-    }
+    } 
 	}
 
 	/**
@@ -120,7 +120,7 @@ class plgUserLmcloud extends JPlugin
 		$query->where('username=' . $db->Quote($user['username']));
     $db->setQuery($query);
 		$userObject = $db->loadObject();
-    
+
     if ($userObject){
       $username=$this->prepareUsername($userObject->id);
       //uložení přihlašovacích údajů do JSession    
