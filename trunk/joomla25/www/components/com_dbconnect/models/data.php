@@ -75,7 +75,7 @@
       $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
       if (($articleId)&&$db->loadObject()){ 
         //budeme updatovat
-        $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', `fulltext`="", sectionId='.$db->quote($categoryId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
+        $db->setQuery('UPDATE #__content SET title='.$db->quote($title).',alias='.$db->quote($this->seoUrl($title)).', introtext='.$db->quote($data).', `fulltext`="", catid='.$db->quote($categoryId).', modified=NOW(), modified_by='.$userId.' WHERE id='.$db->quote($articleId).' LIMIT 1;');
         if ($db->query()){     
           return $articleId;
         }
@@ -92,7 +92,7 @@
         $db->query();
         $parentAsset=$db->loadObject();
         //budeme ukládat
-        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`sectionid`,`created`,`created_by`,`modified`,`modified_by`,`access`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($categoryId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).',1);');
+        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`catid`,`created`,`created_by`,`modified`,`modified_by`,`access`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($categoryId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).',1);');
         if ($db->query()){
           $articleId=$db->insertid();
           //vyřešení ASSETS //TODO dodělat možnost příslušenství ke skupině (kvůli výuce)

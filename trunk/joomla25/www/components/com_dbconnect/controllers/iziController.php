@@ -145,6 +145,7 @@ class IziController extends JController{
    */     
   public function uploadCSV_import(){             
     $fileId=JRequest::getInt('file',-1);
+    /** @var $uploadsModel dbconnectModelUploads */
     $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
     $fileData=$uploadsModel->getFile($fileId);
     
@@ -166,17 +167,21 @@ class IziController extends JController{
     $tableName=JRequest::getString('table_name','table'.rand(1,100));
     
     $uploadsModel->iconvFile($fileId,$encoding);         
-    
+
+    /** @var $dbusersModel dbconnectModelDbusers */
     $dbusersModel=&$this->getModel('Dbusers','dbconnectModel');   
-    $dbUser=$dbusersModel->getDbUser();     
+    $dbUser=$dbusersModel->getDbUser();
+    /** @var $unidbModel dbconnectModelUnidb */
     $unidbModel=&$this->getModel('Unidb','dbconnectModel');           //TODO tady musíme nějak dořešit heslo DB uživatele...  
     $unidbModel->setDB($dbUser->db_type,$dbUser->server,$dbUser->username,$dbUser->password,$dbUser->db_name);
-    $connectionsModel=&$this->getModel('Connections','dbconnectModel');       
+
+    /** @var $connectionsModel dbconnectModelConnections */
+    $connectionsModel=&$this->getModel('Connections','dbconnectModel');
                                               //TODO tady by to asi chtělo kontrolu, jestli to prošlo!
     $tableName=$uploadsModel->importToDb($unidbModel,$tableName,$fileId,$delimitier,$enclosure,$escapeChar);
-                                                                        
+
     $connectionId=$connectionsModel->insertConnection($dbUser->db_type,$dbUser->server,$dbUser->username,$dbUser->password,$dbUser->db_name,$tableName,'id',false);
-                                    
+
     $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=izi&task=newDmTask&tmpl=component&connection_id='.$connectionId,false));
   }      
   
