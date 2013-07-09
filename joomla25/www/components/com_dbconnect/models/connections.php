@@ -11,7 +11,7 @@ jimport('joomla.application.component.model');
  */
 class dbconnectModelConnections extends JModel
 {
-  const LM_URL='http://connect-dev.lmcloud.vse.cz/SewebarConnect';
+  const LM_URL='http://connect-dev.lmcloud.vse.cz/SewebarConnectNext';
 
 	public function getDBTypes(){
     return array('mysql'=>"MySQL",'mysqli'=>"MySQLi");
