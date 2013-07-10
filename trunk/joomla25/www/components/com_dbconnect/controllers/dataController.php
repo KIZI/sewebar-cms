@@ -192,7 +192,7 @@ class DataController extends JController{
    *  Akce pro získání seznamu článků s uživatelskými zprávami 
    */
   public function listKBIArticles(){
-    var_dump($_REQUEST['kbi']);
+    //var_dump($_REQUEST['kbi']);
     $kbiId=JRequest::getInt('kbi',-1);
     if ($kbiId<0){//TODO kontrola, jestli má uživatel přístup k danému KBI zdroji
       $this->outputJSON(array('result'=>'error','message'=>JText::_('KBI_NOT_DEFINED'),'kbi'=>$kbiId));
