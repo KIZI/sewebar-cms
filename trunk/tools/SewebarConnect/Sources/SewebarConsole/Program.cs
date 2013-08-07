@@ -65,7 +65,7 @@ namespace SewebarConsole
 			switch (command)
 			{
 				case "update":
-					Update(args.Length > 1 ? args[1] : null);
+					Update(args.Length >= 1 ? args[0] : null);
 					break;
 				case "remove":
 					Remove();

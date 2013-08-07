@@ -43,7 +43,7 @@ namespace SewebarConnect.API
 		{
 			if (miner != null)
 			{
-				this.DataFolder = String.Format("{0}/xml", miner.LMPath);
+				this.DataFolder = String.Format("{0}/xml", miner.LMPrivatePath);
 
 				this.LISpMiner = miner;
 			}

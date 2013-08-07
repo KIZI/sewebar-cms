@@ -13,17 +13,6 @@
       <Property Name="RegisteredMiners" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="LMWrapper.LISpMiner.Task4ftGen">
-    <Position X="15" Y="8.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAIABgAAAAAAAIgABgIAIAQAAAAAAAI=</HashCode>
-      <FileName>LISpMiner\4ftGen.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="LMWrapper.LISpMiner.LISpMiner" BaseTypeListCollapsed="true">
     <Position X="5.75" Y="2.5" Width="1.5" />
     <Compartments>
@@ -33,10 +22,34 @@
       <Path>
         <Point X="5.75" Y="5.599" />
         <Point X="4.156" Y="5.599" />
-        <Point X="4.156" Y="6.25" />
+        <Point X="4.156" Y="7.75" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.773" Y="1.016" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Importer" Type="LMWrapper.LISpMiner.LMSwbImporter" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="5.704" />
+        <Point X="8.031" Y="5.704" />
+        <Point X="8.031" Y="8.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="LMTaskPooler" Type="LMWrapper.LISpMiner.LMTaskPooler" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="4.968" />
+        <Point X="13.75" Y="4.968" />
+        <Point X="13.75" Y="8.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="LMGridPooler" Type="LMWrapper.LISpMiner.LMGridPooler" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="5.526" />
+        <Point X="10.625" Y="5.526" />
+        <Point X="10.625" Y="8.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.096" Y="0.768" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="Environment" Type="LMWrapper.Environment" FixedFromPoint="true" FixedToPoint="true">
@@ -47,7 +60,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>IBCCAAACAGAIICEAoAAAAAABAABAQAQwAACAAAgAAAA=</HashCode>
+      <HashCode>IBCCAAACAGAIICEAoAAAAAABAgRAQAQwAADAAAgAAAA=</HashCode>
       <FileName>LISpMiner\LISpMiner.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -55,79 +68,125 @@
       <Property Name="Metabase" />
       <Property Name="Importer" />
       <Property Name="Exporter" />
+      <Property Name="LMTaskPooler" />
+      <Property Name="LMProcPooler" />
+      <Property Name="LMGridPooler" />
       <Property Name="Environment" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="LMWrapper.LISpMiner.LMSwbExporter">
     <Position X="5.5" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.451" />
+        <Point X="6.25" Y="13.451" />
+        <Point X="6.25" Y="12.12" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>IAAAAAIAAEIBAAAQBAAIAAEAAAgAAAoAIACAAAAAAAI=</HashCode>
+      <HashCode>IAAAAAIAAEIBAAAQBAAIAAEAAAgAAAgAIACAAAAAAAI=</HashCode>
       <FileName>LISpMiner\LMSwbExporter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LMWrapper.LISpMiner.LMSwbImporter">
     <Position X="7.25" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.485" />
+        <Point X="8" Y="13.485" />
+        <Point X="8" Y="10.476" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAEAAAAAIAIAAAIAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAIAAAIAAAAAA=</HashCode>
       <FileName>LISpMiner\LMSwbImporter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LMWrapper.LISpMiner.Executable">
     <Position X="7" Y="15" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAMAAgEAAQAAAAAAAAAQAgABAIAIAAAAQAAAAI=</HashCode>
+      <HashCode>ABAAAAAMAAgEAAQABQAAAAAAQAAABAAAIAAAAQAAAAI=</HashCode>
       <FileName>LISpMiner\Executable.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Status" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="LMWrapper.ODBC.AccessConnection">
-    <Position X="3" Y="6.25" Width="1.5" />
+    <Position X="3" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAABBAgAAAACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAIACAAAAAAAABBAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>ODBC\AccessConnection.cs</FileName>
     </TypeIdentifier>
     <Lollipop Orientation="Left" Position="0.1" />
   </Class>
   <Class Name="LMWrapper.ODBC.MySQLConnection">
-    <Position X="0.5" Y="6.25" Width="1.5" />
+    <Position X="0.5" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAAAAAAQAAAAAQAAAAAAACACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAEAAAAAACQAAAAAQAAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>ODBC\MySQLConnection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LMWrapper.ODBC.OdbcConnection">
     <Position X="2.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAEAAACACAACAAAA=</HashCode>
-      <FileName>ODBC\OdbcConnection.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABACAAACCACAAAAAAA=</HashCode>
+      <FileName>ODBC\ODBCConnection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LMWrapper.LISpMiner.LMGridPooler">
     <Position X="9.25" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.488" />
+        <Point X="10" Y="13.488" />
+        <Point X="10" Y="11.791" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAABACAAAAAAIAABAAAIAQAAAAAAAA=</HashCode>
+      <HashCode>AAAAKAQAAAAAEAKCBACAAAAAAAgAAAAAIBAAAAAAAAA=</HashCode>
       <FileName>LISpMiner\LMGridPooler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LMWrapper.LISpMiner.LMProcPooler">
     <Position X="11.25" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.454" />
+        <Point X="12" Y="13.454" />
+        <Point X="12" Y="10.969" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAIAQAAAAAAAA=</HashCode>
+      <HashCode>AAAACAQAAAAAEAIABAAAAAAAAAgAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>LISpMiner\LMProcPooler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LMWrapper.LISpMiner.LMTaskPooler">
     <Position X="13" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.471" />
+        <Point X="13.75" Y="13.471" />
+        <Point X="13.75" Y="12.008" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAEAIABgAAAAAAAIgABgIAIAQAAAAAAAI=</HashCode>
+      <HashCode>AAAACAQAAAAAEAIABgAAAAAAAIgABgAAIAAAAAAAAAI=</HashCode>
       <FileName>LISpMiner\LMTaskPooler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Interface Name="LMWrapper.IMetabase">
-    <Position X="0.5" Y="3.75" Width="1.5" />
+    <Position X="10.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IMetabase.cs</FileName>
@@ -136,12 +195,12 @@
   <Interface Name="LMWrapper.LISpMiner.ITaskLauncher">
     <Position X="9" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAQABAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <HashCode>AAAACAQEAAAAEAQABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>LISpMiner\TaskLauncher.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="LMWrapper.LISpMiner.ExecutableStatus">
-    <Position X="4.5" Y="0.5" Width="1.5" />
+    <Position X="10.25" Y="15.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>LISpMiner\ExecutableStatus.cs</FileName>

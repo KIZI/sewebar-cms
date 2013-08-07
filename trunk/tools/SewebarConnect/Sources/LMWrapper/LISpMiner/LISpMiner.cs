@@ -20,6 +20,18 @@ namespace LMWrapper.LISpMiner
 			return Path.GetFullPath(Path.Combine(environment.LMPoolPath, String.Format("{0}_{1}", "LISpMiner", minerId)));
 		}
 
+		private static void CopyToPool(Environment environment, LISpMiner miner)
+		{
+			if (!miner.SharedPool)
+			{
+				DirectoryUtil.Copy(environment.LMPath, miner.LMPath);
+			}
+			else
+			{
+				Directory.CreateDirectory(miner.LMPrivatePath);
+			}
+		}
+
 		#region Properties
 
 		public string Id { get; protected set; }
@@ -30,7 +42,20 @@ namespace LMWrapper.LISpMiner
 
 		public AccessConnection Metabase { get; protected set; }
 
-		public string LMPath { get; set; }
+		internal string LMPath
+		{
+			get
+			{
+				if (this.SharedPool)
+				{
+					return this.Environment.LMPath;
+				}
+
+				return this.LMPrivatePath;
+			}
+		}
+
+		public string LMPrivatePath { get; private set; }
 
 		public Version Version
 		{
@@ -122,15 +147,18 @@ namespace LMWrapper.LISpMiner
 
 		protected Environment Environment { get; set; }
 
+		protected bool SharedPool { get; private set; }
+
 		#endregion
 
-		protected LISpMiner(Environment environment, string id)
+		protected LISpMiner(Environment environment, string id, bool sharedPool)
 		{
 			this.Id = id;
 			this.Environment = environment;
-			this.LMPath = GetMinerPath(environment, this.Id);
+			this.LMPrivatePath = GetMinerPath(environment, this.Id);
+			this.SharedPool = sharedPool;
 
-			DirectoryUtil.Copy(environment.LMPath, this.LMPath);
+			CopyToPool(this.Environment, this);
 
 			this.Created = DateTime.Now;
 		}
@@ -142,8 +170,8 @@ namespace LMWrapper.LISpMiner
 		/// <param name="id">Desired ID.</param>
 		/// <param name="connection">Connection to original database.</param>
 		/// <param name="metabaseConnection">Name of metabase file to use. Must exist in data folder.</param>
-		public LISpMiner(Environment environment, string id, DbConnection connection, DbConnection metabaseConnection)
-			: this(environment, id)
+		public LISpMiner(Environment environment, string id, DbConnection connection, DbConnection metabaseConnection, bool sharedPool)
+			: this(environment, id, sharedPool)
 		{
 			string databaseFile;
 			string databaseDSNFile;
@@ -159,7 +187,6 @@ namespace LMWrapper.LISpMiner
 				this.Database = new AccessConnection(databaseDSNFile, databaseFile, databasePrototypeFile);
 			}
 
-
 			if (this.Database == null)
 			{
 				throw new NullReferenceException("Database can't be null.");
@@ -172,6 +199,7 @@ namespace LMWrapper.LISpMiner
 		/// Creates instance of LISpMiner for existing location.
 		/// </summary>
 		/// <param name="lmpath">Path to LM folder.</param>
+		/// <param name="env">Environment settings.</param>
 		public LISpMiner(DirectoryInfo lmpath, Environment env)
 		{
 			if (!lmpath.Exists)
@@ -179,9 +207,12 @@ namespace LMWrapper.LISpMiner
 				throw new Exception(String.Format("LISpMiner does not exist at location {0}", lmpath.FullName));
 			}
 
+			// TODO: find out if really false
+			this.SharedPool = false;
+
 			this.Environment = env;
 			this.Id = lmpath.Name.Substring("LISpMiner_".Length);
-			this.LMPath = lmpath.FullName;
+			this.LMPrivatePath = lmpath.FullName;
 
 			string metabaseFile;
 			string devNull = string.Empty;
@@ -224,15 +255,15 @@ namespace LMWrapper.LISpMiner
 		{
 			if (string.IsNullOrEmpty(protofile))
 			{
-				protofile = String.Format(@"{0}\{1}", this.LMPath, "LMEmpty.mdb");
+				protofile = String.Format(@"{0}\{1}", Environment.DataPath, "LMEmpty.mdb");
 			}
 			else
 			{
 				protofile = String.Format(@"{0}\{1}", Environment.DataPath, protofile);
 			}
 
-			file = String.Format(@"{0}\LM.MB.mdb", this.LMPath);
-			dsnFile = String.Format(@"{0}\LM.MB.dsn", this.LMPath);
+			file = String.Format(@"{0}\LM.MB.mdb", this.LMPrivatePath);
+			dsnFile = String.Format(@"{0}\LM.MB.dsn", this.LMPrivatePath);
 		}
 
 		protected string GetDatabaseNames(string databasePrototypeFile, out string file, out string dsnFile)
@@ -248,15 +279,24 @@ namespace LMWrapper.LISpMiner
 			}
 			
 			var databaseName = Path.GetFileNameWithoutExtension(databasePrototypePath);
-			file = String.Format(@"{0}\LM-{1}.mdb", this.LMPath,databaseName);
-			dsnFile = String.Format(@"{0}\LM.dsn", this.LMPath);
+			file = String.Format(@"{0}\LM-{1}.mdb", this.LMPrivatePath, databaseName);
+			dsnFile = String.Format(@"{0}\LM.dsn", this.LMPrivatePath);
 
 			return databasePrototypePath;
 		}
 
 		protected Version GetVersion()
 		{
-			var versionPath = String.Format("{0}/version.xml", this.LMPath);
+			string versionPath;
+
+			if (this.SharedPool)
+			{
+				versionPath = String.Format("{0}/version.xml", this.LMPath);
+			}
+			else
+			{
+				versionPath = String.Format("{0}/version.xml", this.LMPrivatePath);
+			}
 
 			if (!File.Exists(versionPath))
 			{
@@ -331,7 +371,7 @@ namespace LMWrapper.LISpMiner
 				this.Database.Destroy();
 			}
 
-			Directory.Delete(this.LMPath, true);
+			Directory.Delete(this.LMPrivatePath, true);
 		}
 	}
 }
