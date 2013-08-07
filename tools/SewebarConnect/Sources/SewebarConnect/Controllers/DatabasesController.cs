@@ -43,7 +43,7 @@ namespace SewebarConnect.Controllers
 		}
 
 		/// <summary>
-		/// Register database for existing user.
+		/// Register database for existing user or creates user and database.
 		/// </summary>
 		/// <returns>Created database.</returns>
 		[Filters.NHibernateTransaction]
@@ -52,6 +52,13 @@ namespace SewebarConnect.Controllers
 			var request = new UserRequest(this);
 			var user = this.GetSewebarUser();
 			var database = request.GetDatabase(user);
+
+			if (user == null)
+			{
+				user = request.GetUser();
+
+				this.Repository.Add(user);
+			}
 
 			if (database != null)
 			{

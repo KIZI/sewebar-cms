@@ -1,16 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace LMWrapper
 {
 	public class Environment
 	{
 		private Dictionary<string, LISpMiner.LISpMiner> _registeredMiners;
+		private string _lmPath;
 
 		public string LMPoolPath { get; set; }
 
 		public string DataPath { get; set; }
 
-		public string LMPath { get; set; }
+		public string LMPath
+		{
+			get
+			{
+				return _lmPath;
+			}
+
+			set
+			{
+				_lmPath = new DirectoryInfo(value).FullName;
+			}
+		}
 
 		public string PCGridPath { get; set; }
 

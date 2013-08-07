@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using LMWrapper.Utils;
 
 namespace LMWrapper
@@ -11,15 +14,18 @@ namespace LMWrapper
 	{
 		private const string VersionPath = "http://lispminer.vse.cz/download/index.php";
 		private const string FilesPath = "http://lispminer.vse.cz/files/exe/";
-		private const string PCGridPackage = "http://lispminer.vse.cz/files/tgs/PCGrid.120706.VSE.zip";
+		private const string PCGrid = "PCGrid.120706.VSE.zip";
 
-		protected string[] Packages = new string[]
-		                              	{
-		                              		"LISp-Miner.Core.zip",
-		                              		"LM.GridPooler.zip"
-		                              	};
+		protected string[] Packages =
+		{
+			"LISp-Miner.Core.zip",
+			"LM.GridPooler.zip",
+			"http://lispminer.vse.cz/files/tgs/" + PCGrid
+		};
 
 		public string TargetPath { get; private set; }
+
+		public string CurrentVersionPath { get; private set; }
 
 		public string Version { get; private set; }
 
@@ -27,8 +33,12 @@ namespace LMWrapper
 
 		private WebClient Client { get; set; }
 
+		private Dictionary<string, ConsoleLine> Lines { get; set; }
+
 		public Manager(string targetPath)
 		{
+			this.Lines = new Dictionary<string, ConsoleLine>();
+
 			this.TargetPath = targetPath;
 			this.Client = new WebClient();
 
@@ -45,19 +55,16 @@ namespace LMWrapper
 
 		public string Update()
 		{
-			var sb = new StringBuilder();
-			var directory = String.Format("{0}\\LISp Miner {1}", this.TargetPath, this.ReleaseDate.ToString("yyyy.MM.dd"));
-			var current = String.Format("{0}\\LISp Miner", this.TargetPath);
+			var tasks = new List<Task>();
+			var directory = string.Format("{0}\\LISp Miner {1}", this.TargetPath, this.ReleaseDate.ToString("yyyy.MM.dd"));
+			var current = string.Format("{0}\\LISp Miner", this.TargetPath);
 
-			var outputBuffer = string.Format("Updating LISp Miner to version {0} from {1}", this.Version, this.ReleaseDate.ToShortDateString());
-			sb.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
+			this.CurrentVersionPath = directory;
 
-			outputBuffer = string.Format("\tto destination: {0}", Path.GetFullPath(this.TargetPath));
-			sb.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
+			ConsoleLine.Append("Updating LISp Miner to version {0} from {1}", this.Version, this.ReleaseDate.ToShortDateString());
+			ConsoleLine.Append("\tto destination: {0}", Path.GetFullPath(this.TargetPath));
 			
-			this.EmptyOutputLine(sb);
+			ConsoleLine.Append();
 
 			if (Directory.Exists(directory))
 			{
@@ -68,83 +75,140 @@ namespace LMWrapper
 
 			foreach (var package in Packages)
 			{
-				this.DownloadPackage(directory, package, sb);
+				string source;
+				string name;
+				string destination;
+
+				GetPackageInfo(package, directory, out name, out source, out destination);
+
+				var line = ConsoleLine.Append("Downloading {0} ...", name);
+
+				this.Lines.Add(name, line);
+
+				var task = this.DownloadPackageAsync(destination, name, source);
+
+				tasks.Add(task);
 			}
+
+			Task.WaitAll(tasks.ToArray());
 
 			if (Directory.Exists(current))
 			{
 				Directory.Delete(current, true);
 			}
 
-			this.EmptyOutputLine(sb);
-
-			this.DownloadPCGrid(this.TargetPath, sb);
-
-			this.EmptyOutputLine(sb);
-
 			#region Setting LISp Miner version {0} as current.
 
-			outputBuffer = string.Format("Setting LISp Miner version {0} as current.", this.Version);
-			sb.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
+			ConsoleLine.Append("Setting LISp Miner version {0} as current.", this.Version);
 
 			DirectoryUtil.Copy(directory, current);
 
 			#endregion
 
-			return sb.ToString();
+			return ConsoleLine.GetBuffer();
 		}
 
-		private void EmptyOutputLine(StringBuilder output)
+		private void GetPackageInfo(string package, string defaultDestination, out string name, out string url, out string destination)
 		{
-			output.AppendLine();
-			Console.WriteLine();
-		}
-
-		private void DownloadPackage(string directory, string package, StringBuilder output)
-		{
-			var outputBuffer = String.Format("Downloading {0} ...", package);
-			output.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
-
-			var source = String.Format("{0}/{1}", FilesPath, package);
-			var destination = String.Format("{0}\\{1}", directory, package);
-
-			this.Client.DownloadFile(source, destination);
-
-			outputBuffer = String.Format("Unpacking {0} ...", package);
-			output.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
-			ZipUtil.Unzip(directory, destination);
-
-			File.Delete(destination);
-		}
-
-		private void DownloadPCGrid(string directory, StringBuilder output)
-		{
-			var current = String.Format("{0}\\{1}", directory, "PCGrid");
-			var package = Path.GetFileName(PCGridPackage);
-
-			if (Directory.Exists(current))
+			if (package.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
 			{
-				Directory.Delete(current, true);
+				name = Path.GetFileName(package);
+				url = package;
+			}
+			else
+			{
+				name = package;
+				url = string.Format("{0}/{1}", FilesPath, package);
 			}
 
-			var outputBuffer = string.Format("Downloading PCGrid executables ({0}) ...", package);
-			output.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
-			
-			var destination = String.Format("{0}\\{1}", directory, package);
+			destination = name == PCGrid ? this.TargetPath : defaultDestination;
+		}
 
-			this.Client.DownloadFile(PCGridPackage, destination);
+		private async Task<Task> DownloadPackageAsync(string directory, string package, string source)
+		{
+			using (var client = new WebClient())
+			{
+				var zip = String.Format("{0}\\{1}", directory, package);
 
-			outputBuffer = String.Format("Unpacking {0} ...", package);
-			output.AppendLine(outputBuffer);
-			Console.WriteLine(outputBuffer);
-			ZipUtil.Unzip(directory, destination);
+				client.DownloadProgressChanged += (o, args) => this.Lines[package].Update("Downloading {0} ({1} %) ...", package, args.ProgressPercentage);
 
-			// Keep packages of PCGrid
-			// File.Delete(destination);
+				Task task = client.DownloadFileTaskAsync(source, zip);
+
+				await task;
+
+				this.Lines[package].Update("Unpacking {0} ...", package);
+
+				ZipUtil.Unzip(directory, zip);
+
+				File.Delete(zip);
+
+				this.Lines[package].Update("Finished {0} ...", package);
+
+				return task;
+			}
+		}
+
+		private class ConsoleLine
+		{
+			private static readonly StringBuilder Buffer = new StringBuilder();
+			private static readonly Object obj = new Object();
+
+			public static ConsoleLine Append(string format, params object[] args)
+			{
+				Buffer.AppendFormat(format, args);
+
+				return new ConsoleLine(format, args);
+			}
+
+			public static void Append()
+			{
+				Buffer.AppendLine();
+
+				Console.WriteLine();
+			}
+
+			public static string GetBuffer()
+			{
+				return Buffer.ToString();
+			}
+
+			private readonly string _spaces;
+
+			private int Row { get; set; }
+
+			private ConsoleLine(string format, params object[] args)
+			{
+				Console.CursorVisible = false;
+
+				this.Row = Console.CursorTop;
+
+				for (int i = 0; i < 10; i++)
+				{
+					_spaces += " ";
+				}
+
+				this.Write(format, args);
+			}
+
+			private void Write(string format, params object[] args)
+			{
+				Console.WriteLine(format + _spaces, args);
+			}
+
+			public void Update(string format, params object[] args)
+			{
+				lock (obj)
+				{
+					int tmpRow = Console.CursorTop;
+					int tmpCol = Console.CursorLeft;
+
+					Console.SetCursorPosition(0, this.Row);
+
+					Write(format, args);
+
+					Console.SetCursorPosition(tmpCol, tmpRow);
+				}
+			}
 		}
 	}
 }

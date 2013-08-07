@@ -31,7 +31,7 @@ namespace SewebarConnect.Controllers
 		{
 			var request = new RegistrationRequest();
 			var id = ShortGuid.NewGuid();
-			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase);
+			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase, true);
 
 			MvcApplication.Environment.Register(miner);
 
