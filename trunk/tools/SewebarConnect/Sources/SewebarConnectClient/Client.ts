@@ -71,13 +71,13 @@ export module SewebarConnect {
 
         public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner: Miner) => void): void {
             // POST miners
-            var mb, database, data,
+            var mb, database, data, raw,
                 url = [
                     this.server,
                     'miners'
                 ].join('');
             
-            if (connection.type == 'Access') {
+            if (connection.type.toLocaleLowerCase() == 'access') {
                 database = {
                     _attr: { type: connection.type },
                     File: connection.file
@@ -92,25 +92,32 @@ export module SewebarConnect {
                 };
             }
 
-            if (metabase.type == 'Access') {
-                mb = {
-                    _attr: { type: metabase.type },
-                    File: metabase.file
-                };
-            } else {
-                mb = {
-                    _attr: { type: metabase.type },
-                    Server: metabase.server,
-                    Database: metabase.database,
-                    Username: metabase.username,
-                    Password: metabase.password
-                };
+            if (metabase) {
+                if (metabase.type.toLocaleLowerCase() == 'access') {
+                    mb = {
+                        _attr: { type: metabase.type },
+                        File: metabase.file
+                    };
+                } else if (metabase.type.toLocaleLowerCase() == 'mysql') {
+                    mb = {
+                        _attr: { type: metabase.type },
+                        Server: metabase.server,
+                        Database: metabase.database,
+                        Username: metabase.username,
+                        Password: metabase.password
+                    };
+                }
             }
 
-            data = xml('RegistrationRequest', {
-                Metabase: mb,
+            raw = {
                 Connection: database
-            });
+            };
+
+            if (mb) {
+                raw.Metabase = mb;
+            }
+
+            data = xml('RegistrationRequest', raw);
 
             this.opts.path = url;
 

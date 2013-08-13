@@ -19,7 +19,7 @@ namespace SewebarConnect.Controllers
 	public class TasksController : ApiBaseController
 	{
 		private static readonly ILog log = LogManager.GetLogger(typeof(TasksController));
-		private const string DefaultTemplate = "ETreeMiner.Task.Template.PMML";
+		private const string DefaultTemplate = "4ftMiner.Task.Template.PMML";
 
 		protected ILog Log
 		{
