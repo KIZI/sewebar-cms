@@ -10,7 +10,7 @@
 <h2>@Model.Id</h2>
 <dl>
 	<dt>Home path</dt>
-	<dd>@Path.GetFullPath(Model.LMPath)</dd>
+	<dd>@Path.GetFullPath(Model.LMPrivatePath)</dd>
 
 	<dt>Created</dt>
 	<dd>@Model.Created</dd>
@@ -24,4 +24,4 @@
 @Model.GetTaskList()
 </pre>
 
-<a href="@Url.HttpRouteUrl("MinersActionApi", new { controller = "Tasks", action = "CancelAll", minerId = Model.Id, taskType = "task" })" class="ajax">Cancel All</a>
+@*<a href="@Url.HttpRouteUrl("MinersApi", new { controller = "Tasks", action = "Post", minerId = Model.Id, taskType = "task" })" class="ajax">Cancel All</a>*@

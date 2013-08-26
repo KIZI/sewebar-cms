@@ -2,6 +2,14 @@
 	list-style: lower-alpha;
 }
 
+ol li.shared {
+	font-style: italic;
+}
+
+ol li.non-shared {
+	font-weight: bold;
+}
+
 li dl {
 	margin-left: 25px;
 }

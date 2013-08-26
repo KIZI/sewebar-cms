@@ -19,6 +19,22 @@ namespace LMWrapper.LISpMiner
 		public string Input { get; set; }
 
 		/// <summary>
+		/// /TimeLog:<název_souboru>
+		/// </summary>
+		public string TimeLog
+		{
+			get
+			{
+				if (this.LISpMiner.Environment.TimeLog)
+				{
+					return String.Format("{0}/{1}.dat", this.LISpMiner.LMPrivatePath, "_TimeLog_LMSwbImporter");
+				}
+
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// skip test of unique values in the database table primary key
 		/// </summary>
 		public bool NoCheckPrimaryKeyUnique { get; set; }
@@ -67,7 +83,13 @@ namespace LMWrapper.LISpMiner
 				// /AppLog
 				if (!String.IsNullOrEmpty(this.AppLog))
 				{
-					arguments.AppendFormat("\"/AppLog:{0}\"", this.AppLog);
+					arguments.AppendFormat("\"/AppLog:{0}\" ", this.AppLog);
+				}
+
+				// /TimeLog
+				if (!String.IsNullOrEmpty(this.TimeLog))
+				{
+					arguments.AppendFormat("\"/TimeLog:{0}\"", this.TimeLog);
 				}
 
 				return arguments.ToString().Trim();

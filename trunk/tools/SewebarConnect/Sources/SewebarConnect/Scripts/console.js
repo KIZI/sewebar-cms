@@ -60,8 +60,11 @@
 			databaseType = $('#reg_type').val(),
 			metabase = $('#reg_metabase').val(),
 			metabaseType = $('#reg_metabase_type').val(),
+			sharedBinaries = $('#reg_shared').is(':checked'),
 			m;
-		
+
+		data.firstChild.setAttribute('sharedBinaries', sharedBinaries);
+
 		data.firstChild.appendChild(database);
 
 		database.setAttribute('type', databaseType);

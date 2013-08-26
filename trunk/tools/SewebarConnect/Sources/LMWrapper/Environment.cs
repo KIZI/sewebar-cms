@@ -27,9 +27,16 @@ namespace LMWrapper
 
 		public string PCGridPath { get; set; }
 
+		public bool TimeLog { get; set; }
+
 		public Dictionary<string, LISpMiner.LISpMiner>.KeyCollection ExistingMiners
 		{
 			get { return this.RegisteredMiners.Keys; }
+		}
+
+		public Dictionary<string, LISpMiner.LISpMiner>.ValueCollection Miners
+		{
+			get { return this.RegisteredMiners.Values; }
 		}
 
 		protected Dictionary<string, LISpMiner.LISpMiner> RegisteredMiners

@@ -46,6 +46,22 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public string GridBinariesPath { get; private set; }
 
+		/// <summary>
+		/// /TimeLog:<název_souboru>
+		/// </summary>
+		public string TimeLog
+		{
+			get
+			{
+				if (this.LISpMiner.Environment.TimeLog)
+				{
+					return String.Format("{0}-{1}.dat", "_TimeLog_LMGridPooler", Guid.NewGuid());
+				}
+
+				return null;
+			}
+		}
+
 		protected string KeyStorePath
 		{
 			get { return this.GridBinariesPath + "\\..\\.."; }
@@ -118,7 +134,13 @@ namespace LMWrapper.LISpMiner
 				// /AppLog
 				if (!String.IsNullOrEmpty(this.AppLog))
 				{
-					arguments.AppendFormat("\"/AppLog:{0}\"", this.AppLog);
+					arguments.AppendFormat("\"/AppLog:{0}\" ", this.AppLog);
+				}
+
+				// /TimeLog
+				if (!String.IsNullOrEmpty(this.TimeLog))
+				{
+					arguments.AppendFormat("\"/TimeLog:{0}\"", this.TimeLog);
 				}
 
 				return arguments.ToString().Trim();
