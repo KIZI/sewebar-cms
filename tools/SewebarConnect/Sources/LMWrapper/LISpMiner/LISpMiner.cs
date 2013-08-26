@@ -145,9 +145,9 @@ namespace LMWrapper.LISpMiner
 			set { this._lmGridPooler = value; }
 		}
 
-		protected Environment Environment { get; set; }
+		public bool SharedPool { get; private set; }
 
-		protected bool SharedPool { get; private set; }
+		internal Environment Environment { get; set; }
 
 		#endregion
 
@@ -207,12 +207,11 @@ namespace LMWrapper.LISpMiner
 				throw new Exception(String.Format("LISpMiner does not exist at location {0}", lmpath.FullName));
 			}
 
-			// TODO: find out if really false
-			this.SharedPool = false;
-
 			this.Environment = env;
 			this.Id = lmpath.Name.Substring("LISpMiner_".Length);
 			this.LMPrivatePath = lmpath.FullName;
+
+			this.SharedPool = !File.Exists(Path.Combine(this.LMPrivatePath, "LMTaskPooler.exe"));
 
 			string metabaseFile;
 			string devNull = string.Empty;

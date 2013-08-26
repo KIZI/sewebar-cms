@@ -31,13 +31,11 @@ namespace SewebarConnect.Controllers
 		{
 			var request = new RegistrationRequest();
 			var id = ShortGuid.NewGuid();
-			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase, true);
+			var miner = new LISpMiner(MvcApplication.Environment, id.ToString(), request.DbConnection, request.Metabase, request.SharedBinaries);
 
 			MvcApplication.Environment.Register(miner);
 
-			var response = new RegistrationResponse {Id = id};
-
-			return response;
+			return new RegistrationResponse { Id = id };
 		}
 
 		public Response Delete()

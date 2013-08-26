@@ -1,4 +1,5 @@
-﻿@using SewebarConnect
+﻿@using System.EnterpriseServices
+@using SewebarConnect
 
 @model object
 
@@ -27,9 +28,13 @@
 {
 	<h3>Existing miners</h3>
 	<ol>
-		@foreach (var miner in MvcApplication.Environment.ExistingMiners)
+		@foreach (var miner in MvcApplication.Environment.Miners)
 		{
-			<li><a href="@Url.Action("Miner", new {guid = miner})">@miner</a>&nbsp;(<a href="@Url.Action("Remove", new { guid = miner })" class="ajax">Remove</a>)</li>
+			string shared = miner.SharedPool ? "shared" : "non-shared";
+			
+			<li class="@shared">
+				<a href="@Url.Action("Miner", new {guid = miner})">@miner.Id</a>&nbsp;(<a href="@Url.Action("Remove", new { guid = miner.Id })" class="ajax">Remove</a>)
+			</li>
         }
 	</ol>
 }

@@ -79,6 +79,29 @@ namespace SewebarConnect.API.Requests.Application
 			get { return this._dbConnection ?? (this._dbConnection = GetDbConnection("Connection", this.GetRequest())); }
 		}
 
+		public bool SharedBinaries
+		{
+			get
+			{
+				var attr = (from attribute in this.GetRequest()
+							.Elements("RegistrationRequest")
+							.Attributes("sharedBinaries")
+							select attribute).FirstOrDefault();
+
+				if (attr != null)
+				{
+					bool parsed;
+
+					if (bool.TryParse(attr.Value, out parsed))
+					{
+						return parsed;
+					}
+				}
+
+				return true;
+			}
+		}
+
 		public RegistrationRequest()
 			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
 		{
