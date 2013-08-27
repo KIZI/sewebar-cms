@@ -6,6 +6,8 @@ namespace LMWrapper.LISpMiner
 {
 	public class LMGridPooler : Executable, ITaskLauncher
 	{
+		private readonly string _keyStorePath;
+
 		// /RMCaseID:<RMCaseID>		... ReverseMiner CaseID to run all tasks in this case	
 		// /ShutdownDelaySec:<n>		... (O) number of seconds <0;86400> before the LM TaskPooler server is shutted down after currently the last waiting task is solved (default: 10)
 		// /TimeMaxHours:<n>		... (O) maximal number of hours the server is running (to allow for periodical re-start) (default: 1)
@@ -62,9 +64,9 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		protected string KeyStorePath
+		private string KeyStorePath
 		{
-			get { return this.GridBinariesPath + "\\..\\.."; }
+			get { return _keyStorePath; }
 		}
 
 		public override string Arguments
@@ -156,6 +158,7 @@ namespace LMWrapper.LISpMiner
 			this.OdbcConnectionString = connectionString.Value;
 
 			this.GridBinariesPath = gridPath;
+			this._keyStorePath = this.GridBinariesPath + "\\..\\..";
 
 			this.ApplicationName = "LMGridPooler.exe";
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_LMGridPooler", Guid.NewGuid());
@@ -168,7 +171,7 @@ namespace LMWrapper.LISpMiner
 		private void InitializePCGrid()
 		{
 			DirectoryInfo mainDirectory;
-			string mainDirectoryPath = Path.GetFullPath(string.Format("{0}\\{1}", this.LMPrivatePath, "PCGrid"));
+			string mainDirectoryPath = Path.GetFullPath(string.Format("{0}\\{1}", this.LMExecutablesPath, "PCGrid"));
 
 			if (!Directory.Exists(mainDirectoryPath))
 			{
@@ -327,7 +330,7 @@ namespace LMWrapper.LISpMiner
 				return result;
 			}
 
-			throw new Exception(string.Format("Keystore {0} does not exist.", origin));
+			throw new Exception(string.Format("Keystore \"{0}\" does not exist.", origin));
 		}
 	}  
 }
