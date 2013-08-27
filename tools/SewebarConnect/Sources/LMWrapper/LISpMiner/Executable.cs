@@ -11,6 +11,8 @@ namespace LMWrapper.LISpMiner
 
 		private readonly Stopwatch _stopwatch;
 
+		private string _appLog = string.Empty;
+
 		public LISpMiner LISpMiner { get; protected set; }
 
 		public string ApplicationName { get; protected set; }
@@ -39,7 +41,21 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// /AppLog:[log_file]		... (O) alternative path and file name for logging
 		/// </summary>
-		public string AppLog { get; protected set; }
+		public string AppLog {
+			get
+			{
+				return this._appLog;
+			}
+
+			protected set
+			{
+				var errorFilePath = String.IsNullOrEmpty(value)
+					? String.Format("{0}/_AppLog.dat", this.LMPrivatePath)
+					: String.Format("{0}/{1}", this.LMPrivatePath, value);
+
+				this._appLog = errorFilePath;
+			}
+		}
 
 		public abstract string Arguments { get; }
 
@@ -53,16 +69,13 @@ namespace LMWrapper.LISpMiner
 
 		public void Execute()
 		{
-			var errorFilePath = String.IsNullOrEmpty(this.AppLog) 
-				? String.Format("{0}/_AppLog.dat", this.LMPrivatePath) 
-				: String.Format("{0}/{1}", this.LMPrivatePath, this.AppLog);
-
 			this.Run();
 
-			if(File.Exists(errorFilePath))
+			if(File.Exists(this.AppLog))
 			{
-				var message = File.ReadAllText(errorFilePath);
-				File.Delete(errorFilePath);
+				var message = File.ReadAllText(this.AppLog);
+				File.Delete(this.AppLog);
+
 				throw new LISpMinerException(message);
 			}
 		}
