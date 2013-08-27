@@ -193,11 +193,12 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		internal LMSwbExporter(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPath)
+		internal LMSwbExporter(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPrivatePath)
 			: base()
 		{
 			this.LISpMiner = lispMiner;
-			this.LMPath = lmPath ?? this.LISpMiner.LMPath;
+			this.LMExecutablesPath = this.LISpMiner.LMExecutablesPath;
+			this.LMPrivatePath = lmPrivatePath;
 			this.OdbcConnectionString = connectionString.Value;
 
 			this.ApplicationName = "LMSwbExporter.exe";

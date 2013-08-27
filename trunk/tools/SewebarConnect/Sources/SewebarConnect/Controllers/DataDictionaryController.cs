@@ -20,7 +20,7 @@ namespace SewebarConnect.Controllers
 			exporter.NoEscapeSeqUnicode = true;
 			exporter.MatrixName = request.MatrixName;
 			exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder, "DD", DateTime.Now);
-			exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
+			exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath,
 											  request.GetTemplate("LMDataSource.Matrix.ARD.Template.PMML"));
 			exporter.Execute();
 

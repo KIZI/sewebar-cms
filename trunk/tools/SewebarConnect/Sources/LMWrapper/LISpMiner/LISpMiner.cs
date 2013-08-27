@@ -24,7 +24,7 @@ namespace LMWrapper.LISpMiner
 		{
 			if (!miner.SharedPool)
 			{
-				DirectoryUtil.Copy(environment.LMPath, miner.LMPath);
+				DirectoryUtil.Copy(environment.LMPath, miner.LMExecutablesPath);
 			}
 			else
 			{
@@ -42,7 +42,7 @@ namespace LMWrapper.LISpMiner
 
 		public AccessConnection Metabase { get; protected set; }
 
-		internal string LMPath
+		internal string LMExecutablesPath
 		{
 			get
 			{
@@ -76,7 +76,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._importer == null)
 				{
-					this._importer = new LMSwbImporter(this, this.Metabase.ConnectionString, this.LMPath);
+					this._importer = new LMSwbImporter(this, this.Metabase.ConnectionString, this.LMPrivatePath);
 				}
 
 				return this._importer;
@@ -91,7 +91,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._exporter == null)
 				{
-					this._exporter = new LMSwbExporter(this, this.Metabase.ConnectionString, this.LMPath);
+					this._exporter = new LMSwbExporter(this, this.Metabase.ConnectionString, this.LMPrivatePath);
 				}
 
 				return this._exporter;
@@ -106,7 +106,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmTaskPooler == null)
 				{
-					this._lmTaskPooler = new LMTaskPooler(this, this.Metabase.ConnectionString, this.LMPath);
+					this._lmTaskPooler = new LMTaskPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath);
 				}
 
 				return this._lmTaskPooler;
@@ -121,7 +121,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmProcPooler == null)
 				{
-					this._lmProcPooler = new LMProcPooler(this, this.Metabase.ConnectionString, this.LMPath);
+					this._lmProcPooler = new LMProcPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath);
 				}
 
 				return this._lmProcPooler;
@@ -136,7 +136,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmGridPooler == null)
 				{
-					this._lmGridPooler = new LMGridPooler(this, this.Metabase.ConnectionString, this.LMPath, this.Environment.PCGridPath);
+					this._lmGridPooler = new LMGridPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath, this.Environment.PCGridPath);
 				}
 
 				return this._lmGridPooler;
@@ -290,7 +290,7 @@ namespace LMWrapper.LISpMiner
 
 			if (this.SharedPool)
 			{
-				versionPath = String.Format("{0}/version.xml", this.LMPath);
+				versionPath = String.Format("{0}/version.xml", this.LMExecutablesPath);
 			}
 			else
 			{
@@ -305,7 +305,7 @@ namespace LMWrapper.LISpMiner
 				{
 					exporter.Version = true;
 					exporter.Output = versionPath;
-					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMVersion.Template.TXT");
+					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath, "LMVersion.Template.TXT");
 
 					exporter.Execute();
 
@@ -334,13 +334,13 @@ namespace LMWrapper.LISpMiner
 		public string GetTaskList()
 		{
 			var exporter = this.Exporter;
-			var tasksFile = String.Format("{0}/LMTaskSurvey_{1:yyyyMMdd-Hmmss}.txt", exporter.LMPath, DateTime.Now);
+			var tasksFile = String.Format("{0}/LMTaskSurvey_{1:yyyyMMdd-Hmmss}.txt", exporter.LMExecutablesPath, DateTime.Now);
 
 			if (exporter.Status == ExecutableStatus.Ready)
 			{
 				exporter.Survey = true;
 				exporter.Output = tasksFile;
-				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath, "LMSurvey.Task.Template.TXT");
+				exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath, "LMSurvey.Task.Template.TXT");
 
 				exporter.Execute();
 

@@ -55,7 +55,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this.LISpMiner.Environment.TimeLog)
 				{
-					return String.Format("{0}-{1}.dat", "_TimeLog_LMGridPooler", Guid.NewGuid());
+					return String.Format("{0}/{1}.dat", this.LISpMiner.LMPrivatePath, "_TimeLog_LMProcPooler");
 				}
 
 				return null;
@@ -147,11 +147,12 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		internal LMGridPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPath, string gridPath)
+		internal LMGridPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPrivatePath, string gridPath)
 			: base()
 		{
 			this.LISpMiner = lispMiner;
-			this.LMPath = lmPath ?? this.LISpMiner.LMPath;
+			this.LMExecutablesPath = this.LISpMiner.LMExecutablesPath;
+			this.LMPrivatePath = lmPrivatePath;
 			this.OdbcConnectionString = connectionString.Value;
 
 			this.GridBinariesPath = gridPath;
@@ -167,7 +168,7 @@ namespace LMWrapper.LISpMiner
 		private void InitializePCGrid()
 		{
 			DirectoryInfo mainDirectory;
-			string mainDirectoryPath = Path.GetFullPath(string.Format("{0}\\{1}", this.LMPath, "PCGrid"));
+			string mainDirectoryPath = Path.GetFullPath(string.Format("{0}\\{1}", this.LMPrivatePath, "PCGrid"));
 
 			if (!Directory.Exists(mainDirectoryPath))
 			{

@@ -22,7 +22,7 @@ namespace LMWrapper.LISpMiner
 											EnableRaisingEvents = true,
 											StartInfo = new ProcessStartInfo
 															{
-																FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
+																FileName = String.Format("{0}/{1}", this.LMExecutablesPath, this.ApplicationName),
 																Arguments = this.Arguments
 															},
 										};
@@ -155,11 +155,12 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		internal LMTaskPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPath)
+		internal LMTaskPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPrivatePath)
 			: base()
 		{
 			this.LISpMiner = lispMiner;
-			this.LMPath = lmPath ?? this.LISpMiner.LMPath;
+			this.LMExecutablesPath = this.LISpMiner.LMExecutablesPath;
+			this.LMPrivatePath = lmPrivatePath;
 			this.OdbcConnectionString = connectionString.Value;
 
 			this.ApplicationName = "LMTaskPooler.exe";
