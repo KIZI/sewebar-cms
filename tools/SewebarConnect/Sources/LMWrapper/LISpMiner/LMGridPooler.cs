@@ -55,7 +55,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this.LISpMiner.Environment.TimeLog)
 				{
-					return String.Format("{0}/{1}.dat", this.LISpMiner.LMPrivatePath, "_TimeLog_LMProcPooler");
+					return String.Format("{0}/{1}.dat", this.LISpMiner.LMPrivatePath, "_TimeLog_LMGridPooler");
 				}
 
 				return null;
