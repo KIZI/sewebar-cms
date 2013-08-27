@@ -182,6 +182,7 @@
     <Compile Include="Security\BasicAuthenticationSecurityTokenHandler.cs" />
     <Compile Include="Security\HttpAuthentication.cs" />
     <Compile Include="Security\SecurityExceptionFilter.cs" />
+    <Compile Include="SVNDataAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\styles.css" />

@@ -64,7 +64,6 @@ describe('SewebarConnect', function() {
         it('should run task', (done) => {
             miner.runProc(task, (err, results) => {
                 should.not.exist(err);
-                console.log(results);
                 results.should.be.ok;
 
                 done();

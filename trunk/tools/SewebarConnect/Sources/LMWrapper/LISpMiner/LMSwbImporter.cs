@@ -35,7 +35,7 @@ namespace LMWrapper.LISpMiner
 		}
 
 		/// <summary>
-		/// skip test of unique values in the database table primary key
+		/// /NoCheckPrimaryKeyUnique	... (O) skip test of unique values in the database table primary key
 		/// </summary>
 		public bool NoCheckPrimaryKeyUnique { get; set; }
 

@@ -45,7 +45,7 @@ namespace SewebarConnect.Controllers
 
 		public ActionResult Index()
 		{
-			return View();
+			return View(SVNDataAttribute.AssemblySVNData);
 		}
 
 		public ActionResult Update()
