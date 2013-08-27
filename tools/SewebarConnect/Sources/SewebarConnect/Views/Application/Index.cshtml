@@ -1,5 +1,6 @@
-﻿@{
-	ViewBag.Title = "title";
+﻿@model SewebarConnect.SVNDataAttribute
+
+@{
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>SEWEBAR Connect</h1>
@@ -15,9 +16,12 @@
 	<li>Run custom tasks</li>
 	<li>PROFIT!!!</li>
 </ol>
+
 <h2>Exceptions</h2>
-In case of failured execution the response contains in header status code <em>500 Internal Server Error</em> and body:
-<br/>
+<p>In case of failured execution the response contains in header status code <em>500 Internal Server Error</em> and body:</p>
 <code>
-&lt;response status="failure"&gt;&lt;message&gt;{Exception message}&lt;/message&gt;&lt;/response&gt;
+	&lt;response status="failure"&gt;&lt;message&gt;{Exception message}&lt;/message&gt;&lt;/response&gt;
 </code>
+
+<h2>Version</h2>
+Build from revision @Model.WCREV at @Model.WCNOW.

@@ -1,4 +1,5 @@
 ﻿using System;
+using LMWrapper.LISpMiner;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.DataDictionary;
 using SewebarConnect.API.Responses.DataDictionary;
@@ -40,8 +41,9 @@ namespace SewebarConnect.Controllers
 
 			if (this.LISpMiner != null && request.DataDictionary != null)
 			{
-				var importer = this.LISpMiner.Importer;
+				LMSwbImporter importer = this.LISpMiner.Importer;
 				importer.Input = request.DataDictionaryPath;
+				importer.NoCheckPrimaryKeyUnique = false;
 				importer.Execute();
 
 				response.Message = String.Format("Data Dictionary imported to {0}", importer.LISpMiner.Id);

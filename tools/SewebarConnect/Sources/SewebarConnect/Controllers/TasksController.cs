@@ -140,6 +140,7 @@ namespace SewebarConnect.Controllers
 
 						// import task
 						importer.Input = request.TaskPath;
+						importer.NoCheckPrimaryKeyUnique = true;
 
 						if (!string.IsNullOrEmpty(request.Alias))
 						{
@@ -211,6 +212,7 @@ namespace SewebarConnect.Controllers
 
 				importer.Input = String.Empty;
 				importer.Alias = String.Empty;
+				importer.NoCheckPrimaryKeyUnique = false;
 			}
 		}
 

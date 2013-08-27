@@ -1,5 +1,13 @@
 @echo off
 
+PUSHD.
+CD ".\Sources\SewebarConnect"
+SubWCRev . SVNDataAttribute.template.cs SVNDataAttribute.cs -mf
+if errorlevel 1 goto error
+POPD
+
+ECHO.
+
 rem assuming msbuild is in system path, ie. "C:\Windows\Microsoft.NET\Framework\v4.0"
 
 echo Build started...
