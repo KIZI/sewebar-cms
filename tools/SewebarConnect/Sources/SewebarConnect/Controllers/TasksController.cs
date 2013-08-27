@@ -115,7 +115,7 @@ namespace SewebarConnect.Controllers
 					exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
 													request.TaskFileName, DateTime.Now);
 
-					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
+					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath,
 													  request.GetTemplate(definition.DefaultTemplate));
 
 					exporter.TaskName = request.TaskName;
@@ -144,7 +144,7 @@ namespace SewebarConnect.Controllers
 
 						if (!string.IsNullOrEmpty(request.Alias))
 						{
-							importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMPath, request.Alias);
+							importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMExecutablesPath, request.Alias);
 						}
 
 						importer.Execute();
@@ -232,7 +232,7 @@ namespace SewebarConnect.Controllers
 					exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
 													request.TaskFileName, DateTime.Now);
 
-					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMPath,
+					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath,
 													  request.GetTemplate(DefaultTemplate));
 
 					exporter.TaskName = request.TaskName;

@@ -22,7 +22,9 @@ namespace LMWrapper.LISpMiner
 		/// </summary>
 		public string OdbcConnectionString { get; protected set; }
 
-		public string LMPath { get; protected set; }
+		public string LMExecutablesPath { get; protected set; }
+
+		public string LMPrivatePath { get; protected set; }
 
 		/// <summary>
 		/// /Quiet	... errors reported to _AppLog.dat instead on screen
@@ -51,7 +53,9 @@ namespace LMWrapper.LISpMiner
 
 		public void Execute()
 		{
-			var errorFilePath = String.IsNullOrEmpty(this.AppLog) ? String.Format("{0}/_AppLog.dat", this.LMPath) : String.Format("{0}/{1}", this.LMPath, this.AppLog);
+			var errorFilePath = String.IsNullOrEmpty(this.AppLog) 
+				? String.Format("{0}/_AppLog.dat", this.LMPrivatePath) 
+				: String.Format("{0}/{1}", this.LMPrivatePath, this.AppLog);
 
 			this.Run();
 
@@ -69,9 +73,9 @@ namespace LMWrapper.LISpMiner
 						{
 							StartInfo = new ProcessStartInfo
 											{
-												FileName = String.Format("{0}/{1}", this.LMPath, this.ApplicationName),
+												FileName = String.Format("{0}/{1}", this.LMExecutablesPath, this.ApplicationName),
 												Arguments = this.Arguments,
-												WorkingDirectory = this.LMPath
+												WorkingDirectory = this.LMExecutablesPath
 											}
 						};
 
