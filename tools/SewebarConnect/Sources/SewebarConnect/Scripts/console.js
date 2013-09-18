@@ -15,13 +15,13 @@
 	}
 
 	function createHeaders() {
-		var username = $('user_username').val(),
-			password = $('user_password').val();
+		var username = $('#user_username').val(),
+			password = $('#user_password').val();
 
 		if (username) {
 			return {
-				"Authorization": encodeCredentials(username, password)
-			};
+				"Authorization": encodeCredentials(username, password ? password : '')
+		};
 		}
 
 		return null;

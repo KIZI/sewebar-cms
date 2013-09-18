@@ -4,6 +4,7 @@
 		<id name="Id" column="id" type="Guid" unsaved-value="00000000-0000-0000-0000-000000000000">
 			<generator class="guid.comb" />
 		</id>
+		<property name="MinerId" column="id_miner" type="string" unique="true" not-null="true" />
 		<property name="Path" column="name" type="string" />
 		<many-to-one name="Owner" column="id_user" cascade="none" fetch="join" class="SewebarKey.User, SewebarKey" not-found="ignore" />
 	</class>

@@ -10,11 +10,11 @@
 		<property name="Role" type="string" not-null="true">
 			<column name="role" default="user" />
 		</property>
-		<set name="Databases" inverse="true" lazy="false" cascade="delete">
+		<set name="Databases" inverse="true" lazy="false" cascade="all">
 			<key column="id_user"/>
 			<one-to-many class="SewebarKey.Database, SewebarKey"/>
 		</set>
-		<set name="Miners" inverse="true" lazy="false" cascade="delete">
+		<set name="Miners" inverse="true" lazy="false" cascade="all">
 			<key column="id_user"/>
 			<one-to-many class="SewebarKey.Miner, SewebarKey"/>
 		</set>
