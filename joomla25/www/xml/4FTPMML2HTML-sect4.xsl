@@ -7,7 +7,7 @@
   <!-- ========================
        Data Mining Task Setting
        ======================== -->
-  <xsl:template match="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="sect4">
+  <xsl:template match="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel | guha:CFMinerModel" mode="sect4">
     <div class="idiv">
       <p><xsl:copy-of select="keg:translate('Task name',150)"/>: <xsl:value-of select="@modelName"/></p>
       <!-- Used quantifier table -->

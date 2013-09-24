@@ -39,7 +39,7 @@
        Document header
        =============== -->
        <!-- uses: 4FTPMML2HTML-header -->
-    <h1><xsl:copy-of select="keg:translate('Description of Data Mining Task', 10)"/> „<xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName | /p:PMML/guha:Ac4ftModel/@modelName"/>“</h1>
+    <h1><xsl:copy-of select="keg:translate('Description of Data Mining Task', 10)"/> „<xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName | /p:PMML/guha:Ac4ftModel/@modelName | /p:PMML/guha:CFMinerModel/@modelName"/>“</h1>
     <p>
       <xsl:choose>
         <xsl:when test="/p:PMML/guha:SD4ftModel">
@@ -93,7 +93,7 @@
             </xsl:otherwise>
           </xsl:choose>
         </a>
-        <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="toc"/>
+        <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel | guha:CFMinerModel" mode="toc"/>
       </li>
     </ol>
     </div>
@@ -217,7 +217,7 @@
             </p>
           </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="sect4"/>
+      <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel | guha:CFMinerModel" mode="sect4"/>
     </div>
 
     <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DMTaskSetting','','end')"/></xsl:comment>
@@ -243,13 +243,13 @@
       <p><xsl:copy-of select="keg:translate('Discovered rules relate to the following attributes',110)"/>: <xsl:apply-templates select="p:DataDictionary/p:DataField" mode="sect5" />.</p>
 
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('NumberOfRulesFound','','start')"/></xsl:comment>
-      <p><xsl:copy-of select="keg:translate('Number of discovered association rules',120)"/>: <xsl:value-of select="guha:AssociationModel/@numberOfRules | guha:SD4ftModel/@numberOfRules | guha:Ac4ftModel/@numberOfRules"/></p>
+      <p><xsl:copy-of select="keg:translate('Number of discovered association rules',120)"/>: <xsl:value-of select="guha:AssociationModel/@numberOfRules | guha:SD4ftModel/@numberOfRules | guha:Ac4ftModel/@numberOfRules | guha:CFMinerModel/@numberOfRules"/></p>
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('NumberOfRulesFound','','end')"/></xsl:comment>
 
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRules_Contents','','start')"/></xsl:comment>
       <div id="sectDiscoveredArToc">
         <h3><xsl:copy-of select="keg:translate('Content (list of rules)',130)"/></h3>
-        <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel" mode="toc">
+        <xsl:apply-templates select="guha:AssociationModel | guha:SD4ftModel | guha:Ac4ftModel | guha:CFMinerModel" mode="toc">
           <xsl:with-param name="checkbox" select="1"/>
         </xsl:apply-templates>
       </div>
@@ -258,6 +258,7 @@
       <xsl:apply-templates select="guha:AssociationModel/AssociationRules/AssociationRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
       <xsl:apply-templates select="guha:SD4ftModel/SD4ftRules/SD4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
       <xsl:apply-templates select="guha:Ac4ftModel/Ac4ftRules/Ac4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
+      <xsl:apply-templates select="guha:CFMinerModel/CFMinerRules/CFMinerRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
     </div>
 
     <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredARs','','end')"/></xsl:comment>
