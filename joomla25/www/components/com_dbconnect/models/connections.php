@@ -26,7 +26,7 @@ class dbconnectModelConnections extends JModel
     $db->setQuery('INSERT INTO #__dbconnect_tables (`uid`,`db_type`,`server`,`username`,`db_name`,`table`,`primary_key`,`shared`)VALUES("'.$user->get('id').'","'.$db->getEscaped($dbtype).'","'.$db->getEscaped($server).'","'.$db->getEscaped($username).'","'.$db->getEscaped($dbname).'","'.$db->getEscaped($table).'","'.$db->getEscaped($primaryKey).'","'.($shared?'1':'0').'");');
     if(!$db->query()){
       return false;
-    }else{                  
+    }else{
       $returnId= $db->insertid();
       self::setDbPassword($returnId,$password);
       return $returnId;
