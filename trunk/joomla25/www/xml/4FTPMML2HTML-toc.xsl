@@ -106,7 +106,7 @@
       </xsl:when>
       <xsl:when test="$numberOfRules &gt; $maxRulesToList">
         <p style="color: red">
-          <xsl:copy-of select="keg:translate('Exceeded',190)"/> maxRulesToList = <xsl:value-of select="$maxRulesToList"/>; <xsl:copy-of select="keg:translate('first',200)"/> <xsl:value-of select="$maxRulesToList"/> <xsl:copy-of select="keg:translate('from the total number of',210)"/> <xsl:value-of select="count(AssociationRule)"/>  <xsl:copy-of select="keg:translate('rules',220)"/>.
+          <xsl:copy-of select="keg:translate('Exceeded',190)"/> maxRulesToList = <xsl:value-of select="$maxRulesToList"/>; <xsl:copy-of select="keg:translate('first',200)"/> <xsl:value-of select="$maxRulesToList"/> <xsl:copy-of select="keg:translate('from the total number of',210)"/> <xsl:value-of select="count(SD4ftRule)"/>  <xsl:copy-of select="keg:translate('rules',220)"/>.
         </p>
       </xsl:when>
     </xsl:choose>
@@ -130,13 +130,37 @@
       </xsl:when>
       <xsl:when test="$numberOfRules &gt; $maxRulesToList">
         <p style="color: red">
-          <xsl:copy-of select="keg:translate('Exceeded',190)"/> maxRulesToList = <xsl:value-of select="$maxRulesToList"/>; <xsl:copy-of select="keg:translate('first',200)"/> <xsl:value-of select="$maxRulesToList"/> <xsl:copy-of select="keg:translate('from the total number of',210)"/> <xsl:value-of select="count(AssociationRule)"/>  <xsl:copy-of select="keg:translate('rules',220)"/>.
+          <xsl:copy-of select="keg:translate('Exceeded',190)"/> maxRulesToList = <xsl:value-of select="$maxRulesToList"/>; <xsl:copy-of select="keg:translate('first',200)"/> <xsl:value-of select="$maxRulesToList"/> <xsl:copy-of select="keg:translate('from the total number of',210)"/> <xsl:value-of select="count(Ac4ftRule)"/>  <xsl:copy-of select="keg:translate('rules',220)"/>.
         </p>
       </xsl:when>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="toc">
+  <xsl:template match="guha:CFMinerModel" mode="toc">
+    <xsl:param name="checkbox"/>
+    <xsl:variable name="numberOfRules" select="count(/p:PMML/guha:CFMinerModel/CFMinerRules/CFMinerRule)"/>
+    <xsl:choose>
+      <xsl:when test="$numberOfRules>0">
+        <ol>
+          <xsl:apply-templates select="CFMinerRules/CFMinerRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="toc">
+            <xsl:with-param name="checkbox" select="$checkbox"/>
+          </xsl:apply-templates>
+        </ol>
+      </xsl:when>
+      <xsl:when test="$numberOfRules=0">
+        <p style="color: red">
+          <xsl:copy-of select="keg:translate('No rules found',191)"/>
+        </p>
+      </xsl:when>
+      <xsl:when test="$numberOfRules &gt; $maxRulesToList">
+        <p style="color: red">
+          <xsl:copy-of select="keg:translate('Exceeded',190)"/> maxRulesToList = <xsl:value-of select="$maxRulesToList"/>; <xsl:copy-of select="keg:translate('first',200)"/> <xsl:value-of select="$maxRulesToList"/> <xsl:copy-of select="keg:translate('from the total number of',210)"/> <xsl:value-of select="count(CFMinerRule)"/>  <xsl:copy-of select="keg:translate('rules',220)"/>.
+        </p>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule | CFMinerRule" mode="toc">
     <xsl:param name="checkbox"/>
     <li>
       <xsl:if test="$checkbox">

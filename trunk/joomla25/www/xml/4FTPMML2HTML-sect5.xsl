@@ -8,7 +8,7 @@
        Section 5 - Discovered ARs
        ========================== -->
   <!-- found rule detail -->
-  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="sect5">
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule | CFMinerRule" mode="sect5">
     <!-- rule link is made according to its position (number) -->
     <xsl:variable name="arText">
       <xsl:apply-templates select="." mode="ruleBody"/>
@@ -40,11 +40,13 @@
       </xsl:for-each>
       <div id="arb_result{position()}" class="hidden">...</div>
       <!-- table of values of test criteria (quantifiers) -->
-      <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule_Quantifiers',$arText,'start')"/></xsl:comment>
-      <xsl:apply-templates select="." mode="sect5-qtable">
-        <xsl:with-param name="rulePos" select="$rulePos"/>
-      </xsl:apply-templates>
-      <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule_Quantifiers',$arText,'end')"/></xsl:comment>
+      <xsl:if test="local-name() != 'CFMinerRule'">
+        <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule_Quantifiers',$arText,'start')"/></xsl:comment>
+        <xsl:apply-templates select="." mode="sect5-qtable">
+          <xsl:with-param name="rulePos" select="$rulePos"/>
+        </xsl:apply-templates>
+        <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule_Quantifiers',$arText,'end')"/></xsl:comment>
+      </xsl:if>
       <!-- 4FT table for AssociationRule / 4ftMiner -->
       <xsl:if test="local-name()='AssociationRule'">
         <!-- 4FT: four field table -->
@@ -133,11 +135,44 @@
           </tbody>
         </table>
       </xsl:if>
+      <!-- attributes table and graph for CFMiner -->
+      <xsl:if test="local-name()='CFMinerRule'">
+        <!-- attributes table -->
+        <table class="itable" id="sect5-rule{$rulePos}-freqtab">
+          <tr>
+            <th>Kategorie</th>
+            <th>Frekvence</th>
+          </tr>
+          <xsl:apply-templates select="Frequencies/Frequency" />
+        </table>
+        <!-- graph -->
+        <xsl:variable name="histId" select="$rulePos + 1000"/>
+        <xsl:variable name="numOfCategories" select="count(Frequencies/Frequency)"/>
+        <div class="graphUI noprint">
+          <label for="cbg{$histId}">Graph:
+          <input id="cbg{$histId}" type="checkbox" onclick="ShowChecked(this,'hist{$histId}')" checked="checked"/>
+          </label>
+          <label for="cbo{$histId}"><xsl:value-of select="$otherCategoryName"/>:
+          <input id="cbo{$histId}" type="checkbox" onclick="GraphUrlOther(this,'{$histId}','{$otherCategoryName}')" checked="checked"/>
+          </label>
+          <label for="from{$histId}">From:
+          <input type="button" onclick="GraphUrlFrom('{$histId}',-1,{$numOfCategories})" value="-"/>
+          <input id="from{$histId}" type="text" onblur="GraphUrlFrom('{$histId}',0,{$numOfCategories})" value="0"/>
+          <input type="button" onclick="GraphUrlFrom('{$histId}',+1,{$numOfCategories})" value="+"/>
+          </label>
+          <label for="num{$histId}">Columns:
+          <input id="num{$histId}" type="text" onblur="GraphUrlNum('{$histId}')" value="{$maxCategoriesToListInGraphs}"/>
+          </label>
+        </div>
+        <div id="hist{$histId}">
+          <xsl:call-template name="drawHistogram"/>
+        </div>
+      </xsl:if>
     </div>
   </xsl:template>
 
   <!-- quantifier table -->
-  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule | FirstSet | SecondSet | StateBefore | StateAfter" mode="sect5-qtable">
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule | CFMinerRule | FirstSet | SecondSet | StateBefore | StateAfter" mode="sect5-qtable">
     <xsl:param name="rulePos"/>
     <xsl:variable name="sect">
       <xsl:if test="local-name()='FirstSet'">fs-</xsl:if>
@@ -258,25 +293,35 @@
 
   </xsl:template>
 
+  <!-- cfminer frequencies table -->
+  <xsl:template match="Frequency">
+    <tr>
+      <td><xsl:value-of select="@category" /></td>
+      <td><xsl:value-of select="@value" /></td>
+    </tr>
+  </xsl:template>
+
 <!-- Debug: Rule parts overview -->
-  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="debug">
-    antecedent=<xsl:value-of select="@antecedent" />
-    consequent=<xsl:value-of select="@consequent | @succedent"/>
-    condition=<xsl:value-of select="@condition"/>
-    
-    firstSet=<xsl:value-of select="FirstSet/@set | FirstSet/@FirstSet"/>
-    secondSet=<xsl:value-of select="SecondSet/@set | SecondSet/@SecondSet"/>
-    
-    antecedentVarBefore=<xsl:value-of select="StateBefore/@antecedentVarBefore"/>
-    antecedentVarAfter=<xsl:value-of select="StateAfter/@antecedentVarAfter"/>
-    
-    consequentVarBefore=<xsl:value-of select="StateBefore/@consequentVarBefore"/>
-    consequentVarAfter=<xsl:value-of select="StateAfter/@consequentVarAfter"/>
+  <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule | CFMinerRule" mode="debug">antecedent=<xsl:value-of select="@antecedent" />
+consequent=<xsl:value-of select="@consequent | @succedent"/>
+condition=<xsl:value-of select="@condition"/>
+
+firstSet=<xsl:value-of select="FirstSet/@set | FirstSet/@FirstSet"/>
+secondSet=<xsl:value-of select="SecondSet/@set | SecondSet/@SecondSet"/>
+
+antecedentVarBefore=<xsl:value-of select="StateBefore/@antecedentVarBefore"/>
+antecedentVarAfter=<xsl:value-of select="StateAfter/@antecedentVarAfter"/>
+
+consequentVarBefore=<xsl:value-of select="StateBefore/@consequentVarBefore"/>
+consequentVarAfter=<xsl:value-of select="StateAfter/@consequentVarAfter"/>
+
+attribute=<xsl:value-of select="@attribute"/>
   </xsl:template>
 
   <!--
   RULE BODY
   -->
+  <!-- CFMinerRule with format Attribute / Condition is bellow ... -->
   <xsl:template match="AssociationRule | SD4ftRule | Ac4ftRule" mode="ruleBody">
     <xsl:param name="arrowOnly"/>
     <xsl:variable name="ante" select="@antecedent"/>
@@ -334,6 +379,21 @@
       </xsl:call-template>
       ]
     </xsl:if>
+    <!-- condition -->
+    <xsl:if test="../BBA[@id=$cond] | ../DBA[@id=$cond]"> /
+      <xsl:call-template name="cedent">
+        <xsl:with-param name="cedentID" select="$cond"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="CFMinerRule" mode="ruleBody">
+    <xsl:param name="arrowOnly"/>
+    <xsl:variable name="cond" select="@condition"/>
+    <!-- Rule has format: Attribute [/Condition]
+      - condition is optional ?
+    -->
+    <xsl:value-of select="@attribute" />
     <!-- condition -->
     <xsl:if test="../BBA[@id=$cond] | ../DBA[@id=$cond]"> /
       <xsl:call-template name="cedent">

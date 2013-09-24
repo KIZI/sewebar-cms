@@ -17,6 +17,7 @@
               <td><i><xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName"/>
                   <xsl:value-of select="/p:PMML/guha:SD4ftModel/@modelName"/>
                   <xsl:value-of select="/p:PMML/guha:Ac4ftModel/@modelName"/>
+                  <xsl:value-of select="/p:PMML/guha:CFMinerModel/@modelName"/>
               </i></td>
           </tr>
           <tr>
