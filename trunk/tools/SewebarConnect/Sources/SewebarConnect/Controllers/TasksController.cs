@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -15,9 +16,12 @@ using log4net;
 
 namespace SewebarConnect.Controllers
 {
+	[Authorize]
 	[APIErrorHandler]
 	public class TasksController : ApiBaseController
 	{
+		#region Private Helpers
+
 		private static readonly ILog log = LogManager.GetLogger(typeof(TasksController));
 		private const string DefaultTemplate = "4ftMiner.Task.Template.PMML";
 
@@ -353,8 +357,25 @@ namespace SewebarConnect.Controllers
 				};
 		}
 
+		private void CheckMinerOwnerShip()
+		{
+			var user = this.GetSewebarUser();
+			var miner = this.Repository.Query<SewebarKey.Miner>()
+				.FirstOrDefault(m => m.MinerId == this.LISpMiner.Id);
+
+			if ((miner != null && user.Username != miner.Owner.Username) && !this.User.IsInRole("admin"))
+			{
+				this.ThrowHttpReponseException("Authorized user is not allowed to use this miner.", HttpStatusCode.Forbidden);
+			}
+		}
+
+		#endregion
+
+		[Filters.NHibernateTransaction]
 		public Response Get(string taskName)
 		{
+			CheckMinerOwnerShip();
+
 			// when exporting we dont need to know what was task type
 			var name = taskName ?? this.ControllerContext.RouteData.Values["taskType"] as string;
 
@@ -366,8 +387,11 @@ namespace SewebarConnect.Controllers
 			return this.ExportTask(name);
 		}
 
+		[Filters.NHibernateTransaction]
 		public TaskResponse Post(string taskType = "task")
 		{
+			CheckMinerOwnerShip();
+
 			var definition = new TaskDefinition
 				{
 					DefaultTemplate = DefaultTemplate,
@@ -377,8 +401,11 @@ namespace SewebarConnect.Controllers
 			return this.RunTask(definition);
 		}
 
+		[Filters.NHibernateTransaction]
 		public Response Put(string taskType, string taskName)
 		{
+			CheckMinerOwnerShip();
+
 			var request = new TaskUpdateRequest(this);
 			var specific = request.GetRequestType() as TaskCancelationRequest;
 			var hasTaskType = !string.IsNullOrEmpty(taskType);

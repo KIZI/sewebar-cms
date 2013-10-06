@@ -8,7 +8,12 @@
 	<script type="text/javascript" src="@Url.Content("~/Scripts/app.js")"></script>
 	@RenderSection("Header", false)
 </head>
-<body>
-	@RenderBody()
-</body>
+	<body>
+		@if (User.Identity.IsAuthenticated)
+		{
+			<div style="float:right">@User.Identity.Name | <a href="@Url.Action("Logout", "Login")">Log out</a></div>
+		}
+
+		@RenderBody()
+	</body>
 </html>

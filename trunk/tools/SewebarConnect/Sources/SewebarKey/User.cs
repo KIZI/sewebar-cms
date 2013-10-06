@@ -34,5 +34,13 @@ namespace SewebarKey
 			get { return _miners ?? (_miners = new HashedSet<Miner>()); }
 			set { _miners = value; }
 		}
+
+		public virtual bool IsAdmin
+		{
+			get
+			{
+				return this.Role.ToLowerInvariant() == "admin";
+			}
+		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
+using SewebarKey;
 
 namespace SewebarConnect.API.Responses.Users
 {
@@ -22,8 +23,15 @@ namespace SewebarConnect.API.Responses.Users
 			return new XElement("user",
 								new XElement("username", user.Username),
 								new XElement("email", user.Email),
-								new XElement("databases", user.Databases.Select(FromDatabase))
+								new XElement("databases", user.Databases.Select(FromDatabase)),
+								new XElement("miners", user.Miners.Select(FromMiner))
 				);
+		}
+
+		private static object FromMiner(Miner miner)
+		{
+			return new XElement("miner",
+				new XAttribute("id", miner.MinerId));
 		}
 
 		private static object FromDatabase(SewebarKey.Database db)
