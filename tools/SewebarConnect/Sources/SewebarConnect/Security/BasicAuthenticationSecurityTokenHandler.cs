@@ -95,7 +95,7 @@ namespace SewebarConnect.Security
 
 			if (user == null)
 			{
-				throw new SecurityTokenValidationException(unToken.UserName);
+				return new List<ClaimsIdentity> { new ClaimsIdentity() }.AsReadOnly();
 			}
 
 			var claims = new List<Claim>

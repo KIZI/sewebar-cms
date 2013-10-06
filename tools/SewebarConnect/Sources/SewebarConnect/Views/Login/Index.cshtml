@@ -1,0 +1,33 @@
+﻿@model SewebarConnect.Models.LogInViewModel
+
+@{
+	Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Login</title>
+		
+		<link href="@Url.Content("~/Content/styles.css")" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="loginForm">
+			@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+			{
+				<h2>Please sign in</h2>
+				@Html.ValidationSummary()
+				<div>
+					@Html.LabelFor(model => model.UserName)
+					@Html.EditorFor(model => model.UserName)
+				</div>
+				<div>
+					@Html.LabelFor(model => model.Password)
+					@Html.EditorFor(model => model.Password)
+				</div>
+				<button type="submit">Sign in</button>
+			}
+		</div>
+	</body>
+</html>

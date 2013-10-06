@@ -12,9 +12,11 @@ namespace SewebarConnect.Controllers
 	public class ApiBaseController : ApiController
 	{
 		protected const string PARAMS_GUID = "minerId";
+		private const string AnonymousUserName = "anonymous";
 
 		private LISpMiner _miner;
 		private IRepository _repository;
+		private SewebarKey.User _user;
 
 		protected virtual IRepository Repository
 		{
@@ -52,6 +54,12 @@ namespace SewebarConnect.Controllers
 			}
 		}
 
+		protected SewebarKey.User GetAnonymousUser()
+		{
+			return this.Repository.Query<SewebarKey.User>()
+				.First(u => u.Username == AnonymousUserName);
+		}
+
 		/// <summary>
 		/// Searches database for authorized Sewebar.User.
 		/// </summary>
@@ -65,6 +73,14 @@ namespace SewebarConnect.Controllers
 
 			return this.Repository.Query<SewebarKey.User>()
 				.FirstOrDefault(u => u.Username == (this.User.Identity.Name) /* && u.Password == password */);
+		}
+
+		protected SewebarKey.User SewebarUser
+		{
+			get
+			{
+				return this._user ?? (this._user = this.GetSewebarUser());
+			}
 		}
 
 		protected T ThrowHttpReponseException<T>(string message = null, HttpStatusCode code = HttpStatusCode.InternalServerError)

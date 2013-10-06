@@ -21,7 +21,7 @@
 		if (username) {
 			return {
 				"Authorization": encodeCredentials(username, password ? password : '')
-		};
+			};
 		}
 
 		return null;
@@ -51,6 +51,32 @@
 			form = 'form.' + cls;
 
 		$(form).toggle(500);
+	});
+
+	// user registration
+	$('input[name="user_register"]').click(function () {
+		var username = $('#user_username').val(),
+			password = $('#user_password').val();
+
+		$.ajax({
+			type: 'POST',
+			url: 'users',
+			data: {
+				name: username,
+				password: password
+			},
+			dataType: 'text',
+			cache: false,
+			complete: function(response) {
+				if (response.status == 200) {
+					alert(response.responseText);
+				} else {
+					alert(response.responseText);
+				}
+			}
+		});
+		
+		return false;
 	});
 
 	// registration

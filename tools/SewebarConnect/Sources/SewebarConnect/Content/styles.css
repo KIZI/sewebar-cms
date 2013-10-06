@@ -2,11 +2,13 @@
 	list-style: lower-alpha;
 }
 
-ol li.shared {
+ol li .shared,
+.annotation.shared {
 	font-style: italic;
 }
 
-ol li.non-shared {
+ol li .non-shared,
+.annotation.non-shared {
 	font-weight: bold;
 }
 
@@ -164,7 +166,50 @@ form.console.reg fieldset label {
 	clear: both;
 }
 
-.console div.buttons button {
+.console div.buttons button,
+.console.credentials .button,
+div#loginForm button {
 	border: 1px solid #000;
 	background-color: #ccc;
+}
+
+div#loginForm {
+	width: 280px;
+
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	margin: auto;
+}
+
+div#loginForm h2 {
+	cursor: default;
+	text-align: center;
+}
+
+div#loginForm label {
+	display: block;
+	float: left;
+	margin-left: 5px;
+	width: 110px;
+}
+
+div#loginForm input {
+	border: 1px solid #CCCCCC;
+	margin: 1px;
+}
+
+div#loginForm button {
+	float: right;
+	margin: 1em 13px 0 0;
+}
+
+div#loginForm .validation-summary-errors ul {
+	color: #FF0000;
+	font-weight: bold;
+	list-style-type: none;
+	padding-left: 0;
 }

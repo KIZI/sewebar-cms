@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
 using LMWrapper.LISpMiner;
 using SewebarConnect.API;
 using SewebarConnect.API.Requests.DataDictionary;
@@ -6,11 +9,27 @@ using SewebarConnect.API.Responses.DataDictionary;
 
 namespace SewebarConnect.Controllers
 {
+	[Authorize]
 	[APIErrorHandler]
 	public class DataDictionaryController : ApiBaseController
 	{
+		private void CheckMinerOwnerShip()
+		{
+			var user = this.GetSewebarUser();
+			var miner = this.Repository.Query<SewebarKey.Miner>()
+				.FirstOrDefault(m => m.MinerId == this.LISpMiner.Id);
+
+			if ((miner != null && user.Username != miner.Owner.Username) && !this.User.IsInRole("admin"))
+			{
+				this.ThrowHttpReponseException("Authorized user is not allowed to use this miner.", HttpStatusCode.Forbidden);
+			}
+		}
+
+		[Filters.NHibernateTransaction]
 		public ExportResponse Get()
 		{
+			CheckMinerOwnerShip();
+
 			var request = new ExportRequest(this);
 
 			var response = new ExportResponse();
@@ -30,8 +49,11 @@ namespace SewebarConnect.Controllers
 			return response;
 		}
 
+		[Filters.NHibernateTransaction]
 		public ImportResponse Put()
 		{
+			CheckMinerOwnerShip();
+
 			var request = new ImportRequest(this);
 
 			var response = new ImportResponse
