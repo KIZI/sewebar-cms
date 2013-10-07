@@ -63,7 +63,7 @@ namespace SewebarConnect.Controllers
 				
 				if (owner != null)
 				{
-					// user sent in XML to be registered
+					// user to be registered
 					user = new SewebarKey.User
 					{
 						Username = owner.Username,

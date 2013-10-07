@@ -13,19 +13,6 @@ namespace SewebarConnect.API.Requests.Application
 		private DbConnection _dbConnection;
 		private DbConnection _dbMetabase;
 
-		public class NotRegisteredUser
-		{
-			public string Username { get; private set; }
-
-			public string Password { get; private set; }
-
-			internal NotRegisteredUser(string username, string password)
-			{
-				this.Username = username;
-				this.Password = password;
-			}
-		}
-
 		public static DbConnection GetDbConnection(string which, XDocument requestBody)
 		{
 			OdbcDrivers type;
@@ -120,20 +107,7 @@ namespace SewebarConnect.API.Requests.Application
 		{
 			get
 			{
-				string basicAuthToken = this.HttpContext.Request.Headers["Authorization"];
-
-				if (!string.IsNullOrEmpty(basicAuthToken))
-				{
-					basicAuthToken = basicAuthToken.Replace("Basic ", string.Empty);
-
-					Encoding encoding = Encoding.GetEncoding("iso-8859-1");
-					string userPass = encoding.GetString(Convert.FromBase64String(basicAuthToken));
-					int separator = userPass.IndexOf(':');
-
-					return new NotRegisteredUser(userPass.Substring(0, separator), userPass.Substring(separator + 1));
-				}
-
-				return null;
+				return NotRegisteredUser.FromRequest(this.HttpContext.Request);
 			}
 		}
 

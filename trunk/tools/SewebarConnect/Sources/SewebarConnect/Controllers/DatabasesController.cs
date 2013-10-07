@@ -46,6 +46,7 @@ namespace SewebarConnect.Controllers
 		/// Register database for existing user or creates user and database.
 		/// </summary>
 		/// <returns>Created database.</returns>
+		[AllowAnonymous]
 		[Filters.NHibernateTransaction]
 		public DatabaseResponse Post(string username)
 		{
@@ -55,9 +56,25 @@ namespace SewebarConnect.Controllers
 
 			if (user == null)
 			{
-				user = request.GetUser();
+				var owner = request.Owner;
 
-				this.Repository.Add(user);
+				if (owner != null)
+				{
+					// user to be registered
+					user = new SewebarKey.User
+					{
+						Username = owner.Username,
+						Password = owner.Password
+					};
+
+					this.Repository.Add(user);
+				}
+				else
+				{
+					return ThrowHttpReponseException<DatabaseResponse>(
+						"No user for database.",
+						HttpStatusCode.BadRequest);
+				}
 			}
 
 			if (database != null)
@@ -125,6 +142,8 @@ namespace SewebarConnect.Controllers
 
 				if (database != null)
 				{
+					database.Owner.Databases.Remove(database);
+
 					this.Repository.Remove(database);
 
 					return new Response(string.Format("Database {0} removed.", id));

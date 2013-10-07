@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using SewebarConnect.API.Requests.Application;
 using SewebarConnect.Controllers;
 
 namespace SewebarConnect.API.Requests.Users
@@ -42,6 +43,14 @@ namespace SewebarConnect.API.Requests.Users
 		public string DbPassword
 		{
 			get { return this.HttpContext.Request["db_password"]; }
+		}
+
+		public NotRegisteredUser Owner
+		{
+			get
+			{
+				return NotRegisteredUser.FromRequest(this.HttpContext.Request);
+			}
 		}
 
 		public UserRequest(ApiBaseController controller)
