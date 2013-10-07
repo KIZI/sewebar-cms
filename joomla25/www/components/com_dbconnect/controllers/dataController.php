@@ -330,6 +330,8 @@ class DataController extends JController{
       if (JRequest::getVar('decode','')=='json'){
         $data=json_decode($data);
         $this->outputJSON(array('result'=>'ok','kbi'=>$kbiId,'user'=>$userId,'type'=>$type,'data'=>$data));
+      }else{
+        echo $data;
       }
     }else{
       $this->outputJSON(array('result'=>'error','message'=>'Data not found.','kbi'=>$kbiId,'user'=>$userId,'type'=>$type));

@@ -36,8 +36,12 @@
      */         
     public function loadMinerData($kbiId,$userId,$type){
       $db=$this->getDBO();
-      $db->setQuery('SELECT * FROM #__dbconnect_miner_data WHERE kbi_source='.$db->quote($kbiId).' AND uid='.$db->quote($userId).' AND `type`='.$db->quote($type).' LIMIT 1;');
-      return $db->loadObject();
+      $db->setQuery('SELECT data FROM #__dbconnect_miner_data WHERE kbi_source='.$db->quote($kbiId).' AND uid='.$db->quote($userId).' AND `type`='.$db->quote($type).' LIMIT 1;');
+      $obj=$db->loadObject();
+      if (isset($obj->data)){
+        return $obj->data;
+      }
+      return null;
     }
     
     /**
