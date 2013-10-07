@@ -136,6 +136,7 @@
     <Compile Include="API\Exceptions\IXmlException.cs" />
     <Compile Include="API\IFileResponse.cs" />
     <Compile Include="API\Request.cs" />
+    <Compile Include="API\Requests\Application\NotRegisteredUser.cs" />
     <Compile Include="API\Requests\Application\RegistrationRequest.cs" />
     <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
     <Compile Include="API\Requests\DataDictionary\ImportRequest.cs" />
