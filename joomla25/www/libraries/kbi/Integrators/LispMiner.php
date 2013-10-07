@@ -64,6 +64,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function register($db_cfg)
 	{
 		$client = $this->getRestClient();
+        $credentials = $this->getAnonymousUser();
 		$data = $db_cfg;
 
 		if (is_array($db_cfg)) {
@@ -106,7 +107,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners";
 
-		$response = $client->post($url, $data);
+		$response = $client->post($url, $data, $credentials);
 
 		KBIDebug::log(array('config' => $db_cfg, 'response' => $response, 'url' => $url), "Miner registered");
 
@@ -134,11 +135,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function unregister($server_id = null)
 	{
 		$client = $this->getRestClient();
+        $credentials = $this->getAnonymousUser();
 
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$this->getMinerId($server_id)}";
 
-		$response = $client->delete($url);
+		$response = $client->delete($url, null, $credentials);
 
 		return $this->parseResponse($response, "Miner unregistered/removed.");
 	}
@@ -152,11 +154,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		$client = $this->getRestClient();
+        $credentials = $this->getAnonymousUser();
 
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$server_id}/DataDictionary";
 
-		$response = $client->put($url, $dataDictionary);
+		$response = $client->put($url, $dataDictionary, $credentials);
 
 		KBIDebug::log($response, "Import executed");
 
@@ -177,6 +180,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		$client = $this->getRestClient();
+        $credentials = $this->getAnonymousUser();
 
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$server_id}/DataDictionary";
@@ -188,7 +192,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		KBIDebug::info(array($url, $data), "getting DataDictionary");
 
-		$response = $client->get($url, $data);
+		$response = $client->get($url, $data, $credentials);
 
 		if ($response->isSuccess()) {
 			return trim($response->getBody());
@@ -199,7 +203,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function queryPost($query, $options)
 	{
-		// $options['export'] = '9741046ed676ec7470cb043db2881a094e36b554';
+        // $options['export'] = '9741046ed676ec7470cb043db2881a094e36b554';
 		// TODO: add user credentials to options
 
 		$server_id = $this->getMinerId();
@@ -212,6 +216,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$data = array();
 		$client = $this->getRestClient();
+        $credentials = $this->getAnonymousUser();
 
 		if(isset($options['template'])) {
 			$data['template'] = $options['template'];
@@ -225,7 +230,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			KBIDebug::info("Making just export of task '{$task}' (no generation).", 'LISpMiner');
 			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
 
-			$response = $client->get("$url", $data);
+			$response = $client->get("$url", $data, $credentials);
 		} else {
 			$pooler = $this->getPooler();
 
@@ -248,7 +253,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 			KBIDebug::log(array('URL' => $url, 'GET' => $data, 'POST' => $query), 'LM Query');
 
-			$response = $client->post("$url?{$client->encodeData($data)}", $query);
+			$response = $client->post("$url?{$client->encodeData($data)}", $query, $credentials);
 		}
 
 		if ($response->isSuccess()) {
@@ -269,6 +274,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$url = trim($this->getUrl(), '/');
 		$client = $this->getRestClient();
+        $credentials = $this->getAnonymousUser();
 
 		switch($this->getPooler()) {
 			case 'grid':
@@ -284,7 +290,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		KBIDebug::info(array($url), 'Canceling task');
 
-		$response = $client->put($url, $request_xml->asXML());
+		$response = $client->put($url, $request_xml->asXML(), $credentials);
 
 		if ($response->isSuccess()) {
 			return $response->getBody();
@@ -303,11 +309,12 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			}
 
 			$client = $this->getRestClient();
+            $credentials = $this->getAnonymousUser();
 
 			$url = trim($this->getUrl(), '/');
 			$url = "$url/miners/{$server_id}";
 
-			$response = $client->get($url);
+			$response = $client->get($url, null, $credentials);
 
 			KBIDebug::log($response, "Test executed");
 
@@ -451,12 +458,14 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/users/$username/databases";
 
+        $credentials = array('username' => $username, 'password' => $password);
+
 		$data = array(
 			'db_id' => $db_id,
 			'db_password' => $db_password
 		);
 
-		$response = $client->post($url, $data, array('username' => $username, 'password' => $password));
+		$response = $client->post($url, $data, $credentials);
 
 		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User's database registered");
 

@@ -1,6 +1,6 @@
 <?php
 
-	require_once dirname(__FILE__).'/../../../www/libraries/kbi/Integrators/LispMiner.php';
+require_once dirname(__FILE__).'/../../../www/libraries/kbi/Integrators/LispMiner.php';
 
 /**
  * Test class for Ontopia.
@@ -118,8 +118,11 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 	{
 		$data = self::$data;
 		$query = file_get_contents("$data/connect/scenarios/ETreeMiner/ETReeMiner.Task52.xml");
+        $options = array(
+            'template' => 'ETreeMiner.Task.Template.PMML'
+        );
 
-		$result = self::$miner->queryPost($query, null);
+		$result = self::$miner->queryPost($query, $options);
 
 		$this->assertNotEmpty($result);
 
@@ -132,6 +135,7 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 	public function test_queryPost_exportResults($r1)
 	{
 		$result = self::$miner->queryPost(null, array(
+            'template' => 'ETreeMiner.Task.Template.PMML',
 			'export' => '9741046ed676ec7470cb043db2881a094e36b554'
 		));
 
@@ -187,6 +191,20 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 		$this->assertNotEmpty($result);
 
 		return array_merge($user, $database);
+	}
+
+	public function test_registerUserAndDatabase()
+	{
+		$seed = rand(0, 1000);
+
+		$result = self::$miner->registerUserDatabase(
+			"test_registerUser_{$seed}",
+			'pwd',
+			"test_registerUserDatabase_{$seed}",
+			'pwdDb'
+		);
+
+		$this->assertNotEmpty($result);
 	}
 
 	/**
