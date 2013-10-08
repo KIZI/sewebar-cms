@@ -14,6 +14,8 @@ declare module 'restify' {
 
         patch(resource: string, data: any, handler: (err, req, res, data) => void);
         patch(options: Object, data: any, handler: (err, req, res, data) => void);
+
+        basicAuth(username: string, password: string): void;
     }
 
     export function createStringClient(cfg: Object): StringClient;
