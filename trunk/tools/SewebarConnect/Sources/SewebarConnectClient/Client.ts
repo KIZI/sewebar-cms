@@ -23,7 +23,7 @@ export module SewebarConnect {
             error = S(e).trim().s;
 
         xml2js.parseString(error, (parseError, result) => {
-            var message = 'Uknonwn error - ' + info;
+            var message = err.statusCode || 'Uknonwn error - ' + info;
 
             if(parseError) {
                 message = err.message || err || parseError;
@@ -35,6 +35,13 @@ export module SewebarConnect {
                 callback(message, null);
             }
         });
+    }
+
+    function getAnonymousUser(): { name: string; password: string } {
+        return {
+            name: 'anonymous',
+            password: ''
+        };
     }
 
     export class SewebarConnectClient {
@@ -52,6 +59,8 @@ export module SewebarConnect {
                 }
             };
 
+            var user = getAnonymousUser();
+
             // TODO: avoid changing cfg itself
             this.opts = cfg;
             this.server = this.opts.app == null ? 'SewebarConnect' : this.opts.app;
@@ -67,6 +76,7 @@ export module SewebarConnect {
             delete this.opts.app;
 
             this.restClient = restify.createStringClient(this.opts);
+            this.restClient.basicAuth(user.name, user.password);
         }
 
         public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner: Miner) => void): void {
@@ -124,8 +134,8 @@ export module SewebarConnect {
             this.restClient.post(this.opts, data, (err, req, res, body) => {
                 var xml = S(body).trim().s;
 
-                parser.parseString(xml, (err, result) => {
-                    if (!err && result.response['$'].status === 'success') {
+                parser.parseString(xml, (parseErr, result) => {
+                    if (!parseErr && result.response['$'].status === 'success') {
                         if (callback && typeof callback === 'function') {
                             callback(null, new Miner(result.response['$'].id, this));
                         }
