@@ -1,4 +1,8 @@
-@echo off
+@ECHO OFF
+
+SETLOCAL
+
+SET EnableNuGetPackageRestore=true
 
 PUSHD.
 CD ".\Sources\SewebarConnect"
