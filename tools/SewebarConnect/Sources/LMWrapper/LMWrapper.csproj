@@ -72,6 +72,7 @@
     <Compile Include="ODBC\MySQLConnection.cs" />
     <Compile Include="ODBC\ODBCConnection.cs" />
     <Compile Include="ODBC\OdbcDrivers.cs" />
+    <Compile Include="PCGridSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortGuid.cs" />
     <Compile Include="Utils\DirectoryUtil.cs" />

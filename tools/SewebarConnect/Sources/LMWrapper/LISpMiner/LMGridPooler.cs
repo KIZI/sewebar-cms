@@ -6,8 +6,6 @@ namespace LMWrapper.LISpMiner
 {
 	public class LMGridPooler : Executable, ITaskLauncher
 	{
-		private readonly string _keyStorePath;
-
 		// /RMCaseID:<RMCaseID>		... ReverseMiner CaseID to run all tasks in this case	
 		// /ShutdownDelaySec:<n>		... (O) number of seconds <0;86400> before the LM TaskPooler server is shutted down after currently the last waiting task is solved (default: 10)
 		// /TimeMaxHours:<n>		... (O) maximal number of hours the server is running (to allow for periodical re-start) (default: 1)
@@ -46,7 +44,15 @@ namespace LMWrapper.LISpMiner
 		/// <summary>
 		/// /GridBinariesPath:[Path]	... (O) an optional path to the PCGrid/Binaries directory (if not in a default location as subdirectory)
 		/// </summary>
-		public string GridBinariesPath { get; private set; }
+		public string GridBinariesPath
+		{
+			get { return this.GridSettings.Binaries; }
+		}
+
+		/// <summary>
+		///	/GridDataPath:[Path]		... (O) an optional path to the PCGrid/Binaries directory (if not in a default location as subdirectory)
+		/// </summary>
+		public string GridDataPath { get; private set; }
 
 		/// <summary>
 		/// /TimeLog:<název_souboru>
@@ -64,10 +70,7 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		private string KeyStorePath
-		{
-			get { return _keyStorePath; }
-		}
+		private PCGridSettings GridSettings { get; set; }
 
 		public override string Arguments
 		{
@@ -95,6 +98,11 @@ namespace LMWrapper.LISpMiner
 				if (!String.IsNullOrEmpty(this.GridBinariesPath))
 				{
 					arguments.AppendFormat("\"/GridBinariesPath:{0}\" ", this.GridBinariesPath);
+				}
+
+				if (!String.IsNullOrEmpty(this.GridDataPath))
+				{
+					arguments.AppendFormat("\"/GridDataPath:{0}\" ", this.GridDataPath);
 				}
 
 				// /TaskCancel
@@ -149,7 +157,7 @@ namespace LMWrapper.LISpMiner
 			}
 		}
 
-		internal LMGridPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPrivatePath, string gridPath)
+		internal LMGridPooler(LISpMiner lispMiner, ODBC.ConnectionString connectionString, string lmPrivatePath, PCGridSettings gridSettings)
 			: base()
 		{
 			this.LISpMiner = lispMiner;
@@ -157,8 +165,8 @@ namespace LMWrapper.LISpMiner
 			this.LMPrivatePath = lmPrivatePath;
 			this.OdbcConnectionString = connectionString.Value;
 
-			this.GridBinariesPath = gridPath;
-			this._keyStorePath = this.GridBinariesPath + "\\..\\..";
+			this.GridSettings = gridSettings;
+			this.GridDataPath = Path.GetFullPath(string.Format(@"{0}\PCGrid", this.LMPrivatePath));
 
 			this.ApplicationName = "LMGridPooler.exe";
 			this.AppLog = String.Format("{0}-{1}.dat", "_AppLog_LMGridPooler", Guid.NewGuid());
@@ -170,12 +178,9 @@ namespace LMWrapper.LISpMiner
 
 		private void InitializePCGrid()
 		{
-			DirectoryInfo mainDirectory;
-			string mainDirectoryPath = Path.GetFullPath(string.Format("{0}\\{1}", this.LMExecutablesPath, "PCGrid"));
-
-			if (!Directory.Exists(mainDirectoryPath))
+			if (!Directory.Exists(this.GridDataPath))
 			{
-				mainDirectory = Directory.CreateDirectory(mainDirectoryPath);
+				DirectoryInfo mainDirectory = Directory.CreateDirectory(this.GridDataPath);
 
 				// Input
 				mainDirectory.CreateSubdirectory("Input");
@@ -188,21 +193,44 @@ namespace LMWrapper.LISpMiner
 
 				// Temp
 				mainDirectory.CreateSubdirectory("Temp");
+			}
 
-				// SewebarConnect.grid.settings
-				// SewebarConnect.jks
-				GenereatePCGridSettings(mainDirectory);
+			CheckPCGridSettings();
+		}
+
+		private void CheckPCGridSettings()
+		{
+			// SewebarConnect.jks
+			var keystore = this.GridSettings.KeyStore;
+
+			if (!File.Exists(keystore))
+			{
+				throw new FileNotFoundException(string.Format("Keystore \"{0}\" does not exist.", keystore));
+			}
+
+			// SewebarConnect.grid.settings
+			string main;
+			
+			if (this.LISpMiner.SharedPool)
+			{
+				main = Path.GetFullPath(string.Format(@"{0}\..\..\LISp Miner\PCGrid", this.GridSettings.Binaries));
+			}
+			else
+			{
+				main = this.GridDataPath;
+			}
+
+			string temp = string.Format(@"{0}\Temp", main);
+			string filename = this.GridSettings.GetSettingsPath(main);
+
+			if (!File.Exists(filename))
+			{
+				GenereatePCGridSettings(main, filename, keystore, temp);
 			}
 		}
 
-		/// <summary>
-		/// TODO: make correct values and allow to set them via settings.
-		/// </summary>
-		/// <param name="mainDirectory"></param>
-		private void GenereatePCGridSettings(DirectoryInfo mainDirectory)
+		private void GenereatePCGridSettings(string main, string filename, string keystore, string temp)
 		{
-			string filename = string.Format("{0}\\{1}", mainDirectory.FullName, "SewebarConnect.grid.settings");
-
 			using (var filestream = new FileStream(filename, FileMode.Create))
 			{
 				using (var writer = new StreamWriter(filestream))
@@ -212,15 +240,15 @@ namespace LMWrapper.LISpMiner
 					writer.WriteLine("#");
 					writer.WriteLine("");
 					writer.WriteLine("# keystore filename");
-					writer.WriteLine(string.Format("keystore={0}", this.InitializeKeyStore(mainDirectory, "SewebarConnect.jks")));
+					writer.WriteLine("keystore={0}", keystore);
 					writer.WriteLine("");
 					writer.WriteLine("# key alias in the keystore");
-					writer.WriteLine("alias=*****");
+					writer.WriteLine("alias={0}", this.GridSettings.Alias);
 					writer.WriteLine("");
 					writer.WriteLine("# keystore & key password");
 					writer.WriteLine("# It is HIGHLY recommended not to write password here, but instead");
 					writer.WriteLine("# use the password dialog below!");
-					writer.WriteLine("password=*****");
+					writer.WriteLine("password={0}", this.GridSettings.Password);
 					writer.WriteLine("");
 					writer.WriteLine("# Password dialog class, a graphical dialog is used to ask the ");
 					writer.WriteLine("# password from the user");
@@ -235,32 +263,32 @@ namespace LMWrapper.LISpMiner
 					writer.WriteLine("statuswindow.nocloseonerror=false");
 					writer.WriteLine("");
 					writer.WriteLine("# server hostname");
-					writer.WriteLine("hostname=techila.vse.cz");
+					writer.WriteLine("hostname={0}", this.GridSettings.Hostname);
 					writer.WriteLine("");
 					writer.WriteLine("# server port");
-					writer.WriteLine("port=25001");
+					writer.WriteLine("port={0}", this.GridSettings.Port);
 					writer.WriteLine("");
 					writer.WriteLine("# temporary directory, use absolute path here, especially with Matlab");
-					writer.WriteLine(string.Format("tempdir={0}\\Temp", mainDirectory.FullName));
+					writer.WriteLine("tempdir={0}", temp);
 					writer.WriteLine("");
 					writer.WriteLine("#");
 					writer.WriteLine("# Error file, if defined project errors are appended to the given file.");
 					writer.WriteLine("#");
-					writer.WriteLine(string.Format("#errorfile={0}\\Temp\\errorfeed", mainDirectory.FullName));
+					writer.WriteLine("#errorfile={0}\\errorfeed", temp);
 					writer.WriteLine("");
 					writer.WriteLine("# Error directory, projects errors are appended to one file per project");
 					writer.WriteLine("# in this directory");
-					writer.WriteLine(string.Format("errordir={0}\\Temp\\Error", mainDirectory.FullName));
+					writer.WriteLine("errordir={0}\\Error", temp);
 					writer.WriteLine("");
 					writer.WriteLine("# if true the project errors are printed to STDERR (console)");
 					writer.WriteLine("#stderr=true");
 					writer.WriteLine("");
 					writer.WriteLine("# file where all stdoutputs from the clients are fed.");
-					writer.WriteLine("#stdoutfile=F:\\Guha\\PCGrid\\temp\\gridout.log");
+					writer.WriteLine("#stdoutfile={0}\\gridout.log", temp);
 					writer.WriteLine("");
 					writer.WriteLine("# directory where stdoutputs from the clients are fed. Each project");
 					writer.WriteLine("# will have a subdirectory created.");
-					writer.WriteLine(string.Format("stdoutdir={0}\\Output", mainDirectory.FullName));
+					writer.WriteLine("stdoutdir={0}\\Output", main);
 					writer.WriteLine("");
 					writer.WriteLine("");
 					writer.WriteLine("#");
@@ -281,7 +309,7 @@ namespace LMWrapper.LISpMiner
 					writer.WriteLine("# Logging config");
 					writer.WriteLine("#");
 					writer.WriteLine("# logfile");
-					writer.WriteLine(string.Format("logfile={0}\\Temp\\Log\\grid.log", mainDirectory.FullName));
+					writer.WriteLine("logfile={0}\\Log\\grid.log", temp);
 					writer.WriteLine("");
 					writer.WriteLine("# max size of the log file (in bytes)");
 					writer.WriteLine("maxlogsize=1000000");
@@ -310,27 +338,6 @@ namespace LMWrapper.LISpMiner
 					writer.Close();
 				}
 			}
-		}
-
-		/// <summary>
-		/// TODO: is it nesseccary to copy keystore. Is it OK to keep only one original?
-		/// </summary>
-		/// <param name="mainDirectory"> </param>
-		/// <param name="keystore"></param>
-		/// <returns></returns>
-		private string InitializeKeyStore(DirectoryInfo mainDirectory, string keystore)
-		{
-			var origin = Path.GetFullPath(string.Format("{0}\\{1}", this.KeyStorePath, keystore));
-			var result = Path.GetFullPath(string.Format("{0}\\{1}", mainDirectory.FullName, keystore));
-
-			if(File.Exists(origin))
-			{
-				File.Copy(origin, result);
-
-				return result;
-			}
-
-			throw new Exception(string.Format("Keystore \"{0}\" does not exist.", origin));
 		}
 	}  
 }

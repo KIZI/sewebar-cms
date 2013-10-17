@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using LMWrapper;
 using LMWrapper.LISpMiner;
 using NHibernate;
 using NHibernate.Cfg;
@@ -27,12 +28,41 @@ namespace SewebarConnect
 			{
 				if (_env == null)
 				{
+					string dataPath = GetAppPathSetting("Sewebar-DataPath",
+						String.Format(@"{0}\..\..\Data", AppDomain.CurrentDomain.BaseDirectory));
+
+					string pcGridPath = GetAppPathSetting("Sewebar-PCGrid-Bin",
+						String.Format(@"{0}\..\..\Libs\PCGrid\Binaries", AppDomain.CurrentDomain.BaseDirectory));
+
+					string pcGridKeyStore = GetAppPathSetting("Sewebar-PCGrid-Keystore",
+						String.Format(@"{0}\..\..\Libs\SewebarConnect.jks", AppDomain.CurrentDomain.BaseDirectory));
+
+					string pcGridHostname = GetAppSetting("Sewebar-PCGrid-Hostname",
+						String.Empty);
+
+					string pcGridPort = GetAppSetting("Sewebar-PCGrid-Port",
+						String.Empty);
+
+					string pcGridAlias = GetAppSetting("Sewebar-PCGrid-Alias",
+						String.Empty);
+
+					string pcGridPassword = GetAppSetting("Sewebar-PCGrid-Password",
+						String.Empty);
+
+					var pcGridSettings = new PCGridSettings(
+						binaries: pcGridPath,
+						keystore: pcGridKeyStore,
+						hostname: pcGridHostname, 
+						port: pcGridPort, 
+						alias: pcGridAlias,
+						password: pcGridPassword);
+
 					_env = new LMWrapper.Environment
 					{
-						DataPath = GetAppSetting("Sewebar-DataPath", String.Format(@"{0}\..\..\Data", AppDomain.CurrentDomain.BaseDirectory)),
-						LMPoolPath = GetAppSetting("Sewebar-PoolPath", String.Format(@"{0}\..\..\Data\LMs", AppDomain.CurrentDomain.BaseDirectory)),
-						LMPath = GetAppSetting("Sewebar-LMPath", String.Format(@"{0}\..\..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
-						PCGridPath = GetAppSetting("Sewebar-PCGridPath", String.Format(@"{0}\..\..\Libs\{1}\Binaries", AppDomain.CurrentDomain.BaseDirectory, "PCGrid")),
+						DataPath = dataPath,
+						LMPoolPath = GetAppPathSetting("Sewebar-PoolPath", String.Format(@"{0}\..\..\Data\LMs", AppDomain.CurrentDomain.BaseDirectory)),
+						LMPath = GetAppPathSetting("Sewebar-LMPath", String.Format(@"{0}\..\..\Libs\{1}", AppDomain.CurrentDomain.BaseDirectory, "LISp Miner")),
+						PCGridSettings = pcGridSettings,
 						TimeLog = GetAppSetting("Sewebar-TimeLog", false),
 					};
 				}
@@ -47,6 +77,12 @@ namespace SewebarConnect
 		{
 			var value = ConfigurationManager.AppSettings[setting];
 			return String.IsNullOrEmpty(value) ? defaultValue : value;
+		}
+
+		protected static string GetAppPathSetting(string setting, string defaultValue)
+		{
+			var value = ConfigurationManager.AppSettings[setting];
+			return Path.GetFullPath(String.IsNullOrEmpty(value) ? defaultValue : value);
 		}
 
 		protected static bool GetAppSetting(string setting, bool defaultValue)
