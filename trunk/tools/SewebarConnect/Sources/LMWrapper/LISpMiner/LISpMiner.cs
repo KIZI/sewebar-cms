@@ -136,7 +136,7 @@ namespace LMWrapper.LISpMiner
 			{
 				if (this._lmGridPooler == null)
 				{
-					this._lmGridPooler = new LMGridPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath, this.Environment.PCGridPath);
+					this._lmGridPooler = new LMGridPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath, this.Environment.PCGridSettings);
 				}
 
 				return this._lmGridPooler;

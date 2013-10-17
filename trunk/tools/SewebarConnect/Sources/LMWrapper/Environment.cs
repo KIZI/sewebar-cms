@@ -25,7 +25,7 @@ namespace LMWrapper
 			}
 		}
 
-		public string PCGridPath { get; set; }
+		public PCGridSettings PCGridSettings { get; set; }
 
 		public bool TimeLog { get; set; }
 
