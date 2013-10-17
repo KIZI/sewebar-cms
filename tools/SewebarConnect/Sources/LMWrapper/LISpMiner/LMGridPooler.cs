@@ -231,6 +231,13 @@ namespace LMWrapper.LISpMiner
 
 		private void GenereatePCGridSettings(string main, string filename, string keystore, string temp)
 		{
+			var dir = Path.GetDirectoryName(filename);
+
+			if (dir != null && !Directory.Exists(dir))
+			{
+				Directory.CreateDirectory(dir);
+			}
+
 			using (var filestream = new FileStream(filename, FileMode.Create))
 			{
 				using (var writer = new StreamWriter(filestream))
