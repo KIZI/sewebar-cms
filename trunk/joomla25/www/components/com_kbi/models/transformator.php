@@ -59,6 +59,7 @@ class KbiModelTransformator extends JModel
 	function setSource($value)
 	{
 		$config = array();
+		$session = JFactory::getSession();
 
 		if(is_numeric($value)) {
 			if(!class_exists('KbiModelSources')) {
@@ -78,6 +79,7 @@ class KbiModelTransformator extends JModel
 		if(!is_array($config)) throw new Exception("Not valid source configuration");
 
 		$this->source = KBIntegrator::create($config);
+		$this->source->setUser($session->get('user', null, 'sewebar'));
 	}
 
 	function getQuery()

@@ -95,6 +95,17 @@ class KBIntegrator implements IKBIntegrator
 		$this->config['port'] = $value;
 	}
 
+	public function getUser()
+	{
+		// abstract method
+		return null;
+	}
+
+	public function setUser($user)
+	{
+		// abstract method
+	}
+
 	protected function getRestClient()
 	{
 		if ($this->restClient === null) {

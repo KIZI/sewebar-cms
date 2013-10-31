@@ -89,7 +89,7 @@
 					<td width="80%">
 						<script type="text/javascript">
 							function getDataDictionary() {
-								var url = '<?php echo JRoute::_("/index.php?option={$option}&task=dataDescription&format=raw&source={$this->row->id}") ?>';
+								var url = '<?php echo JRoute::_("/index.php?option=com_kbi&task=dataDescription&format=raw&source={$this->row->id}") ?>';
 
 								var result = $('dictionaryquery');
 								var loader = $('dictionaryLink');
@@ -103,21 +103,19 @@
 
 								loader.addEvent('click', function(){loader.removeClass('ajax-loading');});
 
-								var myAjax = new Ajax(url,
-										{
-											method : 'post',
-											//update : result,
-											onComplete : function(response) {
-												loader.removeClass('ajax-loading');
-												result.value = response;
-											},
-											onFailure : function(error) {
-												loader.removeClass('ajax-loading');
-												loader.addClass('ajax-error');
-												loader.setAttribute('title', error.responseText);
-											}
-										}
-									).request();
+								new Request({
+									method: 'post',
+									url: url,
+									onComplete: function(response) {
+										loader.removeClass('ajax-loading');
+										result.value = response;
+									},
+									onFailure : function(error) {
+										loader.removeClass('ajax-loading');
+										loader.addClass('ajax-error');
+										loader.setAttribute('title', error.responseText);
+									}
+								}).send();
 							}
 						</script>
 						<a id="dictionaryLink" href="javascript:getDataDictionary();">

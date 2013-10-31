@@ -17,6 +17,8 @@ require_once dirname(__FILE__).'/../IHasDataDictionary.php';
  */
 class LispMiner extends KBIntegrator implements IHasDataDictionary
 {
+	private $user = null;
+
 	//region Getters
 
 	public function getMethod()
@@ -44,6 +46,30 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return isset($this->config['pooler']) ? $this->config['pooler'] : 'task';
 	}
 
+	public function getUser()
+	{
+		if ($this->user != null) {
+			return $this->user;
+		}
+
+		return $this->getAnonymousUser();
+	}
+
+	public function setUser($user)
+	{
+		if (is_array($user)) {
+			$username = $user['username'];
+			$password = $user['password'];
+		} else if (is_object($user)) {
+			$username = $user->username;
+			$password = $user->password;
+		} else {
+			throw new Exception('User not in correct format. Expecting array or object with username and password values.');
+		}
+
+		$this->user = array('username' => $username, 'password' => $password);
+	}
+
 	protected function getAnonymousUser()
 	{
 		return array('username' => 'anonymous', 'password' => '');
@@ -64,7 +90,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function register($db_cfg)
 	{
 		$client = $this->getRestClient();
-        $credentials = $this->getAnonymousUser();
+		$credentials = $this->getUser();
 		$data = $db_cfg;
 
 		if (is_array($db_cfg)) {
@@ -124,7 +150,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$body = $response->getBodyAsXml();
 
 		if($response->getStatusCode() != 200 || $body['status'] == 'failure') {
-			throw new Exception($body->message);
+			throw new Exception(isset($body->message) ? (string)$body->message : $response->getStatus());
 		} else if($body['status'] == 'success') {
 			return (string)$body['id'];
 		}
@@ -135,7 +161,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	public function unregister($server_id = null)
 	{
 		$client = $this->getRestClient();
-        $credentials = $this->getAnonymousUser();
+		$credentials = $this->getUser();
 
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$this->getMinerId($server_id)}";
@@ -154,7 +180,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		$client = $this->getRestClient();
-        $credentials = $this->getAnonymousUser();
+		$credentials = $this->getUser();
 
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$server_id}/DataDictionary";
@@ -180,7 +206,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		}
 
 		$client = $this->getRestClient();
-        $credentials = $this->getAnonymousUser();
+		$credentials = $this->getUser();
 
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/miners/{$server_id}/DataDictionary";
@@ -203,7 +229,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function queryPost($query, $options)
 	{
-        // $options['export'] = '9741046ed676ec7470cb043db2881a094e36b554';
+		// $options['export'] = '9741046ed676ec7470cb043db2881a094e36b554';
 		// TODO: add user credentials to options
 
 		$server_id = $this->getMinerId();
@@ -216,7 +242,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$data = array();
 		$client = $this->getRestClient();
-        $credentials = $this->getAnonymousUser();
+		$credentials = $this->getUser();
 
 		if(isset($options['template'])) {
 			$data['template'] = $options['template'];
@@ -274,7 +300,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 		$url = trim($this->getUrl(), '/');
 		$client = $this->getRestClient();
-        $credentials = $this->getAnonymousUser();
+		$credentials = $this->getUser();
 
 		switch($this->getPooler()) {
 			case 'grid':
@@ -309,7 +335,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 			}
 
 			$client = $this->getRestClient();
-            $credentials = $this->getAnonymousUser();
+			$credentials = $this->getUser();
 
 			$url = trim($this->getUrl(), '/');
 			$url = "$url/miners/{$server_id}";
@@ -458,7 +484,7 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		$url = trim($this->getUrl(), '/');
 		$url = "$url/users/$username/databases";
 
-        $credentials = array('username' => $username, 'password' => $password);
+		$credentials = array('username' => $username, 'password' => $password);
 
 		$data = array(
 			'db_id' => $db_id,
