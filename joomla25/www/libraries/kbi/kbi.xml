@@ -22,5 +22,7 @@
 		<filename>ISynchronable.php</filename>
 		<filename>KBIntegrator.php</filename>
 		<filename>Query.php</filename>
+        <filename>RESTClient.php</filename>
+        <filename>RESTClientResponse.php</filename>
 	</files>
 </extension>

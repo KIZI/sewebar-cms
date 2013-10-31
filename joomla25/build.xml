@@ -5,6 +5,7 @@
 	<property name="dist" value="installers/" />
 	<property name="tests" value="tests/" />
 	<property name="docs" value="meta/docs/"/>
+    <property name="www" value="www/"/>
 
     <target name="all"
 		description="creates one package for all extensions (use with com_multiinstall)"
@@ -13,7 +14,7 @@
 			<property name="sewebar" value="${dist}/sewebar-${today}.zip"/>
 			<zip destfile="${sewebar}">
                 <fileset dir="${dist}">
-                    <include name="${plg_kbilib}" />
+                    <include name="${lib_kbi}" />
                     <include name="${com_kbi}" />
                     <include name="${plg_kbi}" />
                     <include name="${plg_kbinclude}" />
@@ -41,14 +42,16 @@
 	<!-- kbi -->
 	<target name="kbi"
 		description="creates packages for all extensions (KBI)"
-		depends="com_kbi, plg_kbilib, plg_kbi, plg_kbinclude, com_ardesigner">
+		depends="com_kbi, lib_kbi, plg_kbi, plg_kbinclude">
 	</target>
 
-	<target name="plg_kbilib">
-		<property name="plg_kbilib" value="lib_kbi-${today}.zip"/>
-		<zip destfile="${dist}/${plg_kbilib}">
-            <fileset dir="${source.dir}/libraries/kbi/" excludes="**/.svn" />
-			<fileset includes="${docs}/kbi/readme.txt"/>
+	<target name="lib_kbi">
+		<property name="lib_kbi" value="lib_kbi-${project.version}.zip"/>
+		<zip destfile="${dist}/${lib_kbi}">
+			<fileset dir="${www}/libraries/kbi/" defaultexcludes="true" />
+			<fileset dir="${docs}/kbi">
+                <include name="readme.txt" />
+            </fileset>
 		</zip>
 	</target>
 
@@ -62,33 +65,39 @@
 	</target>
 
 	<target name="plg_kbi">
-		<!--<property name="plg_kbi" value="plg_kbi-${today}.zip"/>-->
-		<!--<zip destfile="${dist}/${plg_kbi}">-->
-			<!--<zipfileset dir="${www}/plugins/content/" excludes="**/.svn">-->
-				<!--<include name="kbi.php"/>-->
-				<!--<include name="kbi.xml"/>-->
-			<!--</zipfileset>-->
-			<!--<zipfileset file="${docs}/kbi/readme.txt"/>-->
-		<!--</zip>-->
+		<property name="plg_kbi" value="plg_kbi-${project.version}.zip"/>
+		<zip destfile="${dist}/${plg_kbi}">
+			<fileset dir="${www}/plugins/content/" defaultexcludes="true">
+				<include name="kbi.php"/>
+				<include name="kbi.xml"/>
+			</fileset>
+            <fileset dir="${docs}/kbi">
+                <include name="readme.txt" />
+            </fileset>
+		</zip>
 	</target>
 
 	<target name="plg_kbinclude">
-		<!--<property name="plg_kbinclude" value="plg_kbinclude-${today}.zip"/>-->
-		<!--<zip destfile="${dist}/${plg_kbinclude}">-->
-			<!--<zipfileset dir="${www}/plugins/editors-xtd/" excludes="**/.svn">-->
-				<!--<include name="kbinclude.php"/>-->
-				<!--<include name="kbinclude.xml"/>-->
-			<!--</zipfileset>-->
-			<!--<zipfileset file="${docs}/kbi/readme.txt"/>-->
-		<!--</zip>-->
+		<property name="plg_kbinclude" value="plg_kbinclude-${project.version}.zip"/>
+		<zip destfile="${dist}/${plg_kbinclude}">
+			<fileset dir="${www}/plugins/editors-xtd/" defaultexcludes="true">
+				<include name="kbinclude.php"/>
+				<include name="kbinclude.xml"/>
+			</fileset>
+            <fileset dir="${docs}/kbi">
+                <include name="readme.txt" />
+            </fileset>
+		</zip>
 	</target>
 
 	<target name="com_ardesigner">
-		<!--<property name="com_ardesigner" value="com_ardesigner-${today}.zip"/>-->
-		<!--<zip destfile="${dist}/${com_ardesigner}">-->
-			<!--<zipfileset dir="${www}/components/com_ardesigner/" excludes="**/.svn"/>-->
-			<!--<zipfileset file="${docs}/kbi/readme.txt"/>-->
-		<!--</zip>-->
+		<property name="com_ardesigner" value="com_ardesigner-${project.version}.zip"/>
+		<zip destfile="${dist}/${com_ardesigner}">
+			<fileset dir="${www}/components/com_ardesigner/" defaultexcludes="true" />
+            <fileset dir="${docs}/kbi">
+                <include name="readme.txt" />
+            </fileset>
+		</zip>
 	</target>
 	<!-- /kbi -->
 
@@ -194,7 +203,7 @@
 	<target name="clean-after">
 		<delete>
 			<fileset dir="${dist}">
-				<include name="${plg_kbilib}" />
+				<include name="${lib_kbi}" />
 				<include name="${com_kbi}" />
 				<include name="${plg_kbi}" />
 				<include name="${plg_kbinclude}" />
