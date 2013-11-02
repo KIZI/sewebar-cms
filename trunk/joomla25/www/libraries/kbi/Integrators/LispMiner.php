@@ -57,6 +57,10 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 
 	public function setUser($user)
 	{
+		if ($user === null) {
+			return;
+		}
+
 		if (is_array($user)) {
 			$username = $user['username'];
 			$password = $user['password'];
