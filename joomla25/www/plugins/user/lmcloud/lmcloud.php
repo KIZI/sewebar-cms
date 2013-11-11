@@ -97,7 +97,7 @@ class plgUserLmcloud extends JPlugin
 
     $kbi=self::prepareKbi();
     $session =& JFactory::getSession();
-    $userData=$session->get('user','sewebar');
+    $userData=$session->get('user',array(),'sewebar');
     $kbi->deleteUser($userData['username']);
 	}
 

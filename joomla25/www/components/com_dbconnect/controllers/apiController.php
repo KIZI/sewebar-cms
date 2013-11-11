@@ -232,7 +232,14 @@ class ApiController extends JController{
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);                                      
     JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');     
     $kbi = KBIntegrator::create($configArr);
-                                    
+    //přiřazení uživatele ze session
+    $session =& JFactory::getSession();
+    $userData=$session->get('user',array(),'sewebar');
+    if (is_array($userData)){
+      $kbi->setUser($userData);
+    }
+    //--přiřazení uživatele ze session
+
     if ($task->kbi_source<=0){  
       $registerNewLispminer=true;
     }else{

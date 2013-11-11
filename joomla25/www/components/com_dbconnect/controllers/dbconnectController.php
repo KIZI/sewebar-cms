@@ -669,10 +669,17 @@ class dbconnectController extends JController{
   private function generateKbiSource($configArr,$connection,$task,$pmml,$minerUrl='http://connect-dev.lmcloud.vse.cz/SewebarConnectNext'){
     $kbiModel=&$this->getModel('Kbi','dbconnectModel');        
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);
-                                          
+
     JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');     
     $kbi = KBIntegrator::create($configArr);
-                                    
+    //přiřazení uživatele ze session
+    $session =& JFactory::getSession();
+    $userData=$session->get('user',array(),'sewebar');
+    if (!empty($userData)){
+      $kbi->setUser($userData);
+    }
+    //--přiřazení uživatele ze session
+
     if ($task->kbi_source<=0){  
       $registerNewLispminer=true;
     }else{
