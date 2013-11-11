@@ -774,6 +774,13 @@ class IziController extends JController{
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);                                      
     JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');     
     $kbi = KBIntegrator::create($configArr);
+    //přiřazení uživatele ze session
+    $session =& JFactory::getSession();
+    $userData=$session->get('user',array(),'sewebar');
+    if (is_array($userData)){
+      $kbi->setUser($userData);
+    }
+    //--přiřazení uživatele ze session
                    
     if ($task->kbi_source<=0){  
       $registerNewLispminer=true;
@@ -791,7 +798,7 @@ class IziController extends JController{
       }else{
         $dbType='AccessConnection';
       }          
-      
+
       //$kbiSource=$kbi->register(array('server'=>'localhost','database'=>'barbora','type'=>'mysqlconnection','username'=>'lisp','password'=>'lisp'));
       $lispminerId=$kbi->register(array(
                                     'server'=>$connection->server,
@@ -799,7 +806,7 @@ class IziController extends JController{
                                     'username'=>$connection->username,
                                     'password'=>$connection->getPassword(),
                                     'type'=>$dbType
-                                  ));                               
+                                  ));
       if ($lispminerId){
         //máme zaregistrovaný LM server - vytvorime KBI zdroj
         $importResult=$kbi->importDataDictionary($pmml,$lispminerId);//TODO kontrola $importResult !!
