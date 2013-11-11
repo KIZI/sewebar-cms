@@ -69,6 +69,7 @@ class KbiControllerRegisterlmserver extends JController
 			$model = $this->getModel('lmservers');
 			$sources = $this->getModel('sources');
 			$server = $model->getLmserver($id[0]);
+            $session = JFactory::getSession();
 			
 			$db_conf = json_decode($db_conf, true);
 			$db_conf['type'] = $db_type;
@@ -76,7 +77,9 @@ class KbiControllerRegisterlmserver extends JController
 			$miner = new LispMiner(array(
 				'url' => $server->url,
 			));
-			
+
+            $miner->setUser($session->get('user', null, 'sewebar'));
+
 			$server_id = $miner->register($db_conf);
 
 			// Import Data Dictionary
