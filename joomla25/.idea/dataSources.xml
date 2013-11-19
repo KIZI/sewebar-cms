@@ -10,10 +10,10 @@
       <user-name>root</user-name>
       <libraries>
         <library>
-          <url>jar://$PROJECT_DIR$/../../../../apps/MySQL Java/mysql-connector-java-5.1.22-bin.jar!/</url>
+          <url>jar://E:/../apps/MySQL Java/mysql-connector-java-5.1.22-bin.jar!/</url>
         </library>
         <library>
-          <url>file://$PROJECT_DIR$/../../../../apps/MySQL Java/mysql-connector-license.txt</url>
+          <url>file://E:/../apps/MySQL Java/mysql-connector-license.txt</url>
         </library>
       </libraries>
     </data-source>

@@ -9,11 +9,11 @@ echo '<div id="iziDiv">';
     echo '<div class="errorDiv">'.$this->error.'</div>';
   }
                        
-  echo '<form method="post">
+  echo '<form method="post" id="newReportArticleForm">
           <input type="hidden" name="catId" value="'.@$this->categoryId.'" />
           <input type="hidden" name="kbi" value="'.@$this->kbiId.'" />
           <input type="hidden" name="todo" value="newReportArticle" />
-          <table class="margin:0 auto;">
+          <table>
             <tr>
               <td>
                 <label for="newArticleTitle">'.JText::_('TITLE').'</label>&nbsp;&nbsp;
@@ -24,7 +24,7 @@ echo '<div id="iziDiv">';
             </tr>
             <tr>
               <td colspan="2">
-                <input type="submit" value="'.JText::_('CREATE_ARTICLE').'" class="button" />
+                <input type="submit" value="'.JText::_('CREATE_ARTICLE').'" class="bigButton" />
               </td>
             </tr>
           </table>

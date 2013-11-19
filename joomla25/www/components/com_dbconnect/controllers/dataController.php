@@ -7,7 +7,7 @@ jimport( 'joomla.application.component.controller' );
 class DataController extends JController{
   var $document;
   const DEFAULT_IZI_EXPORT_TEMPLATE='4ftMiner.Task.Template.PMML';
-  const PMML_SECTION_ID=0;
+  const PMML_SECTION_ID=0;//TODO načtení výchozí kategorie pro PMML
 
   /**
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
