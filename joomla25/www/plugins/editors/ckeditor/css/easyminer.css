@@ -1,0 +1,79 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.html or http://ckeditor.com/license
+*/
+
+body
+{
+	font-family: "Helvetica Neue",helvetica,sans-serif;
+  font-size: 15px;
+  color:black;
+  background:white;
+  padding: 0 10px;
+  margin: 0;
+}
+div,p{
+  font-size: 15px;
+}
+
+p{
+  text-align: justify;
+  margin: 15px 0;
+  padding: 0 ;
+}
+
+a{
+  color:#6D87BA;
+  text-decoration: underline;
+}
+
+h1 {
+    color: #925213;
+    font-size: 36px;
+    font-weight: normal;
+}
+h1, h2 {
+    font-family: 'Droid Sans',sans-serif;
+}
+
+h2 {
+    color: #314E64;
+    font-size: 26px;
+    font-weight: normal;
+}
+
+h3 {
+    color: #314E64;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+html
+{
+	/* #3658: [IE6] Editor document has horizontal scrollbar on long lines
+	To prevent this misbehavior, we show the scrollbar always */
+	_overflow-y: scroll
+}
+
+img:-moz-broken
+{
+	-moz-force-broken-image-icon : 1;
+	width : 24px;
+	height : 24px;
+}
+img, input, textarea
+{
+	cursor: default;
+}
+
+/*styly pro gInclude plugin*/
+div.gincludeDiv{
+  border: 1px dotted red ;
+  padding: 5px ;
+  background: rgb(255,255,153);
+}
+div.gincludeDiv div.gincludeTitleDiv{
+  font-size: 10px;
+  color: red;
+  margin-bottom: 5px;
+}
