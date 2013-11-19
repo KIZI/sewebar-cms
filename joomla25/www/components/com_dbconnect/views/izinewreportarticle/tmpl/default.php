@@ -13,9 +13,21 @@ echo '<div id="iziDiv">';
           <input type="hidden" name="catId" value="'.@$this->categoryId.'" />
           <input type="hidden" name="kbi" value="'.@$this->kbiId.'" />
           <input type="hidden" name="todo" value="newReportArticle" />
-          <label for="newArticleTitle">'.JText::_('TITLE').'</label>&nbsp;&nbsp;
-          <input type="text" name="title" id="newArticleTitle" value="" />
-          <input type="submit" value="'.JText::_('CREATE_ARTICLE').'" class="button" />
+          <table class="margin:0 auto;">
+            <tr>
+              <td>
+                <label for="newArticleTitle">'.JText::_('TITLE').'</label>&nbsp;&nbsp;
+              </td>
+              <td>
+                <input type="text" name="title" id="newArticleTitle" value="" />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <input type="submit" value="'.JText::_('CREATE_ARTICLE').'" class="button" />
+              </td>
+            </tr>
+          </table>
         </form>';    
 echo '</div>';         
 ?>
