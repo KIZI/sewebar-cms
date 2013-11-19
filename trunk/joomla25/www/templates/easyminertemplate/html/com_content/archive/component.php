@@ -1,0 +1,1 @@
+</div></div></div></div><div id="main-content"><!--[if IE 6]><link rel="stylesheet" href="/ DOCTYPE html type="text/css" media="screen" PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN < ?php echo $templateUrl; ?>/css/template.ie6.css" DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN type="text/css" media="screen" /><![endif]-->
