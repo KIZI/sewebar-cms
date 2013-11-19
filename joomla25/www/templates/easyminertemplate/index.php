@@ -10,7 +10,7 @@ $footerdisable	= $this->params->get("footerdisable");
 $googleanalytics	= $this->params->get("googleanalytics");
 $analyticsdisable	= $this->params->get("analyticsdisable");
   */
-JHTML::_('behavior.framework', true);  
+JHTML::_('behavior.framework', true);
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
@@ -19,7 +19,8 @@ JHTML::_('behavior.framework', true);
     <!--<link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/basicTemplate.css" type="text/css" />-->
     <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/styles.css" type="text/css" />
   <!-- google analytics -->
-  <?php /*if ($this->params->get( 'analyticsdisable' )){ ?>
+  <?php
+   /*if ($this->params->get( 'analyticsdisable' )){ ?>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', '<?php echo ($googleanalytics); ?>']);

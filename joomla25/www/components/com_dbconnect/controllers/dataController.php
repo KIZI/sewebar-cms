@@ -6,7 +6,7 @@ jimport( 'joomla.application.component.controller' );
  */  
 class DataController extends JController{
   var $document;
-  const DEFAULT_IZI_EXPORT_TEMPLATE='4ftMiner.Task.Template.PMML';
+  const DEFAULT_IZI_EXPORT_TEMPLATE='4ftMiner.Task.Template.PMML';//TODO aktualizace exportni sablony
   const PMML_SECTION_ID=0;//TODO načtení výchozí kategorie pro PMML
 
   /**
@@ -30,8 +30,28 @@ class DataController extends JController{
   public function savePMMLArticle(){     
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
-    $articleId=JRequest::getInt('articleId',0);
+    $articleId=JRequest::getInt('articleId',JRequest::getInt('article',0));
     $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
+    $rules=JRequest::getString('rules',JRequest::getString('rulesIds',""));
+
+    /*pripraveni XML kodu pro zaznamenani vybranych asociacnich pravidel*/
+    $selectedRulesXml="";
+    if (!empty($rules)){
+      $rules=json_decode($rules);
+      if (!is_array($rules)&&(strpos($rules,','))){
+        $rules=explode(',',$rules);
+      }
+      if (is_array($rules)&&(count($rules)>0)){
+        foreach ($rules as $ruleId){
+          $selectedRulesXml.='<AssociationRule id="'.$ruleId.'" />';
+        }
+      }
+    }
+
+    if ($selectedRulesXml!=""){
+      $selectedRulesXml='<Extension name="selectedAssociationRules">'.$selectedRulesXml.'</Extension>';
+    }
+    /*pripraveni XML kodu pro zaznamenani vybranych asociacnich pravidel*/
     //TODO rules - získání jejich seznamu a uložení ke článku
                                         
     try {          /*
@@ -44,13 +64,24 @@ class DataController extends JController{
             		);                          
 			$model = new KbiModelTransformator($config);
       $source=$model->getSource(); */
-      $source=$this->getKbiSource($kbiId);         
-      
+      $source=$this->getKbiSource($kbiId);
+      //přiřazení uživatele ze session
+      $session =& JFactory::getSession();
+      $userData=$session->get('user',array(),'sewebar');
+      if (!empty($userData)){
+        $source->setUser($userData);
+      }
+      //--přiřazení uživatele ze session
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);
+
       //exit(var_dump($result));      
       if((!strpos($result,'<response status="failure">'))&&(strpos($result,'<PMML'))){
-        //máme vyexportovaný PMML soubor => uložíme ho do článku 
+        //máme vyexportovaný PMML soubor => uložíme ho do článku
+        /*pripojeni informaci o vybranych pravidlech*/
+        $result=str_replace('</guha:AssociationModel>',$selectedRulesXml.'</guha:AssociationModel>',$result);
+        /*--pripojeni informaci o vybranych pravidlech*/
+
         /*uložení článku*/
         $userId=JRequest::getInt('user',-1);
         if (!($userId>=0)){

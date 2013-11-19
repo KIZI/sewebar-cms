@@ -11,6 +11,7 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
+JHTML::_('behavior.mootools');
 ?>
 <?php if (JRequest::getString('type')=='raw'):?>
 <jdoc:include type="component" />

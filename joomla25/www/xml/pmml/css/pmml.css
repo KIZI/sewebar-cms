@@ -86,3 +86,33 @@
   }
   /* to by melo resit problem s sablonou quasar */
   ul, ol { padding-left: 2em; }
+
+  /*styly pro vybrana pravidla*/
+  p.ruleText{
+      font-weight: bold;
+  }
+  div.otherRule{
+      color:gray;
+      padding: 5px 10px;
+      margin: 10px 0;
+      background: -moz-linear-gradient(-45deg, rgba(200,200,200,0.2) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(200,200,200,0.2)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+      background: -webkit-linear-gradient(-45deg, rgba(200,200,200,0.2) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+      background: -o-linear-gradient(-45deg, rgba(200,200,200,0.2) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+      background: -ms-linear-gradient(-45deg, rgba(200,200,200,0.2) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+      background: linear-gradient(135deg, rgba(200,200,200,0.2) 0%,rgba(255,255,255,0) 100%); /* W3C */
+  }
+  div.selectedRule{
+      border:1px solid #2D83BE;
+      padding: 5px 10px;
+      margin: 10px 0;
+      background: -moz-linear-gradient(-45deg, rgba(179,213,226,0.2) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(179,213,226,0.2)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+      background: -webkit-linear-gradient(-45deg, rgba(179,213,226,0.2) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+      background: -o-linear-gradient(-45deg, rgba(179,213,226,0.2) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+      background: -ms-linear-gradient(-45deg, rgba(179,213,226,0.2) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+      background: linear-gradient(135deg, rgba(179,213,226,0.2) 0%,rgba(255,255,255,0) 100%); /* W3C */
+  }
+  a.selectedRuleA{
+      font-weight: bold;
+  }

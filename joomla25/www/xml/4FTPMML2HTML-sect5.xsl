@@ -21,9 +21,16 @@
     </xsl:variable>
     <xsl:variable name="rulePos" select="position()"/>
 
-    <div id="sect5-rule{$rulePos}">
+    <xsl:variable name="ruleClass">
+        <xsl:choose>
+            <xsl:when test="count(../../Extension[@name='selectedAssociationRules']/AssociationRule[@id=current()/@id])>0">selectedRule</xsl:when>
+            <xsl:otherwise>otherRule</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <div id="sect5-rule{$rulePos}" class="{$ruleClass}" >
       <h3 title="{$arDebug}"><xsl:copy-of select="keg:translate('Rule',12)"/> <xsl:value-of select="$rulePos"/></h3>
-      <p>
+      <p class="ruleText">
         <!-- Rule has format: Antecedent => Consequent
         -->
         <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arText,'start')"/></xsl:comment>
@@ -35,9 +42,10 @@
         <xsl:copy-of select="$query"/>
         <xsl:text disable-output-escaping="yes">]]--&gt;</xsl:text>
       </div>
+      <!--
       <xsl:for-each select="document('queries.xml')/queries/query">
         <img src="{icon}" onclick="return KbiPostArb({$rulePos}, {source/@id}, {@id}, {xslt/@id});" title="{name}" alt="{name}" />
-      </xsl:for-each>
+      </xsl:for-each>-->
       <div id="arb_result{position()}" class="hidden">...</div>
       <!-- table of values of test criteria (quantifiers) -->
       <xsl:if test="local-name() != 'CFMinerRule'">
