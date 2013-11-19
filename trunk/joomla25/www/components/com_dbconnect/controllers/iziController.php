@@ -1224,9 +1224,10 @@ class IziController extends JController{
    *  Akce pro vyvolání úpravy preprocessing hintu
    */
   public function newReportArticle(){
-    $categoryId=JRequest::getInt('catid',-1); //TODO zadání konkrétní kategorie
+    $categoryId=JRequest::getInt('catid',-1);//možnost zadání konkrétní kategorie pro článek
     if ($categoryId==-1){ 
       //TODO výběr kategorie, do které se mají články přidávat
+      //TODO načtení výchozí kategorie pro analytické zprávy
       $categoryId=2;
      /*
       JError::raiseError(500,JText::_('FORBIDDEN'));

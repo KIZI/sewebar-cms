@@ -18,35 +18,20 @@ input.error{
 }
 /*styly kvůli šabloně*/
 body{
-  padding: 0px  !important;
+  padding: 0  !important;
+  margin:0 !important;
   width:500px !important;
   overflow-x: hidden;
-}
-div#rt-main{
-  padding: 0px  !important;
-  margin: 0px !important;
-}
-div#rt-mainbody{
-  width: 800px;
-  padding: 0px !important ;
-  margin: 0px !important;
-}
-div.rt-container{
-  padding: 0px  !important;
-}
-div.rt-block{
-  padding: 0px  !important;
 }
 /*--styly kvůli šabloně*/
 div#iziDiv{
   position: relative;
   border:1px solid white;
   height:480px;
-  width: 800px;
+  width: 795px;
   overflow: auto;
-  padding: 0px  !important;
-  margin: 0px  !important;
-  
+  padding: 0  !important;
+  margin: 0  !important;
 }
 div#iziDiv h1{
   color: #925213 !important;
@@ -62,7 +47,7 @@ div#iziDiv h2{
   font-size: 20px;
   margin: 10px;
 }
-div#iziDiv div#newTaskUserDiv{
+div#iziDiv div#newTaskUserDiv,div#iziDiv div#newTaskUserDiv p{
   text-align:center;
 }
 div#iziDiv div.bigButtonsDiv{
@@ -87,6 +72,7 @@ div#iziDiv div.bigButtonsDiv a{
   -moz-border-radius: 5px;
   border-radius: 5px;
   text-decoration: none;
+  font-size: 13px;
 }
 div#iziDiv div.bigButtonsDiv a:hover{
   border: 1px solid #075783;
@@ -113,6 +99,7 @@ div#iziDiv a.backButton{
   position: absolute;
   left: 0px;
   top:0px;
+    font-size: 13px;
 }
 div#iziDiv a.backButton:hover{
   border: 1px solid #075783;
@@ -591,4 +578,17 @@ table.dbConnectionTable input[type='checkbox']{
   color:red;
   font-style: italic;
   display: none;
+}
+
+#newReportArticleForm{
+  text-align: center;
+}
+#newReportArticleForm table{
+  margin: 10px auto;
+}
+#newReportArticleForm input#newArticleTitle{
+  width: 400px;
+}
+#newReportArticleForm .bigButton{
+  margin-top: 10px;
 }
