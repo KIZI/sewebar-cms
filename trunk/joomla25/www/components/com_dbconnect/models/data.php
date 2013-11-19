@@ -51,11 +51,11 @@
       $db=$this->getDBO();
       $db->setQuery('SELECT * FROM #__dbconnect_tasks_articles JOIN #__content ON #__dbconnect_tasks_articles.article=#__content.id WHERE #__dbconnect_tasks_articles.task='.$db->quote($taskId).' AND #__dbconnect_tasks_articles.`type`='.$db->quote($type).' ORDER BY #__content.title;');
       return $db->loadObjectList();
-    }      
-    
+    }
+
     /**
      *  Funkce pro uložení vazby mezi článkem a DM úlohou...
-     */         
+     */
     public function saveTaskArticle($taskId,$articleId,$type){
       $db=$this->getDBO();
       $db->setQuery('INSERT INTO #__dbconnect_tasks_articles (article,task,`type`)VALUES('.$db->quote($articleId).','.$db->quote($taskId).','.$db->quote($type).');');
@@ -63,10 +63,41 @@
         $db->setQuery('UPDATE #__dbconnect_tasks_articles SET `type`='.$db->quote($type).' WHERE task='.$db->quote($taskId).' AND article='.$db->quote($articleId).' LIMIT 1;');
         $db->query();
       }
-    }    
-    
-    
-    
+    }
+
+    /**
+     *  Funkce pro uložení vazby mezi článkem a DM úlohou...
+     */
+    public function deleteTaskArticle($articleId){
+      $db=$this->getDBO();
+      $db->setQuery('DELETE FROM #__dbconnect_tasks_articles WHERE article='.$db->quote($articleId).';');
+      return $db->query();
+    }
+
+    /**
+     *  Funkce pro vytvoření/uložení článku
+     */
+    public function deleteArticle($articleId){
+      $db=$this->getDBO();
+      $db->setQuery('SELECT id FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
+      if (($articleId)&&($article=$db->loadObject())){ //TODO check assets
+        //budeme mazat - nejprve najdeme záznam v assets
+        $db->setQuery('SELECT * FROM #__assets WHERE id='.$db->quote($article->asset_id).' LIMIT 1;');
+        $db->query();
+        $asset=$db->loadObject();
+
+        //smažeme assets
+        $db->setQuery('DELETE FROM #__assets WHERE id='.$db->quote($asset->id).' LIMIT 1;');
+        $db->query();
+        $db->setQuery('UPDATE #__assets SET lft=lft-2,rgt=rgt-2 WHERE lft>'.$db->quote($asset->lft));
+        $db->query();
+        $db->setQuery('DELETE FROM #__content WHERE id='.$db->quote($articleId).' LIMIT 1;');
+        $db->query();
+        return true;
+      }
+      return false;
+    }
+
     /**
      *  Funkce pro vytvoření/uložení článku
      */         

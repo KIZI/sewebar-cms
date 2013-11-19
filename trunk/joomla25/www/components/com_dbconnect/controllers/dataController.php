@@ -10,12 +10,27 @@ class DataController extends JController{
   const PMML_SECTION_ID=0;//TODO načtení výchozí kategorie pro PMML
 
   /**
+   * Akce pro smazání článku
+   */
+  public function deleteArticle(){
+    $articleId=JRequest::getInt('articleId',0);
+    /** @var $dataModel dbconnectModelData */
+    $dataModel=&$this->getModel('Data','dbconnectModel');
+    if ($dataModel->deleteArticle($articleId)){
+      $dataModel->deleteTaskArticle($articleId);
+      $this->outputJSON(array('result'=>'ok'));
+    }else{
+      $this->outputJSON(array('result'=>'error'));
+    }
+  }
+
+  /**
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
   public function savePMMLArticle(){     
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
-    $articleId=JRequest::getInt('articleId',-1);
+    $articleId=JRequest::getInt('articleId',0);
     $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
     //TODO rules - získání jejich seznamu a uložení ke článku
                                         
@@ -46,9 +61,10 @@ class DataController extends JController{
         $title=JRequest::getString('title','');
         if ($title==''){
           $title='PMML '.date('r');
-        }                                                   
+        }
+        /** @var $dataModel dbconnectModelData */
         $dataModel=&$this->getModel('Data','dbconnectModel');
-        $articleId=$dataModel->saveArticle(0,$title,$result,$sectionId,$userId);
+        $articleId=$dataModel->saveArticle($articleId,$title,$result,$sectionId,$userId);
         if ($articleId){
           $tasksModel=&$this->getModel('Tasks','dbconnectModel');
           $task=$tasksModel->getTaskByKbi($kbiId);
