@@ -37,27 +37,19 @@ class plgButtonGinclude extends JPlugin
 	 */
 	function onDisplay($name)
 	{
-		global $mainframe;
+		$mainframe=JFactory::getApplication();
 
 		$doc = & JFactory::getDocument();
 		/* @var $doc JDocumentHTML */
 		
 		//Zpracování parametrů pluginu
 		$title 	   = $this->params->get( 'title', 'ginclude' );
-		$categorie = $this->params->get( 'categorie', -1 );
-		$section 	 = $this->params->get( 'section', -1 );
-        
-		if ($categorie>0){
-      $db = & JFactory::getDBO();
-      $db->setQuery( "SELECT section FROM #__categories WHERE `id`='".$categorie."' LIMIT 1;" );
-      $section = $db->loadObjectList();
-      $section=$section[0];
-      $section=$section->section;
-      $_SESSION['ginclude']['section']=$section;
-      $_SESSION['ginclude']['categorie']=$categorie;
-    }else {
-      $_SESSION['ginclude']['section']=$section;
+		$category = $this->params->get( 'category', -1 );
+		    
+		if ($category>0){
+      $_SESSION['ginclude']['category']=$category;
     }
+    
     $jRoot=JURI::root();
     $jAjaxRoot=$jRoot;
     if (JPATH_BASE==JPATH_ADMINISTRATOR){
@@ -66,15 +58,19 @@ class plgButtonGinclude extends JPlugin
 
 		$declaration	= 
 		"
-    function gInclude(id, part) {
-      var a=new Ajax('".$jAjaxRoot."index2.php?option=com_ginclude&no_html=1&task=getArticle&article='+id+'&part='+part,{
-                    method:'get',
-                    onComplete: function(response){
-                        jInsertEditorText( '".str_replace("'","\'",$this->params->get('beforeCode','<div>&nbsp;</div>'))."'+response+'".str_replace("'","\'",$this->params->get('afterCode','<div>&nbsp;</div>'))."', 'text' );
-                    }
-                }).request();
+    
+    function gInclude(id, part) {                                                                 
+      var a = new Request({
+                method: 'get',
+                url: '".$jAjaxRoot."index.php?option=com_ginclude&no_html=1&task=getArticle&article='+id+'&part='+part,
+                onComplete: function(response) {  
+                  if(response!=''){  
+                    jInsertEditorText( '".str_replace("'","\'",$this->params->get('beforeCode','<div>&nbsp;</div>'))."'+response+'".str_replace("'","\'",$this->params->get('afterCode','<div>&nbsp;</div>'))."', '".$name."');
+                  }
+                }
+              }).send();
  
-			document.getElementById('sbox-window').close();
+      SqueezeBox.close()
 		}
 	";
 		
@@ -87,7 +83,7 @@ class plgButtonGinclude extends JPlugin
 		
 		$doc->addStyleDeclaration($declaration);
 		
-		$template = $mainframe->getTemplate();
+		//$template = $mainframe->getTemplate();
 
     $link = 'index.php?option=com_ginclude&task=smartPage&tmpl=component';
 		JHTML::_('behavior.modal');
