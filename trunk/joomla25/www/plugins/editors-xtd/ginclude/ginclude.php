@@ -45,7 +45,7 @@ class plgButtonGinclude extends JPlugin
 		//Zpracování parametrů pluginu
 		$title 	   = $this->params->get( 'title', 'ginclude' );
 		$category = $this->params->get( 'category', -1 );
-		    
+
 		if ($category>0){
       $_SESSION['ginclude']['category']=$category;
     }
