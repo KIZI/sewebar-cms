@@ -27,7 +27,7 @@ class DataController extends JController{
   /**
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
-  public function savePMMLArticle(){     
+  public function savePMMLArticle(){
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',JRequest::getInt('article',0));
@@ -40,6 +40,9 @@ class DataController extends JController{
       $rules=json_decode($rules);
       if (!is_array($rules)&&(strpos($rules,','))){
         $rules=explode(',',$rules);
+      }
+      if (is_int($rules)){
+        $rules=array(0=>$rules);
       }
       if (is_array($rules)&&(count($rules)>0)){
         foreach ($rules as $ruleId){
@@ -66,11 +69,11 @@ class DataController extends JController{
       $source=$model->getSource(); */
       $source=$this->getKbiSource($kbiId);
       //přiřazení uživatele ze session
-      $session =& JFactory::getSession();
+      /*$session =& JFactory::getSession();
       $userData=$session->get('user',array(),'sewebar');
       if (!empty($userData)){
         $source->setUser($userData);
-      }
+      }*/
       //--přiřazení uživatele ze session
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);
@@ -89,7 +92,7 @@ class DataController extends JController{
           $userId=$user->get('id');    
         }
         $sectionId=JRequest::getInt('sectionId',self::PMML_SECTION_ID);
-        $title=JRequest::getString('title','');
+        $title=JRequest::getString('title',JRequest::getString('taskName',''));
         if ($title==''){
           $title='PMML '.date('r');
         }
@@ -195,7 +198,7 @@ class DataController extends JController{
         $pmmlXml->loadXML($result);
 
         //zpracování IDček a jejich označení v PMMLku
-        $selectedRulesIds=JRequest::getString('rules');
+        $selectedRulesIds=JRequest::getString('rules',JRequest::getString('rulesIds'));
         if (!($rulesIdsArr=json_decode($selectedRulesIds))){
           $rulesIdsArr=explode(',',$selectedRulesIds);
         }
