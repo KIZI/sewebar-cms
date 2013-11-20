@@ -1,11 +1,36 @@
 <?php
-/**
- * Controller pro nastavování preferencí dbconnect
- * Class configController
- */
+
+jimport( 'joomla.application.component.controller' );
+
 class configController extends JController{
-  public function config(){
-    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
-    $task=$tasksModel->getTask($taskId);
+  var $document;
+
+  /**
+   *  Konstruktor
+   */
+  public function __construct( $default = array()){
+    parent::__construct( $default );
+    $this->document =& JFactory::getDocument();
+  }
+
+  public function configList(){
+    /** @var $configModel dbconnectModelConfig */
+    $configModel=&$this->getModel('Config','dbconnectModel');
+    $view = &$this->getView('ConfigList',$this->document->getType());
+    $view->assign('configItems',$configModel->getConfigsList());
+    $view->display();
+  }
+
+  public function saveConfigList(){
+    /** @var $configModel dbconnectModelConfig */
+    $configModel=&$this->getModel('Config','dbconnectModel');
+
+    foreach ($_POST as $key=>$value){
+      if (substr($key,0,7)=='config_'){
+        $configModel->saveConfig(substr($key,7),$value);
+      }
+    }
+    $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=config&task=configList'));
+
   }
 }
