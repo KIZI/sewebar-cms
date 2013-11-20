@@ -25,7 +25,7 @@
 					label="Button text"
           description="Text, který se zobrazuje na tlačítku pod editorem obsahu článku."
 			 />
-      <field name="categorie" type="category" default="-1" label="Default category" description="Výchozí kategorie - bude přednastavena při prvním otevření okna s výběrem článků... Je-li nastavena, ignoruje se nastavení sekce!"
+      <field name="category" type="category" default="-1" label="Default category" description="Výchozí kategorie - bude přednastavena při prvním otevření okna s výběrem článků... Je-li nastavena, ignoruje se nastavení sekce!"
              extension="com_content" />
       <field name="beforeCode" type="text" default="" label="Code before text" description="xHTML kód, který bude vložen před vkládaný obsah. Musí být validní v kombinaci s kódem po...!" />
       <field name="afterCode" type="text" default="" label="Code after text" description="xHTML kód, který bude vložen za vkládaný obsah. Musí být validní v kombinaci s kódem před...!" />
