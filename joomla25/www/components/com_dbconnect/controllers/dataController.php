@@ -7,7 +7,6 @@ jimport( 'joomla.application.component.controller' );
 class DataController extends JController{
   var $document;
   const DEFAULT_IZI_EXPORT_TEMPLATE='4ftMiner.Task.Template.PMML';//TODO aktualizace exportni sablony
-  const PMML_SECTION_ID=0;//TODO načtení výchozí kategorie pro PMML
 
   /**
    * Akce pro smazání článku
@@ -28,6 +27,10 @@ class DataController extends JController{
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
   public function savePMMLArticle(){
+    /** @var $dataModel dbconnectModelConfig */
+    $configModel=&$this->getModel('Config','dbconnectModel');
+    $pmmlArticlesCategory=$configModel->loadConfig('new_pmml_category');
+
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',JRequest::getInt('article',0));
@@ -91,14 +94,21 @@ class DataController extends JController{
           $user =& JFactory::getUser();
           $userId=$user->get('id');    
         }
-        $sectionId=JRequest::getInt('sectionId',self::PMML_SECTION_ID);
+        /** @var $dataModel dbconnectModelConfig */
+        $configModel=&$this->getModel('Config','dbconnectModel');
+        if ($pmmlArticlesCategory>0){
+          $reportArticlesCategory=$pmmlArticlesCategory;
+        }else{
+          $reportArticlesCategory=$configModel->loadConfig('new_report_category');
+        }
+
         $title=JRequest::getString('title',JRequest::getString('taskName',''));
         if ($title==''){
           $title='PMML '.date('r');
         }
         /** @var $dataModel dbconnectModelData */
         $dataModel=&$this->getModel('Data','dbconnectModel');
-        $articleId=$dataModel->saveArticle($articleId,$title,$result,$sectionId,$userId);
+        $articleId=$dataModel->saveArticle($articleId,$title,$result,$reportArticlesCategory,$userId);
         if ($articleId){
           $tasksModel=&$this->getModel('Tasks','dbconnectModel');
           $task=$tasksModel->getTaskByKbi($kbiId);
