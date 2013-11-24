@@ -386,6 +386,49 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		return $this->parseResponse($response, 'User successfully registered.');
 	}
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $new_username
+     * @param string $new_password
+     * @param string $new_email
+     * @throws Exception
+     * @return mixed
+     */
+    public function updateUser($username, $password, $new_username, $new_password, $new_email)
+    {
+        if (empty($username)) {
+            throw new Exception('Username cannot be empty!');
+        }
+
+        if (empty($password)) {
+            throw new Exception('Password cannot be empty!');
+        }
+
+        $credentials = array(
+            'username' => $username,
+            'password' => $password
+        );
+
+        $client = $this->getRestClient();
+        $url = trim($this->getUrl(), '/');
+        $url = "$url/Users";
+
+        $data = array(
+            'name' => $username,
+            'password' => $password,
+            'new_name' => $new_username,
+            'new_password' => $new_password,
+            'new_email' => $new_email
+        );
+
+        $response = $client->put($url, $data, $credentials);
+
+        KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User updated");
+
+        return $this->parseResponse($response, 'User successfully updated.');
+    }
+
 	/**
 	 * @param string $username
 	 * @param string $new_username
@@ -393,40 +436,52 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 	 * @param string $new_email
 	 * @param string $email_from - e-mail address for "From:" field for confirmation e-mail
 	 * @param string $email_link - link for user confirmation / string {code} should be on server replaced with security code value
+     *
+     * @return string
+     *
+     * @throws Exception
 	 */
 	public function updateOtherUser($username, $new_username, $new_password, $new_email, $email_from, $email_link)
 	{
-		//TODO funkce pro změnu "nevlastního" uživatelského účtu
+        $client = $this->getRestClient();
+        $url = trim($this->getUrl(), '/');
+        $url = "$url/users/${username}/changes";
+
+        $data = array(
+            'new_username' => $new_username,
+            'new_password' => $new_password,
+            'new_email' => $new_email,
+            'email_from' => $email_from,
+            'email_link' => $email_link
+        );
+
+        $response = $client->post($url, $data);
+
+        return $this->parseResponse($response);
 	}
 
-	/**
-	 * @param string $username
-	 * @param string $password
-	 * @param string $new_username
-	 * @param string $new_password
-	 * @param string $new_email
-	 * @return mixed
-	 */
-	public function updateUser($username, $password, $new_username, $new_password, $new_email)
-	{
-		$client = $this->getRestClient();
-		$url = trim($this->getUrl(), '/');
-		$url = "$url/Users";
+    /**
+     * @param string $username
+     * @param string $security_code
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public function confirmUserPasswordUpdate($username, $security_code)
+    {
+        $client = $this->getRestClient();
+        $url = trim($this->getUrl(), '/');
+        $url = "$url/users/${username}/changes";
 
-		$data = array(
-			'name' => $username,
-			'password' => $password,
-			'new_name' => $new_username,
-			'new_password' => $new_password,
-			'new_email' => $new_email
-		);
+        $data = array(
+            'code' => $security_code
+        );
 
-		$response = $client->put($url, $data);
+        $response = $client->put($url, $data);
 
-		KBIDebug::log(array('url' => $url, 'data' => $data, 'response' => $response), "User updated");
-
-		return $this->parseResponse($response, 'User successfully updated.');
-	}
+        return $this->parseResponse($response);
+    }
 
 	/**
 	 * Removes existing user.
@@ -456,15 +511,6 @@ class LispMiner extends KBIntegrator implements IHasDataDictionary
 		KBIDebug::log(array('url' => "DELETE $url", 'response' => $response), "User removed");
 
 		return $this->parseResponse($response, 'User successfully removed.');
-	}
-
-	/**
-	 * @param string $username
-	 * @param string $security_code
-	 */
-	public function confirmUserPasswordUpdate($username,$security_code)
-	{
-		//TODO uživatelem vyvolané potvrzení hesla
 	}
 
 	/**

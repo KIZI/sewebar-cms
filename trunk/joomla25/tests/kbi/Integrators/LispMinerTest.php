@@ -174,6 +174,22 @@ class LispMinerTest extends PHPUnit_Framework_TestCase
 		return $user;
 	}
 
+    /**
+     * @depends test_registerUser
+     */
+    public function test_updateOtherUser($user)
+    {
+        $result = self::$miner->updateOtherUser(
+            $user['username'],
+            null,
+            'heslo2',
+            'test@example.com',
+            'smtp@vse.cz',
+            'http://vse.cz/index.php?code1=12345&code={code}');
+
+        $this->assertNotEmpty($result);
+    }
+
 	/**
 	 * @depends test_registerUser
 	 */
