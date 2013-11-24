@@ -144,6 +144,8 @@
     <Compile Include="API\Requests\Task\TaskUpdateRequest.cs" />
     <Compile Include="API\Requests\Task\TaskInfoRequest.cs" />
     <Compile Include="API\Requests\Task\TaskRequest.cs" />
+    <Compile Include="API\Requests\Users\UserChangeCommitRequest.cs" />
+    <Compile Include="API\Requests\Users\UserChangeRequest.cs" />
     <Compile Include="API\Requests\Users\UserRequest.cs" />
     <Compile Include="API\Response.cs" />
     <Compile Include="API\Responses\Application\LISpMinerResponse.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="API\Responses\Users\DatabaseResponse.cs" />
     <Compile Include="API\Responses\Users\UserResponse.cs" />
     <Compile Include="API\Responses\Users\UsersResponse.cs" />
+    <Compile Include="API\Responses\Users\UserUpdateResponse.cs" />
     <Compile Include="API\Status.cs" />
     <Compile Include="API\XmlFileResult.cs" />
     <Compile Include="API\ResponseMediaTypeFormatter.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\ChangesController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DatabasesController.cs" />
     <Compile Include="Controllers\DataDictionaryController.cs" />

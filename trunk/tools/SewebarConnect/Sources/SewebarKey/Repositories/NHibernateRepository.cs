@@ -9,7 +9,7 @@ namespace SewebarKey.Repositories
 	{
 		private readonly ISession _session;
 
-		private ISession Session
+		public ISession Session
 		{
 			get { return _session; }
 		}
