@@ -18,5 +18,9 @@
 			<key column="id_user"/>
 			<one-to-many class="SewebarKey.Miner, SewebarKey"/>
 		</set>
+		<set name="PendingUpdates" inverse="true" lazy="false" cascade="all">
+			<key column="id_user"/>
+			<one-to-many class="SewebarKey.UserPendingUpdate, SewebarKey"/>
+		</set>
 	</class>
 </hibernate-mapping>

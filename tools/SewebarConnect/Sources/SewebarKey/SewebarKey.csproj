@@ -61,8 +61,11 @@
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\NHibernateRepository.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserPendingUpdate.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\UserPendingUpdate.hbm.xml" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mappings\Database.hbm.xml" />
     <EmbeddedResource Include="Mappings\Miner.hbm.xml" />
