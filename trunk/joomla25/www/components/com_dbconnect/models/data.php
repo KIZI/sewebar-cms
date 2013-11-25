@@ -101,7 +101,7 @@
     /**
      *  Funkce pro vytvoření/uložení článku
      */         
-    public function saveArticle($articleId,$title,$data,$categoryId=0,$userId=0){
+    public function saveArticle($articleId,$title,$data,$categoryId=0,$userId=0,$accessRights=''){//TODO implementace access rights
       //TODO
       if ($categoryId<2){
         $categoryId=2;
