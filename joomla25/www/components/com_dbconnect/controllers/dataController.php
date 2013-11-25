@@ -317,7 +317,7 @@ class DataController extends JController{
 
     /** @var $dataModel dbconnectModelData */
     $dataModel=&$this->getModel('Data','dbconnectModel');
-    $articleId=$dataModel->newArticle($title,@$_POST['data'],$sectionId,$userId);
+    $articleId=$dataModel->newArticle($title,@$_POST['data'],$sectionId,$userId);//TODO zkontrolovat
     if ($articleId){
       
       $kbiId=JRequest::getInt('kbi',0);

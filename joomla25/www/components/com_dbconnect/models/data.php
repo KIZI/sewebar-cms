@@ -3,6 +3,7 @@
   require_once (JPATH_COMPONENT.DS.'../com_mapping/models'.DS.'data.php');
   //require_once './com_dbconnect/models/tasks.php';
   class dbconnectModelData extends DataModel{
+    const DEFAULT_USER_GROUP=2;
     
     /**
      *  Funkce vracející pole s podporovanými typy dat - musí být nadefinovány v DB (sloupec enum)
@@ -131,6 +132,15 @@
         if ($db->query()){
           $articleId=$db->insertid();
           //vyřešení ASSETS //TODO dodělat možnost příslušenství ke skupině (kvůli výuce)
+          if ($accessRights=='edit'){
+            $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}';
+          }elseif($accessRights=='delete'){
+            $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":0},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}';
+          }else{
+            $rights="";
+          }
+
+
           $parentAssetRgt=$parentAsset->rgt;
           $db->setQuery('UPDATE #__assets SET lft=lft+2 WHERE lft>'.$db->quote($parentAssetRgt));
           $db->query();
@@ -143,7 +153,7 @@
             '.$db->quote($parentAsset->level+1).',
             '.$db->quote('com_content.article.'.$articleId).',
             '.$db->quote($title).',
-            "{}"
+            '.$rights.'
           );');
           $db->query();
           $assetId=$db->insertid();
@@ -160,8 +170,8 @@
     /**
      *  Funkce pro vytvoření/uložení článku
      */         
-    public function newArticle($title,$data,$sectionId=0,$userId=0){  
-      return $this->saveArticle(0,$title,$data,$sectionId,$userId);
+    public function newArticle($title,$data,$sectionId=0,$userId=0,$accessRights=''){
+      return $this->saveArticle(0,$title,$data,$sectionId,$userId,$accessRights);
     }
     
     /**

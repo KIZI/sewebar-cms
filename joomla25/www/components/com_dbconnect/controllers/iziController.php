@@ -987,10 +987,10 @@ class IziController extends JController{
       if ($task->bkef_article>0){
         //update
         $bkefArticleId=$task->bkef_article;
-        $dataModel->saveArticle($bkefArticleId,$bkefArticleTitle,$bkefXML,$bkefArticlesCategory,$userId,'delete');//TODO doplnění zbylých parametrů
+        $dataModel->saveArticle($bkefArticleId,$bkefArticleTitle,$bkefXML,$bkefArticlesCategory,$userId,'delete');
       }else{   
         //new article
-        $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML,$bkefArticlesCategory,$userId,'delete'); //TODO doplnění zbylých parametrů
+        $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML,$bkefArticlesCategory,$userId,'delete');
       }
     }         
            
@@ -1262,7 +1262,7 @@ class IziController extends JController{
       //uložení článku
       /** @var $dataModel dbconnectModelData */
       $dataModel=&$this->getModel('Data','dbconnectModel');
-      $articleId=$dataModel->newArticle($title,'',$categoryId,$userId);
+      $articleId=$dataModel->newArticle($title,'',$categoryId,$userId,'edit');
       //povedlo se článek uložit?
       if ($articleId){
         if ($kbiId>0){
