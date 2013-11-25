@@ -298,8 +298,14 @@ class dbconnectController extends JController{
     $bkefArticleTitle=$connection->table.' - BKEF ('.$curDateStr.')';
     $fmlArticleTitle=$connection->table.' - FML ('.$curDateStr.')';
     $bkefXML=$generatorModel->getBkefXML();
+    $configModel=&$this->getModel('Config','dbconnectModel');
+    $bkefCategoryId=$configModel->loadConfig('new_bkef_category');
+    $fmlCategoryId=$configModel->loadConfig('new_bkef_category');
+    $user = JFactory::getUser();
+    $userId=$user->id;
+
     if ($bkefXML){
-      $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML);
+      $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML,$bkefCategoryId,$userId,'delete');
     }
     
     $taskParams=array();
@@ -307,7 +313,7 @@ class dbconnectController extends JController{
       $taskParams['bkef']=$bkefArticleId;
       $fmlXML=$generatorModel->getFmlXML($bkefArticleId,$bkefArticleTitle,$task->id,$task->name);
       if ($fmlXML){
-        $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML);
+        $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML,$fmlCategoryId,$userId,'delete');
       }
       if (@$fmlArticleId){
         $taskParams['fml']=$fmlArticleId;
