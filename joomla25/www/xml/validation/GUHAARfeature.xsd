@@ -10,9 +10,13 @@ The ARD then does not need to "understand" these two elements, it is only requir
 -->
 
 
-<!-- Version 0.7
+<!-- Version 0.8
   
   author: Tomas Kliegr
+Change 0.7 to 0.8
+  - added attribute priority on   UserInterface
+  - added element Default on IMList"
+  
 Change 0.6 to 0.7
   - added DefaultValue on Interest Measure Type
 
@@ -43,7 +47,7 @@ Changes  0.1 to 0.2:
 -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified"
-  targetNamespace="http://keg.vse.cz/ns/arfeatures_02" xmlns="http://keg.vse.cz/ns/arfeatures_02"
+  targetNamespace="http://keg.vse.cz/ns/arfeatures_08" xmlns="http://keg.vse.cz/ns/arfeatures_08"
   xmlns:guha="http://keg.vse.cz/ns/GUHA0.1rev1">
   <xs:import namespace="http://keg.vse.cz/ns/GUHA0.1rev1"
     schemaLocation="http://sewebar.vse.cz/schemas/GUHA0.1rev1.xsd"/>
@@ -83,6 +87,7 @@ Changes  0.1 to 0.2:
      <xs:element name="Explanation" type="Explanation"  minOccurs="0" maxOccurs="unbounded"></xs:element>
      <xs:element name="AutoSuggest" type="AutoSuggest"></xs:element>
     </xs:sequence>
+    <xs:attribute name="priority" type="xs:integer"></xs:attribute>
   </xs:complexType>
 <xs:complexType name="AutoSuggest">
  <xs:sequence>
@@ -269,6 +274,7 @@ Changes  0.1 to 0.2:
     <xs:sequence>
       <!-- The first name is language independent and must come from a list -->
       <xs:element name="Name" type="IMList"/>
+      <xs:element name="Default" type="xs:boolean"/>
      
       <!-- It might be followed by multiple language specific names -->
       <xs:element name="LocalizedName" type="LocalizedName" minOccurs="0" maxOccurs="unbounded"/>
