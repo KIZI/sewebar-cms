@@ -30,17 +30,20 @@ class DataController extends JController{
     /** @var $dataModel dbconnectModelConfig */
     $configModel=&$this->getModel('Config','dbconnectModel');
     $pmmlArticlesCategory=$configModel->loadConfig('new_pmml_category');
+    $lispminerExportTemplate=$configModel->loadConfig('lispminer_export_template');
 
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',JRequest::getInt('article',0));
-    $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
+    $template=JRequest::getVar('template',$lispminerExportTemplate);
     $rules=JRequest::getString('rules',JRequest::getString('rulesIds',""));
 
     /*pripraveni XML kodu pro zaznamenani vybranych asociacnich pravidel*/
     $selectedRulesXml="";
     if (!empty($rules)){
-      $rules=json_decode($rules);
+      if ($rulesEncoded=json_decode($rules)){
+        $rules=$rulesEncoded;
+      }
       if (!is_array($rules)&&(strpos($rules,','))){
         $rules=explode(',',$rules);
       }
@@ -106,9 +109,10 @@ class DataController extends JController{
         if ($title==''){
           $title='PMML '.date('r');
         }
+
         /** @var $dataModel dbconnectModelData */
         $dataModel=&$this->getModel('Data','dbconnectModel');
-        $articleId=$dataModel->saveArticle($articleId,$title,$result,$reportArticlesCategory,$userId);
+        $articleId=$dataModel->saveArticle($articleId,$title,$result,$reportArticlesCategory,$userId,'delete');
         if ($articleId){
           $tasksModel=&$this->getModel('Tasks','dbconnectModel');
           $task=$tasksModel->getTaskByKbi($kbiId);
@@ -185,10 +189,15 @@ class DataController extends JController{
    *  Akce pro export pravidel pro BR server
    */     
   public function exportBR(){
+    /** @var $dataModel dbconnectModelConfig */
+    $configModel=&$this->getModel('Config','dbconnectModel');
+    //$pmmlArticlesCategory=$configModel->loadConfig('new_pmml_category');
+    $lispminerExportTemplate=$configModel->loadConfig('lispminer_export_template');
+
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $articleId=JRequest::getInt('articleId',-1);
-    $template=JRequest::getVar('template',self::DEFAULT_IZI_EXPORT_TEMPLATE);
+    $template=JRequest::getVar('template',$lispminerExportTemplate);
 
     if (JRequest::getVar('show','')!='ok'){
       $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=exportBR&show=ok&tmpl=component&kbi='.$kbiId.'&lmtask='.$lmtaskId.'&rules='.JRequest::getString('rules'),false));

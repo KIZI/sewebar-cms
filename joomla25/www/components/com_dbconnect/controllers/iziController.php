@@ -976,15 +976,21 @@ class IziController extends JController{
     $bkefArticleTitle=$connection->table.' - BKEF ('.$curDateStr.')';
     $fmlArticleTitle=$connection->table.' - FML ('.$curDateStr.')';
     $bkefXML=$generatorModel->getBkefXML($bkefArticleTitle);
-         
+
+    /** @var $dataModel dbconnectModelConfig */
+    $configModel=&$this->getModel('Config','dbconnectModel');
+    $bkefArticlesCategory=$configModel->loadConfig('new_bkef_category');
+    $user = JFactory::getUser();
+    $userId=$user->id;
+
     if ($bkefXML){
       if ($task->bkef_article>0){
         //update
         $bkefArticleId=$task->bkef_article;
-        $dataModel->saveArticle($bkefArticleId,$bkefArticleTitle,$bkefXML);//TODO doplnění zbylých parametrů
+        $dataModel->saveArticle($bkefArticleId,$bkefArticleTitle,$bkefXML,$bkefArticlesCategory,$userId,'delete');//TODO doplnění zbylých parametrů
       }else{   
         //new article
-        $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML); //TODO doplnění zbylých parametrů
+        $bkefArticleId=$dataModel->newArticle($bkefArticleTitle,$bkefXML,$bkefArticlesCategory,$userId,'delete'); //TODO doplnění zbylých parametrů
       }
     }         
            
@@ -992,14 +998,18 @@ class IziController extends JController{
     if (@$bkefArticleId){ 
       $taskParams['bkef']=$bkefArticleId;
       $fmlXML=$generatorModel->getFmlXML($bkefArticleId,$bkefArticleTitle,$task->id,$task->name);
-      
+
+      /** @var $dataModel dbconnectModelConfig */
+      $configModel=&$this->getModel('Config','dbconnectModel');
+      $fmlArticlesCategory=$configModel->loadConfig('new_fml_category');
+
       if ($fmlXML){
         if ($task->fml_article>0){        
           //update
           $fmlArticleId=$task->fml_article;
-          $dataModel->saveArticle($fmlArticleId,$fmlArticleTitle,$fmlXML);//TODO doplnění zbylých parametrů
+          $dataModel->saveArticle($fmlArticleId,$fmlArticleTitle,$fmlXML,$fmlArticlesCategory,$userId,'delete');//TODO doplnění zbylých parametrů
         }else{                  
-          $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML);//TODO doplnění zbylých parametrů
+          $fmlArticleId=$dataModel->newArticle($fmlArticleTitle,$fmlXML,$fmlArticlesCategory,$userId,'delete');//TODO doplnění zbylých parametrů
         }
       }
       if (@$fmlArticleId){
