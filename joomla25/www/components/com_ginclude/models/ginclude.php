@@ -133,20 +133,19 @@ class GincludeModel extends JModel
   /**
    *  Funkce vracející seznam článků jako výstupní listObject databázového dotazu 
    */ 
-  function getArticles($category,$filter,$order,$order_dir,$limitstart,$limit,$editor=false){
+  function getArticles($category,$filter,$order,$order_dir,$limitstart,$limit,$editor=false,$filterEditorDelete=false){
     $db = & JFactory::getDBO();
     $user =& JFactory::getUser();
   
     //nastavení where částí SQL dotazu
-    $whereClause="(".$this->getAccessWhereSql('ct').")";
+    $whereClause="(".$this->getAccessWhereSql('ct').") AND state!=-2";
     if ($category>-1){
       $whereClause.=" AND ct.catid='".$category."'";
     }
     if ($filter!=''){
       $whereClause.=" AND ct.title LIKE '%".$filter."%'";
     }
-    //         
-            
+    //
     $db->setQuery("SELECT ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,cat.title as categoryTitle,ct.checked_out FROM #__content ct LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE $whereClause order by $order $order_dir",$limitstart,$limit);
     
     $rows = $db->loadObjectList();
@@ -165,8 +164,18 @@ class GincludeModel extends JModel
         }
       }
     }
-                      
-    return $rows;
+    if ($filterEditorDelete&&(count($rows)>0)){
+      $resultRows=array();
+      foreach($rows as $row){
+        if ($user->authorise('core.delete','com_content.article.'.$row->id)){
+          $resultRows[]=$row;
+        }
+      }
+      return $resultRows;
+    }else{
+      return $rows;
+    }
+
   }
   
   /**
@@ -176,7 +185,7 @@ class GincludeModel extends JModel
     $db = & JFactory::getDBO();
     
     //nastavení where částí SQL dotazu
-    $whereClause="(".$this->getAccessWhereSql('ct').")";
+    $whereClause="(".$this->getAccessWhereSql('ct').") AND state!=-2";
     if ($category>-1){
       $whereClause.=" AND ct.catid='".$category."'";
     }
