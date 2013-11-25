@@ -137,7 +137,7 @@
           }elseif($accessRights=='delete'){
             $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":0},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}';
           }else{
-            $rights="";
+            $rights="{}";
           }
 
 
@@ -153,7 +153,7 @@
             '.$db->quote($parentAsset->level+1).',
             '.$db->quote('com_content.article.'.$articleId).',
             '.$db->quote($title).',
-            '.$rights.'
+            '.$db->quote($rights).'
           );');
           $db->query();
           $assetId=$db->insertid();
