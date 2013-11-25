@@ -34,19 +34,26 @@ class GincludeViewArticles extends JView
         $_SESSION['ginclude']['category']=-1;
       } 
     /**/
-    
-    $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false);
+    $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',1)==1));
     $total=$model->getArticlesCount(JRequest::getInt('category',-1),JRequest::getString('filter',''),false);
     $result='';
     
     jimport('joomla.html.pagination');
     $pageNav = new JPagination($total,$limitstart,$limit);
     $result.= '<h3>'.JText::_(SELECT_ARTICLE).'</h3>';
-    $result.= '<form action="index.php?option=com_ginclude&amp;task=articles&amp;tmpl=component" name="adminForm" id="adminForm" method="post">';
+    $result.= '<form action="index.php" name="adminForm" id="adminForm" method="get">
+                <input type="hidden" name="option" value="com_ginclude" />
+                <input type="hidden" name="task" value="articles" />
+                <input type="hidden" name="tmpl" value="component" />';
     $orderDir=JRequest::getCmd('filter_order_Dir','asc');
     if ($orderDir=='asc'){$orderDir2='desc';}else{$orderDir2='asc';}
     $result.= '<div style="position:relative;">'.JText::_(FILTER).': <input type="text" name="filter" value="'.JRequest::getString('filter','').'" id="filter" /><button onclick="this.form.submit();">OK</button><button onclick="document.getElementById(\'filter\').value=\'\';this.form.submit();">Reset</button>';
-    $result.= '<div style="display:inline;position:absolute;right:5px;top:2px;"><select name="category" onchange="document.adminForm.submit();"><option value="-1">--'.JText::_(SELECT_CATEGORY).'--</option>';
+    $result.= '<div style="display:inline;position:absolute;right:5px;top:2px;">
+                 <select name="filterDelete" onchange="document.adminForm.submit();">
+                   <option value="0" '.((JRequest::getInt('filterDelete',1)==0)?'selected="selected"':'').'>'.JText::_('ALL_ARTICLES').'</option>
+                   <option value="1" '.((JRequest::getInt('filterDelete',1)==1)?'selected="selected"':'').'>'.JText::_('ONLY_MY_ARTICLES').'</option>
+                 </select>
+                 <select name="category" onchange="document.adminForm.submit();"><option value="-1">--'.JText::_(SELECT_CATEGORY).'--</option>';
     /*vypsani jednotlivych kategorii*/
     $categories=$model->getCategories(true);  
     $currentCatId=JRequest::getInt('category',-1);
@@ -64,7 +71,9 @@ class GincludeViewArticles extends JView
     $result.= '</select></div>';
     $result.= '</div>';
 
-    $result.= '<table border="0" class="adminlist" cellspacing="1">
+
+    if (($total>0)&&(count($articles)>0)){
+      $result.= '<table border="0" class="adminlist" cellspacing="1">
                  <thead>
                    <tr>
                      <th><a href="javascript:tableOrdering(\'1\',\''.$orderDir2.'\',\'\');">'.JText::_('TITLE').'</a></th>
@@ -72,13 +81,13 @@ class GincludeViewArticles extends JView
                      <th width="80"><a href="javascript:tableOrdering(\'created\',\''.$orderDir2.'\',\'\');">'.JText::_('DATE').'</a></th>
                    </tr>
                  </thead>';
-    if (($total>0)&&(count($articles)>0)){      
+
       foreach ($articles as $article) {       
-        if ($rowClass=='row0'){$rowClass='row1';}else{$rowClass='row0';}
+        if (isset($rowClass)&&($rowClass=='row0')){$rowClass='row1';}else{$rowClass='row0';}
         $result.= '<tr class="'.$rowClass.'">
                      <td>';
           if($article->locked>0){
-            $result.=' <img src="media/" alt="Locked" />';
+            $result.=' <img src="media/" alt="Locked" />';//TODO
           }          
           if ($article->locked==2){
             $result.=' <span class="lockedArticle">'.$article->title.'</span>';
@@ -90,8 +99,13 @@ class GincludeViewArticles extends JView
                      <td>'.$article->cdate.'</td>
                    </tr>';
       }
-    } 
-    $result.= '<tfoot><tr><td colspan="4">'.$pageNav->getListFooter().'</td></tr></tfoot></table>';
+
+      $result.= '<tfoot><tr><td colspan="4">'.$pageNav->getListFooter().'</td></tr></tfoot></table>';
+    }else{
+      $result.= '<p>'.JText::_('NO_ARTICLES_FOUND').'</p>';
+
+    }
+
     $result.= '<input type="hidden" name="filter_order" value="'.JRequest::getCmd('filter_order','title').'" />';
     $result.= '<input type="hidden" name="filter_order_Dir" value="'.$orderDir.'" />';
     $result.= '</form>';
