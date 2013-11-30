@@ -48,6 +48,12 @@ namespace SewebarKey.Configurations
 			schemaExport.Create(false, true);
 		}
 
+		public void CreateDatabase(string filename)
+		{
+			var schemaExport = new SchemaExport(Configuration);
+			schemaExport.SetOutputFile(filename).Execute(false, true, false);
+		}
+
 		public void UpdateDatabase()
 		{
 			var schemaExport = new SchemaUpdate(Configuration);

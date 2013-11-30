@@ -3,9 +3,6 @@ using System.IO;
 using System.Linq;
 using LMWrapper;
 using LMWrapper.LISpMiner;
-using SewebarKey;
-using SewebarKey.Configurations;
-using SewebarKey.Repositories;
 
 namespace SewebarConsole
 {
@@ -56,6 +53,7 @@ namespace SewebarConsole
 			Console.WriteLine("\t\tcreate [nHibernate config]");
 			Console.WriteLine("\t\tupdate [nHibernate config]");
 			Console.WriteLine("\t\tinit [nHibernate config]");
+			Console.WriteLine("\t\tmigrate [nHibernate configFrom] [nHibernate configTo]");
 		}
 
 		#region LM module 
@@ -125,7 +123,7 @@ namespace SewebarConsole
 
 		private static void ManageDatabase(string command, string[] args)
 		{
-			ISessionManager databaseManager;
+			DatabaseManager databaseManager;
 
 			if (args.Length > 0)
 			{
@@ -138,61 +136,37 @@ namespace SewebarConsole
 					cfg = Path.GetFullPath((new Uri(cfg)).LocalPath);
 				}
 				
-				databaseManager = new NHibernateSessionManager(cfg);
-			}
+				databaseManager = new DatabaseManager(cfg);
+			} 
 			else
 			{
-				databaseManager = new NHibernateSessionManager();
+				databaseManager = new DatabaseManager();
 			}
 			
 			switch (command)
 			{
 				case "update":
-					databaseManager.UpdateDatabase();
+					databaseManager.Update();
 					break;
 				case "create":
-					databaseManager.CreateDatabase();
+					databaseManager.Create();
 					break;
 				case "init":
-					InitDatabase(databaseManager);
+					databaseManager.Init();
+					break;
+				case "migrate":
+					if (args.Length > 1)
+					{
+						databaseManager.Migrate(args[1]);
+					}
+					else
+					{
+						Help();
+					}
 					break;
 				default:
 					Help();
 					break;
-			}
-		}
-
-		public static void InitDatabase(ISessionManager sessionManager)
-		{
-			using (var session = sessionManager.BuildSessionFactory().OpenSession())
-			{
-				using (var tx = session.BeginTransaction())
-				{
-					IRepository repository = new NHibernateRepository(session);
-
-					var admin = repository.Query<User>()
-						.FirstOrDefault(u => u.Username == "admin") ?? new User();
-
-					admin.Username = "admin";
-					admin.Password = "sewebar";
-					admin.Email = "andrej.hazucha@vse.cz";
-					admin.Role = "admin";
-
-					repository.Save(admin);
-
-					var anon = repository.Query<User>()
-						.FirstOrDefault(u => u.Username == "anonymous") ?? new User();
-
-					anon.Username = "anonymous";
-					anon.Password = "";
-					anon.Role = "user";
-
-					repository.Save(anon);
-
-					tx.Commit();
-				}
-
-				session.Close();
 			}
 		}
 
