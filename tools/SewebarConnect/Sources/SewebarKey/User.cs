@@ -20,7 +20,7 @@ namespace SewebarKey
 
 		public virtual string Role
 		{
-			get { return _role ?? "user"; }
+			get { return string.IsNullOrEmpty(_role) ? "user" : _role; }
 			set { _role = value; }
 		}
 

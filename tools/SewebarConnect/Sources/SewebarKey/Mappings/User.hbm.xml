@@ -8,7 +8,7 @@
 		<property name="Password" column="password" type="string" />
 		<property name="Email" column="email" type="string" />
 		<property name="Role" type="string" not-null="true">
-			<column name="role" default="user" />
+			<!-- <column name="role" default="user" /> -->
 		</property>
 		<set name="Databases" inverse="true" lazy="false" cascade="all">
 			<key column="id_user"/>
