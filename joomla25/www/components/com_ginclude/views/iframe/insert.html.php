@@ -35,7 +35,7 @@ class GincludeViewInsert extends JView
     $articleParts=$model->getParts($article->id,$part);
     $result='';
     $result.= '<div style="position:relative;"><h3>'.JText::_('ARTICLE').': '.$article->title.'</h3>';
-    $result.= JText::_('SECTION').': <strong>'.$article->section.'</strong> '.JText::_('CATEGORY').': <strong>'.$article->categorie.'</strong> '.JText::_('CREATED').': <strong>'.$article->cdate.'</strong>';
+    $result.= JText::_('CATEGORY').': <strong>'.$article->categorie.'</strong> '.JText::_('CREATED').': <strong>'.$article->cdate.'</strong>';
     $result.= '<div style="position:absolute;right:5px;top:10px;"><button onclick="location.href=\'index.php?option=com_ginclude&task=articles&tmpl=component\';">'.JText::_('SELECT_OTHER_ARTICLE').'</button></div>';
     $result.= '</div>';
     
@@ -45,7 +45,7 @@ class GincludeViewInsert extends JView
     }else {
       /*nacetli jsme jednotlive sekce, tak zobrazime vyber*/
       /*strankovani*/  
-       $limit = JRequest::getVar('limit',$mainframe->getCfg(list_limit));
+       $limit = JRequest::getVar('limit',$mainframe->getCfg('list_limit'));
        $limitstart=JRequest::getVar('limitstart',0);
 
        $articles=$model->getArticles(JRequest::getInt('section',-1),JRequest::getInt('categorie',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit);
@@ -72,7 +72,7 @@ class GincludeViewInsert extends JView
       if ($part==-1){
         /*neni vybrana zadna sekce clanku -> musime vypsat info pro uzivatele*/
         $result.= '<tbody><tr><td>'.JText::_('ARTICLE_SECTION_SELECT').'</td></tr></tbody>';
-      }elseif (count($articleParts['part'])>0){
+      }elseif (count(@$articleParts['part'])>0){
         /*v dané sekci jsou vložitelné oblasti*/
         $result.= '<tbody>';
         $rowClass='row1';
