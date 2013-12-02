@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.0">
+	<name>SEWEBAR_vyuka</name>
+	<!-- The following elements are optional and free of formatting conttraints -->
+	<creationDate>January 2012</creationDate>
+	<author>Stanislav Vojíř</author>
+	<authorEmail>stanislav.vojir@vse.cz</authorEmail>
+	<authorUrl>http://www.vojir.net</authorUrl>
+	<copyright>(C) 2012 All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<!--  The version string is recorded in the components table -->
+	<version>1.0</version>
+	<!-- The description is optional and defaults to the name -->
+	<description>
+		<![CDATA[<p>Komponenta sloužící pro administraci uživatelských skupin a účtů pro výuku studentů na serveru SEWEBAR.</p>]]>
+  </description>
+  
+  <administration>
+    <!-- Administration Menu Section -->
+		<!--<menu img="components/com_helloworld02/images/helloworld02.png">Hello World 02</menu>-->
+    <menu>SEWEBAR Administration</menu>
+		<submenu>
+			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+			<menu link="option=com_sewebar_vyuka&amp;task=usergroups">User groups</menu>
+      <menu link="option=com_sewebar_vyuka&amp;task=usergroups">Users</menu>
+		</submenu>
+  	<files>
+  		<!-- install bootstrap -->
+      <filename>admin.sewebar_vyuka.php</filename>
+      <!-- install controllers -->
+      <filename>controllers/mainController.php</filename>
+      <!-- install models -->
+      <filename>models/joomladb.php</filename>
+      <!-- install views -->
+      <filename>views/usergroups/view.html.php</filename>
+      <filename>views/usergroups/tmpl/default.php</filename>
+
+  	</files>
+    
+  	<languages folder="lang">
+  		<language tag="en-GB">en-GB.com_sewebar_vyuka.ini</language>
+  		<language tag="cs-CZ">cs-CZ.com_sewebar_vyuka.ini</language>
+  	</languages>
+	</administration>
+</install>
