@@ -24,8 +24,13 @@ namespace SewebarConnect.API.Responses.Users
 		{
 			try
 			{
+				if (string.IsNullOrEmpty(Update.User.Email))
+				{
+					throw new Exception(string.Format("User '{0}' has no email to send forgotten password.", Update.User.Username));
+				}
+			
 				SendNotification();
-
+				
 				return base.GetBody();	
 			}
 			catch (Exception ex)
@@ -33,7 +38,7 @@ namespace SewebarConnect.API.Responses.Users
 				this.Status = Status.Failure;
 				this.Message = string.Format("User could not been notified because of error: {0}", ex.Message);
 
-				return base.GetBody();	
+				return base.GetBody();
 			}
 		}
 
@@ -41,9 +46,9 @@ namespace SewebarConnect.API.Responses.Users
 		{
 			var link = Update.Link.Replace("{code}", Update.Id.ToString());
 
-			var mail = new MailMessage("rewko@centrum.cz", Update.User.Email)
+			var mail = new MailMessage(From, Update.User.Email)
 			{
-				Subject = string.Format("EasyMiner forgotten password from {0}", From),
+				Subject = "EasyMiner forgotten password",
 				Body = string.Format("Click here {0}", link)
 			};
 
