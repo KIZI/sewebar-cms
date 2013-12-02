@@ -28,14 +28,14 @@
       <field name="category" type="category" default="-1"
              label="Default category" description="Výchozí kategorie - bude přednastavena při prvním otevření okna s výběrem článků..."
              extension="com_content" />
-      <field name="hide_category" type="checkbox" default="1"
+      <field name="hide_category" type="checkbox" default="1" value="1"
              label="Only default category"
               />
       <field name="filterDelete" type="radio" default="0" label="Filter delete">
           <option value="0">All articles</option>
           <option value="1">Only my articles</option>
       </field>
-      <field name="hide_filterDelete" type="checkbox" default="1"
+      <field name="hide_filterDelete" type="checkbox" default="1" value="1"
              label="Hide filter delete"
              />
       <field name="beforeCode" type="text" default="" label="Code before text" description="xHTML kód, který bude vložen před vkládaný obsah. Musí být validní v kombinaci s kódem po...!" />
