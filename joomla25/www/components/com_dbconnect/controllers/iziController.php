@@ -1125,7 +1125,7 @@ class IziController extends JController{
     
     $values=$unidbModel->getColumnValuesPreview($connection->table,$columnName,$order);
     
-    $view=&$this->getView('IziPreviewColumn',$this->document->getType());
+    $view=&$this->getView('IziColumnHistogram',$this->document->getType());
     $view->assign('columnName',$columnName);
     $view->assign('kbiId',$kbiId);
     $view->assignRef('values',$values);
@@ -1206,7 +1206,7 @@ class IziController extends JController{
       return;
 		}
     
-    $view=&$this->getView('IziPreviewAttribute',$this->document->getType());
+    $view=&$this->getView('IziAttributeHistogram',$this->document->getType());
     $view->assign('field',$field);
     $view->assign('kbiId',$kbiId);
     $view->assignRef('categoriesArr',$categoriesArr);

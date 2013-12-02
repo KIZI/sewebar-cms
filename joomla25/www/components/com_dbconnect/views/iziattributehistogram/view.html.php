@@ -1,7 +1,7 @@
 <?php
 jimport( 'joomla.application.component.view' );
                                   
-class iziViewIziPreviewColumn extends JView
+class iziViewIziAttributeHistogram extends JView
 {
 	/**
 	 * Display the view
