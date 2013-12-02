@@ -3,7 +3,7 @@
 <install type="component" version="1.0">
 	<name>SEWEBAR_vyuka</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>January 2012</creationDate>
+	<creationDate>April 2012</creationDate>
 	<author>Stanislav Vojíř</author>
 	<authorEmail>stanislav.vojir@vse.cz</authorEmail>
 	<authorUrl>http://www.vojir.net</authorUrl>
@@ -16,31 +16,111 @@
 		<![CDATA[<p>Komponenta sloužící pro administraci uživatelských skupin a účtů pro výuku studentů na serveru SEWEBAR.</p>]]>
   </description>
   
+  
+  
+  <files>
+    <filename>sewebar_vyuka.php</filename>
+    <filename>controllers/articlesController.php</filename>
+    <filename>models/admin.php</filename>
+    <filename>models/articles.php</filename>
+    <filename>models/config.php</filename>
+    <filename>views/deletearticle/metadata.xml</filename>
+    <filename>views/deletearticle/view.html.php</filename>
+    <filename>views/deletearticle/tmpl/default.php</filename>
+    <filename>views/deletearticle/tmpl/info.php</filename>
+    <filename>views/renamearticle/metadata.xml</filename>
+    <filename>views/renamearticle/view.html.php</filename>
+    <filename>views/renamearticle/tmpl/default.php</filename>
+    <filename>views/renamearticle/tmpl/info.php</filename>
+    <filename>views/myarticles/view.html.php</filename>
+    <filename>views/myarticles/tmpl/default.php</filename>
+    <filename>views/myarticles/tmpl/default.xml</filename>
+    <filename>views/newarticle/metadata.xml</filename>
+    <filename>views/newarticle/view.html.php</filename>
+    <filename>views/newarticle/tmpl/default.php</filename>
+    <filename>views/newarticle/tmpl/info.php</filename>
+    <filename>views/uploadpmmlfiles/metadata.xml</filename>
+    <filename>views/uploadpmmlfiles/view.html.php</filename>
+    <filename>views/uploadpmmlfiles/tmpl/default.php</filename>
+    <filename>views/uploadpmmlfiles2/metadata.xml</filename>
+    <filename>views/uploadpmmlfiles2/view.html.php</filename>
+    <filename>views/uploadpmmlfiles2/tmpl/default.php</filename>
+    
+ <!--   <filename>sql/install.sql</filename>
+    <filename>sql/uninstall.sql</filename>-->
+  </files>
+                                             <!--
+  <install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.sql</file>
+		</sql>
+	</install>
+  
+  <uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+		</sql>
+	</uninstall>                                   -->
+  
+  <languages folder="lang">
+		<language tag="en-GB">en-GB.com_sewebar_vyuka.ini</language>
+		<language tag="cs-CZ">cs-CZ.com_sewebar_vyuka.ini</language>
+	</languages>
+  
   <administration>
     <!-- Administration Menu Section -->
 		<!--<menu img="components/com_helloworld02/images/helloworld02.png">Hello World 02</menu>-->
-    <menu>SEWEBAR Administration</menu>
+    <menu>SEWEBAR_VYUKA</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-			<menu link="option=com_sewebar_vyuka&amp;task=usergroups">User groups</menu>
-      <menu link="option=com_sewebar_vyuka&amp;task=usergroups">Users</menu>
+			<menu link="option=com_sewebar_vyuka&amp;task=usergroups">USER_GROUPS</menu>
+      <menu link="option=com_sewebar_vyuka&amp;task=usergroups">USERS</menu>
 		</submenu>
   	<files>
-  		<!-- install bootstrap -->
-      <filename>admin.sewebar_vyuka.php</filename>
-      <!-- install controllers -->
-      <filename>controllers/mainController.php</filename>
-      <!-- install models -->
-      <filename>models/joomladb.php</filename>
-      <!-- install views -->
+  		<filename>admin.sewebar_vyuka.php</filename>
+      <filename>com_sewebar_vyuka.xml</filename>
+      <filename>controllers/adminController.php</filename>
+      <filename>helpers/content.php</filename>
+      <filename>models/admin.php</filename>
+      <filename>models/articles.php</filename>
+      <filename>models/config.php</filename>
+      <filename>views/addusersintogroup/view.html.php</filename>
+      <filename>views/addusersintogroup/tmpl/default.php</filename>
+      <filename>views/deleteusergroup/view.html.php</filename>
+      <filename>views/deleteusergroup/tmpl/default.php</filename>
+      <filename>views/info/view.html.php</filename>
+      <filename>views/info/tmpl/default.php</filename>
+      <filename>views/selectparentusergroup/view.html.php</filename>
+      <filename>views/selectparentusergroup/tmpl/default.php</filename>
+      <filename>views/selectusersusergroup/view.html.php</filename>
+      <filename>views/selectusersusergroup/tmpl/default.php</filename>
       <filename>views/usergroups/view.html.php</filename>
       <filename>views/usergroups/tmpl/default.php</filename>
-
+      <filename>views/users/view.html.php</filename>
+      <filename>views/users/tmpl/default.php</filename>
+      <filename>views/usersingroup/view.html.php</filename>
+      <filename>views/usersingroup/tmpl/default.php</filename>
   	</files>
     
   	<languages folder="lang">
   		<language tag="en-GB">en-GB.com_sewebar_vyuka.ini</language>
   		<language tag="cs-CZ">cs-CZ.com_sewebar_vyuka.ini</language>
+      <language tag="en-GB">en-GB.com_sewebar_vyuka.sys.ini</language>
+  		<language tag="cs-CZ">cs-CZ.com_sewebar_vyuka.sys.ini</language>
   	</languages>
+    
 	</administration>
+  
+   <!-- Site Main Media File Copy Section -->
+  	<media destination="com_sewebar_vyuka" folder="media">
+  		<filename>css/main.css</filename>
+      <filename>css/upload.css</filename>
+      <filename>images/add.png</filename>
+      <filename>images/delete.png</filename>
+      <filename>images/kizi_icon.png</filename>
+      <filename>images/lock.png</filename>
+      <filename>js/Form.MultipleFileInput.js</filename>
+      <filename>js/Form.Upload.js</filename>
+      <filename>js/Request.File.js</filename>
+  	</media>
 </install>
