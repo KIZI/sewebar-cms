@@ -193,9 +193,9 @@ class GincludeModel extends JModel
       $whereClause.=" AND ct.title LIKE '%".$filter."%'";
     }
     $user =& JFactory::getUser();
-                                                                                   
+
     $db->setQuery( "SELECT count(id) as pocet FROM #__content ct WHERE  $whereClause");
-    $row = $db->loadObject(); 
+    $row = $db->loadObject();
     return $row->pocet;
   }
   

@@ -36,6 +36,17 @@ class GincludeViewArticles extends JView
     /**/
     $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',1)==1));
     $total=$model->getArticlesCount(JRequest::getInt('category',-1),JRequest::getString('filter',''),false);
+
+    $limitstartOriginal=$limitstart;
+    while (empty($articles)&&($limitstart<$total-1)){
+      $limitstart+=$limit;
+      $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',1)==1));
+      if (($limitstart>$total)&&($limitstartOriginal>0)&&(empty($articles))){
+        $limitstart=-1*$limit;
+        $limitstartOriginal=0;
+      }
+    }
+
     $result='';
     
     jimport('joomla.html.pagination');
