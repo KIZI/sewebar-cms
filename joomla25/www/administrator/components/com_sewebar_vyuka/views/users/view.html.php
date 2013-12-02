@@ -6,7 +6,7 @@ jimport( 'joomla.application.component.view' );
  * @package Joomla
  * @subpackage Config
  */
-class adminViewUserGroups extends JView
+class adminViewUsers extends JView
 {
 	/**
 	 * Display the view
@@ -15,7 +15,7 @@ class adminViewUserGroups extends JView
 	{
 		//DEVNOTE: set document title
 		$document = & JFactory::getDocument();
-		$document->setTitle( JText::_('USER_GROUPS') );
+		$document->setTitle( JText::_('USERS') );
 
     //TOOLBAR, CSS
     JHTML::_('behavior.modal');
@@ -28,8 +28,9 @@ class adminViewUserGroups extends JView
     
     $adminModel=$this->getModel('Admin','sewebarModel');  
                                         
-    $userGroups=$adminModel->getUserGroups($this->parentUserGroup->id,true);   
-    $this->assignRef('userGroups',$userGroups); 		
+    $userGroups=$adminModel->usersInGroup($this->parentUserGroup->id);   
+    $this->assignRef('users',$userGroups); 		
+    $this->assignRef("adminModel",$adminModel);
 
 		//DEVNOTE:call parent display
     parent::display();		
