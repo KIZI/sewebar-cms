@@ -1,0 +1,64 @@
+/* CSS Document */
+
+.icon-48-sewebar_vyuka{
+  background: url('../images/kizi_icon.png') 0 0 no-repeat;
+}
+
+table.myAdminTable {
+  border-spacing: 0px;
+  border: 1px dotted #cccccc ;
+  border-bottom: none ;
+}
+table.myAdminTable td,table.myAdminTable th{
+  padding: 5px 7px ;
+  border-bottom: 1px dotted #cccccc;;
+  text-align: left;
+}
+table.myAdminTable th{
+  background: #f7f7f7;
+}
+table.myAdminTable tr{
+  background: white;
+}
+table.myAdminTable tr.row1{
+  background:#f0f0f0;
+}
+table.myAdminTable tr:hover{
+  background:rgb(232,246,254)
+}
+table.myAdminTable th{
+  color:rgb(23,101,152);
+}
+
+table.myAdminTable td.actionsTd a,a.button,input.button{
+  display: inline-block;
+  border: 1px solid #cccccc;
+  padding: 2px 4px;
+  text-decoration: none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  background: #f7f7f7;
+  color: rgb(2,90,141);
+  font-size: 12px;
+}
+
+table.myAdminTable td.actionsTd a:hover,a.button:hover,input.button:hover{
+  border: 1px solid rgb(2,90,141);
+  text-decoration: none;
+  color: rgb(2,90,141);
+  
+}
+
+.usersTextArea{
+  min-width: 500px;
+  max-width: 500px;
+  min-height: 150px;
+  max-height: 400px;
+}
+.groupsTextArea{
+  min-width: 300px;
+  max-width: 300px;
+  min-height: 150px;
+  max-height: 400px;
+}
