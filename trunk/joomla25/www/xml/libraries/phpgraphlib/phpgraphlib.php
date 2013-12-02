@@ -149,25 +149,27 @@ class PHPGraphLib {
 	var $legend_swatch_outline_color;
 	var $legend_color;
 	var $legend_titles = array();
-	function PHPGraphLib($width = '', $height = '', $output_file = NULL) {
+	function PHPGraphLib($width = '', $height = '', $output_file = NULL) { 
 		if (!empty($width) && !empty($height)) {
 			$this->width = $width;
 			$this->height = $height;
-		}
+		}                                 
 		$this->output_file = $output_file;
-		$this->initialize();
+		$this->initialize();                  
 		$this->allocateColors(); //sets default colors	
 	}
-	function initialize() {
+	function initialize() {                       
 		//header must be sent before any html or blank space output
-		if (!$this->output_file){ header("Content-type: image/png"); }
-		$this->image = @imagecreate($this->width, $this->height)
-			or die("Cannot Initialize new GD image stream - Check your PHP setup");
+		
+		$this->image = imagecreate($this->width, $this->height) ;
+    if (!$this->output_file){ header("Content-type: image/png"); }     
+       
+       
 		$this->data_point_array = array();
 		$this->goal_line_array = array();
 		$this->multi_bar_colors = array();
 		$this->multi_gradient_colors_1 = array();
-		$this->multi_gradient_colors_2 = array();
+		$this->multi_gradient_colors_2 = array();   
 		//these values are now arrays
 		$this->gradient_handicap = array();
 		$this->bool_gradient_colors_found = array();
