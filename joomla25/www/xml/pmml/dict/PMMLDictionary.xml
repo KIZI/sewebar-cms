@@ -16,6 +16,10 @@
         <str lang="en">Four field contingency table</str>
         <str lang="cs">Čtyřpolní tabulka</str>
     </Entry>
+    <Entry id="14">
+        <str lang="en">selected rule</str>
+        <str lang="cs">vybrané pravidlo</str>
+    </Entry>
 
     <Entry id="20">
         <str lang="en">This document contains automatically generated report of a data mining task. It is a task that
