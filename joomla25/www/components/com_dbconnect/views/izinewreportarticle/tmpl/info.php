@@ -13,9 +13,6 @@ echo '<div id="iziDiv">';
   }
   echo '</div>';
   echo '<div class="center" style="margin-top:20px;">';
-  if (($this->result=='ok')&&(isset($this->editUrl))){
-    echo '<a href="'.$this->editUrl.'" class="bigButton" target="_blank">'.JText::_('EDIT_ARTICLE').'</a>';
-  }
   echo '  <a class="bigButton" href="javascript:parent.reloadReports();parent.close();">OK</a>
         </div>';
 echo '</div>';              

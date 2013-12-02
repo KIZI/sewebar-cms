@@ -128,7 +128,7 @@
         $db->query();
         $parentAsset=$db->loadObject();
         //budeme ukládat
-        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`catid`,`created`,`created_by`,`modified`,`modified_by`,`access`) VALUES('.$db->quote($title).','.$db->quote($this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($categoryId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).',1);');
+        $db->setQuery('INSERT INTO #__content (`title`,`alias`,`introtext`,`state`,`catid`,`created`,`created_by`,`modified`,`modified_by`,`access`) VALUES('.$db->quote($title).','.$db->quote(date('U').'-'.$userId.'-'.$this->seoUrl($title)).','.$db->quote($data).',1,'.$db->quote($categoryId).',NOW(),'.$db->quote($userId).',NOW(),'.$db->quote($userId).',1);');
         if ($db->query()){
           $articleId=$db->insertid();
           //vyřešení ASSETS //TODO dodělat možnost příslušenství ke skupině (kvůli výuce)

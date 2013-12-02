@@ -1,4 +1,4 @@
-<?php
+<?php                 
 
 define('INPUT_ENCODING','utf-8');
 define('OUTPUT_ENCODING','iso-8859-2');
@@ -10,7 +10,7 @@ $val = $_GET['val'];
 $lab = iconv(INPUT_ENCODING,OUTPUT_ENCODING,$_GET['lab']);
 $other = (isset($_GET['other']) && $_GET['other']) ? 
 	iconv(INPUT_ENCODING,OUTPUT_ENCODING,$_GET['other']) : NULL;
-
+                          
 $barWidth = 50;
 $maxWidth = 640;
 //offset of "sliding" subset to display
@@ -92,9 +92,9 @@ print_r(array(
 echo '</pre>';
 exit;
 */
-
-include("phpgraphlib.php");
-$graph=new PHPGraphLib($w,$h);
+                   
+require("phpgraphlib.php");  
+$graph=new PHPGraphLib($w,$h);  
 $graph->addData($data);
 $graph->setTitle($title);
 
