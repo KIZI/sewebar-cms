@@ -45,10 +45,12 @@ class plgButtonGinclude extends JPlugin
 		//Zpracování parametrů pluginu
 		$title 	   = $this->params->get( 'title', 'ginclude' );
 		$category = $this->params->get( 'category', -1 );
+
     $_SESSION['ginclude']['hide_filterDelete']=$this->params->get('hide_filterDelete',0);
     $_SESSION['ginclude']['filterDelete']=$this->params->get('filterDelete',0);
 		if ($category>0){
       $_SESSION['ginclude']['category']=$category;
+      $_SESSION['ginclude']['default_category']=$category;
       $_SESSION['ginclude']['hide_category']=$this->params->get('hide_category',0);
     }
     
