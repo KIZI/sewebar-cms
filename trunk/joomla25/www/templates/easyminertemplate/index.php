@@ -75,6 +75,7 @@ JHTML::_('behavior.framework', true);
           <jdoc:include type="modules" name="breadcrumb"  style="none"/>
         </div>
       <?php } ?>
+      <jdoc:include type="message" />
       <jdoc:include type="component" />
     </div>
   </div>

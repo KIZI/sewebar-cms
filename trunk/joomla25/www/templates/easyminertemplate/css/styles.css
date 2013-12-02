@@ -239,7 +239,7 @@ div#main{
     width: 695px;
     padding: 20px 30px;
     margin:0;
-    background:white;s
+    background:white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
@@ -559,4 +559,107 @@ table.listTable td,table.listTable th{
 table.listTable th{
   background:#4093C7;
   color:white;
+}
+
+/*system messages*/
+
+#system-message
+{
+    margin:10px 0 20px 0;
+    border-left:0;
+    border-right:0;
+    position: relative;
+}
+
+#system-message dt
+{
+    font-weight: bold;
+    display: none !important;
+}
+#system-message dd
+{
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    text-indent: 0px;
+    padding:0
+}
+#system-message dd ul
+{
+    color: #000;
+    list-style: none;
+    padding: 0px;
+}
+#system-message dd ul li
+{
+    line-height:1.5em
+}
+
+/* System Standard Messages */
+
+#system-message dd.message  ul
+{
+    background: rgb(215,221,193); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  rgba(215,221,193,1) 0%, rgba(239,244,222,1) 44%, rgba(250,255,239,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(215,221,193,1)), color-stop(44%,rgba(239,244,222,1)), color-stop(100%,rgba(250,255,239,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  rgba(215,221,193,1) 0%,rgba(239,244,222,1) 44%,rgba(250,255,239,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  rgba(215,221,193,1) 0%,rgba(239,244,222,1) 44%,rgba(250,255,239,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  rgba(215,221,193,1) 0%,rgba(239,244,222,1) 44%,rgba(250,255,239,1) 100%); /* IE10+ */
+    background: linear-gradient(135deg,  rgba(215,221,193,1) 0%,rgba(239,244,222,1) 44%,rgba(250,255,239,1) 100%); /* W3C */
+
+    padding: 10px 10px 10px 20px;
+    border-top: 1px solid #90B203;
+    border-bottom: 1px solid #90B203;
+    color:rgb(0,40,0);
+}
+
+#system-message dd.message ul li{background:none !important}
+
+/* System Error Messages */
+
+#system-message dd.error ul
+{
+    background: rgb(255,127,127); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  rgba(255,127,127,1) 0%, rgba(253,209,209,1) 45%, rgba(253,241,241,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,127,127,1)), color-stop(45%,rgba(253,209,209,1)), color-stop(100%,rgba(253,241,241,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  rgba(255,127,127,1) 0%,rgba(253,209,209,1) 45%,rgba(253,241,241,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  rgba(255,127,127,1) 0%,rgba(253,209,209,1) 45%,rgba(253,241,241,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  rgba(255,127,127,1) 0%,rgba(253,209,209,1) 45%,rgba(253,241,241,1) 100%); /* IE10+ */
+    background: linear-gradient(135deg,  rgba(255,127,127,1) 0%,rgba(253,209,209,1) 45%,rgba(253,241,241,1) 100%); /* W3C */
+
+    padding: 10px 10px 10px 20px;
+    border-top: 1px solid #990000;
+    border-bottom: 1px solid #990000;
+    color:#200000;
+}
+
+
+
+/* System Notice Messages */
+
+#system-message dd.notice  ul
+{
+    background: rgb(249,216,169); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  rgba(249,216,169,1) 0%, rgba(254,252,234,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(249,216,169,1)), color-stop(100%,rgba(254,252,234,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  rgba(249,216,169,1) 0%,rgba(254,252,234,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  rgba(249,216,169,1) 0%,rgba(254,252,234,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  rgba(249,216,169,1) 0%,rgba(254,252,234,1) 100%); /* IE10+ */
+    background: linear-gradient(135deg,  rgba(249,216,169,1) 0%,rgba(254,252,234,1) 100%); /* W3C */
+
+    padding: 10px 10px 10px 20px;
+    border-top: 1px solid #FAA528;
+    border-bottom: 1px solid #FAA528;
+}
+#system-message dd.notice ul { color: #000;margin:10px 0 }
+
+#system-message
+{
+    margin-bottom: 0px;
+    padding: 0;
+}
+
+#system-message dd
+{
+    font-weight: bold;
+    padding: 0;
 }
