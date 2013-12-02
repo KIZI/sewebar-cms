@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="SHOW_USERGROUPS_ARTICLES">
+		<message>
+			<![CDATA[]]>
+		</message>
+	</layout>
+	
+	<state>
+		<name>SHOW_USERGROUPS_ARTICLES</name>
+		<description></description>
+	</state>
+	
+	<config>
+ 		<fields name="params">
+ 			<fieldset name="basic" label="Component options">
+          <field name="reportsCategory" extension="com_content" type="category" default="" label="Category - Analytical reports" description="Articles category for analytical reports" />
+          <field name="pmmlCategory" extension="com_content" type="category" default="" label="Category - PMML" description="Articles category for PMML data" />
+ 			</fieldset>
+ 		</fields>
+ 	</config>
+ 	
+</metadata>
