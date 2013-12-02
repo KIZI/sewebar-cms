@@ -33,7 +33,11 @@
       <p class="ruleText">
         <!-- Rule has format: Antecedent => Consequent
         -->
-        <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arText,'start')"/></xsl:comment>
+        <xsl:variable name="arTextWithNumber">
+            <xsl:copy-of select="keg:translate('Rule',12)"/> <xsl:value-of select="$rulePos"/><xsl:if test="$ruleClass='selectedRule'"><xsl:text> - </xsl:text><xsl:value-of select="keg:translate('selected rule',14)"/></xsl:if><xsl:text>: </xsl:text><xsl:copy-of select="$arText"/>
+        </xsl:variable>
+
+        <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arTextWithNumber,'start')"/></xsl:comment>
         <xsl:copy-of select="$arText"/>
         <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arText,'end')"/></xsl:comment>
       </p>
