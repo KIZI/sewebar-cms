@@ -133,9 +133,9 @@
           $articleId=$db->insertid();
           //vyřešení ASSETS //TODO dodělat možnost příslušenství ke skupině (kvůli výuce)
           if ($accessRights=='edit'){
-            $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}';
+            $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}}';
           }elseif($accessRights=='delete'){
-            $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":0},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}';
+            $rights='{"core.delete":{"'.self::DEFAULT_USER_GROUP.'":1},"core.edit":{"'.self::DEFAULT_USER_GROUP.'":0},"core.edit.state":{"'.self::DEFAULT_USER_GROUP.'":0}}';
           }else{
             $rights="{}";
           }
