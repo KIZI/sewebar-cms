@@ -14,8 +14,12 @@
 	<config>
  		<fields name="params">
  			<fieldset name="basic" label="Component options">
-          <field name="reportsCategory" extension="com_content" type="category" default="" label="Category - Analytical reports" description="Articles category for analytical reports" />
-          <field name="pmmlCategory" extension="com_content" type="category" default="" label="Category - PMML" description="Articles category for PMML data" />
+                <field name="reportsCategory" extension="com_content" type="category" default="" label="Category - Analytical reports" description="Articles category for analytical reports" />
+                <field name="pmmlCategory" extension="com_content" type="category" default="" label="Category - PMML" description="Articles category for PMML data" />
+                <field name="filterArticles" type="radio" label="Filter articles" default="0">
+                    <option value="0">Don´t filter</option>
+                    <option value="1">User is author</option>
+                </field>
  			</fieldset>
  		</fields>
  	</config>

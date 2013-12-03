@@ -46,13 +46,13 @@ class GincludeViewArticles extends JView
         }
       }
     /**/
-    $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',0)==1));
-    $total=$model->getArticlesCount(JRequest::getInt('category',-1),JRequest::getString('filter',''),false);
+    $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',0)==1),(JRequest::getInt('filterDelete',0)==2));
+    $total=$model->getArticlesCount(JRequest::getInt('category',-1),JRequest::getString('filter',''),false,(JRequest::getInt('filterDelete',0)==2));
 
     $limitstartOriginal=$limitstart;
     while (empty($articles)&&($limitstart<$total-1)){
       $limitstart+=$limit;
-      $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',0)==1));
+      $articles=$model->getArticles(JRequest::getInt('category',-1),JRequest::getString('filter',''),JRequest::getCmd('filter_order','title'),JRequest::getCmd('filter_order_Dir','asc'),$limitstart,$limit,false,(JRequest::getInt('filterDelete',0)==1),(JRequest::getInt('filterDelete',0)==2));
       if (($limitstart>$total)&&($limitstartOriginal>0)&&(empty($articles))){
         $limitstart=-1*$limit;
         $limitstartOriginal=0;
@@ -72,14 +72,15 @@ class GincludeViewArticles extends JView
     if ($orderDir=='asc'){$orderDir2='desc';}else{$orderDir2='asc';}
     $result.= '<div style="position:relative;">'.JText::_(FILTER).': <input type="text" name="filter" value="'.JRequest::getString('filter','').'" id="filter" /><button onclick="this.form.submit();">OK</button><button onclick="document.getElementById(\'filter\').value=\'\';this.form.submit();">Reset</button>';
     $result.= '<div style="display:inline;position:absolute;right:5px;top:2px;">';
-    if (isset($_SESSION['ginclude']['hide_filterDelete'])&&($_SESSION['ginclude']['filterDelete']==1)){
+    if (isset($_SESSION['ginclude']['hide_filterDelete'])&&(($_SESSION['ginclude']['filterDelete']==1)||($_SESSION['ginclude']['filterDelete']==2))){
       //mame skryt filtr
       $result.='<input type="hidden" name="filterDelete" value="'.JRequest::getInt('filterDelete',0).'" />';
     }else{
       //mame zobrazit filtr
       $result.= '<select name="filterDelete" onchange="document.adminForm.submit();">
                    <option value="0" '.((JRequest::getInt('filterDelete',0)==0)?'selected="selected"':'').'>'.JText::_('ALL_ARTICLES').'</option>
-                   <option value="1" '.((JRequest::getInt('filterDelete',0)==1)?'selected="selected"':'').'>'.JText::_('ONLY_MY_ARTICLES').'</option>
+                   <option value="1" '.((JRequest::getInt('filterDelete',0)==1)?'selected="selected"':'').'>'.JText::_('ACCESSIBLE_ARTICLES').'</option>
+                   <option value="2" '.((JRequest::getInt('filterDelete',0)==2)?'selected="selected"':'').'>'.JText::_('I_AM_AUTHOR').'</option>
                  </select>';
     }
 

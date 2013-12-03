@@ -60,14 +60,17 @@
     /**
      *  Funkce vracející hodnotu konkrétní položky
      */         
-    public function getArticlesInCategory($categoryId=-1,$editor=true,$canDelete=true){          
+    public function getArticlesInCategory($categoryId=-1,$editor=true,$canDelete=true,$isAuthor=false){
       $db = & JFactory::getDBO();
       $user =& JFactory::getUser();
-                                                              
+
       //nastavení where částí SQL dotazu
       $whereClause="(state>=0) AND (".$this->getAccessWhereSql('ct').")";
       if ($categoryId>-1){
         $whereClause.=" AND (ct.catid='".$categoryId."')";
+      }
+      if ($isAuthor){
+        $whereClause.=' AND (ct.created_by="'.$user->id.'" OR ct.modified_by="'.$user->id.'")';
       }
       //                       
       $db->setQuery("SELECT ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,date_format(ct.modified, '%d.%m.%y %h:%i') as mdate,cat.title as categoryTitle,ct.checked_out FROM #__content ct LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE $whereClause");
