@@ -24,13 +24,14 @@ class articlesViewMyarticles extends JView
     $articlesModel=$this->getModel('Articles','sewebarModel');
     
     $mainframe=JFactory::getApplication();
-    $params=$mainframe->getParams();           
+    $params=$mainframe->getParams();
+    $userIsAuthor=$params->get('filterArticles');
 
     $reportsCategory=$params->get('reportsCategory');                                                                                                     
-    $this->assignRef('reportsArticles',$articlesModel->getArticlesInCategory($reportsCategory,true));
+    $this->assignRef('reportsArticles',$articlesModel->getArticlesInCategory($reportsCategory,true,false,$userIsAuthor));
     $this->assign('reportsCategory',$reportsCategory);
     $pmmlCategory=$params->get('pmmlCategory');
-    $this->assignRef('pmmlArticles',$articlesModel->getArticlesInCategory($pmmlCategory,false,true));
+    $this->assignRef('pmmlArticles',$articlesModel->getArticlesInCategory($pmmlCategory,false,true,$userIsAuthor));
     $this->assign('pmmlCategory',$pmmlCategory);
     
 		//DEVNOTE:call parent display

@@ -133,7 +133,7 @@ class GincludeModel extends JModel
   /**
    *  Funkce vracející seznam článků jako výstupní listObject databázového dotazu 
    */ 
-  function getArticles($category,$filter,$order,$order_dir,$limitstart,$limit,$editor=false,$filterEditorDelete=false){
+  function getArticles($category,$filter,$order,$order_dir,$limitstart,$limit,$editor=false,$filterEditorDelete=false,$isAuthor=false){
     $db = & JFactory::getDBO();
     $user =& JFactory::getUser();
   
@@ -144,6 +144,11 @@ class GincludeModel extends JModel
     }
     if ($filter!=''){
       $whereClause.=" AND ct.title LIKE '%".$filter."%'";
+    }
+    if ($isAuthor){
+      //filtrujeme články, u kterých je uživatel autorem
+      $user =& JFactory::getUser();
+      $whereClause.=' AND (ct.created_by="'.$user->id.'" OR ct.modified_by="'.$user->id.'")';
     }
     //
     $db->setQuery("SELECT ct.title,ct.id,date_format(ct.created, '%d.%m.%y %h:%i') as cdate,cat.title as categoryTitle,ct.checked_out FROM #__content ct LEFT JOIN #__categories cat ON ct.catid=cat.id WHERE $whereClause order by $order $order_dir",$limitstart,$limit);
@@ -181,7 +186,7 @@ class GincludeModel extends JModel
   /**
    *  Funkce vracející počet článků odpovídajících vybranému filtru
    */       
-  function getArticlesCount($category,$filter,$editor=false){
+  function getArticlesCount($category,$filter,$editor=false,$isAuthor=false){
     $db = & JFactory::getDBO();
     
     //nastavení where částí SQL dotazu
@@ -192,7 +197,12 @@ class GincludeModel extends JModel
     if ($filter!=''){
       $whereClause.=" AND ct.title LIKE '%".$filter."%'";
     }
-    $user =& JFactory::getUser();
+    if ($isAuthor){
+      //filtrujeme články, u kterých je uživatel autorem
+      $user =& JFactory::getUser();
+      $whereClause.=' AND (ct.created_by="'.$user->id.'" OR ct.modified_by="'.$user->id.'")';
+    }
+
 
     $db->setQuery( "SELECT count(id) as pocet FROM #__content ct WHERE  $whereClause");
     $row = $db->loadObject();
