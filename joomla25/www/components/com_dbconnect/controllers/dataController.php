@@ -6,7 +6,6 @@ jimport( 'joomla.application.component.controller' );
  */  
 class DataController extends JController{
   var $document;
-  const DEFAULT_IZI_EXPORT_TEMPLATE='4ftMiner.Task.Template.PMML';//TODO aktualizace exportni sablony
 
   /**
    * Akce pro smazání článku
@@ -428,6 +427,18 @@ class DataController extends JController{
 		  $errorMessage=$e->getMessage();	
 	  }
     $this->outputJSON(array('result'=>'error','message'=>$errorMessage));
+  }
+
+  /**
+   * Akce pro zobrazení jednoduché infostránky
+   */
+  public function showInfo(){
+    //TODO zobrazení view se zprávou pro uživatele
+    //TODO messages: GENERATING_TASK_DETAILS,GENERATING_TASK_DETAILS_FAILED
+    //zobrazíme view s přehledem
+    $view=&$this->getView('ShowInfo','html');
+    $view->assign('message',JText::_(JRequest::getString('message')));
+    $view->display();
   }
   
   /**
