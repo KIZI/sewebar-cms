@@ -39,7 +39,7 @@
 
         <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arTextWithNumber,'start')"/></xsl:comment>
         <xsl:copy-of select="$arText"/>
-        <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arText,'end')"/></xsl:comment>
+        <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRule',$arTextWithNumber,'end')"/></xsl:comment>
       </p>
       <div id="arb{position()}" class="hidden">
         <xsl:text disable-output-escaping="yes">&lt;!--[CDATA[</xsl:text>
