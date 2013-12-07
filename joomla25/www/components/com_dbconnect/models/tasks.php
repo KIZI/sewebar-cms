@@ -70,7 +70,7 @@ class dbconnectModelTasks extends JModel
   /**
    *  Funkce pro vypsání všech záznamů pro aktuálního/všechny uživatele
    */     
-  public function getTasks($orderBy='id'){
+  public function getTasks($orderBy='id DESC'){
     $db=$this->getDBO();
     $user=&JFactory::getUser();
     $db->setQuery("SELECT * FROM #__dbconnect_tasks WHERE uid='".$user->get('id')."' ORDER BY $orderBy;");
