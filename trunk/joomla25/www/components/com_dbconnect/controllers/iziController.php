@@ -58,7 +58,7 @@ class IziController extends JController{
                                         
     $tasksModel=&$this->getModel('Tasks','dbconnectModel'); 
                                           
-    $order=JRequest::getVar('order','id');
+    $order=JRequest::getVar('order','id DESC');
     $tasks=$tasksModel->getTasks($order);
   	$view->assignRef('tasks',	$tasks);                   
     
