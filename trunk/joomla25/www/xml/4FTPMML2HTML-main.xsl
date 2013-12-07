@@ -39,7 +39,7 @@
        Document header
        =============== -->
        <!-- uses: 4FTPMML2HTML-header -->
-    <h1><xsl:copy-of select="keg:translate('Description of Data Mining Task', 10)"/> „<xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName | /p:PMML/guha:Ac4ftModel/@modelName | /p:PMML/guha:CFMinerModel/@modelName"/>“</h1>
+    <h1><xsl:copy-of select="keg:translate('Description of Data Mining Task', 10)"/><!-- „<xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName | /p:PMML/guha:SD4ftModel/@modelName | /p:PMML/guha:Ac4ftModel/@modelName | /p:PMML/guha:CFMinerModel/@modelName"/>“--></h1>
     <p>
       <xsl:choose>
         <xsl:when test="/p:PMML/guha:SD4ftModel">

@@ -433,8 +433,6 @@ class DataController extends JController{
    * Akce pro zobrazení jednoduché infostránky
    */
   public function showInfo(){
-    //TODO zobrazení view se zprávou pro uživatele
-    //TODO messages: GENERATING_TASK_DETAILS,GENERATING_TASK_DETAILS_FAILED
     //zobrazíme view s přehledem
     $view=&$this->getView('ShowInfo','html');
     $view->assign('message',JText::_(JRequest::getString('message')));
