@@ -86,7 +86,7 @@ JHTML::_('behavior.framework', true);
     <jdoc:include type="modules" name="copyright"/>
     <div id="footerText">
       <?php if ($this->params->get( 'footerdisable' )){ ?><?php echo $footertext; ?><?php } ?>
-      Copyright &copy; KIZI, University of Economics, Prague, 2013<?php $year=date('Y');if ($year>2013){echo '&nbsp;-&nbsp;'.$year;}?>
+      Copyright &copy; <a href="http://kizi.vse.cz" title="Department of Information and Knowledge Engineering">KIZI</a>, <a href="http://www.vse.cz">University of Economics</a>, Prague, 2013<?php $year=date('Y');if ($year>2013){echo '&nbsp;-&nbsp;'.$year;}?>
     </div>
   </footer>
 
