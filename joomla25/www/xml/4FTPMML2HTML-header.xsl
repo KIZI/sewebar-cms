@@ -13,7 +13,7 @@
               <th colspan="2"><xsl:copy-of select="keg:translate('Task Metadata',140)"/></th>
           </tr>
           <tr>
-              <td align="right"><xsl:copy-of select="keg:translate('Task name',150)"/> </td>
+              <td align="right"><xsl:copy-of select="keg:translate('Task ID',150)"/>: </td>
               <td><i><xsl:value-of select="/p:PMML/guha:AssociationModel/@modelName"/>
                   <xsl:value-of select="/p:PMML/guha:SD4ftModel/@modelName"/>
                   <xsl:value-of select="/p:PMML/guha:Ac4ftModel/@modelName"/>

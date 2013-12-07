@@ -88,8 +88,8 @@
         <str lang="cs">Metadata úlohy</str>
     </Entry>
     <Entry id="150">
-        <str lang="en">Task name</str>
-        <str lang="cs">Jméno úlohy</str>
+        <str lang="en">Task ID</str>
+        <str lang="cs">ID úlohy</str>
     </Entry>
     <Entry id="160">
         <str lang="en">Software used</str>
