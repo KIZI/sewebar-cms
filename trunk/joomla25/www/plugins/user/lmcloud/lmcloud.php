@@ -89,22 +89,24 @@ class plgUserLmcloud extends JPlugin
             $session->set('user', array('username' => $username, 'password' => self::encodePassword($user['username'], $user['password_clear'])), 'sewebar');
           }
         } else {
-          $confirmPasswordChangeLink=JRoute::_('index.php?option=com_dbconnect&controller=izi&task=confirmPasswordChange&user='.base64_encode($user['username']).'&code={code}',false);
+          $confirmPasswordChangeLink=JRoute::_(JURI::root().'index.php?option=com_dbconnect&controller=izi&task=confirmPasswordChange&user='.urlencode(base64_encode($user['username'])).'&code={code}',false);
           //měníme heslo jinému uživateli
-          $kbi->updateOtherUser(
+
+          $result=$kbi->updateOtherUser(
             $username,
             $username,
-            self::encodePassword($user['username'],
-              $user['password_clear']),
+            self::encodePassword($user['username'],$user['password_clear']),
             $user['email'],
             $this->params->get('email_from'),
             $confirmPasswordChangeLink
           );
-          JError::raiseNotice(JText::_('PASSWORD_CONFIRM_REQUEST_MAIL'));
+          JError::raiseNotice(100,JText::_('PASSWORD_CONFIRM_REQUEST_MAIL'));
         }
       }
     } catch (Exception $e) {
-      JError::raiseWarning(JText::_('PASSWORD_CHANGE_FAILED'));
+      var_dump($e);
+      exit('error');
+      JError::raiseWarning(100,JText::_('PASSWORD_CHANGE_FAILED'));
     }
   }
 

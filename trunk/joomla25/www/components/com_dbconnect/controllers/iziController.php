@@ -1372,7 +1372,7 @@ class IziController extends JController{
       $application = JFactory::getApplication();
       $application->enqueueMessage(JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_DONE'));
     }else{
-      JError::raiseWarning(JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_FAILED'));
+      JError::raiseWarning(100,JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_FAILED'));
     }
   }
 }
