@@ -17,7 +17,8 @@ JHTML::_('behavior.framework', true);
 <head>
   <jdoc:include type="head" />
     <!--<link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/basicTemplate.css" type="text/css" />-->
-    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/styles.css" type="text/css" media="screen,projection"/>
+  <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/print.css" type="text/css" media="print" />
   <!-- google analytics -->
   <?php
    /*if ($this->params->get( 'analyticsdisable' )){ ?>

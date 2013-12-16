@@ -128,47 +128,29 @@ ol {
 dd {
     margin: 0 0 0 40px;
 }
-   /*
+/*
 ::-moz-selection {
-    background: #fe57a1;
-    color: #fff;
-    text-shadow: none;
+ background: #fe57a1;
+ color: #fff;
+ text-shadow: none;
 }
 ::selection {
-    background: #fe57a1;
-    color: #fff;
-    text-shadow: none;
+ background: #fe57a1;
+ color: #fff;
+ text-shadow: none;
 }          */
 
-html{
-    height: 100%;
-}
 
 body{
-    min-height: 100%;
-    overflow: auto;
     position: relative;
     padding: 0;
     margin: 0;
     font-size: 15px;
     font-family: "Helvetica Neue",helvetica,sans-serif;
-    /*
-        display: -moz-box;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-                          /*
-        -moz-box-align: stretch;
-        -webkit-box-align: stretch;
-        -ms-flex-align: stretch;
-        -webkit-align-items: stretch;
-        align-items: stretch;   */
-    background:url(../images/bg-body.jpg) repeat top left  #2D83BE;
 }
 body.contentpane{
-  background: white;
-  min-height: 100px;
+    background: white;
+    min-height: 100px;
 }
 
 body * {
@@ -186,16 +168,15 @@ div#body{
 }
 
 p{
-  text-align: justify;
-  margin:5px 0 10px 0;
+    text-align: justify;
+    margin:5px 0 10px 0;
 }
 
 header.page{
-    background: green;
     height:146px;
     display: block;
-    background: url(../images/bg-header.png) repeat-x top #064f7c;
     margin-bottom: 10px;
+    border-bottom: 2px solid #064F7A;
 }
 header.page div.content{
     width: 1050px;
@@ -204,18 +185,17 @@ header.page div.content{
 }
 header.page h1{
     font-family: 'Average',serif !important;
-    color: white;
+    color: #064F7A;
     margin: 0;
     font-weight: normal;
     padding: 0;
-    font-size: 54px;
+    font-size: 64px;
     position: absolute;
     left:15px;
-    top:38px;
-    cursor: pointer;
+    top:0;
 }
 header.page h1 .slogan{
-    font-size: 20px;
+    font-size: 24px;
     display: block;
 }
 
@@ -237,55 +217,34 @@ a{
     color:#6d87ba;
     text-decoration: none;
 }
-a:hover{
-    text-decoration: underline;
-}
+
 div#right{
-    float:right;
-    width:280px;
-    min-height:100px;
+    display: none;
 }
 div#main{
-    float: left;
     position: relative;
     z-index: 4;
-    width: 695px;
     padding: 20px 30px;
     margin:0;
     background:white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     color: #434343;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 div#footerPad{
     clear: both;
-    height:65px
+    /*height:65px;*/
 }
 footer.page{
-    position: absolute;
-    bottom:0;
-    left:0;
-    width:100%;
-    padding: 15px 0 20px 0;
-    font-size: 12px;
-    color: black;
-    text-align: center;
-    background: #ededed;
+    padding: 15px 0 0 0;
+    font-size: 10px;
+    color: gray;
+    text-align: right;
     display: block;
-    margin: 0px;
-    width:100%;
-    text-align: center;
+    margin: 0;
+    border-top:2px solid #064F7A;
 }
 footer.page a{
-    color: black;
+    color: gray;
     text-decoration: none;
-}
-footer.page a:hover{
-    text-decoration: underline;
 }
 
 article.item-page{
@@ -324,8 +283,8 @@ h3{
     margin: 10px 0;
 }
 ul li, ol li{
-  margin-bottom: 5px;
-  text-align: justify;
+    margin-bottom: 5px;
+    text-align: justify;
 }
 div#right aside{
     /*TODO*/
@@ -350,14 +309,9 @@ article.item-page hgroup h2{
 }
 
 div.buttonheading{
-    float:right;
-    margin: 10px;
-    position: relative;
+    display: none;
 }
-div.buttonheading div{
-    float: right;
-    margin-left: 10px;
-}
+
 article.item-page footer{
     color:gray;
     font-size: 11px;
@@ -368,31 +322,7 @@ article.item-page header .iteminfo{
     color: gray;
     font-size: 12px;
 }
-div#right nav,div#right aside{
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    color: #434343;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-div#right nav ul{
-    margin: 0;
-    padding: 10px 0px;
-}
-div#right nav ul li{
-    display: block;
-    padding: 5px 25px;
-}
-div#right nav ul li.current a{
-    color: black;
-}
-div#right nav ul li.current a:hover{
-    text-decoration: none;
-}
+
 .topRight{
     position: absolute;
     right: 15px;
@@ -400,16 +330,16 @@ div#right nav ul li.current a:hover{
 }
 
 .tip {
-   background: rgb(255,255,204);
-   border: 1px solid #AAA;
-   padding:5px;
+    background: rgb(255,255,204);
+    border: 1px solid #AAA;
+    padding:5px;
 }
 .tip-title {
-   font-weight: bold;
-   font-size:12px;
+    font-weight: bold;
+    font-size:12px;
 }
 .tip-text {
-  font-size:10px;
+    font-size:10px;
 }
 
 ul.actions{
@@ -426,21 +356,21 @@ ul.actions li{
 }
 
 input.button, a.button,button,input[type='submit'],input[type='button']{
-  border:1px solid #075783;
-  font-family: sans-serif;
-  font-size: 13px;
-  color: white;
-  padding:5px 10px;
-  background:#075783;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  cursor: pointer;
+    border:1px solid #075783;
+    font-family: sans-serif;
+    font-size: 13px;
+    color: white;
+    padding:5px 10px;
+    background:#075783;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 input.button:hover,a.button:hover,button:hover,input[type='submit']:hover,input[type='button']:hover{
-  background:#2D83BE;
-  color: white;
-  cursor: pointer;
+    background:#2D83BE;
+    color: white;
+    cursor: pointer;
 }
 
 
@@ -448,130 +378,130 @@ form#login-form div.login-greeting{
     margin: 10px 0;
 }
 form#login-form fieldset.userdata{
-  border: none ;
-  padding: 0 ;
+    border: none ;
+    padding: 0 ;
 }
 form#login-form fieldset.userdata p{
-  margin: 0;
-  padding: 0 ;
+    margin: 0;
+    padding: 0 ;
 }
 form#login-form fieldset.userdata label{
-  display:block;
-  margin: 5px 0 2px 0;
-  font-size: 0.8em;
+    display:block;
+    margin: 5px 0 2px 0;
+    font-size: 0.8em;
 }
 form#login-form fieldset.userdata p input{
-  margin:0 0 5px 0;
-  padding:3px 5px;
-  width:220px;
+    margin:0 0 5px 0;
+    padding:3px 5px;
+    width:220px;
 }
 form#login-form p#form-login-remember{
-  visibility: hidden;
-  height: 10px;
+    visibility: hidden;
+    height: 10px;
 }
 form#login-form ul{
-  font-size: 0.8em;
-  padding: 0 0 0 5px;
-  list-style-position: inside;
-  margin: 20px 0 0 0;
+    font-size: 0.8em;
+    padding: 0 0 0 5px;
+    list-style-position: inside;
+    margin: 20px 0 0 0;
 }
 form#login-form ul li{
-  display: none;
+    display: none;
 }
 form#login-form ul li:first-child{
-  display: list-item;
+    display: list-item;
 }
 
 /*********************/
 div#editor-xtd-buttons-jform_articletext{
-  margin:10px;
+    margin:10px;
 }
 div.button2-left{
-  border: 1px solid red ;
-  display: inline-block;
-  padding: 5px 10px ;
-  font-size: 12px;
-  background: #075783;
-  border: 1px solid #075783;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: sans-serif;
+    border: 1px solid red ;
+    display: inline-block;
+    padding: 5px 10px ;
+    font-size: 12px;
+    background: #075783;
+    border: 1px solid #075783;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: sans-serif;
 }
 div.button2-left:hover{
-  background:#2D83BE;
-  cursor: pointer;
+    background:#2D83BE;
+    cursor: pointer;
 }
 div.button2-left img{
-  display: none;
+    display: none;
 }
 div.button2-left a{
-  text-decoration:none;
-  background: transparent;
-  color:white;
+    text-decoration:none;
+    background: transparent;
+    color:white;
 }
 div.button2-left div.ginclude{
-  background: transparent;
+    background: transparent;
 }
 
 form#adminForm fieldset{
-  border: 1px solid #4093C7;
-  border: 1px solid rgba(64,147,199,0.5);
-  margin:20px 0;
-  position: relative;
+    border: 1px solid #4093C7;
+    border: 1px solid rgba(64,147,199,0.5);
+    margin:20px 0;
+    position: relative;
 }
 form#adminForm fieldset legend{
-  color: #4093C7;
-  font-size: 12px;
+    color: #4093C7;
+    font-size: 12px;
 }
 form#adminForm label{
-  width:100px;
-  display: inline-block;
-  font-size: 13px;
-  font-weight: bold;
+    width:100px;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
 }
 form#adminForm div.formelm-buttons{
-  position:absolute;
-  top:20px;
-  right: 10px;
+    position:absolute;
+    top:20px;
+    right: 10px;
 }
 form#adminForm div.formelm{
-  margin: 10px 0;
+    margin: 10px 0;
 }
 form#adminForm input#jform_title{
-  width: 300px;
+    width: 300px;
 }
 form#adminForm div.formelm-area,form#adminForm div.formelm{
-  position: relative;
-  overflow: auto;
+    position: relative;
+    overflow: auto;
 }
 form#adminForm input.inputbox{
-  width:160px;
+    width:160px;
 }
 form#adminForm div.formelm-area label,form#adminForm div.formelm label{
-  float: left;
-  display:block;
-  width:130px;
-  padding-top: 2px;
+    float: left;
+    display:block;
+    width:130px;
+    padding-top: 2px;
 }
 div.gincludeTitleDiv{
-  display: none;
+    display: none;
 }
 
 
 table.listTable{
-  border-spacing: 0;
+    border-spacing: 0;
 }
 table.listTable td,table.listTable th{
-  padding:5px 15px;
-  text-align: left;
-  border:none;
-  border-top:1px solid #4093C7;
+    padding:5px 15px;
+    text-align: left;
+    border:none;
+    border-top:1px solid #4093C7;
 }
 table.listTable th{
-  background:#4093C7;
-  color:white;
+    background:#4093C7;
+    color:white;
 }
 
 /*system messages*/
