@@ -61,7 +61,7 @@
       //$('escape').value='\\\\';
       //escape='\\\\';
     }
-                          alert('chciAjax');
+                        
     var a = new Request( {
       url:ajaxUrl,
     	method: 'get',
@@ -69,11 +69,8 @@
       data: {'delimitier':delimitier,
              'enclosure':enclosure,
              'escape':escape,
-             'encoding':encoding},
-      onRequest:function(){
-        alert('request');
-      },       
-      onComplete:function(response){  alert('complete'); 
+             'encoding':encoding},    
+      onComplete:function(response){   
         $('reloadPreviewA').style.visibility='visible';
         data=JSON.parse(response);    
         $('previewDiv').set('html',data.html);
@@ -85,21 +82,8 @@
           $('colsCountWarning').style.display='none';
         }
       }
-    });
-    
-    
-    /*
-    var req = new Request.HTML({
-      method: 'get',
-      url: ajaxUrl,
-      data: {  },
-      onRequest: function() { alert('Request made. Please wait...'); },
-      update: $('previewDiv'),
-      onComplete: function(response) { 
-                    alert('Request completed successfully.'); $('message-here').setStyle('background','#fffea1');
-                  }
     }).send();
-        */
+    
     
     
   }

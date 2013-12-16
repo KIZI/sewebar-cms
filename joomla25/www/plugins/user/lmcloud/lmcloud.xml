@@ -14,7 +14,10 @@
   <config>
     <fields name="params">
       <fieldset name="basic">
-        <field name="servername" type="text" default="sewebar" label="server_identification" description="unique_server_identification" />
+          <field name="servername" type="text" default="sewebar" label="server_identification" description="unique_server_identification" />
+          <field name="lm_url" type="text" default="http://connect-dev.lmcloud.vse.cz/SewebarConnectNext" label="connect_server_url" />
+          <field name="admin_password" type="text" default="" label="connect_server_admin_password" />
+          <field name="email_from" type="text" default="stanislav.vojir@vse.cz" label="change_password_email_from" />
       </fieldset>
     </fields>
   </config>
