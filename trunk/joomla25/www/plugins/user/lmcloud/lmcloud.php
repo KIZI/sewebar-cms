@@ -89,9 +89,8 @@ class plgUserLmcloud extends JPlugin
             $session->set('user', array('username' => $username, 'password' => self::encodePassword($user['username'], $user['password_clear'])), 'sewebar');
           }
         } else {
-          $confirmPasswordChangeLink=JRoute::_(JURI::root().'index.php?option=com_dbconnect&controller=izi&task=confirmPasswordChange&user='.urlencode(base64_encode($user['username'])).'&code={code}',false);
+          $confirmPasswordChangeLink=JRoute::_(JURI::root().'index.php?option=com_dbconnect&controller=izi&task=confirmPasswordChange&user='.urlencode(base64_encode($username)).'&code={code}',false);
           //měníme heslo jinému uživateli
-
           $result=$kbi->updateOtherUser(
             $username,
             $username,
@@ -104,8 +103,6 @@ class plgUserLmcloud extends JPlugin
         }
       }
     } catch (Exception $e) {
-      var_dump($e);
-      exit('error');
       JError::raiseWarning(100,JText::_('PASSWORD_CHANGE_FAILED'));
     }
   }
