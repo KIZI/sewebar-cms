@@ -39,7 +39,7 @@
     font-size                           : 8pt;
     }
 
-  input[type="text"] {
+  div.graphUI input[type="text"] {
     width: 40px;
   }
 
