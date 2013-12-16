@@ -772,7 +772,7 @@ class IziController extends JController{
   private function generateKbiSource($configArr,$connection,$task,$pmml,$minerUrl='http://connect-dev.lmcloud.vse.cz/SewebarConnectNext'){
     $kbiModel=&$this->getModel('Kbi','dbconnectModel');        
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);                                      
-    JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');     
+    JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
     $kbi = KBIntegrator::create($configArr);
     //přiřazení uživatele ze session
     $session =& JFactory::getSession();
@@ -1362,18 +1362,22 @@ class IziController extends JController{
     //TODO poslání potvrzovacího požadavku
     $minerUrl='http://connect-dev.lmcloud.vse.cz/SewebarConnectNext';//TODO výběr URL mineru
     $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);
-    JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
 
     $username=base64_decode(JRequest::getString('user',''));
     $code=JRequest::getString('code','');
-    /** @var $kbi LispMiner */
-    $kbi = KBIntegrator::create($configArr);
-    if ($kbi->confirmUserPasswordUpdate($username,$code)){
+
+    try{
+      JLoader::import('KBIntegrator', JPATH_LIBRARIES . DS . 'kbi');
+      /** @var $kbi LispMiner */
+      $kbi = KBIntegrator::create($configArr);
+      $kbi->confirmUserPasswordUpdate($username,$code);
+
       $application = JFactory::getApplication();
       $application->enqueueMessage(JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_DONE'));
-    }else{
+    }catch (Exception $e){
       JError::raiseWarning(100,JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_FAILED'));
     }
+
   }
 }
 
