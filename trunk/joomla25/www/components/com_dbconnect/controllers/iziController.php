@@ -1353,6 +1353,29 @@ class IziController extends JController{
       
       $view->display();
     }
-  }      
+  }
+
+  /**
+   * Akce pro potvrzení změny hesla uživatele na connect serveru
+   */
+  public function confirmPasswordChange(){
+    //TODO poslání potvrzovacího požadavku
+    $minerUrl='http://connect-dev.lmcloud.vse.cz/SewebarConnectNext';//TODO výběr URL mineru
+    $configArr=array('type'=>'LISPMINER','name'=>'TEST','method'=>'POST','url'=>$minerUrl);
+    JLoader::import('KBIntegrator', JPATH_PLUGINS . DS . 'kbi');
+
+    $username=base64_decode(JRequest::getString('user',''));
+    $code=JRequest::getString('code','');
+    /** @var $kbi LispMiner */
+    $kbi = KBIntegrator::create($configArr);
+    if ($kbi->confirmUserPasswordUpdate($username,$code)){
+      $application = JFactory::getApplication();
+      $application->enqueueMessage(JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_DONE'));
+    }else{
+      JError::raiseWarning(JText::_('PASSWORD_CONFIRM_REQUEST_MAIL_FAILED'));
+    }
+  }
 }
-?>
+
+
+
