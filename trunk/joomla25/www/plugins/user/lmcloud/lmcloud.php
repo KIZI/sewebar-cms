@@ -84,6 +84,10 @@ class plgUserLmcloud extends JPlugin
         if ($username == $userData['username']){
           //jde o toho samého uživatele
           $result=$kbi->updateUser($username, $userData['password'], $username, self::encodePassword($user['username'], $user['password_clear']), $user['email']);
+          if ($result){
+            $session =& JFactory::getSession();
+            $session->set('user', array('username' => $username, 'password' => self::encodePassword($user['username'], $user['password_clear'])), 'sewebar');
+          }
         } else {
           $confirmPasswordChangeLink=JRoute::_('index.php?option=com_dbconnect&controller=izi&task=confirmPasswordChange&user='.base64_encode($user['username']).'&code={code}',false);
           //měníme heslo jinému uživateli
