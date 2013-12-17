@@ -55,8 +55,6 @@ namespace SewebarConnect.Controllers
 						return new UserUpdateResponse(update, request.EmailFrom);
 					}
 
-					transaction.Rollback();
-
 					return ThrowHttpReponseException("User not found.");
 				}
 				catch
