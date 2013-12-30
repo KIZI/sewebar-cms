@@ -79,7 +79,7 @@ export module SewebarConnect {
             this.restClient.basicAuth(user.name, user.password);
         }
 
-        public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner: Miner) => void): void {
+        public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner?: Miner) => void): void {
             // POST miners
             var mb, database, data, raw,
                 url = [
@@ -146,7 +146,7 @@ export module SewebarConnect {
             });
         }
 
-        public get(id: string, callback: (err: any, miner: Miner) => void ): void {
+        public get(id: string, callback: (err: any, miner?: Miner) => void ): void {
             // GET miners/{minerId}
             var url = [
                 this.server,
@@ -206,19 +206,19 @@ export module SewebarConnect {
             });
         }
 
-        public runTask(task: string, callback: (err, results) => void): void {
+        public runTask(task: string, callback: (err, results?) => void): void {
             this.run('task', task, callback);
         }
 
-        public runGrid(task: string, callback: (err, results) => void): void {
+        public runGrid(task: string, callback: (err, results?) => void): void {
             this.run('grid', task, callback);
         }
 
-        public runProc(task: string, callback: (err, results) => void): void {
+        public runProc(task: string, callback: (err, results?) => void): void {
             this.run('proc', task, callback);
         }
 
-        private run(taskType: string, task: string, callback: (err, results) => void ): void {
+        private run(taskType: string, task: string, callback: (err, results?) => void ): void {
             // miners/{minerId}/tasks/{taskType}{?alias,template}
             var url = [
                 this.server,
@@ -239,23 +239,23 @@ export module SewebarConnect {
             });
         }
 
-        public cancelTask(task: string, callback: (err, results) => void): void {
+        public cancelTask(task: string, callback: (err, results?) => void): void {
             this.cancel('task', task, callback);
         }
 
-        public cancelGrid(task: string, callback: (err, results) => void): void {
+        public cancelGrid(task: string, callback: (err, results?) => void): void {
             this.cancel('grid', task, callback);
         }
 
-        public cancelProc(task: string, callback: (err, results) => void): void {
+        public cancelProc(task: string, callback: (err, results?) => void): void {
             this.cancel('proc', task, callback);
         }
 
-        public cancelAll(callback: (err, results) => void ): void {
+        public cancelAll(callback: (err, results?) => void ): void {
             this.cancel(null, null, callback);
         }
 
-        private cancel(taskType: string, task: string, callback: (err, results) => void ) {
+        private cancel(taskType: string, task: string, callback: (err, results?) => void ) {
             // PUT miners/{minerId}/tasks/{taskType}/{taskName}
             var data,
                 url = [
@@ -282,7 +282,7 @@ export module SewebarConnect {
             });
         }
 
-        public getTask(taskName: string, alias: string, template: string, callback: (err: any, results: string) => void ): void {
+        public getTask(taskName: string, alias: string, template: string, callback: (err: any, results?: string) => void ): void {
             if (typeof alias === 'function') {
                 callback = <any>alias;
                 alias = '';
@@ -312,7 +312,7 @@ export module SewebarConnect {
             });
         }
 
-        public getAllTasks(callback: (err: any, results: string) => void ): void {
+        public getAllTasks(callback: (err: any, results?: string) => void ): void {
             // GET miners/{minerId}/tasks
             var url = [
                 this.server,
@@ -350,7 +350,7 @@ export module SewebarConnect {
             });
         }
 
-        public getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary: string) => void): void {
+        public getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary?: string) => void): void {
             if (typeof matrix === 'function') {
                 callback = <any>matrix;
                 matrix = '';
