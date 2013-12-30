@@ -144,5 +144,12 @@ namespace LMWrapper.LISpMiner
 			this.CancelAll = false;
 			// this.TimeOut = 10;
 		}
+
+		protected override void Run()
+		{
+			base.Run();
+
+			this.Status = ExecutableStatus.Ready;
+		}
 	}
 }
