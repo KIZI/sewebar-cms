@@ -173,6 +173,8 @@ namespace LMWrapper.LISpMiner
 
 		protected override void Run()
 		{
+			this.Status = ExecutableStatus.Running;
+
 			if (this.CancelAll || this.TaskCancel)
 			{
 				ExecutableLog.Debug(String.Format("Launching Task cancelation: {0} {1}", this.ApplicationName, this.Arguments));
