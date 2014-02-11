@@ -176,13 +176,6 @@ namespace LMWrapper.LISpMiner
 			InitializePCGrid();
 		}
 
-		protected override void Run()
-		{
-			base.Run();
-
-			this.Status = ExecutableStatus.Ready;
-		}
-
 		private void InitializePCGrid()
 		{
 			if (!Directory.Exists(this.GridDataPath))
