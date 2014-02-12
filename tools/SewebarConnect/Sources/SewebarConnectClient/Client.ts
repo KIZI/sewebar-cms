@@ -1,13 +1,10 @@
 ///<reference path='node.d.ts'/>
-///<reference path='restify.d.ts'/>
-///<reference path='data2xml.d.ts' />
 
 import http = require('http');
 import restify = require('restify');
-
-var xml2js = require('xml2js');
-var S = require('string');
-var data2xml = require('data2xml');
+import data2xml = require('data2xml');
+import xml2js = require('xml2js');
+import S = require('string');
 
 export module SewebarConnect {
     var parser = new xml2js.Parser(),
