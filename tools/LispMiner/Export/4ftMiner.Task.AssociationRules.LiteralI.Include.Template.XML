@@ -1,0 +1,33 @@
+<?LM:IFF:LastRef.LiteralI.Negation:Yes?>
+  <Cedent connective="Negation">
+<?LM:EndIFF:LastRef.LiteralI.Negation?>
+
+<Attribute>
+  <Name><?LM:MB:LastRef.LiteralI.LiteralD.Quantity?></Name>
+  <Column><?LM:MB:LastRef.LiteralI.LiteralD.Quantity.Attribute?></Column>
+  <?LM:Loop:LastRef.LiteralI.Coefficient?>
+    <Category>
+      <Name><?LM:MB:LastRef.Coefficient.Name?></Name>
+      <Data>
+//    <!-- Enum -->
+  		<?LM:IFF:LastRef.Coefficient.CategorySubType:Enumeration?>
+  		  <?LM:Loop:LastRef.Coefficient.Enum?>
+  		    <Value><?LM:MB:LastRef.Enum?></Value>
+  		  <?LM:EndLoop:LastRef.Coefficient.Enum?>
+  		<?LM:EndIFF:LastRef.Coefficient.CategorySubType?>
+//    <!-- Enum -->
+//    <!-- Interval -->
+  		<?LM:IFF:LastRef.Coefficient.CategorySubType:Interval?>
+  		  <?LM:Loop:LastRef.Coefficient.Interval?>
+  		    <Interval closure="<?LM:MB:LastRef.Interval.Closure?>" leftMargin="<?LM:MB:LastRef.Interval.FromValue?>" rightMargin="<?LM:MB:LastRef.Interval.ToValue?>" />
+  		  <?LM:EndLoop:LastRef.Coefficient.Interval?>
+  		<?LM:EndIFF:LastRef.Coefficient.CategorySubType?>
+//    <!-- Interval -->    
+  	  </Data>  
+    </Category>
+  <?LM:EndLoop:LastRef.LiteralI.Coefficient?>
+</Attribute>
+
+<?LM:IFF:LastRef.LiteralI.Negation:Yes?>
+  </Cedent>
+<?LM:EndIFF:LastRef.LiteralI.Negation?>

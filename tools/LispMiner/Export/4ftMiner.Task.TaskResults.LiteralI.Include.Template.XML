@@ -1,0 +1,13 @@
+<?LM:IFF:LastRef.LiteralI.Negation:Yes?>
+  <Cedent connective="Negation">
+<?LM:EndIFF:LastRef.LiteralI.Negation?>
+
+<Attribute id="<?LM:MB:LastRef.LiteralI.LiteralD.Quantity.QuantityID?>">
+<?LM:Loop:LastRef.LiteralI.Coefficient?>
+  <Category id="<?LM:MB:LastRef.Coefficient.CategoryID?>" />
+<?LM:EndLoop:LastRef.LiteralI.Coefficient?>
+</Attribute>
+
+<?LM:IFF:LastRef.LiteralI.Negation:Yes?>
+  </Cedent>
+<?LM:EndIFF:LastRef.LiteralI.Negation?>

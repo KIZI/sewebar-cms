@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://keg.vse.cz/lm/TaskImport/v1.0" xmlns:ns="http://keg.vse.cz/lm/TaskImport/v1.0" targetNamespace="http://keg.vse.cz/lm/TaskImport/v1.0" elementFormDefault="qualified">
+
+    <xs:complexType name="DataMatrixType">
+        <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="PrimaryKey" type="xs:string"/>
+            <xs:element name="Column" type="ColumnType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ColumnType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="SubColumns" type="SubColumnsType" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:group ref="DiscretizationsGroup"/>
+        </xs:choice>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="dataType" type="xs:string" use="required"/><!-- tady by to chtělo výčet možností -->    
+    </xs:complexType>
+
+    <xs:complexType name="SubColumnsType">
+        <xs:sequence>
+            <xs:element name="SubColumn" type="SubColumnType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="delimitier" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="SubColumnType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="DiscretizationsGroup"/>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="position" type="xs:integer" use="required"/>        
+    </xs:complexType>
+
+    <xs:group name="DiscretizationsGroup">
+        <xs:choice>
+            <xs:element name="EachValueOneCategory" type="EachValueOneCategoryType"/>
+            <xs:element name="ExhaustiveEnumeration" type="ExhaustiveEnumerationType">
+                <xs:unique name="uniqueExhaustiveEnumerationBinName">
+                    <xs:selector xpath="ns:Bin"></xs:selector>
+                    <xs:field xpath="@name"></xs:field>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="IntervalEnumeration" type="IntervalEnumerationType">
+                <xs:unique name="uniqueIntervalEnumerationBinName">
+                    <xs:selector xpath="ns:Bin"></xs:selector>
+                    <xs:field xpath="@name"></xs:field>
+                </xs:unique>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="EachValueOneCategoryType">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="count" use="optional" default="5000" type="xs:integer"/>
+        <xs:attribute name="frequencyMin" use="optional" default="0" type="xs:integer"/>
+        <xs:attribute name="categoryOthers" use="optional" default="true" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="ExhaustiveEnumerationType">
+        <xs:sequence>
+            <xs:element name="Bin" type="ExhaustiveEnumerationBinType" maxOccurs="unbounded" minOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="ExhaustiveEnumerationBinType">
+        <xs:sequence>
+            <xs:element name="Value" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="IntervalEnumerationType">
+        <xs:sequence>
+            <xs:element name="Bin" type="IntervalEnumerationBinType" maxOccurs="unbounded" minOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+    
+    <xs:complexType name="IntervalEnumerationBinType">
+        <xs:sequence>
+            <xs:element name="Interval" type="IntervalType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" use="required" type="xs:string" />
+    </xs:complexType>
+    
+    <xs:simpleType name="extendedFloat">
+        <xs:union memberTypes="xs:float infTypes" />
+    </xs:simpleType>
+    
+    <xs:simpleType name="infTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="-inf"/>
+            <xs:enumeration value="+inf"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="IntervalType">
+        <xs:attribute name="closure" type="IntervalClosureType" />
+        <xs:attribute name="leftMargin" type="extendedFloat" />
+        <xs:attribute name="rightMargin" type="extendedFloat" />
+    </xs:complexType>
+
+    <xs:simpleType name="IntervalClosureType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="openOpen" />
+            <xs:enumeration value="closedOpen" />
+            <xs:enumeration value="openClosed" />
+            <xs:enumeration value="closedClosed" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:element name="DataMatrix" type="DataMatrixType">
+        <xs:unique name="uniquePreprocessingName">
+            <xs:selector xpath="ns:Column/child::*" />
+            <xs:field xpath="@name" />
+        </xs:unique>
+    </xs:element>
+
+</xs:schema>
