@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="Windows-1250"?>
+<FTTaskResults xmlns="http://keg.vse.cz/lm/TaskResults/v1.0">
+
+  <!-- Attributes -->
+  
+	<Attributes>
+		<?LM:Loop:Task.Quantity?>
+		<Attribute id="<?LM:MB:Task.Quantity.QuantityID?>">
+			<Name><?LM:MB:Task.Quantity.Name?></Name>
+			<ShortName><?LM:MB:Task.Quantity.ShortName?></ShortName>
+			<Column><?LM:MB:Task.Quantity.Attribute?></Column>
+			<ItemShift><?LM:MB:Task.Quantity.ItemShift?></ItemShift>
+			<Categories>
+				<?LM:Loop:Task.Quantity.Category?>
+				<Category id="<?LM:MB:Task.Quantity.Category.CategoryID?>">
+					<Name><?LM:MB:Task.Quantity.Category?></Name>
+					<Data>
+						<?LM:IFF:Task.Quantity.Category.CategorySubType:Enumeration?>
+						<?LM:Loop:Task.Quantity.Category.Enum?>
+						<Value><?LM:MB:Task.Quantity.Category.Enum?></Value>
+						<?LM:EndLoop:Task.Quantity.Category.Enum?>
+						<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+						<?LM:IFF:Task.Quantity.Category.CategorySubType:Interval?>
+						<?LM:Loop:Task.Quantity.Category.Interval?>
+					  <Interval leftMargin="<?LM:MB:Task.Quantity.Category.Interval.FromValue?>" rightMargin="<?LM:MB:Task.Quantity.Category.Interval.ToValue?>" closure="<?LM:MB:Task.Quantity.Category.Interval.Closure?>" />							
+						<?LM:EndLoop:Task.Quantity.Category.Interval?>
+						<?LM:EndIFF:Task.Quantity.Category.CategorySubType?>
+					</Data>
+				</Category>
+				<?LM:EndLoop:Task.Quantity.Category?>
+			</Categories>
+		</Attribute>
+		<?LM:EndLoop:Task.Quantity?>
+	</Attributes>
+
+	<!-- Task Description-->
+
+	<TaskDescription>
+
+		<Task id="<?LM:MB:Task.TaskID?>">
+			<DataMatrix><?LM:MB:Task.Matrix?></DataMatrix>
+			<FTMissingsType><?LM:MB:Task.MissingsType?></FTMissingsType>
+			
+		<!-- Association rules -->
+
+			<AssociationRules>
+				<?LM:Loop:Task.Hypothesis?>
+				<AssociationRule id="<?LM:MB:Task.Hypothesis.HypothesisID?>">
+					<Text><?LM:MB:Task.Hypothesis.Name?></Text>
+
+					<Antecedent>
+						<?LM:Loop:Task.Hypothesis.FTAntecedentBagI?>
+						<Cedent connective="<?LM:MB:Task.Hypothesis.FTAntecedentBagI.CedentD.BoolOpType?>">
+							<Text><?LM:MB:Task.Hypothesis.FTAntecedentBagI?></Text>
+							<?LM:Loop:Task.Hypothesis.FTAntecedentBagI.LiteralI?>
+                <?LM:Include:4ftMiner.Task.TaskResults.LiteralI.Include.Template.XML?>               
+							<?LM:EndLoop:Task.Hypothesis.FTAntecedentBagI.LiteralI?>
+						</Cedent>
+						<?LM:EndLoop:Task.Hypothesis.FTAntecedentBagI?>
+					</Antecedent>
+
+					<Consequent>
+						<?LM:Loop:Task.Hypothesis.FTSuccedentBagI?>
+  						<Cedent connective="<?LM:MB:Task.Hypothesis.FTSuccedentBagI.CedentD.BoolOpType?>">
+  							<Text><?LM:MB:Task.Hypothesis.FTSuccedentBagI?></Text>
+  							
+                <?LM:Loop:Task.Hypothesis.FTSuccedentBagI.LiteralI?>
+                  <?LM:Include:4ftMiner.Task.TaskResults.LiteralI.Include.Template.XML?>
+  							<?LM:EndLoop:Task.Hypothesis.FTSuccedentBagI.LiteralI?>
+                
+  						</Cedent>
+						<?LM:EndLoop:Task.Hypothesis.FTSuccedentBagI?>
+					</Consequent>
+                 
+          <?LM:IFF:Task.Hypothesis.FTConditionBagI#Count:0:Not?>
+  					<Condition>
+  						<?LM:Loop:Task.Hypothesis.FTConditionBagI?>
+    						<Cedent connective="<?LM:MB:Task.Hypothesis.FTConditionBagI.CedentD.BoolOpType?>">
+  							 <Text><?LM:MB:Task.Hypothesis.FTConditionBagI?></Text>
+  							
+                 <?LM:Loop:Task.Hypothesis.FTConditionBagI.LiteralI?>
+                   <?LM:Include:4ftMiner.Task.TaskResults.LiteralI.Include.Template.XML?>
+  							 <?LM:EndLoop:Task.Hypothesis.FTConditionBagI.LiteralI?>
+                
+  						  </Cedent>
+  						<?LM:EndLoop:Task.Hypothesis.FTConditionBagI?>
+  					</Condition> 
+          <?LM:EndIFF:Task.Hypothesis.FTConditionBagI#Count?>
+ 
+		      <IMValues>
+            <?LM:Loop:Task.Hypothesis.InterestMeasure?>
+		          <IMValue selected="ok" name="<?LM:MB:Task.Hypothesis.InterestMeasure.FTQuantifierType.ShortName?>" type="<?LM:MB:Task.Hypothesis.InterestMeasure.FTQuantifierValueType.ShortName?>"><?LM:MB:Task.Hypothesis.InterestMeasure.Value?></IMValue>
+		        <?LM:EndLoop:Task.Hypothesis.InterestMeasure?>
+          </IMValues>
+	
+					<FourFtTable a="<?LM:MB:Task.Hypothesis.FreqA?>" b="<?LM:MB:Task.Hypothesis.FreqB?>" c="<?LM:MB:Task.Hypothesis.FreqC?>" d="<?LM:MB:Task.Hypothesis.FreqD?>" />
+
+				</AssociationRule>
+				<?LM:EndLoop:Task.Hypothesis?>
+
+			</AssociationRules>
+
+		</Task>
+
+	</TaskDescription>
+
+</FTTaskResults>

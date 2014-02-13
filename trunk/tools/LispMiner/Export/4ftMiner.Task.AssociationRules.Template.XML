@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<AssociationRules xmlns="http://keg.vse.cz/lm/AssociationRules/v1.0">
+  <?LM:Loop:Task.Hypothesis?>
+    <AssociationRule id="<?LM:MB:Task.Hypothesis.HypothesisID?>">
+    	<Text><?LM:MB:Task.Hypothesis.Name?></Text>
+    
+    	<Antecedent>
+        <?LM:Loop:Task.Hypothesis.FTAntecedentBagI?>
+    			<Cedent connective="<?LM:MB:Task.Hypothesis.FTAntecedentBagI.CedentD.BoolOpType?>">
+            <?LM:Loop:Task.Hypothesis.FTAntecedentBagI.LiteralI?>
+              <?LM:Include:4ftMiner.Task.AssociationRules.LiteralI.Include.Template.XML?>
+    				<?LM:EndLoop:Task.Hypothesis.FTAntecedentBagI.LiteralI?>
+    			</Cedent>
+    		<?LM:EndLoop:Task.Hypothesis.FTAntecedentBagI?>        
+    	</Antecedent>
+    
+    	<Consequent>
+    		<?LM:Loop:Task.Hypothesis.FTSuccedentBagI?>
+    			<Cedent connective="<?LM:MB:Task.Hypothesis.FTSuccedentBagI.CedentD.BoolOpType?>">
+            <?LM:Loop:Task.Hypothesis.FTSuccedentBagI.LiteralI?>
+              <?LM:Include:4ftMiner.Task.AssociationRules.LiteralI.Include.Template.XML?>
+    				<?LM:EndLoop:Task.Hypothesis.FTSuccedentBagI.LiteralI?>
+    			</Cedent>
+    		<?LM:EndLoop:Task.Hypothesis.FTSuccedentBagI?>
+    	</Consequent>
+             
+      <?LM:IFF:Task.Hypothesis.FTConditionBagI#Count:0:Not?>
+    		<Condition>
+    			<?LM:Loop:Task.Hypothesis.FTConditionBagI?>
+    				<Cedent connective="<?LM:MB:Task.Hypothesis.FTConditionBagI.CedentD.BoolOpType?>">
+            
+              <?LM:Loop:Task.Hypothesis.FTConditionBagI.LiteralI?>
+                <?LM:Include:4ftMiner.Task.AssociationRules.LiteralI.Include.Template.XML?>
+    				  <?LM:EndLoop:Task.Hypothesis.FTConditionBagI.LiteralI?>
+            
+    			  </Cedent>
+    			<?LM:EndLoop:Task.Hypothesis.FTConditionBagI?>
+    		</Condition> 
+      <?LM:EndIFF:Task.Hypothesis.FTConditionBagI#Count?>
+    
+      <IMValues>
+        <?LM:Loop:Task.Hypothesis.InterestMeasure?>
+          <IMValue selected="ok" name="<?LM:MB:Task.Hypothesis.InterestMeasure.FTQuantifierType.ShortName?>" type="<?LM:MB:Task.Hypothesis.InterestMeasure.FTQuantifierValueType.ShortName?>"><?LM:MB:Task.Hypothesis.InterestMeasure.Value?></IMValue>
+        <?LM:EndLoop:Task.Hypothesis.InterestMeasure?>
+      </IMValues>
+    
+    	<FourFtTable a="<?LM:MB:Task.Hypothesis.FreqA?>" b="<?LM:MB:Task.Hypothesis.FreqB?>" c="<?LM:MB:Task.Hypothesis.FreqC?>" d="<?LM:MB:Task.Hypothesis.FreqD?>" />
+    
+    </AssociationRule>
+  <?LM:EndLoop:Task.Hypothesis?>
+
+</AssociationRules>
