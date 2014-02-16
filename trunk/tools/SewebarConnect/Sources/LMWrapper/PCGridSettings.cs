@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace LMWrapper
+﻿namespace LMWrapper
 {
 	public class PCGridSettings
 	{

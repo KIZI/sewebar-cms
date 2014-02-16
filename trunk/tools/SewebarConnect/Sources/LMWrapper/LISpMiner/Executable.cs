@@ -82,29 +82,26 @@ namespace LMWrapper.LISpMiner
 
 		protected virtual void Run()
 		{
-			var p = new Process
-						{
-							StartInfo = new ProcessStartInfo
-											{
-												FileName = String.Format("{0}/{1}", this.LMExecutablesPath, this.ApplicationName),
-												Arguments = this.Arguments,
-												WorkingDirectory = this.LMExecutablesPath
-											}
-						};
+			var info = new ProcessStartInfo
+			{
+				FileName = String.Format("{0}/{1}", this.LMExecutablesPath, this.ApplicationName),
+				Arguments = this.Arguments,
+				WorkingDirectory = this.LMExecutablesPath
+			};
 
-			this.Status = ExecutableStatus.Running;
-			
-			ExecutableLog.DebugFormat("Launching: {0} {1}", this.ApplicationName, this.Arguments);
+			using (Process process = Process.Start(info))
+			{
+				this.Status = ExecutableStatus.Running;
+				ExecutableLog.DebugFormat("Launching: {0} {1}", this.ApplicationName, this.Arguments);
 
-			this._stopwatch.Start();
+				this._stopwatch.Start();
+				process.WaitForExit();
+				this._stopwatch.Stop();
 
-			p.Start();
-			p.WaitForExit();
-			
-			this.Status = ExecutableStatus.Ready;
+				this.Status = ExecutableStatus.Ready;
+				ExecutableLog.DebugFormat("Finished: {0} ms. ({1} {2})", this._stopwatch.Elapsed, this.ApplicationName, this.Arguments);
+			}
 
-			this._stopwatch.Stop();
-			ExecutableLog.DebugFormat("Finished: {0} ms. ({1} {2})", this._stopwatch.Elapsed, this.ApplicationName, this.Arguments);
 			this._stopwatch.Reset();
 		}
 	}
