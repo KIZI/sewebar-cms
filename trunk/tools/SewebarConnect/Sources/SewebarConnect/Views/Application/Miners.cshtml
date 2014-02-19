@@ -25,17 +25,32 @@
 
 @if (MvcApplication.Environment.ExistingMiners.Count > 0)
 {
+	var line = 1;
+	
 	<h3>Existing miners</h3>
-	<ol>
+	<table>
+		<tr>
+			<th></th>
+			<th>Id</th>
+			<th>Owner</th>
+			<th>Created</th>
+			<th></th>
+		</tr>
 		@foreach (var miner in @Model)
 		{
 			string shared = miner.SharedPool ? "shared" : "non-shared";
-			
-			<li>
-				<a href="@Url.Action("Miner", new {guid = miner.Id})" class="@shared">@miner.Id</a> - @miner.Owner&nbsp;(<a href="@Url.Action("Remove", new { guid = miner.Id })" class="ajax">Remove</a>)
-			</li>
-        }
-	</ol>
+
+			<tr>
+				<td>@(line++).</td>
+				<td>
+					<a href="@Url.Action("Miner", new {guid = miner.Id})" class="@shared">@miner.Id</a>
+				</td>
+				<td>@miner.Owner</td>
+				<td><em style="color: lightgray">@miner.Miner.Created</em></td>
+				<td><a href="@Url.Action("Remove", new { guid = miner.Id })" class="ajax">Remove</a></td>
+			</tr>
+		}
+	</table>
 }
 
 <hr/>
