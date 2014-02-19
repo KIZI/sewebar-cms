@@ -2,12 +2,12 @@
 	list-style: lower-alpha;
 }
 
-ol li .shared,
+table tr td a.shared,
 .annotation.shared {
 	font-style: italic;
 }
 
-ol li .non-shared,
+table tr td a.non-shared,
 .annotation.non-shared {
 	font-weight: bold;
 }

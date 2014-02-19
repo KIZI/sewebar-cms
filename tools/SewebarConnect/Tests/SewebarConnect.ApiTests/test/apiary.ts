@@ -66,9 +66,9 @@ describe('SewebarConnect', () => {
                 metabase = {
                     type: 'Access',
                     file: 'LM Barbora.mdb'
-                }
+                };
 
-                client.register(database, metabase, (err, m) => {
+                client.register(database, metabase, (err, m: connect.Miner) => {
                     miner = m;
 
                     should.not.exist(err);
@@ -95,7 +95,7 @@ describe('SewebarConnect', () => {
                     fs.writeFileSync(out + '/miner.getDataDictionary01.xml', dict);
 
                     // no template and matrix
-                    miner.getDataDictionary((err2: string, dict2: string) => {
+                    miner.getDataDictionary(null, (err2: string, dict2: string) => {
                         should.not.exist(err2);
                         should.exist(dict2);
 
