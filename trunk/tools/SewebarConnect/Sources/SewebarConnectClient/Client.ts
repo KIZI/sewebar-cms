@@ -214,7 +214,7 @@ export module SewebarConnect {
                     definition: task
                 };
             } else {
-                opts = task;
+                opts = task || {};
             }
 
             // miners/{minerId}/tasks/{taskType}{?alias,template}
@@ -252,7 +252,7 @@ export module SewebarConnect {
                     name: task
                 };
             } else {
-                opts = task;
+                opts = task || {};
             }
 
             // PUT miners/{minerId}/tasks/{taskType}/{taskName}
@@ -293,7 +293,7 @@ export module SewebarConnect {
                     name: task
                 };
             } else {
-                opts = task;
+                opts = task || {};
             }
 
             // miners/{minerId}/tasks/{taskType}/{taskName}{?alias,template}
@@ -368,7 +368,7 @@ export module SewebarConnect {
                     matrix: dd
                 };
             } else {
-                opts = dd;
+                opts = dd || {};
             }
 
             // GET miners/{minerId}/DataDictionary{?matrix,template}

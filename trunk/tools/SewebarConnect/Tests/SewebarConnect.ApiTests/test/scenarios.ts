@@ -62,7 +62,7 @@ describe('SewebarConnect', function() {
         });
 
         it('should run task', (done) => {
-            miner.runProc(task, (err, results) => {
+            miner.runTask({ type: 'proc', definition: task }, (err, results) => {
                 should.not.exist(err);
                 results.should.be.ok;
 
@@ -79,7 +79,7 @@ describe('SewebarConnect', function() {
         });
 
         it('should get datadictionary with empty string template', (done) => {
-            miner.getDataDictionary('demo_13_csv60', '', (err, dd) => {
+            miner.getDataDictionary({ matrix: 'demo_13_csv60' }, (err, dd) => {
                 should.not.exist(err);
                 should.exist(dd);
 
@@ -90,7 +90,7 @@ describe('SewebarConnect', function() {
         it('should get existing miner', (done) => {
             var client2 = connect.createClient(config);
 
-            client2.get(miner.id, (err, m: connect.Miner) => {
+            client2.getMiner(miner.id, (err, m: connect.Miner) => {
                 should.not.exist(err);
 
                 should.exist(m);
@@ -182,7 +182,7 @@ describe('SewebarConnect', function() {
         });
 
         it('should get datadictionary with empty string as matrix', (done) => {
-            miner.getDataDictionary('Loans', 'ETreeMiner.Task.Template.PMML', (err, dd) => {
+            miner.getDataDictionary({ matrix: 'Loans', template: 'ETreeMiner.Task.Template.PMML' }, (err, dd) => {
                 should.not.exist(err);
                 should.exist(dd);
 
@@ -193,7 +193,7 @@ describe('SewebarConnect', function() {
         it('should get existing miner', (done) => {
             var client2 = connect.createClient(config);
 
-            client2.get(miner.id, (err, m: connect.Miner) => {
+            client2.getMiner(miner.id, (err, m: connect.Miner) => {
                 should.not.exist(err);
 
                 should.exist(m);

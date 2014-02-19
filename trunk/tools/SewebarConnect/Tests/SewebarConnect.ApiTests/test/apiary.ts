@@ -88,7 +88,10 @@ describe('SewebarConnect', () => {
 
             it('#GET /miners/{minerId}/DataDictionary{?matrix,template}', (done) => {
                 // default template and matrix
-                miner.getDataDictionary('loans', 'LMDataSource.Matrix.ARD.Template.PMML', (err: string, dict: string) => {
+                miner.getDataDictionary({
+                    matrix: 'loans',
+                    template: 'LMDataSource.Matrix.ARD.Template.PMML'
+                }, (err: string, dict: string) => {
                     should.not.exist(err);
                     should.exist(dict);
 
@@ -139,7 +142,12 @@ describe('SewebarConnect', () => {
             });
 
             it('#GET /miners/{minerId}/tasks/{taskName}{?alias,template}', (done) => {
-                miner.getTask('9741046ed676ec7470cb043db2881a094e36b554', 'loans', 'ETreeMiner.Task.Template.PMML', (err, data) => {
+                miner.getTask({
+                    type: 'task',
+                    name: '9741046ed676ec7470cb043db2881a094e36b554',
+                    // 'loans',
+                    template: 'ETreeMiner.Task.Template.PMML'
+                }, (err, data) => {
                     should.not.exist(err);
                     should.exist(data);
 
