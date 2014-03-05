@@ -45,6 +45,10 @@
         <str lang="en">Discovered Association Rules</str>
         <str lang="cs">Nalezená asociační pravidla</str>
     </Entry>
+    <Entry id="61">
+        <str lang="en">Maximum number of discovered rules exceeded! Number of founded rules:</str>
+        <str lang="cs">Byl překročen maximální počet nalezených pravidel! Celkem nalezeno pravidel:</str>
+    </Entry>
     <Entry id="70">
         <str lang="en">Frequency analysis - columns</str>
         <str lang="cs">Frekvenční analýza sloupců</str>
@@ -317,7 +321,7 @@
     </Entry>
     <Entry id="600">
         <str lang="en">Consequent</str>
-        <str lang="cs">Sukcedent</str>
+        <str lang="cs">Konsekvent</str>
     </Entry>
     <Entry id="610">
         <str lang="en">Antecedent</str>
