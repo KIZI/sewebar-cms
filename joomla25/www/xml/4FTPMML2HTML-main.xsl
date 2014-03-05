@@ -255,10 +255,22 @@
       </div>
       <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredRules_Contents','','end')"/></xsl:comment>
 
+      <xsl:if test="($maxRulesToList and (count(guha:AssociationModel/AssociationRules/AssociationRule) > $maxRulesToList))">
+        <p style="color:red;">
+          <xsl:copy-of select="keg:translate('Maximum number of discovered rules exceeded! Number of founded rules:',61)"/> <xsl:value-of select="guha:AssociationModel/@numberOfRules | guha:SD4ftModel/@numberOfRules | guha:Ac4ftModel/@numberOfRules | guha:CFMinerModel/@numberOfRules"/>
+        </p>
+      </xsl:if>
+
       <xsl:apply-templates select="guha:AssociationModel/AssociationRules/AssociationRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
       <xsl:apply-templates select="guha:SD4ftModel/SD4ftRules/SD4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
       <xsl:apply-templates select="guha:Ac4ftModel/Ac4ftRules/Ac4ftRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
       <xsl:apply-templates select="guha:CFMinerModel/CFMinerRules/CFMinerRule[position() &lt;= $maxRulesToList or not($maxRulesToList)]" mode="sect5"/>
+      
+      <xsl:if test="($maxRulesToList and (count(guha:AssociationModel/AssociationRules/AssociationRule) > $maxRulesToList))">
+        <p style="color:red;">
+          <xsl:copy-of select="keg:translate('Maximum number of discovered rules exceeded! Number of founded rules:',61)"/> <xsl:value-of select="guha:AssociationModel/@numberOfRules | guha:SD4ftModel/@numberOfRules | guha:Ac4ftModel/@numberOfRules | guha:CFMinerModel/@numberOfRules"/>
+        </p>
+      </xsl:if>
     </div>
 
     <xsl:comment><xsl:value-of select="keg:getContentBlockTag('DiscoveredARs','','end')"/></xsl:comment>
