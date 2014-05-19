@@ -253,7 +253,39 @@
       $sql='INSERT INTO '.$tableNameX.' ('.implode(',',$columnNamesArr).') VALUES '.substr($sql2,1).';';
       $query=$this->db->prepare($sql);
       $query->execute();
-    }                    
+    }
+
+    /**
+     * Funkce pro export dat z databáze do CSV souboru
+     */
+    public function exportCsv($tableName,$filename){
+      try{
+        $outputFile=fopen($filename,'w');
+
+        $query=$this->db->prepare('SELECT * FROM `'.$tableName.'`;');
+        $query->execute();
+        $row=0;
+        while($data = $query->fetch(PDO::FETCH_ASSOC)){
+          if ($row==0){
+            $arr=array();
+            foreach ($data as $key=>$value){
+              $arr[]=$key;
+            }
+            fputcsv($outputFile,$arr,';','"');
+            $arr=1;
+          }
+          $arr=array();
+          foreach ($data as $value){
+            $arr[]=$value;
+          }
+          fputcsv($outputFile,$arr,';','"');
+        }
+        fclose($outputFile);
+      }catch (Exception $e){
+        return false;
+      }
+      return true;
+    }
   	
   }
 ?>

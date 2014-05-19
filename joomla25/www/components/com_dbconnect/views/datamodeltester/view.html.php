@@ -1,8 +1,8 @@
 <?php
 jimport( 'joomla.application.component.view' );
-                         
-                                
-class dataViewModelTester extends JView
+
+
+class dataViewDataModelTester extends JView
 {
 	/**
 	 * Display the view
@@ -13,7 +13,8 @@ class dataViewModelTester extends JView
     
 		$document = & JFactory::getDocument();
 		$document->setTitle( JText::_('TEST_MODEL') );
-    
+
+
     parent::display();		
   }
 }
