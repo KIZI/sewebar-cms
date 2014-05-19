@@ -500,6 +500,14 @@ class DataController extends JController{
   private function getKbiSource($kbiId){
     $model=$this->getKbiModel($kbiId);
     return $model->getSource();
-  }     
+  }
+
+  public function modelTester(){
+    //zobrazíme view s přehledem
+    $view=&$this->getView('ModelTester','html');
+    //$view->assignRef('drlXml',$drlRulesXml);
+    $view->display();
+  }
+
 }
 ?>
