@@ -14,6 +14,7 @@ class dbconnectModelUploads extends JModel
 
   const TMP_DIR='./components/com_dbconnect/tmp';
   const UNZIP_DIR='./components/com_dbconnect/tmp/unzip';
+  const DATA_DIR='./components/com_dbconnect/tmp/data';
   const ROWS_COUNT=50;
   const MAX_COLUMNS_COUNT=300; //1000;
 
@@ -342,7 +343,7 @@ class dbconnectModelUploads extends JModel
         $outName2.=$outName[$i];
       }
     }           
-    if (strpos(' 0123456789',$outName2[0])){
+    if (strpos(' 0123456789',@$outName2[0].'a')){
       $outName2='x_'.$outName2;
     }
     return $outName2;
@@ -392,7 +393,29 @@ class dbconnectModelUploads extends JModel
     unset($importData);
      
     return $tableName;
-  } 
+  }
+
+  /**
+   * Funkce pro přípravu CSV souboru do požadovaného formátu
+   */
+  public function prepareCsvFile($filename,$id,$delimitier=';',$enclosure='"',$escapeCharacter='\\'){
+    try{
+      $file=fopen(self::getFilePath($id),'r');
+      if ($file===false){return null;}
+      if ($delimitier=='\t'){
+        $delimitier="\t";
+      }
+      $outputFile=fopen($filename,'w');
+      while ($rowArr=fgetcsv($file,0,$delimitier,$enclosure,$escapeCharacter)){
+        fputcsv($outputFile,$rowArr,';','"');
+      }
+      fclose($outputFile);
+      fclose($file);
+    }catch (Exception $e){
+      return false;
+    }
+    return true;
+  }
 
 }
 ?>

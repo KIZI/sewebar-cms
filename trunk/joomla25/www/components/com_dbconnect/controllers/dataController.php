@@ -6,6 +6,8 @@ jimport( 'joomla.application.component.controller' );
  */  
 class DataController extends JController{
   var $document;
+  const RULES_XML_TEMPLATE='4ftMiner.Task.AssociationRules.Template.XML';//TODO
+  const MODELTESTER_XML_DIR='./components/com_dbconnect/tmp/rulesxml';
 
   /**
    * Akce pro smazání článku
@@ -504,10 +506,191 @@ class DataController extends JController{
 
   public function modelTester(){
     //zobrazíme view s přehledem
-    $view=&$this->getView('ModelTester','html');
+    $kbi=JRequest::getString('kbi');
+    $lmtask=JRequest::getString('lmtask');
+    $rules=JRequest::getString('rules');
+
+    //TODO check REQUEST items (kbi,lmtask,rules)
+    $view=&$this->getView('DataModelTester','html');
+
+    $testFile=JRequest::getString('file','');
+    if ($testFile){
+
+      //TODO remove
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterExportRulesXml&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
+      //
+      $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
+      $testFile=dbconnectModelUploads::DATA_DIR.'/'.$testFile;
+      $view->assign('testFile',$testFile);
+    }
+
+    $view->assign('kbi',$kbi);
+    $view->assign('lmtask',$lmtask);
+    $view->assign('rules',$rules);
+
+
     //$view->assignRef('drlXml',$drlRulesXml);
     $view->display();
   }
+
+  public function modelTesterExportRulesXml(){
+    $kbiId=JRequest::getInt('kbi',-1);
+    $lmtaskId=JRequest::getVar('lmtask','');
+    $template=JRequest::getVar('template',self::RULES_XML_TEMPLATE);
+    $rules=JRequest::getString('rules',JRequest::getString('rulesIds',""));
+
+    try{
+      $source=$this->getKbiSource($kbiId);
+      $options=array('export'=>$lmtaskId,'template'=>$template);
+      $result=$source->queryPost(null,$options);
+      exit($result);
+      //TODO check result
+      //TODO filter only selected rules
+      file_put_contents(self::MODELTESTER_XML_DIR.'/'.$kbiId.'-'.$lmtaskId,$result);
+    }catch (Exception $e){
+      exit(var_dump($e));
+      //TODO show error
+    }
+  }
+
+  public function modelTesterExportConnectionCSV(){
+    $kbi=JRequest::getString('kbi');
+    $lmtask=JRequest::getString('lmtask');
+    $rules=JRequest::getString('rules');
+
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $taskId=JRequest::getInt('task_id',JRequest::getInt('taskId',-1));
+    $kbiId=JRequest::getInt('kbi',-1);
+    $columnName=JRequest::getString('col','');
+    if ($taskId>0){
+      $task=$tasksModel->getTask($taskId);
+    }elseif($kbiId>0){
+      $task=$tasksModel->getTaskByKbi($kbiId);
+    }
+    if (!$task){//TODO zobrazení chyby
+      $this->showErrorView(JText::_('TASK_NOT_FOUND'),JText::_('TASK_NOT_FOUND_TEXT'));
+      return ;
+    }
+
+    $connectionsModel= &$this->getModel('Connections', 'dbconnectModel');
+    $connection=$connectionsModel->getConnection($task->db_table);
+
+    /** @var dbconnectModelUnidb $unidbModel */
+    $unidbModel=&$this->getModel('Unidb','dbconnectModel');
+    $dbError=$unidbModel->setDB($connection->db_type,$connection->server,$connection->username,$connection->getPassword(),$connection->db_name);
+    if ($dbError!=''){
+      JError::raiseError(500,$dbError);
+      return ;
+    }
+
+    //output CSV file
+    $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
+    $testFileName=$kbiId.'_trainData';
+    $testFile=dbconnectModelUploads::DATA_DIR.'/'.$testFileName;
+
+    if (!$unidbModel->exportCsv($connection->table,$testFile)){
+      $this->showErrorView(JText::_('DB_EXPORT_FAILED'),JText::_('DB_EXPORT_FAILED'));
+      return;
+    }
+
+    $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTester&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules.'&file='.$testFileName,false));
+  }
+
+  #region modelTesterUploadCSV
+  /**
+   *   Akce pro upload CSV souboru
+   */
+  public function modelTesterUploadCSV(){
+    $kbi=JRequest::getString('kbi');
+    $lmtask=JRequest::getString('lmtask');
+    $rules=JRequest::getString('rules');
+
+    if (isset($_FILES['url'])){
+      //test, jestli byl odeslán formulář
+      $fileData=$_FILES['url'];
+      $fileName=$fileData['name'];if (is_array($fileName)){$fileName=$fileName[0];}
+      $fileTmpName=$fileData['tmp_name'];if (is_array($fileTmpName)){$fileTmpName=$fileTmpName[0];}
+
+      $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
+      if ($fileId=$uploadsModel->insertFile($fileName,$fileTmpName)){
+        $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&tmpl=component&task=modelTesterUploadCSV_step2&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules.'&file='.$fileId,false));
+        return ;
+      }
+    }
+    $view=$this->getView('DataModelTesterUploadCSV',$this->document->getType());
+    $view->assign('kbi',JRequest::getString('kbi'));
+    $view->assign('lmtask',JRequest::getString('lmtask'));
+    $view->assign('rules',JRequest::getInt('rules'));
+    $view->display();
+  }
+
+  /**
+   *  Funkce pro zadání základních parametrů uploadu CSV souboru
+   */
+  public function modelTesterUploadCSV_step2(){
+    $kbi=JRequest::getString('kbi');
+    $lmtask=JRequest::getString('lmtask');
+    $rules=JRequest::getString('rules');
+
+    $fileId=JRequest::getInt('file',-1);
+    $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
+    $fileData=$uploadsModel->getFile($fileId);
+
+    if (!$fileData){
+      //pokud nemáme data o nahraném souboru, tak uživatele přesměrujeme na nahrání jiného
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&tmpl=component&task=modelTesterUploadCSV&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
+      return ;
+    }
+
+    $view=$this->getView('DataModelTesterUploadCSV_2',$this->document->getType());
+    $view->assignRef('fileData',$fileData);
+    $view->assign('table_name',$uploadsModel->cleanName($fileData->filename));
+    $view->assign('delimitier',trim(JRequest::getString('delimitier',$uploadsModel->getCSVDelimitier($fileData->id))));
+    $view->assign('enclosure',trim(JRequest::getString('enclosure','"')));
+    $view->assign('escapeChar',trim(JRequest::getString('escapeChar','\\')));
+    $view->assign('kbi',JRequest::getString('kbi'));
+    $view->assign('lmtask',JRequest::getString('lmtask'));
+    $view->assign('rules',JRequest::getInt('rules'));
+    $view->display();
+  }
+
+
+  /**
+   *  Akce pro naimportování CSV do databáze
+   */
+  public function modelTesterUploadCSV_import(){
+    $kbi=JRequest::getString('kbi');
+    $lmtask=JRequest::getString('lmtask');
+    $rules=JRequest::getString('rules');
+    $fileId=JRequest::getInt('file',-1);
+    /** @var $uploadsModel dbconnectModelUploads */
+    $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
+    $fileData=$uploadsModel->getFile($fileId);
+
+    if (!$fileData){
+      //pokud nemáme data o nahraném souboru, tak uživatele přesměrujeme na nahrání jiného
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&tmpl=component&task=modelTesterUploadCSV&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
+      return ;
+    }
+
+    $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
+
+    $delimitier=JRequest::getString('delimitier','');
+    if ($delimitier==''){
+      $delimitier=JRequest::getString('delimitier_text',';');
+    }
+    $enclosure=JRequest::getString('enclosure',',');
+    $escapeChar=JRequest::getString('escape','\\');
+    $encoding=JRequest::getString('encoding','utf8');
+    $uploadsModel->iconvFile($fileId,$encoding);
+
+    if ($uploadsModel->prepareCsvFile(dbconnectModelUploads::DATA_DIR.'/'.$kbi.'_testData',$fileId,$delimitier,$enclosure,$escapeChar)){
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTester&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules.'&file='.$kbi.'_testData',false));
+      return;
+    }
+    $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&tmpl=component&task=modelTesterUploadCSV&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
+  }
+  #endregion modelTesterUploadCSV
 
 }
 ?>
