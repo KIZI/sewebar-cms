@@ -272,7 +272,7 @@
               $arr[]=$key;
             }
             fputcsv($outputFile,$arr,';','"');
-            $arr=1;
+            $row=1;
           }
           $arr=array();
           foreach ($data as $value){
