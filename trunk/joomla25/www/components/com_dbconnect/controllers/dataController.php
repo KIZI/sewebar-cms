@@ -7,6 +7,7 @@ jimport( 'joomla.application.component.controller' );
 class DataController extends JController{
   var $document;
   const RULES_XML_TEMPLATE='4ftMiner.Task.AssociationRules.Template.XML';//TODO
+  const MODELTESTER_URL="http://br-dev.lmcloud.vse.cz:8080/DroolsModelTester_web/rest/association-rules/test-files";
   const MODELTESTER_XML_DIR='./components/com_dbconnect/tmp/rulesxml';
 
   /**
@@ -516,12 +517,12 @@ class DataController extends JController{
     $testFile=JRequest::getString('file','');
     if ($testFile){
 
-      //TODO remove
-      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterExportRulesXml&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
-      //
       $uploadsModel=&$this->getModel('Uploads','dbconnectModel');
       $testFile=dbconnectModelUploads::DATA_DIR.'/'.$testFile;
       $view->assign('testFile',$testFile);
+
+      $view->assign('rulesExportUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterExportRulesXml&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
+      $view->assign('testUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterRequest&format=raw&rulesXml='.self::MODELTESTER_XML_DIR.'/'.$kbi.'-'.$lmtask.'&dataCsv='.$testFile,false));
     }
 
     $view->assign('kbi',$kbi);
@@ -543,13 +544,37 @@ class DataController extends JController{
       $source=$this->getKbiSource($kbiId);
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);
-      exit($result);
       //TODO check result
       //TODO filter only selected rules
       file_put_contents(self::MODELTESTER_XML_DIR.'/'.$kbiId.'-'.$lmtaskId,$result);
     }catch (Exception $e){
       exit(var_dump($e));
       //TODO show error
+    }
+  }
+
+  public function modelTesterRequest(){
+    $rulesXml=JRequest::getString('rulesXml','');
+    $dataCsv=JRequest::getString('dataCsv','');
+
+    if (substr($rulesXml,0,2)=='./'){
+      $rulesXml=JURI::base().substr($rulesXml,2);
+    }
+    if (substr($dataCsv,0,2)=='./'){
+      $dataCsv=JURI::base().substr($dataCsv,2);
+    }
+
+    try{
+      $output=array();
+      //exit(self::MODELTESTER_URL.'?rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
+      $content=@file_get_contents(self::MODELTESTER_URL.'?rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
+      $xml=simplexml_load_string($content);
+      $output['truePositive']=(string)$xml->truePositive;
+      $output['falsePositive']=(string)$xml->falsePositive;
+      $output['rowsCount']=(string)$xml->rowsCount;
+      echo json_encode($output);
+    }catch (Exception $e){
+      //TODO return error
     }
   }
 
@@ -642,6 +667,7 @@ class DataController extends JController{
       return ;
     }
 
+    /** @var dataViewDataModelTesterUploadCSV_2 $view */
     $view=$this->getView('DataModelTesterUploadCSV_2',$this->document->getType());
     $view->assignRef('fileData',$fileData);
     $view->assign('table_name',$uploadsModel->cleanName($fileData->filename));
