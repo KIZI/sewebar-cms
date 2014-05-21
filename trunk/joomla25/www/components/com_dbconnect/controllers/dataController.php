@@ -596,11 +596,35 @@ class DataController extends JController{
     try{
       $output=array();
       //exit(self::MODELTESTER_URL.'?rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
-      $content=@file_get_contents(self::MODELTESTER_URL.'?rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
+      $content=@file_get_contents(self::MODELTESTER_URL.'?complexResults=ok&rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
       $xml=simplexml_load_string($content);
       $output['truePositive']=(string)$xml->truePositive;
       $output['falsePositive']=(string)$xml->falsePositive;
       $output['rowsCount']=(string)$xml->rowsCount;
+
+      if (isset($xml->rulesMatches)&&count($xml->rulesMatches->rule)){
+        $rulesResultsArr=array();
+        foreach ($xml->rulesMatches->rule as $rule){
+          $id=(string)$rule['id'];
+          $rulesResultsArr[$id]=array('truePositive'=>(string)$rule['truePositive'],'falsePositive'=>(string)$rule['falsePositive']);
+        }
+        unset($xml);
+        $xml=simplexml_load_file($rulesXml);
+        $output['rules']=array();
+        foreach ($xml->AssociationRule as $associationRule){
+          $id=(string)$associationRule['id'];
+          $truePositive=0;
+          if (isset($rulesResultsArr[$id])){
+            $truePositive=$rulesResultsArr[$id]['truePositive'];
+          }
+          $falsePositive=0;
+          if (isset($rulesResultsArr[$id])){
+            $falsePositive=$rulesResultsArr[$id]['falsePositive'];
+          }
+          $output['rules'][]=array('text'=>(string)$associationRule->Text,'truePositive'=>$truePositive,'falsePositive'=>$falsePositive);
+        }
+
+      }
       echo json_encode($output);
     }catch (Exception $e){
       //TODO return error
