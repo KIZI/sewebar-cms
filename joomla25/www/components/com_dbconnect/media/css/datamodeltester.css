@@ -1,0 +1,42 @@
+.right{
+    text-align: right;
+}
+div#loadingInfoDiv{
+    background: url('http://sewebar-dev.lmcloud.vse.cz/izi-miner/images/icon-loading-big.gif') left top no-repeat;
+    width:50%;
+    margin:0 auto;
+    min-height: 30px;
+    padding: 20px 0 0 80px;
+}
+div#contentDiv{
+    position: relative;
+    overflow: auto;
+}
+table.resultsTable{
+    border-spacing: 2px;
+    margin: 20px;
+    width:300px;
+    float: left;
+}
+table.rulesTable{
+    margin: 20px auto;
+    width: 95%;
+    border-spacing: 0;
+}
+table.rulesTable th.text{
+    width:70%;
+}
+table.rulesTable tr:hover td{
+    background: #f0f0fd;
+}
+table.rulesTable td{
+    padding: 3px 5px;
+}
+table.rulesTable th{
+    text-align: left;
+}
+div#resultsChart{
+    float: right;
+    width:400px;
+    height: 180px;
+}
