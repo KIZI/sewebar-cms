@@ -43,15 +43,7 @@ class DataController extends JController{
     /*pripraveni XML kodu pro zaznamenani vybranych asociacnich pravidel*/
     $selectedRulesXml="";
     if (!empty($rules)){
-      if ($rulesEncoded=json_decode($rules)){
-        $rules=$rulesEncoded;
-      }
-      if (!is_array($rules)&&(strpos($rules,','))){
-        $rules=explode(',',$rules);
-      }
-      if (is_int($rules)){
-        $rules=array(0=>$rules);
-      }
+      $rules=$this->decodeRules($rules);
       if (is_array($rules)&&(count($rules)>0)){
         foreach ($rules as $ruleId){
           $selectedRulesXml.='<AssociationRule id="'.$ruleId.'" />';
@@ -544,13 +536,50 @@ class DataController extends JController{
       $source=$this->getKbiSource($kbiId);
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);
-      //TODO check result
-      //TODO filter only selected rules
+      if (!strpos($result,'<AssociationRules')){
+        throw new Exception('Export failed!');
+      }
+      $rules=$this->decodeRules($rules);
+
+      if (is_array($rules)&&count($rules)){
+        $result=$this->cleanRulesXml($result,$rules);
+      }
       file_put_contents(self::MODELTESTER_XML_DIR.'/'.$kbiId.'-'.$lmtaskId,$result);
     }catch (Exception $e){
       exit(var_dump($e));
       //TODO show error
     }
+  }
+
+  private function cleanRulesXml($xmlString,$rulesArr){
+    $outputXml='';
+    if (strpos($xmlString,'encoding="windows-1250"')){
+      $xmlString=str_replace('encoding="windows-1250"','encoding="utf-8"',$xmlString);
+      $xmlString=iconv('cp1250','utf8',$xmlString);
+    }
+    $pos=mb_strpos($xmlString,'<AssociationRules',0,'utf8');
+    $pos=mb_strpos($xmlString,'>',$pos,'utf8');
+    $outputXml=mb_substr($xmlString,0,$pos+1,'utf8');
+    $xmlString=mb_substr($xmlString,$pos+1,null,'utf8');
+
+    $pos=0;
+    while (($pos=mb_strpos($xmlString,'<AssociationRule',$pos,'utf8'))!==false){
+      $endPos=mb_strpos($xmlString,'>',$pos,'utf8');
+      $startTag=mb_substr($xmlString,$pos,$endPos-$pos,'utf8').'/>';
+      $xml=simplexml_load_string($startTag);
+      $id=(string)$xml['id'];
+      $endPos=mb_strpos($xmlString,'</AssociationRule',$endPos,'utf8');
+      $endPos=mb_strpos($xmlString,'>',$endPos,'utf8');
+      if (in_array($id,$rulesArr,true)){
+        //copy tag
+        unset($xml);
+        $outputXml.=mb_substr($xmlString,$pos,$endPos-$pos+1,'utf8');
+      }
+      $xmlString=mb_substr($xmlString,$endPos+1,null,'utf8');
+      $pos=0;
+    }
+    $outputXml.=$xmlString;
+    return $outputXml;
   }
 
   public function modelTesterRequest(){
@@ -578,6 +607,7 @@ class DataController extends JController{
     }
   }
 
+  //region export CSV from DB
   public function modelTesterExportConnectionCSV(){
     $kbi=JRequest::getString('kbi');
     $lmtask=JRequest::getString('lmtask');
@@ -620,6 +650,7 @@ class DataController extends JController{
 
     $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTester&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules.'&file='.$testFileName,false));
   }
+  //endregion
 
   #region modelTesterUploadCSV
   /**
@@ -717,6 +748,19 @@ class DataController extends JController{
     $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&tmpl=component&task=modelTesterUploadCSV&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
   }
   #endregion modelTesterUploadCSV
+
+  private function decodeRules($rules){
+    if ($rulesEncoded=json_decode($rules)){
+      $rules=$rulesEncoded;
+    }
+    if (!is_array($rules)&&(strpos($rules,','))){
+      $rules=explode(',',$rules);
+    }
+    if (is_int($rules)){
+      $rules=array(0=>$rules);
+    }
+    return $rules;
+  }
 
 }
 ?>
