@@ -735,7 +735,6 @@ class DataController extends JController{
     $view->display();
   }
 
-
   /**
    *  Akce pro naimportování CSV do databáze
    */
@@ -784,6 +783,10 @@ class DataController extends JController{
       $rules=array(0=>$rules);
     }
     return $rules;
+  }
+  
+  public function brBaseRulesCount(){
+    echo json_encode(array('rulesCount'=>0));
   }
 
 }
