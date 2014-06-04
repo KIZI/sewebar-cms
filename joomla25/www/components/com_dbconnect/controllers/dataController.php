@@ -29,6 +29,7 @@ class DataController extends JController{
    *  Akce pro stažení PMML dat a jejich uložení v podobě článku
    */     
   public function savePMMLArticle(){
+    $errorMessage='';
     /** @var $dataModel dbconnectModelConfig */
     $configModel=&$this->getModel('Config','dbconnectModel');
     $pmmlArticlesCategory=$configModel->loadConfig('new_pmml_category');
@@ -642,6 +643,7 @@ class DataController extends JController{
     $taskId=JRequest::getInt('task_id',JRequest::getInt('taskId',-1));
     $kbiId=JRequest::getInt('kbi',-1);
     $columnName=JRequest::getString('col','');
+    $task=null;
     if ($taskId>0){
       $task=$tasksModel->getTask($taskId);
     }elseif($kbiId>0){
@@ -791,18 +793,65 @@ class DataController extends JController{
    */
   public function brBaseRulesCount(){
     $rulesCount=0;
-    $taskId=JRequest::getInt('task_id',0);
-    if ($taskId>0){
+    $kbiId=JRequest::getInt('kbi',0);
+    if ($kbiId>0){
+      /** @var dbconnectModelTasks $tasksModel */
       $tasksModel=&$this->getModel('Tasks','dbconnectModel');
-      $task=$tasksModel->getTask($taskId);
+      $task=$tasksModel->getTaskByKbi($kbiId);
       if ($task){
         /** @var dbconnectModelBRBase $brbaseModel */
         $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-        $rulesCount=$brbaseModel->getRulesCount($taskId);
+        $rulesCount=$brbaseModel->getRulesCount($task->id);
       }
     }
 
     echo json_encode(array('rulesCount'=>$rulesCount));
+  }
+
+  public function brBaseRemoveRule(){
+    $kbiId=JRequest::getInt('kbi',-1);
+    /** @var dbconnectModelTasks $tasksModel */
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $task=$tasksModel->getTaskByKbi($kbiId);
+    $ruleId=JRequest::getInt('rule',-1);
+    if ($task && $ruleId>-1){
+      /** @var dbconnectModelBRBase $brbaseModel */
+      $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
+      $brbaseModel->removeRule($ruleId,$task->id);
+    }
+  }
+
+  public function brBaseAddRules(){
+    //TODO
+    $kbiId=JRequest::getInt('kbi',-1);
+    $lmtaskId=JRequest::getVar('lmtask','');
+    $template=JRequest::getVar('template',self::RULES_XML_TEMPLATE);
+    $rules=JRequest::getString('rules',JRequest::getString('rulesIds',""));
+
+    try{
+      /** @var LispMiner $source */
+      $source=$this->getKbiSource($kbiId);
+      $options=array('export'=>$lmtaskId,'template'=>$template);
+      $result=$source->queryPost(null,$options);
+
+      if (!strpos($result,'<AssociationRules')){
+        throw new Exception('Export failed!');
+      }
+      $rules=$this->decodeRules($rules);
+      if (is_array($rules)&&count($rules)){
+        $result=$this->cleanRulesXml($result,$rules);
+      }
+      /** @var dbconnectModelTasks $tasksModel */
+      $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+      $task=$tasksModel->getTaskByKbi($kbiId);
+      /** @var dbconnectModelBRBase $brbaseModel */
+      $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
+      $brbaseModel->addRulesToTask($result,$task->id);
+    }catch (Exception $e){
+      var_dump($e);
+      exit();
+      //TODO show error
+    }
   }
 
 }
