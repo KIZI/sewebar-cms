@@ -492,6 +492,7 @@ class DataController extends JController{
   
   /**
    *  Funkce pro získání instance konkrétního KBI zdroje
+   * @return LispMiner
    */
   private function getKbiSource($kbiId){
     $model=$this->getKbiModel($kbiId);
