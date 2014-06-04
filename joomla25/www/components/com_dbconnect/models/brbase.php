@@ -45,7 +45,7 @@ class dbconnectModelBRBase extends JModel {
    */
   public function addRule($ruleXmlString,$taskId){
     $db=$this->getDbo();
-    $db->setQuery('INSERT INTO #__dbconnect_brbase (task,data) VALUES('.$db->quote($taskId).','.$ruleXmlString.');');
+    $db->setQuery('INSERT INTO #__dbconnect_brbase (task,data) VALUES('.$db->quote($taskId).','.$db->quote($ruleXmlString).');');
     $db->query();
   }
 
@@ -61,7 +61,7 @@ class dbconnectModelBRBase extends JModel {
           continue;
         }
         $rule=substr($rule,$startPos).'</AssociationRule>';
-        $this->addRuleToTask($rule,$taskId);
+        $this->addRule($rule,$taskId);
       }
     }
   }

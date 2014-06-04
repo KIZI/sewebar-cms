@@ -846,7 +846,7 @@ class DataController extends JController{
       $task=$tasksModel->getTaskByKbi($kbiId);
       /** @var dbconnectModelBRBase $brbaseModel */
       $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-      $brbaseModel->addRulesToTask($result,$task->id);
+      $brbaseModel->addRules($result,$task->id);
     }catch (Exception $e){
       var_dump($e);
       exit();
