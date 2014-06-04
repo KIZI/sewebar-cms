@@ -536,11 +536,11 @@ class DataController extends JController{
       $source=$this->getKbiSource($kbiId);
       $options=array('export'=>$lmtaskId,'template'=>$template);
       $result=$source->queryPost(null,$options);
+
       if (!strpos($result,'<AssociationRules')){
         throw new Exception('Export failed!');
       }
       $rules=$this->decodeRules($rules);
-
       if (is_array($rules)&&count($rules)){
         $result=$this->cleanRulesXml($result,$rules);
       }
@@ -566,11 +566,12 @@ class DataController extends JController{
     while (($pos=mb_strpos($xmlString,'<AssociationRule',$pos,'utf8'))!==false){
       $endPos=mb_strpos($xmlString,'>',$pos,'utf8');
       $startTag=mb_substr($xmlString,$pos,$endPos-$pos,'utf8').'/>';
+
       $xml=simplexml_load_string($startTag);
       $id=(string)$xml['id'];
       $endPos=mb_strpos($xmlString,'</AssociationRule',$endPos,'utf8');
       $endPos=mb_strpos($xmlString,'>',$endPos,'utf8');
-      if (in_array($id,$rulesArr,true)){
+      if (in_array($id,$rulesArr)){
         //copy tag
         unset($xml);
         $outputXml.=mb_substr($xmlString,$pos,$endPos-$pos+1,'utf8');
@@ -784,9 +785,24 @@ class DataController extends JController{
     }
     return $rules;
   }
-  
+
+  /**
+   * Akce vracející počet pravidel v BR base pro konkrétní úlohu
+   */
   public function brBaseRulesCount(){
-    echo json_encode(array('rulesCount'=>0));
+    $rulesCount=0;
+    $taskId=JRequest::getInt('task_id',0);
+    if ($taskId>0){
+      $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+      $task=$tasksModel->getTask($taskId);
+      if ($task){
+        /** @var dbconnectModelBRBase $brbaseModel */
+        $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
+        $rulesCount=$brbaseModel->getRulesCount($taskId);
+      }
+    }
+
+    echo json_encode(array('rulesCount'=>$rulesCount));
   }
 
 }
