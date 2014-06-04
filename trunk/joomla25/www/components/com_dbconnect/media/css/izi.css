@@ -592,3 +592,20 @@ table.dbConnectionTable input[type='checkbox']{
 #newReportArticleForm .bigButton{
   margin-top: 10px;
 }
+a.remove{
+  background: url("/izi-miner/images/sprite-icons.png") no-repeat scroll -15px -13px rgba(0, 0, 0, 0);
+  display: inline-block;
+  width: 20px;
+  height:20px;
+}
+a.blockA{
+    display: inline-block;
+    height: 20px;
+}
+a.checkModel{
+    display: inline-block;
+    height: 20px;
+    margin-left: 20px;
+    padding-left: 30px;
+    background:url("http://icons.iconarchive.com/icons/double-j-design/super-mono-3d/24/speed-test-icon.png") no-repeat left -6px;
+}

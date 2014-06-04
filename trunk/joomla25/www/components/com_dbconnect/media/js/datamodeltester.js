@@ -27,6 +27,7 @@ function ModelTester(args){
     this.contentElementId=(args.contentElementId?args.contentElementId:"");
     this.infoElementId=(args.infoElementId?args.infoElementId:"");
     this.rulesExportUrl=(args.rulesExportUrl?args.rulesExportUrl:"");
+    this.removeRuleUrl=(args.removeRuleUrl?args.removeRuleUrl:"");
     this.testUrl=(args.testUrl?args.testUrl:"");
 
     this.runTest=function(){
@@ -52,7 +53,7 @@ function ModelTester(args){
         this.showStatus("");
         var contentHtml="";
         if (this.jsonContent.rowsCount>0){
-            contentHtml ="<table class=\"resultsTable\">";
+            contentHtml ="<table class=\"resultsTable hiddenLinks\">";
             contentHtml+="<tr><td>True positive:</td><td><strong>"+this.jsonContent.truePositive+"</strong></td></tr>";
             contentHtml+="<tr><td>False positive:</td><td><strong>"+this.jsonContent.falsePositive+"</strong></td></tr>";
             contentHtml+="<tr><td>Test rows count:</td><td><strong>"+this.jsonContent.rowsCount+"</strong></td></tr>";
@@ -67,7 +68,12 @@ function ModelTester(args){
                 contentHtml+="<table class=\"rulesTable\"><tr><th class=\"text\">Rule</th><th>True positive</th><th>False positive</th></tr>";
                 for (var i=0;i<this.jsonContent.rules.length;i++){
                     var rule=this.jsonContent.rules[i];
-                    contentHtml+="<tr><td>"+rule.text+"</td><td class=\"right\">"+rule.truePositive+"</td><td class=\"right\">"+rule.falsePositive+"</td></tr>";
+                    contentHtml+="<tr><td>"+rule.text;
+                    if (this.removeRuleUrl){
+                        contentHtml+="<a href="+this.removeRuleUrl.replace("{ruleId}",rule.id)+" class=\"remove\"></a>";
+                    }
+                    contentHtml+="</td><td class=\"right\">"+rule.truePositive;
+                    contentHtml+="</td><td class=\"right\">"+rule.falsePositive+"</td></tr>";
                 }
                 contentHtml+="</table>";
             }
