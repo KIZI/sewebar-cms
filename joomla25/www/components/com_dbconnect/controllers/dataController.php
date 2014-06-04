@@ -515,7 +515,14 @@ class DataController extends JController{
       $testFile=dbconnectModelUploads::DATA_DIR.'/'.$testFile;
       $view->assign('testFile',$testFile);
 
-      $view->assign('rulesExportUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterExportRulesXml&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false));
+      if ($lmtask=='BRBASE'){
+        $rulesExportUrl=JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseExportRulesXml&format=raw&kbi='.$kbi,false);
+        $view->assign('ruleRemoveUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseRemoveRule&tmpl=component&kbi='.$kbi.'&return=modelTester&file='.JRequest::getString('file','').'&rule={ruleId}'));//TODO
+      }else{
+        $rulesExportUrl=JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterExportRulesXml&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false);
+      }
+
+      $view->assign('rulesExportUrl',$rulesExportUrl);
       $view->assign('testUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterRequest&format=raw&rulesXml='.self::MODELTESTER_XML_DIR.'/'.$kbi.'-'.$lmtask.'&dataCsv='.$testFile,false));
     }
 
@@ -624,7 +631,7 @@ class DataController extends JController{
           if (isset($rulesResultsArr[$id])){
             $falsePositive=$rulesResultsArr[$id]['falsePositive'];
           }
-          $output['rules'][]=array('text'=>(string)$associationRule->Text,'truePositive'=>$truePositive,'falsePositive'=>$falsePositive);
+          $output['rules'][]=array('id'=>(string)$associationRule['id'],'text'=>(string)$associationRule->Text,'truePositive'=>$truePositive,'falsePositive'=>$falsePositive);
         }
 
       }
@@ -809,6 +816,24 @@ class DataController extends JController{
     echo json_encode(array('rulesCount'=>$rulesCount));
   }
 
+  public function brBaseShow(){
+    $kbiId=JRequest::getInt('kbi',-1);
+    /** @var dbconnectModelTasks $tasksModel */
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $task=$tasksModel->getTaskByKbi($kbiId);
+    $ruleId=JRequest::getInt('rule',-1);
+    /** @var dbconnectModelBRBase $brbaseModel */
+    $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
+    $rules=$brbaseModel->getRulesXml($task->id);
+
+    /** @var dataViewBRBaseShow $view */
+    $view=&$this->getView('BRBaseShow','html');
+    $view->assign('kbiId',$kbiId);
+    $view->assign('rulesXml',simplexml_load_string($rules));
+    $view->display();
+
+  }
+
   public function brBaseRemoveRule(){
     $kbiId=JRequest::getInt('kbi',-1);
     /** @var dbconnectModelTasks $tasksModel */
@@ -820,10 +845,41 @@ class DataController extends JController{
       $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
       $brbaseModel->removeRule($ruleId,$task->id);
     }
+    if (JRequest::getVar('return','')=='modelTester'){
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTester&tmpl=component&kbi='.$kbiId.'&lmtask=BRBASE&file='.JRequest::getString('file'),false));
+    }else{
+      $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseShow&tmpl=component&kbi='.$kbiId,false));
+    }
+
+  }
+
+  public function brBaseRemoveAllRules(){
+    $kbiId=JRequest::getInt('kbi',-1);
+    /** @var dbconnectModelTasks $tasksModel */
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $task=$tasksModel->getTaskByKbi($kbiId);
+    if ($task){
+      /** @var dbconnectModelBRBase $brbaseModel */
+      $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
+      $brbaseModel->removeAllRules($task->id);
+    }
+    $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseShow&tmpl=component&kbi='.$kbiId,false));
+  }
+
+  public function brBaseExportRulesXml(){
+    $kbiId=JRequest::getInt('kbi',-1);
+    /** @var dbconnectModelTasks $tasksModel */
+    $tasksModel=&$this->getModel('Tasks','dbconnectModel');
+    $task=$tasksModel->getTaskByKbi($kbiId);
+    $ruleId=JRequest::getInt('rule',-1);
+    /** @var dbconnectModelBRBase $brbaseModel */
+    $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
+    $result=$brbaseModel->getRulesXml($task->id);
+    file_put_contents(self::MODELTESTER_XML_DIR.'/'.$kbiId.'-'.'BRBASE',$result);
+
   }
 
   public function brBaseAddRules(){
-    //TODO
     $kbiId=JRequest::getInt('kbi',-1);
     $lmtaskId=JRequest::getVar('lmtask','');
     $template=JRequest::getVar('template',self::RULES_XML_TEMPLATE);

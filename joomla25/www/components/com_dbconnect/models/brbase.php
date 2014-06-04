@@ -42,18 +42,23 @@ class dbconnectModelBRBase extends JModel {
   /**
    * @param string $ruleXmlString
    * @param int $taskId
+   * @param string $lmtask = ''
    */
-  public function addRule($ruleXmlString,$taskId){
+  public function addRule($ruleXmlString,$taskId,$lmtask=''){
     $db=$this->getDbo();
-    $db->setQuery('INSERT INTO #__dbconnect_brbase (task,data) VALUES('.$db->quote($taskId).','.$db->quote($ruleXmlString).');');
-    $db->query();
+    $db->setQuery('SELECT * FROM #__dbconnect_brbase WHERE task='.$db->quote($taskId).' AND data='.$db->quote($ruleXmlString));
+    if (!($db->loadObject())){
+      $db->setQuery('INSERT INTO #__dbconnect_brbase (task,data,lmtask) VALUES('.$db->quote($taskId).','.$db->quote($ruleXmlString).','.$db->quote($lmtask).');');
+      $db->query();
+    }
   }
 
   /**
    * @param string $rulesXmlString
    * @param int $taskId
+   * @param string $lmtask
    */
-  public function addRules($rulesXmlString,$taskId){
+  public function addRules($rulesXmlString,$taskId,$lmtask=''){
     $rulesArr=explode('</AssociationRule',$rulesXmlString);
     if (count($rulesArr)){
       foreach($rulesArr as $rule){
@@ -61,9 +66,27 @@ class dbconnectModelBRBase extends JModel {
           continue;
         }
         $rule=substr($rule,$startPos).'</AssociationRule>';
-        $this->addRule($rule,$taskId);
+        $this->addRule($rule,$taskId,$lmtask);
       }
     }
+  }
+
+  /**
+   * @param int $taskId
+   * @return string
+   */
+  public function getRulesXml($taskId){
+    $rulesXml='<AssociationRules xmlns="http://keg.vse.cz/lm/AssociationRules/v1.0">';
+      $rules=$this->getRules($taskId);
+    if ($rules && count($rules)){
+      foreach($rules as $rule){
+        $ruleData=$rule->data;
+        $ruleData='<AssociationRule id="'.$rule->id.'">'.substr($ruleData,strpos($ruleData,'>')+1);
+        $rulesXml.=$ruleData;
+      }
+    }
+    $rulesXml.='</AssociationRules>';
+    return $rulesXml;
   }
 
 

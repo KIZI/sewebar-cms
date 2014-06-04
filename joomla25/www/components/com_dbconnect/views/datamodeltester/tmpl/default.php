@@ -3,7 +3,7 @@
   echo '<div id="iziDiv">';
   
   if (JRequest::getVar('close',@$this->close)!='no'){
-    echo '<a href="javascript:parent.close();" class="backButton">'.JText::_('CLOSE').'</a>';
+    echo '<a href="javascript:parent.reloadBRBase();parent.close();" class="backButton">'.JText::_('CLOSE').'</a>';
   }
   
   echo '<h1>Test classification model</h1>';
@@ -17,6 +17,7 @@
                  modelTester = new ModelTester({
                   rulesExportUrl:"'.$this->rulesExportUrl.'",
                   testUrl:"'.$this->testUrl.'",
+                  '.($this->ruleRemoveUrl?'removeRuleUrl:"'.$this->ruleRemoveUrl.'",':'').'
                   infoElementId:"loadingInfoDiv",
                   contentElementId:"contentDiv",
                 });
