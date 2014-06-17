@@ -58,8 +58,8 @@ function ModelTester(args){
             contentHtml+="<tr><td>False positive:</td><td><strong>"+this.jsonContent.falsePositive+"</strong></td></tr>";
             contentHtml+="<tr><td>Test rows count:</td><td><strong>"+this.jsonContent.rowsCount+"</strong></td></tr>";
             contentHtml+="<tr><td colspan=\"2\"></td></tr>";
-            contentHtml+="<tr><td>Precision:</td><td><strong>"+(Math.round(1000*((this.jsonContent.truePositive*1)/((this.jsonContent.truePositive*1)+(this.jsonContent.falsePositive*1))))/10)+"%</strong></td></tr>";
-            contentHtml+="<tr><td>Recall:</td><td><strong>"+(Math.round(1000*((this.jsonContent.truePositive*1)/(this.jsonContent.rowsCount*1)))/10)+"%</strong></td></tr>";
+            contentHtml+="<tr><td>Accuracy:</td><td><strong>"+(Math.round(1000*((this.jsonContent.truePositive*1)/((this.jsonContent.truePositive*1)+(this.jsonContent.falsePositive*1))))/10)+"%</strong></td></tr>";
+            //contentHtml+="<tr><td>Recall:</td><td><strong>"+(Math.round(1000*((this.jsonContent.truePositive*1)/(this.jsonContent.rowsCount*1)))/10)+"%</strong></td></tr>";
             contentHtml+="</table>";
 
             contentHtml+="<div id=\"resultsChart\" ></div>";
