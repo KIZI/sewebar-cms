@@ -601,11 +601,21 @@ a.remove{
 a.blockA{
     display: inline-block;
     height: 20px;
+    padding-top:5px;
 }
 a.checkModel{
     display: inline-block;
     height: 20px;
     margin-left: 20px;
     padding-left: 30px;
-    background:url("http://icons.iconarchive.com/icons/double-j-design/super-mono-3d/24/speed-test-icon.png") no-repeat left -6px;
+    padding-top:5px;
+    background:url("http://icons.iconarchive.com/icons/double-j-design/super-mono-3d/24/speed-test-icon.png") no-repeat left 0px;
+}
+a.rulesEditor{
+    display: inline-block;
+    height: 20px;
+    margin-left: 20px;
+    padding-top:5px;
+    padding-left: 30px;/*url("") no-repeat scroll 0 0 transparent;*/
+    background:url("http://icons.iconarchive.com/icons/harwen/pleasant/24/Text-Document-icon.png") no-repeat left 0px;
 }
