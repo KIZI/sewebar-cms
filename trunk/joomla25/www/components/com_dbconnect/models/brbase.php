@@ -1,17 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Stanislav
- * Date: 4.6.14
- * Time: 15:03
- */
 
 class dbconnectModelBRBase extends JModel {
+
+  const EXTERNAL_API_URL='http://brserver.golemsoftware.cz/www';
+
   /**
    * @param int $taskId
    * @return BRRule[]
    */
   public function getRules($taskId){
+    //TODO new version!!!
     $db=$this->getDbo();
     $db->setQuery('SELECT * FROM #__dbconnect_brbase WHERE task='.$db->quote($taskId));
     return $db->loadObjectList('','BRRule');
@@ -22,18 +20,21 @@ class dbconnectModelBRBase extends JModel {
    * @return int
    */
   public function getRulesCount($taskId){
+    //TODO new version!!!
     $db=$this->getDbo();
     $db->setQuery('SELECT count(*)AS pocet FROM #__dbconnect_brbase WHERE task='.$db->quote($taskId));
     return $db->loadResult();
   }
 
   public function removeAllRules($taskId){
+    //TODO new version!!!
     $db=$this->getDbo();
     $db->setQuery('DELETE FROM #__dbconnect_brbase WHERE task='.$db->quote($taskId));
     return $db->query();
   }
 
   public function removeRule($ruleId,$taskId){
+    //TODO new version!!!
     $db=$this->getDbo();
     $db->setQuery('DELETE FROM #__dbconnect_brbase WHERE id='.$db->quote($ruleId).' AND task='.$db->quote($taskId).' LIMIT 1;');
     return $db->query();
@@ -45,6 +46,7 @@ class dbconnectModelBRBase extends JModel {
    * @param string $lmtask = ''
    */
   public function addRule($ruleXmlString,$taskId,$lmtask=''){
+    //TODO new version!!!
     $db=$this->getDbo();
     $db->setQuery('SELECT * FROM #__dbconnect_brbase WHERE task='.$db->quote($taskId).' AND data='.$db->quote($ruleXmlString));
     if (!($db->loadObject())){
@@ -59,6 +61,7 @@ class dbconnectModelBRBase extends JModel {
    * @param string $lmtask
    */
   public function addRules($rulesXmlString,$taskId,$lmtask=''){
+    //TODO new version!!!
     $rulesArr=explode('</AssociationRule',$rulesXmlString);
     if (count($rulesArr)){
       foreach($rulesArr as $rule){

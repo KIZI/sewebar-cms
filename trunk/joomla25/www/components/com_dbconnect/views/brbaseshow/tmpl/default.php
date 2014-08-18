@@ -29,6 +29,8 @@
           <a href="'.JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseRemoveAllRules&tmpl=component&kbi='.$this->kbiId).'" class="blockA">'.JText::_('REMOVE_ALL_RULES').'</a>
 
           <a class="checkModel" href="'.JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTester&tmpl=component&kbi='.$this->kbiId.'&lmtask=BRBASE').'">'.JText::_('CHECK_MODEL').'</a>
+
+          <a class="rulesEditor" href="/bre/new/drag.php?ruleset=http://easyminer.eu/kb/RuleSet/'.$this->kbiId.'&baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$this->kbiId.'" target="_blank">'.JText::_('RULES_EDITOR').'</a>
         </div>';
   echo '</div>';
   echo '</div>';  

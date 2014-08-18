@@ -7,6 +7,7 @@ jimport( 'joomla.application.component.controller' );
 class DataController extends JController{
   var $document;
   const RULES_XML_TEMPLATE='4ftMiner.Task.AssociationRules.Template.XML';//TODO
+  const ATTRIBUTES_XML_TEMPLATE='LMDataSource.Matrix.ARD.DBConnectExtended.Template.PMML';//TODO
   const MODELTESTER_URL="http://br-dev.lmcloud.vse.cz:8080/DroolsModelTester_web/rest/association-rules/test-files";
   const MODELTESTER_XML_DIR='./components/com_dbconnect/tmp/rulesxml';
 
@@ -888,22 +889,63 @@ class DataController extends JController{
     try{
       /** @var LispMiner $source */
       $source=$this->getKbiSource($kbiId);
-      $options=array('export'=>$lmtaskId,'template'=>$template);
-      $result=$source->queryPost(null,$options);
+      $resultRules=$source->queryPost(null,array('export'=>$lmtaskId,'template'=>$template));
 
-      if (!strpos($result,'<AssociationRules')){
+      #region získání atributů
+      require_once (JPATH_COMPONENT.DS.'../com_kbi/models/transformator.php');
+      $config = array(                        //TODO - kde se použije ID kbi zdroje???
+        'source' => JRequest::getVar('kbi', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+        'query' => JRequest::getVar('query', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+        'xslt' => JRequest::getVar('xslt', NULL, 'default', 'none', JREQUEST_ALLOWRAW),
+        'parameters' => JRequest::getVar('parameters', NULL, 'default', 'none', JREQUEST_ALLOWRAW)
+      );
+      $model = new KbiModelTransformator($config);
+      $resultAttributes=$model->getDataDescription(array('template'=>self::ATTRIBUTES_XML_TEMPLATE));
+      #endregion získání atributů
+
+      if (!strpos($resultRules,'<AssociationRules')){
         throw new Exception('Export failed!');
       }
       $rules=$this->decodeRules($rules);
       if (is_array($rules)&&count($rules)){
-        $result=$this->cleanRulesXml($result,$rules);
+        $resultRules=$this->cleanRulesXml($resultRules,$rules);
       }
-      /** @var dbconnectModelTasks $tasksModel */
+
+      //TODO doladit - aktuálně jen provizorní řešení...
+      #regin odeslání dat do EasyMinerCenter
+      $urlAttributes = 'http://brserver.golemsoftware.cz/www/association-rules/import-data-description?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
+      $data = array('data' => $resultAttributes);
+      $options = array(
+        'http' => array(
+          'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+          'method'  => 'POST',
+          'content' => http_build_query($data),
+        ),
+      );
+      $context  = stream_context_create($options);
+      $result = file_get_contents($urlAttributes, false, $context);
+      $urlRules = 'http://brserver.golemsoftware.cz/www/association-rules/import-association-rules?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
+
+      $data = array('data' => $resultRules);
+      $options = array(
+        'http' => array(
+          'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+          'method'  => 'POST',
+          'content' => http_build_query($data),
+        ),
+      );
+      $context  = stream_context_create($options);
+      $result = file_get_contents($urlRules, false, $context);
+
+      #endregion odeslání dat do EasyMinerCenter
+      /*
+      / ** @var dbconnectModelTasks $tasksModel * /
       $tasksModel=&$this->getModel('Tasks','dbconnectModel');
       $task=$tasksModel->getTaskByKbi($kbiId);
-      /** @var dbconnectModelBRBase $brbaseModel */
+      / ** @var dbconnectModelBRBase $brbaseModel * /
       $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-      $brbaseModel->addRules($result,$task->id);
+      $brbaseModel->addRules($resultRules,$task->id);
+      */
     }catch (Exception $e){
       var_dump($e);
       exit();
