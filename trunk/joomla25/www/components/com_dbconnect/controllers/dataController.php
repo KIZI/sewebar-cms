@@ -10,6 +10,7 @@ class DataController extends JController{
   const ATTRIBUTES_XML_TEMPLATE='LMDataSource.Matrix.ARD.DBConnectExtended.Template.PMML';//TODO
   const MODELTESTER_URL="http://br-dev.lmcloud.vse.cz:8080/DroolsModelTester_web/rest/association-rules/test-files";
   const MODELTESTER_XML_DIR='./components/com_dbconnect/tmp/rulesxml';
+  const BRBASE_URL='http://brserver.golemsoftware.cz/www';
 
   /**
    * Akce pro smazání článku
@@ -518,7 +519,7 @@ class DataController extends JController{
 
       if ($lmtask=='BRBASE'){
         $rulesExportUrl=JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseExportRulesXml&format=raw&kbi='.$kbi,false);
-        $view->assign('ruleRemoveUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseRemoveRule&tmpl=component&kbi='.$kbi.'&return=modelTester&file='.JRequest::getString('file','').'&rule={ruleId}'));//TODO
+        //$view->assign('ruleRemoveUrl',JRoute::_('index.php?option=com_dbconnect&controller=data&task=brBaseRemoveRule&tmpl=component&kbi='.$kbi.'&return=modelTester&file='.JRequest::getString('file','').'&rule={ruleId}'));//TODO
       }else{
         $rulesExportUrl=JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTesterExportRulesXml&tmpl=component&kbi='.$kbi.'&lmtask='.$lmtask.'&rules='.$rules,false);
       }
@@ -606,7 +607,7 @@ class DataController extends JController{
 
     try{
       $output=array();
-      //exit(self::MODELTESTER_URL.'?rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
+      //exit(self::MODELTESTER_URL.'?complexResults=ok&rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
       $content=@file_get_contents(self::MODELTESTER_URL.'?complexResults=ok&rulesXml='.$rulesXml.'&dataCsv='.$dataCsv);
       $xml=simplexml_load_string($content);
       $output['truePositive']=(string)$xml->truePositive;
@@ -801,36 +802,23 @@ class DataController extends JController{
    * Akce vracející počet pravidel v BR base pro konkrétní úlohu
    */
   public function brBaseRulesCount(){
-    $rulesCount=0;
-    $kbiId=JRequest::getInt('kbi',0);
-    if ($kbiId>0){
-      /** @var dbconnectModelTasks $tasksModel */
-      $tasksModel=&$this->getModel('Tasks','dbconnectModel');
-      $task=$tasksModel->getTaskByKbi($kbiId);
-      if ($task){
-        /** @var dbconnectModelBRBase $brbaseModel */
-        $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-        $rulesCount=$brbaseModel->getRulesCount($task->id);
-      }
-    }
-
-    echo json_encode(array('rulesCount'=>$rulesCount));
+    //TODO není finální verze
+    $kbiId=JRequest::getInt('kbi',-1);
+    $rulesExportUrl=self::BRBASE_URL.'/association-rules/association-rules-count?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
+    echo file_get_contents($rulesExportUrl);
   }
 
   public function brBaseShow(){
     $kbiId=JRequest::getInt('kbi',-1);
     /** @var dbconnectModelTasks $tasksModel */
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
-    $task=$tasksModel->getTaskByKbi($kbiId);
-    $ruleId=JRequest::getInt('rule',-1);
-    /** @var dbconnectModelBRBase $brbaseModel */
-    $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-    $rules=$brbaseModel->getRulesXml($task->id);
 
     /** @var dataViewBRBaseShow $view */
     $view=&$this->getView('BRBaseShow','html');
-    $view->assign('kbiId',$kbiId);
-    $view->assign('rulesXml',simplexml_load_string($rules));
+    $view->assign('kbiId',$kbiId);//TODO není finální verze...
+    $rulesetContent=file_get_contents(self::BRBASE_URL.'/rule-set/get?uri=http://easyminer.eu/kb/RuleSet/'.$kbiId.'&baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId);
+    $view->assign('deleteRuleUrl',self::BRBASE_URL.'/rule/delete?uri={:ruleUri}&ruleset=http://easyminer.eu/kb/RuleSet/{:kbiId}&baseId=http://easyminer.eu/kb/KnowledgeBase/kb{:kbiId}');
+    $view->assign('rulesXml',simplexml_load_string($rulesetContent));
     $view->display();
 
   }
@@ -840,11 +828,9 @@ class DataController extends JController{
     /** @var dbconnectModelTasks $tasksModel */
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTaskByKbi($kbiId);
-    $ruleId=JRequest::getInt('rule',-1);
-    if ($task && $ruleId>-1){
-      /** @var dbconnectModelBRBase $brbaseModel */
-      $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-      $brbaseModel->removeRule($ruleId,$task->id);
+    $ruleId=JRequest::getInt('rule',-1);//TODO není finální verze...
+    if ($task && $ruleId){
+      file_get_contents(self::BRBASE_URL.'/rule/delete?uri=http://easyminer.eu/kb/Rule/'.$ruleId.'&ruleset=http://easyminer.eu/kb/RuleSet/'.$kbiId.'&baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId);
     }
     if (JRequest::getVar('return','')=='modelTester'){
       $this->setRedirect(JRoute::_('index.php?option=com_dbconnect&controller=data&task=modelTester&tmpl=component&kbi='.$kbiId.'&lmtask=BRBASE&file='.JRequest::getString('file'),false));
@@ -869,15 +855,15 @@ class DataController extends JController{
 
   public function brBaseExportRulesXml(){
     $kbiId=JRequest::getInt('kbi',-1);
-    /** @var dbconnectModelTasks $tasksModel */
+    /*
     $tasksModel=&$this->getModel('Tasks','dbconnectModel');
     $task=$tasksModel->getTaskByKbi($kbiId);
     $ruleId=JRequest::getInt('rule',-1);
-    /** @var dbconnectModelBRBase $brbaseModel */
     $brbaseModel=&$this->getModel('BRBase','dbconnectModel');
-    $result=$brbaseModel->getRulesXml($task->id);
-    file_put_contents(self::MODELTESTER_XML_DIR.'/'.$kbiId.'-'.'BRBASE',$result);
+    $result=$brbaseModel->getRulesXml($task->id);*/
 
+    $rulesExportUrl=self::BRBASE_URL.'/association-rules/export-association-rules?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
+    file_put_contents(self::MODELTESTER_XML_DIR.'/'.$kbiId.'-'.'BRBASE',file_get_contents($rulesExportUrl));
   }
 
   public function brBaseAddRules(){
@@ -913,7 +899,7 @@ class DataController extends JController{
 
       //TODO doladit - aktuálně jen provizorní řešení...
       #regin odeslání dat do EasyMinerCenter
-      $urlAttributes = 'http://brserver.golemsoftware.cz/www/association-rules/import-data-description?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
+      $urlAttributes = self::BRBASE_URL.'/association-rules/import-data-description?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
       $data = array('data' => $resultAttributes);
       $options = array(
         'http' => array(
@@ -924,7 +910,7 @@ class DataController extends JController{
       );
       $context  = stream_context_create($options);
       $result = file_get_contents($urlAttributes, false, $context);
-      $urlRules = 'http://brserver.golemsoftware.cz/www/association-rules/import-association-rules?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
+      $urlRules = self::BRBASE_URL.'/association-rules/import-association-rules?baseId=http://easyminer.eu/kb/KnowledgeBase/kb'.$kbiId.'&kbi='.$kbiId;
 
       $data = array('data' => $resultRules);
       $options = array(
