@@ -1,0 +1,87 @@
+# Introduction #
+
+SEWEBAR allows to use multiple interest measures as test criteria. The list of supported **interest measures** is determined by the list  of **quantifiers** implemented in the underlying LISp-Miner data mining system.
+
+## History ##
+LISp-Miner is based on the GUHA method, which originated in the 1960's that it is before the term "interest measure" became widely accepted. Widely referenced example of a quantifier is "Founded implication", which corresponds to what is now known as support and confidence interest measures.
+
+While the LISp-Miner system continues to use the GUHA terminology, SEWEBAR attempts to stick to terminology which we know consider as mainstream.
+
+## Test criteria and informative interest measures ##
+In SEWEBAR we distinguish two types of interest measures
+  1. test criteria interest measures
+  1. informative interest measures
+### Interest measures used as test criteria in task setting ###
+These interest measures have always associated a threshold or a significance level and their purpose is to filter out the uninteresting rules.  There is at lease one such interest measure defined in each mining task in the TaskSetting/InterestMeasureSetting element
+
+Interest Measure Setting may comprise either of
+  * Threshold value
+  * Significance level
+  * both
+
+For each Interest Measure Setting it is also necessary to define
+  * Compare Type
+  * Threshold Type
+
+### Informative interest measures ###
+
+These measures are listed separately for each discovered association rule in the IMValue element. These measures need not be associated with any test criterion, but those which  are associated can be identified by the imRef attribute.
+
+```
+        <IMValue imSettingRef="30" name="BASE">0.0014560751</IMValue>
+        <IMValue imSettingRef="1" name="DFUI">0.0116580311</IMValue>
+        <IMValue name="a">9</IMValue>
+        <IMValue name="b">45</IMValue>
+```
+
+There is an informative interest measure for every test criterion interest measure.
+
+# Dictionary #
+Available interest measures are defined in an XML-based dictionary document http://code.google.com/p/sewebar-cms/source/browse/trunk/joomla/www/xml/pmml/dict/GUHAQuantifier-InterestMeasureDictionary.xml
+
+## Informative Interest Measures ##
+The InterestMeasure  entries have the following structure
+`InterestMeasure = element str {str}+, element TestCriteria {element TestCriterion{TestCriterion}+}, element Symbol {Symbol`}
+
+One InterestMeasure entry defines an informative interest measure. If it is associated with one or more test criterion, these are listed in TestCriterion elements.
+
+  * **str** elements defines  the names for the interest measure.
+```
+        <str lang="MasterName">BASE</str>        
+        <str lang="pmml" software="Ferda">Base</str>
+        <str lang="pmml" software="LISp-Miner">BASE</str>            
+        <str lang="en">Support</str>
+        <str lang="cs">Podpora</str>        
+```
+The `<str lang="MasterName">` has a special importance as it defines the canonical name for the interest measure as it appears in GUHA AR PMML IMValue element.
+## Test Criterion Interest Measures ##
+The structure is as follows
+```
+TestCriterion = attribute type{"Functional"| "Aggregational"| "BASE/CEILING"},
+element ThresholdType{"Abs"|"% of act"|"% of max"|"% of all"}+, 
+element CompareType{"Equal"|"Less than"|"Less than or equal"|"Greater than or equal"|"Greater than"}+,
+element Threshold{"Yes"|"No"},element SignificanceLevel{"Yes"|"No"}, element str{str}+ 
+```
+
+
+  * the **type** attribute is informative and does not currently have any use
+  * ThresholdType,CompareType - the list of supported threshold specifications by LISp-Miner
+  * **Threshold** - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a Threshold element or not?
+  * **SignificanceLevel** - does a corresponding InterestMeasureThreshold element in GUHA AR PMML contain a SignificanceLevel element or not?
+  * **str** elements defines  the names for the interest measure. The `<str lang="MasterName">` has a special importance as it defines the canonical name for the interest measure as it appears in GUHA AR PMML `InterestMeasureThreshold/InterestMeasure` element.
+
+Note that at least one of Threshold and SignificanceLevel must be se to Yes.
+
+# Dictionary Use in XSLT transformation templates #
+The Dictionary is automatically used by  XSLT transformation templates to make the display of interest measures in reports more user friendly e.g. by providing localised names.
+
+
+# Dictionary Use to generate ARFeaure.xml #
+
+This dictionary should be used to create ARFeaure.xml documents, which define the palette of available measures used as test criteria in ARD.
+
+When preparing an ARFeaure document, observe the following guidelines:
+  1. Select the list of interest measures to be included into the palette and for each interest measure decide on one  `ThresholdType` and `CompareType` and create an entry in ` GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type `
+  1. ` GUHAFeatureList/BuildingBlocks/InterestMeasures/Types/Type/Field/Validation` must be adjusted according to the selected option
+
+The ARD then does not need to "understand" these two elements, it is only required to copy them to `PMML//InterestMeasureSetting/InterestMeasureThreshold` element.
